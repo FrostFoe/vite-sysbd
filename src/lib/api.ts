@@ -1,5 +1,5 @@
 import axios from "axios";
-import {
+import type {
   Article,
   HomeData,
   User,
@@ -7,13 +7,26 @@ import {
   Conversation,
   Message,
   Category,
+  Section,
 } from "../types";
 
-export interface AdminArticle extends Article {
+export interface AdminArticle {
+  id: string;
   title_bn?: string;
   title_en?: string;
-  category: string; // The translated category name
-  category_id?: string;
+  title?: string;
+  summary_bn?: string;
+  summary_en?: string;
+  content_bn?: string;
+  content_en?: string;
+  status: "published" | "draft" | "archived";
+  image: string;
+  created_at?: string;
+  published_at?: string;
+  category_id?: string | undefined;
+  section_id?: string;
+  category?: string; // The translated category name
+  allow_submissions?: boolean;
 }
 
 const API_BASE_URL = "/api"; // Vite proxy will handle this

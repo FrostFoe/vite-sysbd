@@ -1,19 +1,12 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import ReactQuill from "react-quill-new";
 import "react-quill-new/dist/quill.snow.css"; // Import Quill styles
 import { useLayout } from "../../context/LayoutContext";
-import { AdminArticle, Category, Section } from "../../types";
+import type { AdminArticle, Category, Section } from "../../types";
 import { adminApi, publicApi } from "../../lib/api";
 import { t } from "../../lib/translations";
-import {
-  Loader,
-  Save,
-  ExternalLink,
-  Globe,
-  LinkIcon,
-  AlertCircle,
-} from "lucide-react";
+import { Loader, Save, ExternalLink } from "lucide-react";
 import { showToastMsg } from "../../lib/utils"; // Assuming showToastMsg handles toasts
 
 const ArticleEdit: React.FC = () => {
@@ -26,7 +19,7 @@ const ArticleEdit: React.FC = () => {
   const [sections, setSections] = useState<Section[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
-  const [autosaveMessage, setAutosaveMessage] = useState("");
+  const [_autosaveMessage, setAutosaveMessage] = useState("");
   const [restoreAlert, setRestoreAlert] = useState(false);
 
   const quillBnRef = useRef<ReactQuill>(null);
@@ -52,7 +45,11 @@ const ArticleEdit: React.FC = () => {
           // Sections type in API returns Section[], but here we only need id and title
           setSections(
             sectionsRes.data.map(
-              (s) => ({ id: s.id, title: s.title_bn || s.title_en }) as Section,
+              (s) =>
+                ({
+                  ...s,
+                  title: s.title || "Untitled Section",
+                }) as unknown as Section,
             ),
           );
         }
@@ -120,8 +117,8 @@ const ArticleEdit: React.FC = () => {
   const autosaveArticle = useCallback(() => {
     const currentArticleData = {
       ...article,
-      content_bn: quillBnRef.current?.editor?.getHTML() || "",
-      content_en: quillEnRef.current?.editor?.getHTML() || "",
+      content_bn: quillBnRef.current?.getEditor?.().root?.innerHTML || "",
+      content_en: quillEnRef.current?.getEditor?.().root?.innerHTML || "",
     };
     localStorage.setItem(storageKey, JSON.stringify(currentArticleData));
     setAutosaveMessage(t("draft_saved", language));
@@ -201,11 +198,11 @@ const ArticleEdit: React.FC = () => {
       formData.append("summary_en", article.summary_en || "");
       formData.append(
         "content_bn",
-        quillBnRef.current?.editor?.getHTML() || "",
+        quillBnRef.current?.getEditor?.().root?.innerHTML || "",
       );
       formData.append(
         "content_en",
-        quillEnRef.current?.editor?.getHTML() || "",
+        quillEnRef.current?.getEditor?.().root?.innerHTML || "",
       );
       formData.append("image", article.image || "");
       formData.append("category_id", article.category_id || "");

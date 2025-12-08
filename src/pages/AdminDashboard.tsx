@@ -14,7 +14,7 @@ interface AdminStats {
 }
 
 const AdminDashboard: React.FC = () => {
-  const { user } = useAuth();
+  const {} = useAuth();
   const { language } = useLayout();
   const [stats, setStats] = useState<AdminStats | null>(null);
   const [isLoading, setIsLoading] = useState(true);

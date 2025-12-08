@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { useLayout } from "../../context/LayoutContext";
-import { AdminArticle, Category } from "../../types";
-import { adminApi, publicApi } from "../../lib/api";
+import type { AdminArticle, Category } from "../../types";
+import { adminApi } from "../../lib/api";
 import { t } from "../../lib/translations";
 import { FileText, Plus, Search, Edit2, Trash2, Loader } from "lucide-react";
 import {

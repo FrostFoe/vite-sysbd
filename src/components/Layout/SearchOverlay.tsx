@@ -4,7 +4,7 @@ import { useLayout } from "../../context/LayoutContext";
 import { t } from "../../lib/translations";
 import { X, Search as SearchIcon } from "lucide-react";
 import { publicApi } from "../../lib/api";
-import { Article } from "../../types";
+import type { Article } from "../../types";
 
 interface SearchOverlayProps {
   // Add any specific props if needed
@@ -15,7 +15,7 @@ const SearchOverlay: React.FC<SearchOverlayProps> = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState<Article[]>([]);
   const searchInputRef = useRef<HTMLInputElement>(null);
-  const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
+  const debounceTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     if (isSearchOpen && searchInputRef.current) {

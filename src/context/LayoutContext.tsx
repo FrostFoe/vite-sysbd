@@ -1,11 +1,11 @@
-import React, {
+import {
   createContext,
   useContext,
   useState,
   useEffect,
-  ReactNode,
   useCallback,
 } from "react";
+import type { ReactNode } from "react";
 
 interface LayoutContextType {
   theme: "light" | "dark";

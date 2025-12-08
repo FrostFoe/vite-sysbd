@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Article } from "../../types";
+import type { Article } from "../../types";
 import { useLayout } from "../../context/LayoutContext";
 import { escapeHtml, PLACEHOLDER_IMAGE } from "../../lib/utils"; // Assuming PLACEHOLDER_IMAGE is in utils
 
@@ -13,7 +13,7 @@ const MiniArticle: React.FC<MiniArticleProps> = ({
   article,
   colorClass = "text-bbcRed",
 }) => {
-  const { theme } = useLayout();
+  const {} = useLayout();
   const titleColor = "text-card-text"; // Always from main theme
 
   return (

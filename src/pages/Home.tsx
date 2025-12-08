@@ -1,14 +1,15 @@
 import React, { useState, useEffect, useCallback } from "react";
+import { Link } from "react-router-dom";
 import { useLayout } from "../context/LayoutContext";
 import { publicApi } from "../lib/api";
-import { Article, Section, Category } from "../types";
+import type { Section, Category } from "../types";
 import { t } from "../lib/translations";
-import { Bookmark, Newspaper, Inbox } from "lucide-react"; // Import icons needed
+import { Bookmark, Newspaper, ChevronRight } from "lucide-react"; // Import icons needed
 import ArticleCard from "../components/common/ArticleCard";
 import MiniArticle from "../components/common/MiniArticle";
 
 const HomePage: React.FC = () => {
-  const { language, currentCategory, theme } = useLayout();
+  const { language, currentCategory } = useLayout();
   const [homeData, setHomeData] = useState<{
     sections: Section[];
     categories: Category[];
@@ -73,7 +74,7 @@ const HomePage: React.FC = () => {
   }, [language, currentCategory]);
 
   const renderSection = (section: Section) => {
-    const isSectionDark = section.style === "dark" || theme === "dark";
+    const isSectionDark = section.style === "dark";
     const titleColor = isSectionDark ? "text-white" : "text-card-text";
     const borderColor = isSectionDark
       ? "white"

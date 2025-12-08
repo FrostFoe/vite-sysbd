@@ -1,12 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Article } from "../../types";
+import type { Article } from "../../types";
 import { useLayout } from "../../context/LayoutContext";
 import {
   escapeHtml,
   formatTimestamp,
   PLACEHOLDER_IMAGE,
-  showToastMsg,
 } from "../../lib/utils";
 import { t } from "../../lib/translations";
 import {

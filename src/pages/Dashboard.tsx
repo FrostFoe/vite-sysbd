@@ -3,7 +3,7 @@ import { useAuth } from "../context/AuthContext";
 import { useLayout } from "../context/LayoutContext";
 import { t } from "../lib/translations";
 import { Link } from "react-router-dom";
-import { LayoutDashboard, Mail, Bookmark } from "lucide-react";
+import { Mail, Bookmark } from "lucide-react";
 
 const Dashboard: React.FC = () => {
   const { user } = useAuth();

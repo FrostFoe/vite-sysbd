@@ -3,20 +3,21 @@ import { useAuth } from "../../context/AuthContext";
 import { useLayout } from "../../context/LayoutContext";
 import { t } from "../../lib/translations";
 import { publicApi } from "../../lib/api";
-import { Message } from "../../types";
+import type { Message } from "../../types";
 import {
   ArrowLeft,
   Menu,
-  Info,
   Send,
   Inbox as InboxIcon,
-  MessageCircle,
+  Loader,
+  Info,
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { escapeHtml, formatTimestamp, showToastMsg } from "../../lib/utils";
 
 const UserInbox: React.FC = () => {
   const { user } = useAuth();
-  const { language, theme, toggleSidebar } = useLayout();
+  const { language, toggleSidebar } = useLayout();
   const [messages, setMessages] = useState<Message[]>([]);
   const [messageInput, setMessageInput] = useState("");
   const [isLoading, setIsLoading] = useState(true);

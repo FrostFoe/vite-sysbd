@@ -1,13 +1,13 @@
-import React, {
+import {
   createContext,
   useContext,
   useState,
   useEffect,
-  ReactNode,
   useCallback,
 } from "react";
+import type { ReactNode } from "react";
 import { authApi } from "../lib/api";
-import { User } from "../types";
+import type { User } from "../types";
 
 interface AuthContextType {
   user: User | null;

@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useLayout } from "../context/LayoutContext";
 import { useAuth } from "../context/AuthContext";
 import { publicApi } from "../lib/api";
-import { Article, Comment, Document, UserProfile } from "../types";
+import type { Article, UserProfile } from "../types";
 import {
   escapeHtml,
   formatTimestamp,
@@ -26,20 +26,12 @@ import {
   Trash2,
   Loader,
   X,
-  Shield,
-  LayoutDashboard,
-  Mail,
-  Coins,
-  Bitcoin,
-  Copy,
-  AlertCircle,
-  CheckCircle,
 } from "lucide-react";
 
 const ArticleDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const { language, theme, toggleTheme } = useLayout();
-  const { user, isAuthenticated } = useAuth();
+  const { language } = useLayout();
+  const { user } = useAuth();
   const [article, setArticle] = useState<Article | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [bookmarks, setBookmarks] = useState<string[]>([]);
@@ -279,7 +271,7 @@ const ArticleDetail: React.FC = () => {
       }
 
       try {
-        const response = await publicApi.postReply(id, text); // Changed from postComment to postReply
+        const response = await publicApi.postReply(parentCommentId, text); // Changed from postComment to postReply
         if (response.success) {
           setReplyInput((prev) => ({ ...prev, [parentCommentId]: "" }));
           setActiveReplyForm(null);
@@ -311,7 +303,7 @@ const ArticleDetail: React.FC = () => {
 
   // Delete comment for admin
   const deleteComment = useCallback(
-    async (commentId: number) => {
+    async (_commentId: number) => {
       if (!isAdmin || !window.confirm(t("confirm_delete_comment", language)))
         return;
 
@@ -499,13 +491,7 @@ const ArticleDetail: React.FC = () => {
                 >
                   <Bookmark
                     className="w-5 h-5"
-                    fill={
-                      isArticleBookmarked
-                        ? theme === "dark"
-                          ? "white"
-                          : "black"
-                        : "none"
-                    }
+                    fill={isArticleBookmarked ? "black" : "none"}
                   />
                 </button>
               </div>

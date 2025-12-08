@@ -3,19 +3,8 @@ import { Link, useSearchParams } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { useLayout } from "../../context/LayoutContext";
 import { t } from "../../lib/translations";
-import {
-  Menu,
-  Sun,
-  Moon,
-  Search,
-  Shield,
-  LayoutDashboard,
-  LogOut,
-  ChevronRight,
-  X,
-  Plus,
-} from "lucide-react";
-import { Category } from "../../types";
+import { Menu, Sun, Moon, Search, Shield, LayoutDashboard } from "lucide-react";
+import type { Category } from "../../types";
 import { publicApi } from "../../lib/api"; // Import publicApi for categories
 
 interface HeaderProps {
@@ -35,7 +24,7 @@ const Header: React.FC<HeaderProps> = () => {
     setCurrentCategory,
   } = useLayout();
   const [categories, setCategories] = useState<Category[]>([]);
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
 
   useEffect(() => {
     const fetchCategories = async () => {

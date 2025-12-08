@@ -3,26 +3,14 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { useLayout } from "../../context/LayoutContext";
 import { t } from "../../lib/translations";
-import {
-  Menu,
-  X,
-  Shield,
-  LayoutDashboard,
-  LogOut,
-  ChevronRight,
-} from "lucide-react";
-import { Category } from "../../types";
+import { X, Shield, LayoutDashboard, LogOut, ChevronRight } from "lucide-react";
+import type { Category } from "../../types";
 import { publicApi } from "../../lib/api";
 
 const MobileSidebar: React.FC = () => {
   const { user, isAuthenticated, logout } = useAuth();
-  const {
-    language,
-    isSidebarOpen,
-    toggleSidebar,
-    currentCategory,
-    setCurrentCategory,
-  } = useLayout();
+  const { language, isSidebarOpen, toggleSidebar, setCurrentCategory } =
+    useLayout();
   const [categories, setCategories] = React.useState<Category[]>([]);
 
   React.useEffect(() => {

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useLayout } from "../../context/LayoutContext";
 import { adminApi } from "../../lib/api";
 import { t } from "../../lib/translations";
-import { Inbox, FileText, Download, Loader } from "lucide-react";
+import { Inbox, FileText, Loader } from "lucide-react";
 import { showToastMsg, formatTimestamp, escapeHtml } from "../../lib/utils";
 
 const Submissions: React.FC = () => {

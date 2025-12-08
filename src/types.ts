@@ -16,8 +16,14 @@ export interface Article {
   section_id: string | null;
   category_id: string | null;
   title: string;
+  title_bn?: string;
+  title_en?: string;
   summary: string;
+  summary_bn?: string;
+  summary_en?: string;
   content: string;
+  content_bn?: string;
+  content_en?: string;
   readTime: string;
   image: string;
   published_at: string; // ISO date string
@@ -35,13 +41,19 @@ export interface AdminArticle {
   id: string;
   title_bn?: string;
   title_en?: string;
-  title: string;
+  title?: string;
+  summary_bn?: string;
+  summary_en?: string;
+  content_bn?: string;
+  content_en?: string;
   status: "published" | "draft" | "archived";
   image: string;
-  created_at: string;
-  published_at: string;
+  created_at?: string;
+  published_at?: string;
   category_id?: string;
-  category: string; // The translated category name
+  section_id?: string;
+  category?: string; // The translated category name
+  allow_submissions?: boolean;
 }
 
 export interface Section {

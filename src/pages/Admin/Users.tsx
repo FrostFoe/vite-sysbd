@@ -2,10 +2,13 @@ import React, { useState, useEffect, useCallback } from "react";
 import { useLayout } from "../../context/LayoutContext";
 import { adminApi } from "../../lib/api";
 import { t } from "../../lib/translations";
-import { User, Ban, CheckCircle, Loader, AlertCircle } from "lucide-react";
+import { Ban, CheckCircle, Loader, AlertCircle } from "lucide-react";
 import { showToastMsg } from "../../lib/utils";
 
-interface AdminUser extends User {
+interface AdminUser {
+  id: number;
+  email: string;
+  role: "admin" | "user";
   is_muted: number | null;
   reason: string | null;
   muted_at: string | null;
@@ -14,7 +17,7 @@ interface AdminUser extends User {
 
 const Users: React.FC = () => {
   const { language } = useLayout();
-  const [users, setUsers] = useState<any[]>([]); // Use any temporarily or define AdminUser properly
+  const [users, setUsers] = useState<AdminUser[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [muteModalOpen, setMuteModalOpen] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
@@ -26,7 +29,7 @@ const Users: React.FC = () => {
     try {
       const response = await adminApi.getUsers();
       if (response.success && response.users) {
-        setUsers(response.users);
+        setUsers(response.users as unknown as AdminUser[]);
       } else {
         showToastMsg(response.error || "Failed to fetch users", "error");
       }

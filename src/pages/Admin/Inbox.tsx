@@ -3,8 +3,8 @@ import { useAuth } from "../../context/AuthContext";
 import { useLayout } from "../../context/LayoutContext";
 import { t } from "../../lib/translations";
 import { adminApi } from "../../lib/api";
-import { Conversation, Message } from "../../types";
-import { Loader, User, Send, MessageCircle, Info, Menu } from "lucide-react";
+import type { Conversation, Message } from "../../types";
+import { Loader, Send, MessageCircle, Menu, ArrowLeft } from "lucide-react";
 import { formatTimestamp, escapeHtml, showToastMsg } from "../../lib/utils";
 import { Link } from "react-router-dom";
 
