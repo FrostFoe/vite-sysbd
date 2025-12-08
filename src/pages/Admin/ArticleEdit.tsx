@@ -295,7 +295,7 @@ const ArticleEdit: React.FC = () => {
                 onChange={(e) =>
                   setArticle((prev) => ({ ...prev, title_en: e.target.value }))
                 }
-                className="w-full p-3 rounded-lg border border-border-color bg-card focus:border-bbcRed outline-none"
+                className="w-full p-3 rounded-lg border border-border-color bg-card focus:border-bbcRed outline-none font-hind"
                 placeholder={t("enter_article_title_en", language)}
               />
             </div>
@@ -334,7 +334,7 @@ const ArticleEdit: React.FC = () => {
                     summary_en: e.target.value,
                   }))
                 }
-                className="w-full p-3 rounded-lg border border-border-color bg-card focus:border-bbcRed outline-none"
+                className="w-full p-3 rounded-lg border border-border-color bg-card focus:border-bbcRed outline-none font-hind"
                 placeholder={t("brief_summary_en", language)}
               ></textarea>
             </div>
@@ -352,7 +352,7 @@ const ArticleEdit: React.FC = () => {
                 }}
                 placeholder={t("write_in_bengali", language)}
                 height="400px"
-                className="rounded-lg border border-border-color"
+                className="w-full rounded-lg border border-border-color bg-card focus:border-bbcRed"
               />
             </div>
 
@@ -368,7 +368,7 @@ const ArticleEdit: React.FC = () => {
                 }}
                 placeholder={t("write_in_english", language)}
                 height="400px"
-                className="rounded-lg border border-border-color"
+                className="w-full rounded-lg border border-border-color bg-card focus:border-bbcRed"
               />
             </div>
           </div>

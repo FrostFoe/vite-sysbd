@@ -109,10 +109,11 @@ try {
     // Set proper permissions
     chmod($uploadPath, 0644);
 
-    // Generate public URL
-    $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
-    $host = $_SERVER['HTTP_HOST'];
-    $publicUrl = $protocol . $host . "/assets/uploads/" . $type . "/" . $uniqueName;
+    // Generate relative URL (better for portability)
+    // Note: The directory is plural (images/videos) but the type is singular (image/video)
+    // We need to map the type to the directory name for the URL
+    $urlDir = ($type === 'image') ? 'images' : 'videos';
+    $publicUrl = "/assets/uploads/" . $urlDir . "/" . $uniqueName;
 
     // Return success response
     http_response_code(200);

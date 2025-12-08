@@ -53,8 +53,8 @@ CREATE TABLE IF NOT EXISTS `articles` (
   `summary_bn` text,
   `title_en` varchar(255) DEFAULT NULL,
   `summary_en` text,
-    `content_bn` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-    `content_en` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+    `content_bn` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+    `content_en` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
     `read_time_bn` varchar(50) DEFAULT NULL,
     `read_time_en` varchar(50) DEFAULT NULL,
 
@@ -176,5 +176,44 @@ CREATE TABLE IF NOT EXISTS `documents` (
   KEY `article_id` (`article_id`),
   CONSTRAINT `fk_documents_article` FOREIGN KEY (`article_id`) REFERENCES `articles` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Performance Indexes for BreachTimes Database
+
+-- Indexes for articles table - critical for content retrieval
+ALTER TABLE articles ADD INDEX idx_status_published_at (status, published_at DESC);
+ALTER TABLE articles ADD INDEX idx_category_status (category_id, status);
+ALTER TABLE articles ADD INDEX idx_section_status (section_id, status);
+ALTER TABLE articles ADD INDEX idx_status_created_at (status, created_at DESC);
+
+-- Indexes for comments table - critical for comment loading
+ALTER TABLE comments ADD INDEX idx_article_parent_time (article_id, parent_comment_id, created_at DESC);
+ALTER TABLE comments ADD INDEX idx_article_created_at (article_id, created_at DESC);
+
+-- Indexes for comment_votes table - needed for sorting comments by helpfulness
+ALTER TABLE comment_votes ADD INDEX idx_comment_type (comment_id, vote_type);
+
+-- Indexes for documents table
+ALTER TABLE documents ADD INDEX idx_article_sort (article_id, sort_order ASC);
+
+-- Indexes for categories and sections (lookup tables)
+ALTER TABLE categories ADD INDEX idx_id (id);
+ALTER TABLE sections ADD INDEX idx_sort_order (sort_order ASC);
+ALTER TABLE sections ADD INDEX idx_category (associated_category);
+
+-- Indexes for search functionality
+ALTER TABLE articles ADD INDEX idx_title_content (title_bn(100), title_en(100));
+
+-- Indexes for user-related tables
+ALTER TABLE users ADD INDEX idx_email (email);
+ALTER TABLE users ADD INDEX idx_role (role);
+
+-- Index for search performance (fulltext)
+-- For TEXT columns in InnoDB, specify prefix length for FULLTEXT indexes
+ALTER TABLE articles ADD FULLTEXT idx_ft_title_bn (title_bn(255));
+ALTER TABLE articles ADD FULLTEXT idx_ft_summary_bn (summary_bn(500));
+ALTER TABLE articles ADD FULLTEXT idx_ft_content_bn (content_bn(1000));
+ALTER TABLE articles ADD FULLTEXT idx_ft_title_en (title_en(255));
+ALTER TABLE articles ADD FULLTEXT idx_ft_summary_en (summary_en(500));
+ALTER TABLE articles ADD FULLTEXT idx_ft_content_en (content_en(1000));
 
 COMMIT;

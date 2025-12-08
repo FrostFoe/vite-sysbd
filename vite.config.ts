@@ -12,6 +12,18 @@ export default defineConfig({
       },
     }),
   ],
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:8000',
+        changeOrigin: true,
+      },
+      '/assets': {
+        target: 'http://localhost:8000',
+        changeOrigin: true,
+      },
+    },
+  },
   build: {
     rollupOptions: {
       output: {
@@ -49,17 +61,5 @@ export default defineConfig({
     },
     // Optimize for smaller bundle size
     target: 'es2020',
-  },
-  server: {
-    proxy: {
-      "/api": {
-        target: "http://localhost:8000",
-        changeOrigin: true,
-      },
-      "/assets/uploads": {
-        target: "http://localhost:8000",
-        changeOrigin: true,
-      },
-    },
   },
 });

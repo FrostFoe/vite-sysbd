@@ -54,7 +54,7 @@ const CategoryModal: React.FC<{
               onChange={(e) => setFormData({ ...formData, id: e.target.value })}
               required
               readOnly={!!category?.id}
-              className="w-full p-2 rounded border border-border-color bg-muted-bg"
+              className="w-full p-3 rounded-lg border border-border-color bg-card focus:border-bbcRed outline-none"
             />
           </div>
           <div>
@@ -68,7 +68,7 @@ const CategoryModal: React.FC<{
                 setFormData({ ...formData, title_bn: e.target.value })
               }
               required
-              className="w-full p-2 rounded border border-border-color bg-muted-bg"
+              className="w-full p-3 rounded-lg border border-border-color bg-card focus:border-bbcRed outline-none font-hind"
             />
           </div>
           <div>
@@ -82,7 +82,7 @@ const CategoryModal: React.FC<{
                 setFormData({ ...formData, title_en: e.target.value })
               }
               required
-              className="w-full p-2 rounded border border-border-color bg-muted-bg"
+              className="w-full p-3 rounded-lg border border-border-color bg-card focus:border-bbcRed outline-none font-hind"
             />
           </div>
           <div>
@@ -101,13 +101,13 @@ const CategoryModal: React.FC<{
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-sm font-bold text-muted-text hover:text-card-text"
+              className="px-4 py-2 text-sm font-bold text-muted-text hover:text-card-text hover:bg-muted-bg rounded-lg"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-4 py-2 bg-bbcRed text-white rounded-lg font-bold text-sm"
+              className="px-4 py-2 bg-bbcRed text-white rounded-lg font-bold text-sm hover:opacity-90 transition-opacity"
             >
               Save
             </button>

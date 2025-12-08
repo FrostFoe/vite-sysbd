@@ -11,12 +11,13 @@ if (mb_strlen($query) < 2) {
     exit();
 }
 
-// Search in specific language columns
+// Search in specific language columns using FULLTEXT indexes
 $titleCol = "title_{$lang}";
 $summaryCol = "summary_{$lang}";
+$contentCol = "content_{$lang}";
 $readTimeCol = "read_time_{$lang}";
 
-// Optimized search with JOIN to get category names in one query
+// Optimized search using FULLTEXT indexes with MATCH/AGAINST for better performance and relevance
 $sql = "SELECT
             a.id,
             a.{$titleCol} as title,
@@ -29,13 +30,13 @@ $sql = "SELECT
             COALESCE(c.title_{$lang}, c.title_bn) as category_title
         FROM articles a
         LEFT JOIN categories c ON a.category_id = c.id
-        WHERE (a.{$titleCol} LIKE ? OR a.{$summaryCol} LIKE ?) AND a.status = 'published'
-        ORDER BY a.published_at DESC
+        WHERE a.status = 'published'
+        AND MATCH(a.{$titleCol}, a.{$summaryCol}, a.{$contentCol}) AGAINST (? IN BOOLEAN MODE)
+        ORDER BY MATCH(a.{$titleCol}, a.{$summaryCol}, a.{$contentCol}) AGAINST (? IN BOOLEAN MODE) DESC, a.published_at DESC
         LIMIT 20";
 
 $stmt = $pdo->prepare($sql);
-$searchTerm = "%" . $query . "%";
-$stmt->execute([$searchTerm, $searchTerm]);
+$stmt->execute([$query, $query]);
 $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Process results

@@ -416,7 +416,7 @@ textarea:focus-visible {
 }
 
 .custom-dropdown-button {
-  @apply w-full flex items-center justify-between px-3 py-2 text-sm bg-card text-card-text border border-border-color rounded-lg cursor-pointer transition-colors hover:border-bbcRed focus:outline-none focus:border-bbcRed;
+  @apply w-full flex items-center justify-between px-3 py-3 text-sm bg-card text-card-text border border-border-color rounded-lg cursor-pointer transition-colors hover:border-bbcRed focus:outline-none focus:border-bbcRed;
 }
 
 .custom-dropdown-button.open {

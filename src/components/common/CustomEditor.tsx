@@ -130,6 +130,11 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
     onUpdate: ({ editor }) => {
       onChange(editor.getHTML());
     },
+    editorProps: {
+      attributes: {
+        class: 'focus:outline-none min-h-full p-3'
+      }
+    }
   });
 
   // Handle drag and drop
@@ -202,13 +207,13 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
   return (
     <div className={`custom-editor-wrapper ${className}`}>
       {/* Toolbar */}
-      <div className="border-b border-border-color bg-gray-50 p-2 rounded-t-lg flex flex-wrap gap-1">
+      <div className="border-b border-border-color bg-muted-bg p-2 rounded-t-lg flex flex-wrap gap-1">
         <button
           onClick={() => editor.chain().focus().toggleBold().run()}
           className={`px-3 py-1 rounded text-sm font-medium ${
             editor.isActive("bold")
-              ? "bg-primary-color text-white"
-              : "bg-white border border-border-color hover:bg-gray-100"
+              ? "bg-bbcRed text-white"
+              : "bg-card border border-border-color hover:bg-muted-bg"
           }`}
           title="Bold (Ctrl+B)"
         >
@@ -219,8 +224,8 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
           onClick={() => editor.chain().focus().toggleItalic().run()}
           className={`px-3 py-1 rounded text-sm font-medium ${
             editor.isActive("italic")
-              ? "bg-primary-color text-white"
-              : "bg-white border border-border-color hover:bg-gray-100"
+              ? "bg-bbcRed text-white"
+              : "bg-card border border-border-color hover:bg-muted-bg"
           }`}
           title="Italic (Ctrl+I)"
         >
@@ -231,8 +236,8 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
           onClick={() => editor.chain().focus().toggleStrike().run()}
           className={`px-3 py-1 rounded text-sm font-medium ${
             editor.isActive("strike")
-              ? "bg-primary-color text-white"
-              : "bg-white border border-border-color hover:bg-gray-100"
+              ? "bg-bbcRed text-white"
+              : "bg-card border border-border-color hover:bg-muted-bg"
           }`}
           title="Strikethrough"
         >
@@ -247,8 +252,8 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
           }
           className={`px-3 py-1 rounded text-sm font-medium ${
             editor.isActive("heading", { level: 1 })
-              ? "bg-primary-color text-white"
-              : "bg-white border border-border-color hover:bg-gray-100"
+              ? "bg-bbcRed text-white"
+              : "bg-card border border-border-color hover:bg-muted-bg"
           }`}
           title="Heading 1"
         >
@@ -261,8 +266,8 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
           }
           className={`px-3 py-1 rounded text-sm font-medium ${
             editor.isActive("heading", { level: 2 })
-              ? "bg-primary-color text-white"
-              : "bg-white border border-border-color hover:bg-gray-100"
+              ? "bg-bbcRed text-white"
+              : "bg-card border border-border-color hover:bg-muted-bg"
           }`}
           title="Heading 2"
         >
@@ -273,8 +278,8 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
           onClick={() => editor.chain().focus().toggleBulletList().run()}
           className={`px-3 py-1 rounded text-sm font-medium ${
             editor.isActive("bulletList")
-              ? "bg-primary-color text-white"
-              : "bg-white border border-border-color hover:bg-gray-100"
+              ? "bg-bbcRed text-white"
+              : "bg-card border border-border-color hover:bg-muted-bg"
           }`}
           title="Bullet List"
         >
@@ -285,8 +290,8 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
           onClick={() => editor.chain().focus().toggleOrderedList().run()}
           className={`px-3 py-1 rounded text-sm font-medium ${
             editor.isActive("orderedList")
-              ? "bg-primary-color text-white"
-              : "bg-white border border-border-color hover:bg-gray-100"
+              ? "bg-bbcRed text-white"
+              : "bg-card border border-border-color hover:bg-muted-bg"
           }`}
           title="Ordered List"
         >
@@ -297,7 +302,7 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
 
         <button
           onClick={handleImageButtonClick}
-          className="px-3 py-1 rounded text-sm font-medium bg-white border border-border-color hover:bg-gray-100 flex items-center gap-1"
+          className="px-3 py-1 rounded text-sm font-medium bg-card border border-border-color hover:bg-muted-bg flex items-center gap-1"
           title="Insert Image"
         >
           <Upload size={16} /> Image
@@ -305,7 +310,7 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
 
         <button
           onClick={handleVideoButtonClick}
-          className="px-3 py-1 rounded text-sm font-medium bg-white border border-border-color hover:bg-gray-100 flex items-center gap-1"
+          className="px-3 py-1 rounded text-sm font-medium bg-card border border-border-color hover:bg-muted-bg flex items-center gap-1"
           title="Insert Video"
         >
           <Video size={16} /> Video
@@ -315,8 +320,8 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
           onClick={() => editor.chain().focus().toggleBlockquote().run()}
           className={`px-3 py-1 rounded text-sm font-medium ${
             editor.isActive("blockquote")
-              ? "bg-primary-color text-white"
-              : "bg-white border border-border-color hover:bg-gray-100"
+              ? "bg-bbcRed text-white"
+              : "bg-card border border-border-color hover:bg-muted-bg"
           }`}
           title="Blockquote"
         >
@@ -325,7 +330,7 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
 
         <button
           onClick={() => editor.chain().focus().setHorizontalRule().run()}
-          className="px-3 py-1 rounded text-sm font-medium bg-white border border-border-color hover:bg-gray-100"
+          className="px-3 py-1 rounded text-sm font-medium bg-card border border-border-color hover:bg-muted-bg"
           title="Horizontal Rule"
         >
           —
@@ -335,7 +340,7 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
 
         <button
           onClick={() => editor.chain().focus().undo().run()}
-          className="px-3 py-1 rounded text-sm font-medium bg-white border border-border-color hover:bg-gray-100"
+          className="px-3 py-1 rounded text-sm font-medium bg-card border border-border-color hover:bg-muted-bg"
           title="Undo"
         >
           ↶
@@ -343,7 +348,7 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
 
         <button
           onClick={() => editor.chain().focus().redo().run()}
-          className="px-3 py-1 rounded text-sm font-medium bg-white border border-border-color hover:bg-gray-100"
+          className="px-3 py-1 rounded text-sm font-medium bg-card border border-border-color hover:bg-muted-bg"
           title="Redo"
         >
           ↷
@@ -353,7 +358,7 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
       {/* Editor Content Area */}
       <div
         style={{ height, minHeight: height }}
-        className="border border-t-0 border-border-color rounded-b-lg overflow-y-auto bg-white p-3 prose prose-sm max-w-none"
+        className="border border-t-0 border-border-color rounded-b-lg overflow-y-auto bg-card p-3 prose prose-sm max-w-none text-card-text"
         onDrop={handleDrop}
         onDragOver={(e) => {
           e.preventDefault();

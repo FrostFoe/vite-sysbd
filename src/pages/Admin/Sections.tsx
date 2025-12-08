@@ -77,7 +77,7 @@ const SectionModal: React.FC<{
               onChange={(e) => setFormData({ ...formData, id: e.target.value })}
               required
               readOnly={!!section?.id}
-              className="w-full p-2 rounded border border-border-color bg-muted-bg"
+              className="w-full p-3 rounded-lg border border-border-color bg-card focus:border-bbcRed outline-none"
             />
           </div>
           <div>
@@ -91,7 +91,7 @@ const SectionModal: React.FC<{
                 setFormData({ ...formData, title_bn: e.target.value })
               }
               required
-              className="w-full p-2 rounded border border-border-color bg-muted-bg"
+              className="w-full p-3 rounded-lg border border-border-color bg-card focus:border-bbcRed outline-none font-hind"
             />
           </div>
           <div>
@@ -105,11 +105,11 @@ const SectionModal: React.FC<{
                 setFormData({ ...formData, title_en: e.target.value })
               }
               required
-              className="w-full p-2 rounded border border-border-color bg-muted-bg"
+              className="w-full p-3 rounded-lg border border-border-color bg-card focus:border-bbcRed outline-none font-hind"
             />
           </div>
           <div>
-            <label className="block text-sm font-bold mb-2">Type</label>
+            <label className="block text-sm font-bold mb-1">Type</label>
             <CustomDropdown
               value={formData.type || "grid"}
               onChange={(value) =>
@@ -139,20 +139,20 @@ const SectionModal: React.FC<{
                   sort_order: parseInt(e.target.value, 10),
                 })
               }
-              className="w-full p-2 rounded border border-border-color bg-muted-bg"
+              className="w-full p-3 rounded-lg border border-border-color bg-card focus:border-bbcRed outline-none"
             />
           </div>
           <div className="flex justify-end gap-2 mt-6">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-sm font-bold text-muted-text hover:text-card-text"
+              className="px-4 py-2 text-sm font-bold text-muted-text hover:text-card-text hover:bg-muted-bg rounded-lg"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-4 py-2 bg-bbcRed text-white rounded-lg font-bold text-sm"
+              className="px-4 py-2 bg-bbcRed text-white rounded-lg font-bold text-sm hover:opacity-90 transition-opacity"
             >
               Save
             </button>

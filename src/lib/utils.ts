@@ -21,7 +21,7 @@ export function sanitizeHtml(html: string | null | undefined): string {
   div.innerHTML = html;
   
   // List of allowed tags
-  const allowedTags = ["p", "br", "strong", "em", "b", "i", "u", "a", "ul", "li", "ol", "h1", "h2", "h3", "blockquote"];
+  const allowedTags = ["p", "br", "strong", "em", "b", "i", "u", "a", "ul", "li", "ol", "h1", "h2", "h3", "blockquote", "img", "video", "source", "div", "span"];
   
   // Recursive function to remove disallowed tags
   const sanitize = (node: Node): void => {
@@ -41,7 +41,8 @@ export function sanitizeHtml(html: string | null | undefined): string {
         } else {
           // Remove dangerous attributes from allowed tags
           Array.from(element.attributes).forEach((attr) => {
-            if (attr.name.toLowerCase().startsWith("on")) {
+            const attrName = attr.name.toLowerCase();
+            if (attrName.startsWith("on") || attrName.startsWith("javascript")) {
               element.removeAttribute(attr.name);
             }
           });

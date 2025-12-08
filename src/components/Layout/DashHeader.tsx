@@ -1,7 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import { Menu, Plus } from "lucide-react";
+import { useLayout } from "../../context/LayoutContext";
+import { Menu, Plus, Sun, Moon } from "lucide-react";
 
 interface DashHeaderProps {
   type: "admin" | "dashboard";
@@ -10,6 +11,7 @@ interface DashHeaderProps {
 
 const DashHeader: React.FC<DashHeaderProps> = ({ type, toggleSidebar }) => {
   const { user } = useAuth();
+  const { theme, toggleTheme } = useLayout(); // Get the theme and toggle function
   const isAdmin = type === "admin";
 
   const userName = user?.email.split("@")[0] || "User";
@@ -42,6 +44,18 @@ const DashHeader: React.FC<DashHeaderProps> = ({ type, toggleSidebar }) => {
       </div>
 
       <div className="flex items-center gap-2 md:gap-4 flex-shrink-0">
+        {/* Theme Toggle Button */}
+        <button
+          onClick={toggleTheme}
+          className="p-2 md:p-2.5 rounded-full hover:bg-muted-bg text-muted-text dark:text-yellow-400 transition-all active:scale-90 theme-toggle-btn"
+        >
+          {theme === "dark" ? (
+            <Moon className="w-5 h-5" />
+          ) : (
+            <Sun className="w-5 h-5" />
+          )}
+        </button>
+
         {isAdmin ? (
           <Link
             to="/admin/articles/new"
