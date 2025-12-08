@@ -21,13 +21,6 @@ export {
   createImageSkeleton,
 } from "./imageOptimization";
 
-// Logging
-export { default as LoggingService, logger } from "./logging";
-
-// Performance Monitoring
-export { performanceMonitor, usePerformanceMonitor, monitorWebVitals } from "./performanceMonitoring";
-export type { PerformanceMetrics } from "./performanceMonitoring";
-
 // Other Utilities
 export * from "./translations";
 export * from "./utils";

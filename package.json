@@ -10,6 +10,8 @@
     "preview": "vite preview",
     "format": "prettier --write .",
     "server": "/usr/bin/php -S localhost:8000 -t backend/public",
+    "migrate": "mysql -h 127.0.0.1 -u root -prootpass breachtimes < backend/src/database/database.sql",
+    "db:reset": "mysql -h 127.0.0.1 -u root -prootpass -e \"DROP DATABASE IF EXISTS breachtimes; CREATE DATABASE breachtimes;\"",
     "db:start": "sudo service mysql start",
     "seed": "/usr/bin/php backend/src/database/seed.php",
     "push": "git add . && git commit -m 'update' && git push"
