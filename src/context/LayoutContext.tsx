@@ -1,0 +1,108 @@
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+  useCallback,
+} from "react";
+
+interface LayoutContextType {
+  theme: "light" | "dark";
+  toggleTheme: () => void;
+  language: "en" | "bn";
+  toggleLanguage: () => void;
+  isSidebarOpen: boolean;
+  toggleSidebar: (open?: boolean) => void;
+  isSearchOpen: boolean;
+  toggleSearch: (open?: boolean) => void;
+  currentCategory: string;
+  setCurrentCategory: (category: string) => void;
+}
+
+const LayoutContext = createContext<LayoutContextType | undefined>(undefined);
+
+export const LayoutProvider = ({ children }: { children: ReactNode }) => {
+  const [theme, setTheme] = useState<"light" | "dark">(() => {
+    const savedTheme = localStorage.getItem("breachtimes-theme");
+    return savedTheme === "dark" ||
+      (!savedTheme && window.matchMedia("(prefers-color-scheme: dark)").matches)
+      ? "dark"
+      : "light";
+  });
+
+  const [language, setLanguage] = useState<"en" | "bn">(() => {
+    const savedLang = localStorage.getItem("breachtimes-lang");
+    const urlParams = new URLSearchParams(window.location.search);
+    const langParam = urlParams.get("lang");
+    return langParam === "en" || langParam === "bn"
+      ? langParam
+      : savedLang === "en" || savedLang === "bn"
+        ? savedLang
+        : "bn";
+  });
+
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [currentCategory, setCurrentCategory] = useState<string>(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get("category") || "home";
+  });
+
+  useEffect(() => {
+    document.documentElement.classList.toggle("dark", theme === "dark");
+    localStorage.setItem("breachtimes-theme", theme);
+  }, [theme]);
+
+  useEffect(() => {
+    localStorage.setItem("breachtimes-lang", language);
+    document.documentElement.lang = language;
+    // Update URL parameter without reload
+    const urlParams = new URLSearchParams(window.location.search);
+    urlParams.set("lang", language);
+    window.history.replaceState({}, "", `?${urlParams.toString()}`);
+  }, [language]);
+
+  const toggleTheme = useCallback(() => {
+    setTheme((prevTheme) => (prevTheme === "light" ? "dark" : "light"));
+  }, []);
+
+  const toggleLanguage = useCallback(() => {
+    setLanguage((prevLang) => (prevLang === "bn" ? "en" : "bn"));
+  }, []);
+
+  const toggleSidebar = useCallback((open?: boolean) => {
+    setIsSidebarOpen((prev) => (open !== undefined ? open : !prev));
+  }, []);
+
+  const toggleSearch = useCallback((open?: boolean) => {
+    setIsSearchOpen((prev) => (open !== undefined ? open : !prev));
+  }, []);
+
+  return (
+    <LayoutContext.Provider
+      value={{
+        theme,
+        toggleTheme,
+        language,
+        toggleLanguage,
+        isSidebarOpen,
+        toggleSidebar,
+        isSearchOpen,
+        toggleSearch,
+        currentCategory,
+        setCurrentCategory,
+      }}
+    >
+      {children}
+    </LayoutContext.Provider>
+  );
+};
+
+export const useLayout = () => {
+  const context = useContext(LayoutContext);
+  if (context === undefined) {
+    throw new Error("useLayout must be used within a LayoutProvider");
+  }
+  return context;
+};

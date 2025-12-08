@@ -1,0 +1,19 @@
+# Documents subdirectory configuration
+Options -Indexes
+AddType application/pdf .pdf
+AddType application/zip .zip
+AddType application/msword .doc
+AddType application/vnd.openxmlformats-officedocument.wordprocessingml.document .docx
+AddType text/plain .txt
+
+# Force download for documents
+<FilesMatch "\\.(pdf|zip|doc|docx|txt|xls|xlsx|ppt|pptx)$">
+    Header set Content-Disposition "attachment"
+    Header set Cache-Control "max-age=2592000, public"
+</FilesMatch>
+
+# Deny PHP execution
+<FilesMatch "\\.php$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>

@@ -1,0 +1,18 @@
+# Media subdirectory configuration
+Options -Indexes
+AddType video/mp4 .mp4
+AddType video/webm .webm
+AddType audio/mpeg .mp3
+AddType audio/wav .wav
+AddType audio/ogg .ogg
+
+# Cache media files
+<FilesMatch "\\.(mp4|webm|mp3|wav|ogg)$">
+    Header set Cache-Control "max-age=2592000, public"
+</FilesMatch>
+
+# Deny PHP execution
+<FilesMatch "\\.php$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
