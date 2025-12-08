@@ -186,7 +186,6 @@ const ArticleEdit: React.FC = () => {
     async (e: React.FormEvent) => {
       e.preventDefault();
       setIsSaving(true);
-      setAutosaveMessage("");
 
       const formData = new FormData();
       const articleId = article.id || `art_${Date.now()}`;
@@ -540,8 +539,8 @@ const ArticleEdit: React.FC = () => {
                       value: sec.id,
                       label:
                         language === "bn"
-                          ? sec.title_bn || sec.title_en
-                          : sec.title_en || sec.title_bn,
+                          ? sec.title || sec.title
+                          : sec.title || sec.title,
                     })),
                   ]}
                 />

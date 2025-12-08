@@ -85,7 +85,7 @@ const MobileSidebar: React.FC = () => {
                   <Link
                     to="/admin"
                     onClick={() => toggleSidebar(false)}
-                    className="w-full py-3 bg-bbcRed text-white rounded-xl font-bold flex items-center justify-center gap-2 shadow-lg shadow-bbcRed/20 active:scale-95"
+                    className="w-full py-3 bg-bbcRed text-white rounded-xl font-bold flex items-center justify-center gap-2 shadow-lg shadow-bbcRed/20 hover:shadow-lg hover:shadow-bbcRed/40 hover:bg-opacity-90 hover:-translate-y-0.5 transition-all active:scale-95"
                   >
                     <Shield className="w-5 h-5" /> {t("admin_panel", language)}
                   </Link>
@@ -93,7 +93,7 @@ const MobileSidebar: React.FC = () => {
                   <Link
                     to="/dashboard"
                     onClick={() => toggleSidebar(false)}
-                    className="w-full py-3 bg-bbcRed text-white rounded-xl font-bold flex items-center justify-center gap-2 shadow-lg shadow-bbcRed/20 active:scale-95"
+                    className="w-full py-3 bg-bbcRed text-white rounded-xl font-bold flex items-center justify-center gap-2 shadow-lg shadow-bbcRed/20 hover:shadow-lg hover:shadow-bbcRed/40 hover:bg-opacity-90 hover:-translate-y-0.5 transition-all active:scale-95"
                   >
                     <LayoutDashboard className="w-5 h-5" />{" "}
                     {t("dashboard", language)}
@@ -101,7 +101,7 @@ const MobileSidebar: React.FC = () => {
                 )}
                 <button
                   onClick={handleLogout}
-                  className="w-full py-3 bg-muted-bg text-bbcDark dark:text-white rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-600 transition-colors active:scale-95"
+                  className="w-full py-3 bg-muted-bg text-bbcDark dark:text-white rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-600 hover:shadow-md hover:-translate-y-0.5 transition-all active:scale-95"
                 >
                   <LogOut className="w-5 h-5" /> {t("sign_out", language)}
                 </button>
@@ -111,14 +111,14 @@ const MobileSidebar: React.FC = () => {
                 <Link
                   to="/login"
                   onClick={() => toggleSidebar(false)}
-                  className="w-full py-3 bg-bbcDark dark:bg-white text-white dark:text-black rounded-xl font-bold shadow-lg active:scale-95 text-center"
+                  className="w-full py-3 bg-bbcDark dark:bg-white text-white dark:text-black rounded-xl font-bold shadow-lg hover:shadow-lg hover:bg-opacity-90 dark:hover:bg-opacity-90 hover:-translate-y-0.5 transition-all active:scale-95 text-center"
                 >
                   {t("sign_in", language)}
                 </Link>
                 <Link
                   to="/register"
                   onClick={() => toggleSidebar(false)}
-                  className="w-full py-3 border border-bbcDark dark:border-white text-bbcDark dark:text-white rounded-xl font-bold hover:bg-muted-bg transition-colors active:scale-95 text-center"
+                  className="w-full py-3 border border-bbcDark dark:border-white text-bbcDark dark:text-white rounded-xl font-bold hover:bg-muted-bg dark:hover:bg-gray-800/50 hover:shadow-md hover:-translate-y-0.5 transition-all active:scale-95 text-center"
                 >
                   {t("register", language)}
                 </Link>

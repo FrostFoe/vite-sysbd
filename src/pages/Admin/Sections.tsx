@@ -52,7 +52,7 @@ const SectionModal: React.FC<{
 
   // Reset form data when modal opens with different section
   useEffect(() => {
-    setFormData(initialFormData);
+    setFormData(initialFormData as Partial<AdminSection>);
   }, [initialFormData]);
 
   const handleSubmit = (e: FormEvent) => {

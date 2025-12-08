@@ -78,10 +78,10 @@ export function showToastMsg(
   // Re-render lucide icons if the library is available globally
   if (
     typeof window !== "undefined" &&
-    window.lucide &&
-    typeof window.lucide.createIcons === "function"
+    (window as any).lucide &&
+    typeof (window as any).lucide.createIcons === "function"
   ) {
-    window.lucide.createIcons();
+    (window as any).lucide.createIcons();
   }
   setTimeout(() => toast.remove(), 3000);
 }
