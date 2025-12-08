@@ -1,12 +1,12 @@
 <?php
-session_start();
 require_once __DIR__ . "/../config/db.php";
+require_once __DIR__ . "/../lib/CacheManager.php";
+require_once "api_header.php";
 
-header("Content-Type: application/json");
+session_start();
 
 if (!isset($_SESSION["user_id"])) {
-    http_response_code(401);
-    echo json_encode(["success" => false, "error" => "Unauthorized"]);
+    send_response(["success" => false, "error" => "Unauthorized"], 401);
     exit();
 }
 
@@ -15,15 +15,14 @@ $isAdmin = $_SESSION["user_role"] === "admin";
 $otherUserId = $_GET["user_id"] ?? null;
 
 if (!$otherUserId) {
-    http_response_code(400);
-    echo json_encode(["success" => false, "error" => "Missing user_id"]);
+    send_response(["success" => false, "error" => "Missing user_id"], 400);
     exit();
 }
 
 try {
     // Fetch all messages between current user and the other user
     $stmt = $pdo->prepare("
-        SELECT 
+        SELECT
             id,
             sender_id,
             sender_type,
@@ -31,7 +30,7 @@ try {
             content,
             created_at
         FROM messages
-        WHERE (sender_id = ? AND recipient_id = ?) 
+        WHERE (sender_id = ? AND recipient_id = ?)
            OR (sender_id = ? AND recipient_id = ?)
         ORDER BY created_at ASC
         LIMIT 500
@@ -40,13 +39,12 @@ try {
     $stmt->execute([$userId, $otherUserId, $otherUserId, $userId]);
     $messages = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    echo json_encode([
+    send_response([
         "success" => true,
         "messages" => $messages,
         "count" => count($messages),
     ]);
 } catch (Exception $e) {
-    http_response_code(500);
-    echo json_encode(["success" => false, "error" => $e->getMessage()]);
+    send_response(["success" => false, "error" => $e->getMessage()], 500);
 }
 ?>

@@ -89,11 +89,23 @@ if ($articleRaw["category_id"]) {
 }
 $article["category"] = $categoryName;
 
-// Fetch Comments
+// Fetch Comments with pre-joined vote counts
 $commentStmt = $pdo->prepare("
-    SELECT c.id, c.text, c.created_at, c.user_name, c.user_id, c.is_pinned, c.pin_order, u.email 
-    FROM comments c 
-    LEFT JOIN users u ON c.user_id = u.id 
+    SELECT
+        c.id, c.text, c.created_at, c.user_name, c.user_id, c.is_pinned, c.pin_order,
+        u.email,
+        COALESCE(v.upvotes, 0) as upvotes,
+        COALESCE(v.downvotes, 0) as downvotes
+    FROM comments c
+    LEFT JOIN users u ON c.user_id = u.id
+    LEFT JOIN (
+        SELECT
+            comment_id,
+            SUM(CASE WHEN vote_type = 'upvote' THEN 1 ELSE 0 END) as upvotes,
+            SUM(CASE WHEN vote_type = 'downvote' THEN 1 ELSE 0 END) as downvotes
+        FROM comment_votes
+        GROUP BY comment_id
+    ) v ON c.id = v.comment_id
     WHERE c.article_id = ? AND c.parent_comment_id IS NULL
     ORDER BY c.is_pinned DESC, c.pin_order ASC, c.created_at DESC
 ");
@@ -108,22 +120,23 @@ foreach ($rawComments as $c) {
         $displayName = $parts[0];
     }
 
-    // Votes
-    $voteStmt = $pdo->prepare("
-        SELECT 
-            SUM(CASE WHEN vote_type = 'upvote' THEN 1 ELSE 0 END) as upvotes,
-            SUM(CASE WHEN vote_type = 'downvote' THEN 1 ELSE 0 END) as downvotes
-        FROM comment_votes WHERE comment_id = ?
-    ");
-    $voteStmt->execute([$c["id"]]);
-    $votes = $voteStmt->fetch(PDO::FETCH_ASSOC);
-
-    // Replies
+    // Replies with pre-joined vote counts
     $replyStmt = $pdo->prepare("
-        SELECT c.id, c.text, c.created_at, c.user_name, c.user_id, u.email 
-        FROM comments c 
-        LEFT JOIN users u ON c.user_id = u.id 
-        WHERE c.parent_comment_id = ? 
+        SELECT
+            c.id, c.text, c.created_at, c.user_name, c.user_id, u.email,
+            COALESCE(v.upvotes, 0) as upvotes,
+            COALESCE(v.downvotes, 0) as downvotes
+        FROM comments c
+        LEFT JOIN users u ON c.user_id = u.id
+        LEFT JOIN (
+            SELECT
+                comment_id,
+                SUM(CASE WHEN vote_type = 'upvote' THEN 1 ELSE 0 END) as upvotes,
+                SUM(CASE WHEN vote_type = 'downvote' THEN 1 ELSE 0 END) as downvotes
+            FROM comment_votes
+            GROUP BY comment_id
+        ) v ON c.id = v.comment_id
+        WHERE c.parent_comment_id = ?
         ORDER BY c.created_at ASC
     ");
     $replyStmt->execute([$c["id"]]);
@@ -142,6 +155,8 @@ foreach ($rawComments as $c) {
             "text" => $r["text"],
             "time" => time_ago($r["created_at"], $lang),
             "created_at" => $r["created_at"],
+            "upvotes" => (int) ($r["upvotes"] ?? 0),
+            "downvotes" => (int) ($r["downvotes"] ?? 0),
             "isAdmin" =>
                 !empty($r["email"]) && strpos($r["email"], "admin") !== false,
         ];
@@ -153,8 +168,8 @@ foreach ($rawComments as $c) {
         "text" => $c["text"],
         "time" => time_ago($c["created_at"], $lang),
         "created_at" => $c["created_at"],
-        "upvotes" => (int) ($votes["upvotes"] ?? 0),
-        "downvotes" => (int) ($votes["downvotes"] ?? 0),
+        "upvotes" => (int) $c["upvotes"],
+        "downvotes" => (int) $c["downvotes"],
         "isPinned" => (bool) $c["is_pinned"],
         "replies" => $replies,
         "userId" => $c["user_id"],

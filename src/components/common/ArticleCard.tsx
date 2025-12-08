@@ -210,4 +210,4 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
   );
 };
 
-export default ArticleCard;
+export default React.memo(ArticleCard);

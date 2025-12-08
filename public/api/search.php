@@ -16,10 +16,21 @@ $titleCol = "title_{$lang}";
 $summaryCol = "summary_{$lang}";
 $readTimeCol = "read_time_{$lang}";
 
-$sql = "SELECT id, {$titleCol} as title, {$summaryCol} as summary, image, category_id, published_at, {$readTimeCol} as read_time, is_video 
-        FROM articles 
-        WHERE ({$titleCol} LIKE ? OR {$summaryCol} LIKE ?) AND status = 'published'
-        ORDER BY published_at DESC 
+// Optimized search with JOIN to get category names in one query
+$sql = "SELECT
+            a.id,
+            a.{$titleCol} as title,
+            a.{$summaryCol} as summary,
+            a.image,
+            a.category_id,
+            a.published_at,
+            a.{$readTimeCol} as read_time,
+            a.is_video,
+            COALESCE(c.title_{$lang}, c.title_bn) as category_title
+        FROM articles a
+        LEFT JOIN categories c ON a.category_id = c.id
+        WHERE (a.{$titleCol} LIKE ? OR a.{$summaryCol} LIKE ?) AND a.status = 'published'
+        ORDER BY a.published_at DESC
         LIMIT 20";
 
 $stmt = $pdo->prepare($sql);
@@ -27,23 +38,17 @@ $searchTerm = "%" . $query . "%";
 $stmt->execute([$searchTerm, $searchTerm]);
 $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Fetch category names
+// Process results
 foreach ($results as &$article) {
     $catName = null;
-    if ($article["category_id"]) {
-        $catStmt = $pdo->prepare(
-            "SELECT title_bn, title_en FROM categories WHERE id = ?",
-        );
-        $catStmt->execute([$article["category_id"]]);
-        $catRow = $catStmt->fetch();
-        if ($catRow) {
-            $catName =
-                $lang === "en" ? $catRow["title_en"] : $catRow["title_bn"];
-        }
+    if (!empty($article["category_title"])) {
+        $catName = $article["category_title"];
     }
     $article["category"] = $catName ?? ($lang === "bn" ? "অন্যান্য" : "Other");
     $article["timestamp"] = $article["published_at"];
     $article["isVideo"] = (bool) $article["is_video"];
+    // Clean up temporary field
+    unset($article["category_title"]);
 }
 
 echo json_encode($results);

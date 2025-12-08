@@ -28,18 +28,16 @@ switch ($sort) {
         $orderBy = "c.created_at ASC";
         break;
     case "helpful":
-        $orderBy =
-            "(SELECT COUNT(*) FROM comment_votes WHERE comment_id = c.id AND vote_type = 'upvote') DESC, c.created_at DESC";
+        $orderBy = "upvotes DESC, c.created_at DESC";
         break;
     case "discussed":
-        $orderBy =
-            "(SELECT COUNT(*) FROM comments WHERE parent_comment_id = c.id) DESC, c.created_at DESC";
+        $orderBy = "reply_count DESC, c.created_at DESC";
         break;
 }
 
 // Get total count
 $countStmt = $pdo->prepare("
-    SELECT COUNT(*) as count FROM comments 
+    SELECT COUNT(*) as count FROM comments
     WHERE article_id = ? AND parent_comment_id IS NULL
 ");
 $countStmt->execute([$articleId]);
@@ -48,11 +46,32 @@ $totalCount = $countStmt->fetch(PDO::FETCH_ASSOC)["count"];
 // Update pagination with total count
 $pagination = new Pagination($page, DEFAULT_PAGE_SIZE, $totalCount);
 
-// Get comments with pagination
+// Optimized query: Get comments with pre-joined vote counts and user info
 $commentStmt = $pdo->prepare("
-    SELECT c.id, c.text, c.created_at, c.user_name, c.user_id, c.is_pinned, c.pin_order, u.email 
-    FROM comments c 
+    SELECT
+        c.id, c.text, c.created_at, c.user_name, c.user_id, c.is_pinned, c.pin_order,
+        COALESCE(u.email, '') as email,
+        COALESCE(v.upvotes, 0) as upvotes,
+        COALESCE(v.downvotes, 0) as downvotes,
+        COALESCE(r.reply_count, 0) as reply_count
+    FROM comments c
     LEFT JOIN users u ON c.user_id = u.id
+    LEFT JOIN (
+        SELECT
+            comment_id,
+            SUM(CASE WHEN vote_type = 'upvote' THEN 1 ELSE 0 END) as upvotes,
+            SUM(CASE WHEN vote_type = 'downvote' THEN 1 ELSE 0 END) as downvotes
+        FROM comment_votes
+        GROUP BY comment_id
+    ) v ON c.id = v.comment_id
+    LEFT JOIN (
+        SELECT
+            parent_comment_id,
+            COUNT(*) as reply_count
+        FROM comments
+        WHERE parent_comment_id IS NOT NULL
+        GROUP BY parent_comment_id
+    ) r ON c.id = r.parent_comment_id
     WHERE c.article_id = ? AND c.parent_comment_id IS NULL
     ORDER BY c.is_pinned DESC, c.pin_order ASC, " . $orderBy . "
     " . $pagination->getLimitClause()
@@ -69,24 +88,24 @@ foreach ($rawComments as $c) {
         $displayName = $parts[0];
     }
 
-    // Get votes for this comment
-    $voteStmt = $pdo->prepare(
-        "SELECT 
-            SUM(CASE WHEN vote_type = 'upvote' THEN 1 ELSE 0 END) as upvotes,
-            SUM(CASE WHEN vote_type = 'downvote' THEN 1 ELSE 0 END) as downvotes
-        FROM comment_votes WHERE comment_id = ?",
-    );
-    $voteStmt->execute([$c["id"]]);
-    $votes = $voteStmt->fetch(PDO::FETCH_ASSOC);
-    $upvotes = (int) ($votes["upvotes"] ?? 0);
-    $downvotes = (int) ($votes["downvotes"] ?? 0);
-
-    // Get replies for this comment
+    // Get replies for this comment with pre-joined vote counts
     $replyStmt = $pdo->prepare("
-        SELECT c.id, c.text, c.created_at, c.user_name, c.user_id, u.email 
-        FROM comments c 
-        LEFT JOIN users u ON c.user_id = u.id 
-        WHERE c.parent_comment_id = ? 
+        SELECT
+            c.id, c.text, c.created_at, c.user_name, c.user_id,
+            COALESCE(u.email, '') as email,
+            COALESCE(v.upvotes, 0) as upvotes,
+            COALESCE(v.downvotes, 0) as downvotes
+        FROM comments c
+        LEFT JOIN users u ON c.user_id = u.id
+        LEFT JOIN (
+            SELECT
+                comment_id,
+                SUM(CASE WHEN vote_type = 'upvote' THEN 1 ELSE 0 END) as upvotes,
+                SUM(CASE WHEN vote_type = 'downvote' THEN 1 ELSE 0 END) as downvotes
+            FROM comment_votes
+            GROUP BY comment_id
+        ) v ON c.id = v.comment_id
+        WHERE c.parent_comment_id = ?
         ORDER BY c.created_at ASC
     ");
     $replyStmt->execute([$c["id"]]);
@@ -100,52 +119,29 @@ foreach ($rawComments as $c) {
             $replyDisplayName = $parts[0];
         }
 
-        // Time ago helper (simplified version)
-        $timeAgo = date_diff(date_create($r["created_at"]), date_create());
-        $timeStr = "ঠিক এখন";
-        if ($timeAgo->i > 0) {
-            $timeStr = $timeAgo->i . " মিনিট আগে";
-        } elseif ($timeAgo->h > 0) {
-            $timeStr = $timeAgo->h . " ঘন্টা আগে";
-        } elseif ($timeAgo->d > 0) {
-            $timeStr = $timeAgo->d . " দিন আগে";
-        }
-
         $replies[] = [
             "id" => $r["id"],
             "user" => $replyDisplayName,
             "text" => htmlspecialchars($r["text"]),
-            "time" => $timeStr,
-            "isAdmin" =>
-                !empty($r["email"]) && strpos($r["email"], "admin") !== false,
+            "time" => time_ago($r["created_at"], $lang),
+            "upvotes" => (int)$r["upvotes"],
+            "downvotes" => (int)$r["downvotes"],
+            "isAdmin" => !empty($r["email"]) && strpos($r["email"], "admin") !== false,
         ];
-    }
-
-    // Calculate time ago (simplified)
-    $timeAgo = date_diff(date_create($c["created_at"]), date_create());
-    $timeStr = "ঠিক এখন";
-    if ($timeAgo->i > 0) {
-        $timeStr = $timeAgo->i . " মিনিট আগে";
-    } elseif ($timeAgo->h > 0) {
-        $timeStr = $timeAgo->h . " ঘন্টা আগে";
-    } elseif ($timeAgo->d > 0) {
-        $timeStr = $timeAgo->d . " দিন আগে";
     }
 
     $processedComments[] = [
         "id" => $c["id"],
         "user" => $displayName,
         "text" => htmlspecialchars($c["text"]),
-        "time" => $timeStr,
-        "upvotes" => $upvotes,
-        "downvotes" => $downvotes,
+        "time" => time_ago($c["created_at"], $lang),
+        "upvotes" => (int)$c["upvotes"],
+        "downvotes" => (int)$c["downvotes"],
         "isPinned" => (bool) $c["is_pinned"],
         "replies" => $replies,
         "userId" => $c["user_id"],
     ];
 }
-
-$totalPages = ceil($totalCount / $perPage);
 
 send_response([
     "success" => true,

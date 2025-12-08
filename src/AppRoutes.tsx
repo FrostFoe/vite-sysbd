@@ -1,25 +1,28 @@
-import React from "react";
+import React, { lazy, Suspense } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { useAuth } from "./context/AuthContext";
 import { LayoutProvider } from "./context/LayoutContext";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
+import { LoadingSpinner } from "./components/common/LoadingSpinner";
 import MainLayout from "./components/Layout/MainLayout";
 import DashLayout from "./components/Layout/DashLayout";
-import HomePage from "./pages/Home";
-import Dashboard from "./pages/Dashboard";
-import AdminDashboard from "./pages/AdminDashboard";
-import ArticleDetail from "./pages/ArticleDetail";
-import ArticleList from "./pages/Admin/ArticleList";
-import ArticleEdit from "./pages/Admin/ArticleEdit";
-import AdminInbox from "./pages/Admin/Inbox";
-import AdminUsers from "./pages/Admin/Users";
-import AdminComments from "./pages/Admin/Comments";
-import AdminSubmissions from "./pages/Admin/Submissions";
-import AdminCategories from "./pages/Admin/Categories";
-import AdminSections from "./pages/Admin/Sections";
-import AdminDocuments from "./pages/Admin/Documents";
-import UserInbox from "./pages/Dashboard/Inbox";
+
+// Lazy load pages for code splitting
+const Login = lazy(() => import("./pages/Login"));
+const Register = lazy(() => import("./pages/Register"));
+const HomePage = lazy(() => import("./pages/Home"));
+const Dashboard = lazy(() => import("./pages/Dashboard"));
+const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
+const ArticleDetail = lazy(() => import("./pages/ArticleDetail"));
+const ArticleList = lazy(() => import("./pages/Admin/ArticleList"));
+const ArticleEdit = lazy(() => import("./pages/Admin/ArticleEdit"));
+const AdminInbox = lazy(() => import("./pages/Admin/Inbox"));
+const AdminUsers = lazy(() => import("./pages/Admin/Users"));
+const AdminComments = lazy(() => import("./pages/Admin/Comments"));
+const AdminSubmissions = lazy(() => import("./pages/Admin/Submissions"));
+const AdminCategories = lazy(() => import("./pages/Admin/Categories"));
+const AdminSections = lazy(() => import("./pages/Admin/Sections"));
+const AdminDocuments = lazy(() => import("./pages/Admin/Documents"));
+const UserInbox = lazy(() => import("./pages/Dashboard/Inbox"));
 
 // A simple Protected Route wrapper
 const ProtectedRoute: React.FC<{
@@ -48,15 +51,31 @@ const AppRoutes: React.FC = () => {
     <LayoutProvider>
       <Routes>
         {/* Routes without MainLayout (e.g., Auth pages) */}
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+        <Route
+          path="/login"
+          element={
+            <Suspense fallback={<LoadingSpinner />}>
+              <Login />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/register"
+          element={
+            <Suspense fallback={<LoadingSpinner />}>
+              <Register />
+            </Suspense>
+          }
+        />
 
         {/* Routes with MainLayout */}
         <Route
           path="/"
           element={
             <MainLayout>
-              <HomePage />
+              <Suspense fallback={<LoadingSpinner />}>
+                <HomePage />
+              </Suspense>
             </MainLayout>
           }
         />
@@ -64,7 +83,9 @@ const AppRoutes: React.FC = () => {
           path="/article/:id"
           element={
             <MainLayout>
-              <ArticleDetail />
+              <Suspense fallback={<LoadingSpinner />}>
+                <ArticleDetail />
+              </Suspense>
             </MainLayout>
           }
         />
@@ -75,7 +96,9 @@ const AppRoutes: React.FC = () => {
           element={
             <ProtectedRoute>
               <DashLayout>
-                <Dashboard />
+                <Suspense fallback={<LoadingSpinner />}>
+                  <Dashboard />
+                </Suspense>
               </DashLayout>
             </ProtectedRoute>
           }
@@ -85,7 +108,9 @@ const AppRoutes: React.FC = () => {
           element={
             <ProtectedRoute>
               <DashLayout>
-                <UserInbox />
+                <Suspense fallback={<LoadingSpinner />}>
+                  <UserInbox />
+                </Suspense>
               </DashLayout>
             </ProtectedRoute>
           }
@@ -97,7 +122,9 @@ const AppRoutes: React.FC = () => {
           element={
             <ProtectedRoute adminOnly>
               <DashLayout>
-                <AdminDashboard />
+                <Suspense fallback={<LoadingSpinner />}>
+                  <AdminDashboard />
+                </Suspense>
               </DashLayout>
             </ProtectedRoute>
           }
@@ -107,7 +134,9 @@ const AppRoutes: React.FC = () => {
           element={
             <ProtectedRoute adminOnly>
               <DashLayout>
-                <ArticleList />
+                <Suspense fallback={<LoadingSpinner />}>
+                  <ArticleList />
+                </Suspense>
               </DashLayout>
             </ProtectedRoute>
           }
@@ -117,7 +146,9 @@ const AppRoutes: React.FC = () => {
           element={
             <ProtectedRoute adminOnly>
               <DashLayout>
-                <ArticleEdit />
+                <Suspense fallback={<LoadingSpinner />}>
+                  <ArticleEdit />
+                </Suspense>
               </DashLayout>
             </ProtectedRoute>
           }
@@ -127,7 +158,9 @@ const AppRoutes: React.FC = () => {
           element={
             <ProtectedRoute adminOnly>
               <DashLayout>
-                <ArticleEdit />
+                <Suspense fallback={<LoadingSpinner />}>
+                  <ArticleEdit />
+                </Suspense>
               </DashLayout>
             </ProtectedRoute>
           }
@@ -137,7 +170,9 @@ const AppRoutes: React.FC = () => {
           element={
             <ProtectedRoute adminOnly>
               <DashLayout>
-                <AdminInbox />
+                <Suspense fallback={<LoadingSpinner />}>
+                  <AdminInbox />
+                </Suspense>
               </DashLayout>
             </ProtectedRoute>
           }
@@ -147,7 +182,9 @@ const AppRoutes: React.FC = () => {
           element={
             <ProtectedRoute adminOnly>
               <DashLayout>
-                <AdminUsers />
+                <Suspense fallback={<LoadingSpinner />}>
+                  <AdminUsers />
+                </Suspense>
               </DashLayout>
             </ProtectedRoute>
           }
@@ -157,7 +194,9 @@ const AppRoutes: React.FC = () => {
           element={
             <ProtectedRoute adminOnly>
               <DashLayout>
-                <AdminComments />
+                <Suspense fallback={<LoadingSpinner />}>
+                  <AdminComments />
+                </Suspense>
               </DashLayout>
             </ProtectedRoute>
           }
@@ -167,7 +206,9 @@ const AppRoutes: React.FC = () => {
           element={
             <ProtectedRoute adminOnly>
               <DashLayout>
-                <AdminSubmissions />
+                <Suspense fallback={<LoadingSpinner />}>
+                  <AdminSubmissions />
+                </Suspense>
               </DashLayout>
             </ProtectedRoute>
           }
@@ -177,7 +218,9 @@ const AppRoutes: React.FC = () => {
           element={
             <ProtectedRoute adminOnly>
               <DashLayout>
-                <AdminCategories />
+                <Suspense fallback={<LoadingSpinner />}>
+                  <AdminCategories />
+                </Suspense>
               </DashLayout>
             </ProtectedRoute>
           }
@@ -187,7 +230,9 @@ const AppRoutes: React.FC = () => {
           element={
             <ProtectedRoute adminOnly>
               <DashLayout>
-                <AdminSections />
+                <Suspense fallback={<LoadingSpinner />}>
+                  <AdminSections />
+                </Suspense>
               </DashLayout>
             </ProtectedRoute>
           }
@@ -197,14 +242,23 @@ const AppRoutes: React.FC = () => {
           element={
             <ProtectedRoute adminOnly>
               <DashLayout>
-                <AdminDocuments />
+                <Suspense fallback={<LoadingSpinner />}>
+                  <AdminDocuments />
+                </Suspense>
               </DashLayout>
             </ProtectedRoute>
           }
         />
 
         {/* Catch-all for unknown routes */}
-        <Route path="*" element={<div>404 Not Found</div>} />
+        <Route
+          path="*"
+          element={
+            <Suspense fallback={<LoadingSpinner />}>
+              <div>404 Not Found</div>
+            </Suspense>
+          }
+        />
       </Routes>
     </LayoutProvider>
   );

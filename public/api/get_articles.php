@@ -1,5 +1,6 @@
 <?php
 require_once "api_header.php";
+require_once __DIR__ . "/../lib/CacheManager.php";
 session_start();
 
 // --- Authorization Check ---
@@ -16,6 +17,20 @@ if ($_SERVER["REQUEST_METHOD"] !== "GET") {
 $status = isset($_GET["status"]) ? $_GET["status"] : "all";
 $search = isset($_GET["search"]) ? trim($_GET["search"]) : "";
 $catFilter = isset($_GET["cat"]) ? $_GET["cat"] : "";
+
+// Create cache key for this specific query
+$cache = new CacheManager();
+$cacheKey = $cache->generateKey(['admin_articles', $status, $search, $catFilter]);
+
+// Don't cache if there are filters applied or for admin views that might change frequently
+if (empty($search) && $catFilter === "" && $status === "all") {
+    // Try to get from cache first (for unfiltered admin view, cache for 5 minutes)
+    $cachedArticles = $cache->get($cacheKey);
+    if ($cachedArticles) {
+        send_response($cachedArticles);
+        exit();
+    }
+}
 $lang = isset($_GET["lang"]) ? $_GET["lang"] : "bn"; // Language for title fallback and category names
 
 try {
@@ -70,7 +85,14 @@ try {
         ];
     }
 
-    send_response(["success" => true, "articles" => $articles]);
+    $result = ["success" => true, "articles" => $articles];
+
+    // Cache only the unfiltered results
+    if (empty($search) && $catFilter === "" && $status === "all") {
+        $cache->set($cacheKey, $result, 300); // Cache for 5 minutes
+    }
+
+    send_response($result);
 } catch (PDOException $e) {
     error_log("Admin articles list database error: " . $e->getMessage());
     send_response(["success" => false, "error" => "Database error"], 500);
