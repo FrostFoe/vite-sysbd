@@ -1,3 +1,13 @@
+/**
+ * Authentication Context
+ * Manages user authentication state across the application
+ * 
+ * @provides User login, registration, logout functionality
+ * @provides User authentication state and loading states
+ * @example
+ * const { user, isAuthenticated, login } = useAuth();
+ */
+
 import {
   createContext,
   useContext,
@@ -8,18 +18,29 @@ import {
 import type { ReactNode } from "react";
 import { authApi } from "../lib/api";
 import type { User } from "../types";
+import { showToastMsg } from "../lib/utils";
 
+/**
+ * Authentication context type definition
+ */
 interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
   isLoading: boolean;
+  /** Login user with email and password */
   login: (email: string, password: string) => Promise<boolean>;
+  /** Register new user */
   register: (email: string, password: string) => Promise<boolean>;
+  /** Logout current user */
   logout: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+/**
+ * Auth Provider Component
+ * Wraps app with authentication context
+ */
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
@@ -57,13 +78,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setIsAuthenticated(true);
         return true;
       } else {
-        alert(response.message || "Login failed");
+        showToastMsg(response.message || "Login failed", "error");
         return false;
       }
     } catch (error: unknown) {
-      console.error("Login error:", error);
       const err = error as { response?: { data?: { message?: string } } };
-      alert(err.response?.data?.message || "Login failed");
+      showToastMsg(err.response?.data?.message || "Login failed", "error");
       return false;
     } finally {
       setIsLoading(false);
@@ -82,13 +102,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setIsAuthenticated(true);
         return true;
       } else {
-        alert(response.message || "Registration failed");
+        showToastMsg(response.message || "Registration failed", "error");
         return false;
       }
     } catch (error: unknown) {
-      console.error("Registration error:", error);
       const err = error as { response?: { data?: { message?: string } } };
-      alert(err.response?.data?.message || "Registration failed");
+      showToastMsg(err.response?.data?.message || "Registration failed", "error");
       return false;
     } finally {
       setIsLoading(false);
@@ -119,6 +138,24 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
 // Allow both components and hooks in context files
 // eslint-disable-next-line react-refresh/only-export-components
+
+/**
+ * useAuth Hook
+ * Access authentication state and methods
+ * 
+ * @throws Error if used outside AuthProvider
+ * @returns {AuthContextType} Authentication context
+ * 
+ * @example
+ * const { user, login, isLoading } = useAuth();
+ * 
+ * const handleLogin = async () => {
+ *   const success = await login('user@example.com', 'password');
+ *   if (success) {
+ *     navigate('/dashboard');
+ *   }
+ * };
+ */
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (context === undefined) {

@@ -32,7 +32,6 @@ const Submissions: React.FC = () => {
         showToastMsg(response.error || "Failed to fetch submissions", "error");
       }
     } catch (error) {
-      console.error("Fetch submissions error:", error);
       showToastMsg(t("server_error", language), "error");
     } finally {
       setIsLoading(false);

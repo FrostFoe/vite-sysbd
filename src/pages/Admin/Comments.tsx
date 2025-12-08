@@ -31,7 +31,6 @@ const Comments: React.FC = () => {
         showToastMsg(response.error || "Failed to fetch comments", "error");
       }
     } catch (error) {
-      console.error("Fetch comments error:", error);
       showToastMsg(t("server_error", language), "error");
     } finally {
       setIsLoading(false);
@@ -56,7 +55,6 @@ const Comments: React.FC = () => {
         );
       }
     } catch (error) {
-      console.error("Delete comment error:", error);
       showToastMsg(t("server_error", language), "error");
     }
   };

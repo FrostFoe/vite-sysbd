@@ -6,6 +6,7 @@ import { publicApi, adminApi } from "../lib/api";
 import type { Article, UserProfile } from "../types";
 import {
   escapeHtml,
+  sanitizeHtml,
   formatTimestamp,
   PLACEHOLDER_IMAGE,
   showToastMsg,
@@ -495,7 +496,7 @@ const ArticleDetail: React.FC = () => {
             {/* Article Content */}
             <div
               className="prose max-w-none [&_p]:text-lg [&_p]:leading-[1.8] [&_p]:mb-[1em] space-y-8 text-card-text transition-all duration-300"
-              dangerouslySetInnerHTML={{ __html: article.content }}
+              dangerouslySetInnerHTML={{ __html: sanitizeHtml(article.content) }}
             ></div>
           </article>
         </div>
@@ -512,9 +513,9 @@ const ArticleDetail: React.FC = () => {
                     {t("leaked_documents", language)}
                   </h4>
                   <ul className="space-y-3">
-                    {article.leaked_documents.map((doc, index) => (
+                    {article.leaked_documents.map((doc) => (
                       <li
-                        key={index}
+                        key={doc.id || doc.display_name_en}
                         className="group flex items-center gap-3 p-2 rounded-lg hover:bg-muted-bg transition-colors cursor-pointer"
                       >
                         <div className="w-10 h-10 rounded-lg bg-red-50 dark:bg-red-900/20 flex items-center justify-center flex-shrink-0 text-bbcRed font-bold text-xs border border-bbcRed/20">
@@ -762,7 +763,7 @@ const ArticleDetail: React.FC = () => {
 
                       <p
                         className="text-sm text-card-text ml-12 leading-relaxed mb-3"
-                        dangerouslySetInnerHTML={{ __html: comment.text }}
+                        dangerouslySetInnerHTML={{ __html: sanitizeHtml(comment.text) }}
                       ></p>
 
                       <div className="ml-12 flex items-center gap-3 text-xs">
@@ -820,7 +821,7 @@ const ArticleDetail: React.FC = () => {
                               </div>
                               <p
                                 className="text-xs text-card-text ml-9 leading-relaxed"
-                                dangerouslySetInnerHTML={{ __html: reply.text }}
+                                dangerouslySetInnerHTML={{ __html: sanitizeHtml(reply.text) }}
                               ></p>
                             </div>
                           ))}
@@ -968,9 +969,9 @@ const ArticleDetail: React.FC = () => {
                           {t("recent_comments", language)}
                         </div>
                         <div className="space-y-2">
-                          {userProfile.recentComments.map((comment, index) => (
+                          {userProfile.recentComments.map((comment) => (
                             <div
-                              key={index}
+                              key={`comment-${comment.text.substring(0, 20)}`}
                               className="bg-muted-bg p-2 rounded-lg text-xs text-card-text border border-border-color"
                             >
                               <p className="mb-1">"{comment.text}"</p>

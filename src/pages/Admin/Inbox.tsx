@@ -40,7 +40,6 @@ const AdminInbox: React.FC = () => {
         setConversations(response.conversations);
       }
     } catch (error) {
-      console.error("Error loading conversations:", error);
       showToastMsg(t("failed_to_load_conversations", language), "error");
     } finally {
       setIsLoadingConversations(false);
@@ -56,7 +55,6 @@ const AdminInbox: React.FC = () => {
           setMessages(response.messages);
         }
       } catch (error) {
-        console.error("Error loading messages:", error);
         showToastMsg(t("failed_to_load_messages", language), "error");
       } finally {
         setIsLoadingMessages(false);

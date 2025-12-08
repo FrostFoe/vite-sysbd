@@ -8,18 +8,18 @@ if ($_SERVER["REQUEST_METHOD"] !== "POST") {
 }
 
 $data = json_decode(file_get_contents("php://input"), true);
-$articleId = $data["articleId"] ?? null;
-$page = (int) ($data["page"] ?? 1);
-$perPage = (int) ($data["perPage"] ?? 10);
-$sort = $data["sort"] ?? "newest";
-$lang = $data["lang"] ?? "bn";
+$articleId = validateAndSanitize($data["articleId"] ?? null, 'int');
+$page = validateAndSanitize($data["page"] ?? 1, 'int');
+$sort = validateAndSanitize($data["sort"] ?? "newest", 'string');
+$lang = validateAndSanitize($data["lang"] ?? "bn", 'string');
 
 if (!$articleId || $page < 1) {
     send_response(["error" => "Invalid parameters"], 400);
     exit();
 }
 
-$offset = ($page - 1) * $perPage;
+// Initialize pagination
+$pagination = new Pagination($page, DEFAULT_PAGE_SIZE);
 
 // Determine sorting
 $orderBy = "c.created_at DESC"; // default newest
@@ -45,16 +45,19 @@ $countStmt = $pdo->prepare("
 $countStmt->execute([$articleId]);
 $totalCount = $countStmt->fetch(PDO::FETCH_ASSOC)["count"];
 
+// Update pagination with total count
+$pagination = new Pagination($page, DEFAULT_PAGE_SIZE, $totalCount);
+
 // Get comments with pagination
 $commentStmt = $pdo->prepare("
     SELECT c.id, c.text, c.created_at, c.user_name, c.user_id, c.is_pinned, c.pin_order, u.email 
     FROM comments c 
-    LEFT JOIN users u ON c.user_id = u.id 
+    LEFT JOIN users u ON c.user_id = u.id
     WHERE c.article_id = ? AND c.parent_comment_id IS NULL
-    ORDER BY c.is_pinned DESC, c.pin_order ASC, $orderBy
-    LIMIT ? OFFSET ?
-");
-$commentStmt->execute([$articleId, $perPage, $offset]);
+    ORDER BY c.is_pinned DESC, c.pin_order ASC, " . $orderBy . "
+    " . $pagination->getLimitClause()
+);
+$commentStmt->execute([$articleId]);
 $rawComments = $commentStmt->fetchAll(PDO::FETCH_ASSOC);
 
 $processedComments = [];
@@ -147,13 +150,6 @@ $totalPages = ceil($totalCount / $perPage);
 send_response([
     "success" => true,
     "comments" => $processedComments,
-    "pagination" => [
-        "page" => $page,
-        "perPage" => $perPage,
-        "totalCount" => $totalCount,
-        "totalPages" => $totalPages,
-        "hasNextPage" => $page < $totalPages,
-        "hasPrevPage" => $page > 1,
-    ],
+    "pagination" => $pagination->toArray(),
 ]);
 ?>

@@ -91,7 +91,6 @@ const ArticleEdit: React.FC = () => {
           });
         }
       } catch (error) {
-        console.error("Failed to fetch initial data:", error);
         showToastMsg(t("server_error", language), "error");
       } finally {
         setIsLoading(false);
@@ -174,7 +173,6 @@ const ArticleEdit: React.FC = () => {
           );
         }
       } catch (error) {
-        console.error("Image upload error:", error);
         showToastMsg(t("server_error", language), "error");
       }
     },
@@ -226,7 +224,6 @@ const ArticleEdit: React.FC = () => {
           );
         }
       } catch (error) {
-        console.error("Save article error:", error);
         showToastMsg(t("server_error", language), "error");
       } finally {
         setIsSaving(false);

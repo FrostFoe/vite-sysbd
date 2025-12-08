@@ -10,6 +10,57 @@ export function escapeHtml(unsafe: string | null | undefined): string {
   return div.innerHTML;
 }
 
+/**
+ * Sanitize HTML content to prevent XSS attacks
+ * Allows safe tags like p, br, strong, em, a, ul, li, etc.
+ */
+export function sanitizeHtml(html: string | null | undefined): string {
+  if (!html) return "";
+  
+  const div = document.createElement("div");
+  div.innerHTML = html;
+  
+  // List of allowed tags
+  const allowedTags = ["p", "br", "strong", "em", "b", "i", "u", "a", "ul", "li", "ol", "h1", "h2", "h3", "blockquote"];
+  
+  // Recursive function to remove disallowed tags
+  const sanitize = (node: Node): void => {
+    const nodesToRemove: Node[] = [];
+    
+    Array.from(node.childNodes).forEach((child) => {
+      if (child.nodeType === 1) { // Element node
+        const element = child as Element;
+        const tagName = element.tagName.toLowerCase();
+        
+        if (!allowedTags.includes(tagName)) {
+          // Replace element with its content
+          while (element.firstChild) {
+            node.insertBefore(element.firstChild, element);
+          }
+          nodesToRemove.push(element);
+        } else {
+          // Remove dangerous attributes from allowed tags
+          Array.from(element.attributes).forEach((attr) => {
+            if (attr.name.toLowerCase().startsWith("on")) {
+              element.removeAttribute(attr.name);
+            }
+          });
+          sanitize(child);
+        }
+      } else if (child.nodeType === 8) { // Comment node
+        nodesToRemove.push(child);
+      } else if (child.nodeType === 1) {
+        sanitize(child);
+      }
+    });
+    
+    nodesToRemove.forEach((node) => node.parentNode?.removeChild(node));
+  };
+  
+  sanitize(div);
+  return div.innerHTML;
+}
+
 export function formatTimestamp(
   timestampString: string | null | undefined,
   lang: "en" | "bn",

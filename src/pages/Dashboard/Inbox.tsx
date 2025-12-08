@@ -69,7 +69,6 @@ const UserInbox: React.FC = () => {
         );
       }
     } catch (error) {
-      console.error("Error sending message:", error);
       showToastMsg(t("server_error", language), "error");
     }
   }, [user?.id, messageInput, loadMessages, language]);

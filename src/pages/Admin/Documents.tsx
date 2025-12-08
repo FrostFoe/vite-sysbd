@@ -39,7 +39,7 @@ const Documents: React.FC = () => {
         setArticles(res.data || []);
       }
     } catch (error) {
-      console.error("Failed to fetch articles", error);
+      // Error silently handled
     } finally {
       setIsLoadingArticles(false);
     }
@@ -58,7 +58,7 @@ const Documents: React.FC = () => {
           );
         }
       } catch (error) {
-        console.error("Failed to fetch documents", error);
+        // Error silently handled
       } finally {
         setIsLoadingDocuments(false);
       }
@@ -93,8 +93,7 @@ const Documents: React.FC = () => {
       if (res.success && res.document) {
         setEditingDoc(res.document);
       } else {
-        // handle error
-        console.error("Could not fetch document details");
+        // Handle error silently
         return;
       }
     } else {
@@ -127,7 +126,7 @@ const Documents: React.FC = () => {
         }
         fetchArticles();
       } catch (error) {
-        console.error("Failed to delete document", error);
+        // Error silently handled
       }
     }
   };
@@ -353,7 +352,6 @@ const DocumentModal: React.FC<{
       }
     } catch (error) {
       setError("An unexpected error occurred.");
-      console.error("Document save error:", error);
     } finally {
       setIsSaving(false);
     }

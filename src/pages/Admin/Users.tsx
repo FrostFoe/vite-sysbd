@@ -34,7 +34,6 @@ const Users: React.FC = () => {
         showToastMsg(response.error || "Failed to fetch users", "error");
       }
     } catch (error) {
-      console.error("Fetch users error:", error);
       showToastMsg(t("server_error", language), "error");
     } finally {
       setIsLoading(false);
@@ -69,7 +68,6 @@ const Users: React.FC = () => {
         showToastMsg(response.error || "Failed to mute user", "error");
       }
     } catch (error) {
-      console.error("Mute user error:", error);
       showToastMsg(t("server_error", language), "error");
     }
   };
@@ -85,7 +83,6 @@ const Users: React.FC = () => {
         showToastMsg(response.error || "Failed to unmute user", "error");
       }
     } catch (error) {
-      console.error("Unmute user error:", error);
       showToastMsg(t("server_error", language), "error");
     }
   };

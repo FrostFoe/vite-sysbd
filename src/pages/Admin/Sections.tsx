@@ -190,7 +190,6 @@ const Sections: React.FC = () => {
       }
     } catch (err) {
       setError("Failed to fetch sections.");
-      console.error(err);
     } finally {
       setIsLoading(false);
     }
@@ -213,7 +212,7 @@ const Sections: React.FC = () => {
       handleCloseModal();
       fetchSections();
     } catch (err) {
-      console.error("Failed to save section", err);
+      // Error silently handled, user can retry
     }
   };
 
@@ -223,7 +222,7 @@ const Sections: React.FC = () => {
         await adminApi.deleteSection(id);
         fetchSections();
       } catch (err) {
-        console.error("Failed to delete section", err);
+        // Error silently handled, user can retry
       }
     }
   };

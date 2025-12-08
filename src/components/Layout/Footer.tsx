@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { useLayout } from "../../context/LayoutContext";
 import { t } from "../../lib/translations";
+import { showToastMsg } from "../../lib/utils";
 import {
   Facebook,
   Twitter,
@@ -18,11 +19,10 @@ const Footer: React.FC = () => {
     navigator.clipboard
       .writeText(text)
       .then(() => {
-        // In a real app, you'd use a toast notification system here
-        alert(successMsg);
+        showToastMsg(successMsg, "success");
       })
-      .catch((err) => {
-        console.error("Failed to copy text: ", err);
+      .catch(() => {
+        showToastMsg("Failed to copy", "error");
       });
   };
 

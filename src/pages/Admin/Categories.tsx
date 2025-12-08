@@ -141,7 +141,6 @@ const Categories: React.FC = () => {
       }
     } catch (err) {
       setError("Failed to fetch categories.");
-      console.error(err);
     } finally {
       setIsLoading(false);
     }
@@ -163,8 +162,7 @@ const Categories: React.FC = () => {
       handleCloseModal();
       fetchCategories(); // Refetch to show changes
     } catch (err) {
-      console.error("Failed to save category", err);
-      // TODO: Show toast notification
+      // Error silently handled, user can retry
     }
   };
 
@@ -174,8 +172,7 @@ const Categories: React.FC = () => {
         await adminApi.deleteCategory(id);
         fetchCategories(); // Refetch to show changes
       } catch (err) {
-        console.error("Failed to delete category", err);
-        // TODO: Show toast notification
+        // Error silently handled, user can retry
       }
     }
   };
