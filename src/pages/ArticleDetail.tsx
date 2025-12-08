@@ -502,7 +502,7 @@ const ArticleDetail: React.FC = () => {
 
         {/* Sidebar */}
         <div className="lg:col-span-4 w-full">
-          <div className="w-full space-y-6 z-40 lg:fixed lg:top-28 lg:right-4 lg:w-[calc(33.33vw-4rem)] lg:max-w-[400px] lg:max-h-[calc(100vh-8rem)] lg:overflow-y-auto lg:pr-2 no-scrollbar">
+          <div className="w-full space-y-6 lg:sticky lg:top-28">
             {/* Leaked Documents */}
             {article.leaked_documents &&
               article.leaked_documents.length > 0 && (
