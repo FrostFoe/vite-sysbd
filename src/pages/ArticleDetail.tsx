@@ -11,6 +11,7 @@ import {
   showToastMsg,
 } from "../lib/utils";
 import { t } from "../lib/translations";
+import { CustomDropdown } from "../components/common/CustomDropdown";
 import {
   Clock,
   FileText,
@@ -243,9 +244,8 @@ const ArticleDetail: React.FC = () => {
 
   // Comment sorting
   const handleCommentSortChange = useCallback(
-    (e: React.ChangeEvent<HTMLSelectElement>) => {
-      const newSort = e.target.value as typeof commentSort;
-      setCommentSort(newSort);
+    (newSort: string) => {
+      setCommentSort(newSort as typeof commentSort);
       localStorage.setItem(`sort-${id}`, newSort);
       // Optionally re-fetch comments with new sort order or re-sort locally
       // For now, re-sorting logic might be complex if replies are involved, will assume simple re-render.
@@ -262,7 +262,7 @@ const ArticleDetail: React.FC = () => {
   // Post reply for admin
   const postReply = useCallback(
     async (parentCommentId: number) => {
-      if (!isAdmin || !id) return;
+      if (!id) return;
       const text = replyInput[parentCommentId]?.trim();
 
       if (!text || text.length < 3) {
@@ -271,7 +271,7 @@ const ArticleDetail: React.FC = () => {
       }
 
       try {
-        const response = await publicApi.postReply(parentCommentId, text); // Changed from postComment to postReply
+        const response = await publicApi.postReply(parentCommentId, text, language);
         if (response.success) {
           setReplyInput((prev) => ({ ...prev, [parentCommentId]: "" }));
           setActiveReplyForm(null);
@@ -700,23 +700,178 @@ const ArticleDetail: React.FC = () => {
               <label className="text-xs font-bold text-muted-text">
                 {t("sort_by", language)}
               </label>
-              <select
+              <CustomDropdown
                 id="sort-comments"
                 value={commentSort}
                 onChange={handleCommentSortChange}
-                className="px-3 py-1.5 rounded-lg bg-muted-bg border border-border-color text-card-text text-xs font-bold hover:bg-border-color transition-colors"
-              >
-                <option value="newest">{t("newest", language)}</option>
-                <option value="oldest">{t("oldest", language)}</option>
-                <option value="helpful">{t("most_helpful", language)}</option>
-                <option value="discussed">
-                  {t("most_discussed", language)}
-                </option>
-              </select>
+                options={[
+                  { value: "newest", label: t("newest", language) },
+                  { value: "oldest", label: t("oldest", language) },
+                  {
+                    value: "helpful",
+                    label: t("most_helpful", language),
+                  },
+                  {
+                    value: "discussed",
+                    label: t("most_discussed", language),
+                  },
+                ]}
+                className="w-32"
+              />
             </div>
           </div>
 
-          <div className="mb-8">
+          {/* Comments List */}
+          <div className="bg-card rounded-xl border border-border-color overflow-hidden">
+            {article.comments && article.comments.length > 0 ? (
+              <div className="divide-y divide-border-color">
+                {[...article.comments]
+                  .sort((a, b) => {
+                    // Sort by newest first
+                    if (commentSort === "newest") {
+                      return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+                    } else if (commentSort === "oldest") {
+                      return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
+                    } else if (commentSort === "helpful") {
+                      return (b.upvotes - b.downvotes) - (a.upvotes - a.downvotes);
+                    } else if (commentSort === "discussed") {
+                      const aReplies = a.replies?.length || 0;
+                      const bReplies = b.replies?.length || 0;
+                      return bReplies - aReplies;
+                    }
+                    return 0;
+                  })
+                  .map((comment) => (
+                    <div key={comment.id} className="p-4">
+                      <div className="flex items-start gap-3 mb-2">
+                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-bbcRed to-orange-500 flex items-center justify-center font-bold text-white text-sm shadow-md flex-shrink-0">
+                          {comment.user[0].toUpperCase()}
+                        </div>
+                        <div className="flex-grow min-w-0">
+                          <span
+                            onClick={() => openProfileModal(comment.user)}
+                            className="font-bold text-sm text-card-text block hover:text-bbcRed cursor-pointer transition-colors"
+                          >
+                            {escapeHtml(comment.user)}
+                          </span>
+                          <span className="text-xs text-muted-text">
+                            {comment.time}
+                          </span>
+                        </div>
+                      </div>
+
+                      <p
+                        className="text-sm text-card-text ml-12 leading-relaxed mb-3"
+                        dangerouslySetInnerHTML={{ __html: comment.text }}
+                      ></p>
+
+                      <div className="ml-12 flex items-center gap-3 text-xs">
+                        <div className="flex items-center gap-1">
+                          <button
+                            onClick={() => voteComment(comment.id, "upvote")}
+                            className={`p-1 hover:text-success transition-colors text-muted-text vote-btn-up flex items-center justify-center min-w-[36px] min-h-[36px] ${userVotes[comment.id] === "upvote" ? "text-success font-bold" : ""}`}
+                            title="Upvote"
+                          >
+                            <ThumbsUp className="w-3 h-3" />
+                          </button>
+                          <span className="text-xs font-bold text-muted-text min-w-[20px] text-center">
+                            {comment.upvotes - comment.downvotes}
+                          </span>
+                          <button
+                            onClick={() => voteComment(comment.id, "downvote")}
+                            className={`p-1 hover:text-danger transition-colors text-muted-text vote-btn-down flex items-center justify-center min-w-[36px] min-h-[36px] ${userVotes[comment.id] === "downvote" ? "text-danger font-bold" : ""}`}
+                            title="Downvote"
+                          >
+                            <ThumbsDown className="w-3 h-3" />
+                          </button>
+                        </div>
+                        <button
+                          onClick={() => toggleReplyForm(comment.id)}
+                          className="px-3 py-1 hover:bg-bbcRed/10 dark:hover:bg-bbcRed/20 text-bbcRed rounded transition-colors font-bold text-sm"
+                        >
+                          {t("reply", language)}
+                        </button>
+                        {isAdmin && (
+                          <button
+                            onClick={() => deleteComment(comment.id)}
+                            className="text-danger hover:text-red-700 p-1 rounded hover:bg-red-50 dark:hover:bg-red-900/20"
+                          >
+                            <Trash2 className="w-3 h-3" />
+                          </button>
+                        )}
+                      </div>
+
+                      {comment.replies && comment.replies.length > 0 && (
+                        <div className="ml-12 mt-4 space-y-3 border-l-2 border-border-color pl-4">
+                          {comment.replies.map((reply) => (
+                            <div key={reply.id}>
+                              <div className="flex items-start gap-2 mb-1">
+                                <div className="w-7 h-7 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center font-bold text-white text-xs shadow-md flex-shrink-0">
+                                  {reply.user[0].toUpperCase()}
+                                </div>
+                                <div className="flex-grow min-w-0">
+                                  <span className="font-bold text-xs text-card-text block">
+                                    {escapeHtml(reply.user)}
+                                  </span>
+                                  <span className="text-xs text-muted-text">
+                                    {reply.time}
+                                  </span>
+                                </div>
+                              </div>
+                              <p
+                                className="text-xs text-card-text ml-9 leading-relaxed"
+                                dangerouslySetInnerHTML={{ __html: reply.text }}
+                              ></p>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+
+                      {activeReplyForm === comment.id && (
+                        <div className="ml-12 mt-4 p-4 rounded-lg">
+                          <h4 className="text-xs font-bold text-card-text mb-3">{t("write_your_reply", language)}</h4>
+                          <textarea
+                            value={replyInput[comment.id] || ""}
+                            onChange={(e) =>
+                              setReplyInput((prev) => ({
+                                ...prev,
+                                [comment.id]: e.target.value,
+                              }))
+                            }
+                            placeholder={t("write_your_reply", language)}
+                            className="w-full p-3 rounded-lg bg-card border border-border-color text-card-text focus:ring-2 focus:ring-bbcRed/30 focus:border-bbcRed outline-none transition-all resize-none text-sm mb-3 min-h-[80px]"
+                          ></textarea>
+                          <div className="flex justify-end gap-2">
+                            <button
+                              onClick={() => toggleReplyForm(comment.id)}
+                              className="px-4 py-2 rounded-lg bg-card border border-border-color hover:bg-border-color transition-colors text-sm font-bold text-card-text"
+                            >
+                              {t("cancel", language)}
+                            </button>
+                            <button
+                              onClick={() => postReply(comment.id)}
+                              className="px-4 py-2 rounded-lg bg-bbcRed hover:bg-bbcRed-hover text-white transition-colors text-sm font-bold shadow-soft hover:shadow-soft-hover"
+                            >
+                              {t("send_reply", language)}
+                            </button>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+              </div>
+            ) : (
+              <div className="text-center py-8 text-muted-text">
+                {t("no_comments_yet", language)}
+              </div>
+            )}
+          </div>
+
+          {/* Comment Input Form - at the bottom */}
+          <div className="border-t border-border-color pt-6">
+            <h4 className="font-bold text-sm text-card-text mb-4">
+              {t("write_your_comment", language)}
+            </h4>
             <textarea
               id="comment-input"
               className="w-full p-4 rounded-xl border border-border-color bg-card text-card-text focus:ring-2 focus:ring-bbcRed/20 focus:border-bbcRed outline-none transition-all resize-y text-base min-h-[150px]"
@@ -735,143 +890,11 @@ const ArticleDetail: React.FC = () => {
               )}
               <button
                 onClick={postComment}
-                className="bg-bbcDark dark:bg-white text-white dark:text-black px-6 py-2.5 rounded-full font-bold hover:shadow-lg hover:-translate-y-0.5 transition-all text-sm"
+                className="bg-bbcDark dark:bg-white text-white dark:text-black px-6 py-2.5 rounded-full font-bold hover:bg-opacity-90 dark:hover:bg-opacity-90 hover:shadow-lg hover:-translate-y-0.5 transition-all text-sm"
               >
                 {t("post_comment", language)}
               </button>
             </div>
-          </div>
-
-          <div className="space-y-6">
-            {article.comments && article.comments.length > 0 ? (
-              article.comments.map((comment) => (
-                <div
-                  key={comment.id}
-                  className="bg-muted-bg p-4 rounded-xl border border-border-color"
-                >
-                  <div className="flex items-start gap-3 mb-2">
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-bbcRed to-orange-500 flex items-center justify-center font-bold text-white text-sm shadow-md flex-shrink-0">
-                      {comment.user[0].toUpperCase()}
-                    </div>
-                    <div className="flex-grow min-w-0">
-                      <span
-                        onClick={() => openProfileModal(comment.user)}
-                        className="font-bold text-sm text-card-text block hover:text-bbcRed cursor-pointer transition-colors"
-                      >
-                        {escapeHtml(comment.user)}
-                      </span>
-                      <span className="text-xs text-muted-text">
-                        {comment.time}
-                      </span>
-                    </div>
-                  </div>
-
-                  <p
-                    className="text-sm text-card-text ml-12 leading-relaxed bg-card p-3 rounded-lg rounded-tl-none border border-border-color mb-3"
-                    dangerouslySetInnerHTML={{ __html: comment.text }}
-                  ></p>
-
-                  <div className="ml-12 flex items-center gap-3 text-xs">
-                    <div className="flex items-center gap-1 bg-card px-2 py-1 rounded-lg border border-border-color">
-                      <button
-                        onClick={() => voteComment(comment.id, "upvote")}
-                        className={`p-1 hover:text-success transition-colors text-muted-text vote-btn-up flex items-center justify-center min-w-[36px] min-h-[36px] ${userVotes[comment.id] === "upvote" ? "text-success font-bold" : ""}`}
-                        title="Upvote"
-                      >
-                        <ThumbsUp className="w-3 h-3" />
-                      </button>
-                      <span className="text-xs font-bold text-muted-text min-w-[20px] text-center">
-                        {comment.upvotes - comment.downvotes}
-                      </span>
-                      <button
-                        onClick={() => voteComment(comment.id, "downvote")}
-                        className={`p-1 hover:text-danger transition-colors text-muted-text vote-btn-down flex items-center justify-center min-w-[36px] min-h-[36px] ${userVotes[comment.id] === "downvote" ? "text-danger font-bold" : ""}`}
-                        title="Downvote"
-                      >
-                        <ThumbsDown className="w-3 h-3" />
-                      </button>
-                    </div>
-                    {isAdmin && (
-                      <button
-                        onClick={() => toggleReplyForm(comment.id)}
-                        className="px-3 py-1 hover:bg-blue-100 dark:hover:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded transition-colors font-bold"
-                      >
-                        {t("reply", language)}
-                      </button>
-                    )}
-                    {isAdmin && (
-                      <button
-                        onClick={() => deleteComment(comment.id)}
-                        className="text-danger hover:text-red-700 p-1 rounded hover:bg-red-50 dark:hover:bg-red-900/20"
-                      >
-                        <Trash2 className="w-3 h-3" />
-                      </button>
-                    )}
-                  </div>
-
-                  {comment.replies && comment.replies.length > 0 && (
-                    <div className="ml-12 mt-4 space-y-3 border-l-2 border-border-color pl-4">
-                      {comment.replies.map((reply) => (
-                        <div key={reply.id} className="bg-card p-3 rounded-lg">
-                          <div className="flex items-start gap-2 mb-1">
-                            <div className="w-7 h-7 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center font-bold text-white text-xs shadow-md flex-shrink-0">
-                              {reply.user[0].toUpperCase()}
-                            </div>
-                            <div className="flex-grow min-w-0">
-                              <span className="font-bold text-xs text-card-text block">
-                                {escapeHtml(reply.user)}
-                              </span>
-                              <span className="text-xs text-muted-text">
-                                {reply.time}
-                              </span>
-                            </div>
-                          </div>
-                          <p
-                            className="text-xs text-card-text ml-9 leading-relaxed"
-                            dangerouslySetInnerHTML={{ __html: reply.text }}
-                          ></p>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-
-                  {isAdmin && activeReplyForm === comment.id && (
-                    <div className="ml-12 mt-4">
-                      <textarea
-                        value={replyInput[comment.id] || ""}
-                        onChange={(e) =>
-                          setReplyInput((prev) => ({
-                            ...prev,
-                            [comment.id]: e.target.value,
-                          }))
-                        }
-                        placeholder={t("write_your_reply", language)}
-                        className="w-full p-3 rounded-lg border border-border-color bg-card text-card-text focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all resize-none text-sm"
-                        rows={2}
-                      ></textarea>
-                      <div className="flex justify-end gap-2 mt-2">
-                        <button
-                          onClick={() => toggleReplyForm(comment.id)}
-                          className="px-3 py-1.5 rounded-lg bg-muted-bg hover:bg-border-color transition-colors text-sm font-bold text-card-text"
-                        >
-                          {t("cancel", language)}
-                        </button>
-                        <button
-                          onClick={() => postReply(comment.id)}
-                          className="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white transition-colors text-sm font-bold"
-                        >
-                          {t("send_reply", language)}
-                        </button>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              ))
-            ) : (
-              <div className="text-center py-8 text-muted-text">
-                {t("no_comments_yet", language)}
-              </div>
-            )}
           </div>
         </div>
       </div>

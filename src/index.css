@@ -78,7 +78,7 @@
     --text-card: #000000;
     --border-color: #e5e5e5;
     --bg-muted: #f4f4f5;
-    --text-muted: #737373;
+    --text-muted: #4b5563;
   }
 
   :root.dark {
@@ -348,14 +348,9 @@ textarea {
   }
 }
 
-#sort-comments {
-  @apply cursor-pointer appearance-none pr-8 bg-no-repeat bg-[position:right_0.5rem_center] bg-[size:16px];
-  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12"><path fill="currentColor" d="M3 4l3 3 3-3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>');
-}
-
-/* Fix for select arrow color in dark mode manually toggled */
-:is(.dark #sort-comments) {
-  @apply text-card-text;
+/* Fix for custom dropdown in dark mode */
+:is(.dark #sort-comments .custom-dropdown-button) {
+  color: var(--text-card);
 }
 
 #error-message {

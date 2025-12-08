@@ -101,7 +101,7 @@ const Footer: React.FC = () => {
                     t("subscribed_successfully", language),
                   )
                 }
-                className="bg-bbcDark text-white dark:bg-white dark:text-black font-bold px-6 py-3 rounded-lg hover:opacity-90 transition-colors"
+                className="bg-bbcDark text-white dark:bg-white dark:text-black font-bold px-6 py-3 rounded-lg hover:bg-opacity-90 dark:hover:bg-opacity-90 hover:shadow-md transition-all"
               >
                 {t("subscribe", language)}
               </button>

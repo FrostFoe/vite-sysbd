@@ -5,6 +5,7 @@ import type { AdminArticle, Category } from "../../types";
 import { adminApi } from "../../lib/api";
 import { t } from "../../lib/translations";
 import { FileText, Plus, Search, Edit2, Trash2, Loader } from "lucide-react";
+import { CustomDropdown } from "../../components/common/CustomDropdown";
 import {
   formatTimestamp,
   escapeHtml,
@@ -126,19 +127,18 @@ const ArticleList: React.FC = () => {
               className="p-2 rounded border border-border-color bg-card text-sm w-full md:w-48 focus:border-bbcRed outline-none"
             />
 
-            <select
-              name="cat"
+            <CustomDropdown
               value={currentCategoryFilter}
-              onChange={(e) => handleFilterChange("cat", e.target.value)}
-              className="custom-select p-2.5 rounded-lg border border-border-color bg-card text-sm w-32 md:w-40 text-card-text"
-            >
-              <option value="">{t("all_categories", language)}</option>
-              {categories.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {language === "bn" ? c.title_bn : c.title_en}
-                </option>
-              ))}
-            </select>
+              onChange={(value) => handleFilterChange("cat", value)}
+              options={[
+                { value: "", label: t("all_categories", language) },
+                ...categories.map((c) => ({
+                  value: c.id,
+                  label: language === "bn" ? c.title_bn : c.title_en,
+                })),
+              ]}
+              className="w-32 md:w-40"
+            />
 
             <button
               type="submit"

@@ -7,19 +7,24 @@ if ($_SERVER["REQUEST_METHOD"] !== "POST") {
     exit();
 }
 
-// Only admin can reply
-if (!isset($_SESSION["user_role"]) || $_SESSION["user_role"] !== "admin") {
-    send_response(["error" => "Only admin can reply to comments"], 403);
-    exit();
-}
-
 $data = json_decode(file_get_contents("php://input"), true);
 $parentCommentId = $data["parentCommentId"] ?? null;
 $text = $data["text"] ?? "";
+$lang = $data["lang"] ?? "bn";
 
 if (!$parentCommentId || !$text) {
     send_response(
         ["error" => "Missing required fields (parentCommentId, text)"],
+        400,
+    );
+    exit();
+}
+
+// Trim and validate text
+$text = trim($text);
+if (strlen($text) < 1 || strlen($text) > 5000) {
+    send_response(
+        ["error" => "Reply text must be between 1 and 5000 characters"],
         400,
     );
     exit();
@@ -35,19 +40,48 @@ if (!$parent) {
     exit();
 }
 
-$userId = $_SESSION["user_id"] ?? null;
-$userName = "Admin"; // Force name for replies
+// Get user info from session or use anonymous
+$userId = isset($_SESSION["user_id"]) ? $_SESSION["user_id"] : null;
+$userName = isset($_SESSION["user_name"]) ? $_SESSION["user_name"] : "Anonymous";
+
+if (!$userName || empty(trim($userName))) {
+    $userName = "Anonymous User";
+}
+
 $articleId = $parent["article_id"];
 
-// Insert reply as a comment with parent_comment_id
-$stmt = $pdo->prepare(
-    "INSERT INTO comments (article_id, user_id, user_name, text, parent_comment_id) VALUES (?, ?, ?, ?, ?)",
-);
-$stmt->execute([$articleId, $userId, $userName, $text, $parentCommentId]);
+try {
+    // Insert reply as a comment with parent_comment_id
+    $stmt = $pdo->prepare(
+        "INSERT INTO comments (article_id, user_id, user_name, text, parent_comment_id, created_at) VALUES (?, ?, ?, ?, ?, NOW())",
+    );
+    $stmt->execute([$articleId, $userId, $userName, $text, $parentCommentId]);
 
-send_response([
-    "success" => true,
-    "replyId" => $pdo->lastInsertId(),
-    "message" => "Reply posted successfully",
-]);
+    $replyId = $pdo->lastInsertId();
+
+    // Get the inserted reply with formatted response
+    $stmt = $pdo->prepare(
+        "SELECT id, user_name, text, created_at FROM comments WHERE id = ?",
+    );
+    $stmt->execute([$replyId]);
+    $reply = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    send_response([
+        "success" => true,
+        "replyId" => $replyId,
+        "reply" => [
+            "id" => $reply["id"],
+            "user" => $reply["user_name"],
+            "text" => htmlspecialchars($reply["text"]),
+            "time" => time_ago($reply["created_at"], $lang),
+        ],
+        "message" => "Reply posted successfully",
+    ]);
+} catch (PDOException $e) {
+    send_response(
+        ["error" => "Failed to post reply: " . $e->getMessage()],
+        500,
+    );
+}
 ?>
+

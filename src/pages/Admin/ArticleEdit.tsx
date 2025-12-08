@@ -7,6 +7,7 @@ import type { AdminArticle, Category, Section } from "../../types";
 import { adminApi, publicApi } from "../../lib/api";
 import { t } from "../../lib/translations";
 import { Loader, Save, ExternalLink } from "lucide-react";
+import { CustomDropdown } from "../../components/common/CustomDropdown";
 import { showToastMsg } from "../../lib/utils"; // Assuming showToastMsg handles toasts
 
 const ArticleEdit: React.FC = () => {
@@ -441,21 +442,20 @@ const ArticleEdit: React.FC = () => {
                 <label className="block text-xs font-bold mb-2">
                   {t("status", language)}
                 </label>
-                <select
-                  name="status"
+                <CustomDropdown
                   value={article.status || "draft"}
-                  onChange={(e) =>
+                  onChange={(value) =>
                     setArticle((prev) => ({
                       ...prev,
-                      status: e.target.value as AdminArticle["status"],
+                      status: value as AdminArticle["status"],
                     }))
                   }
-                  className="custom-select w-full p-2.5 rounded-lg border border-border-color bg-card text-card-text text-sm"
-                >
-                  <option value="draft">{t("draft", language)}</option>
-                  <option value="published">{t("published", language)}</option>
-                  <option value="archived">{t("archived", language)}</option>
-                </select>
+                  options={[
+                    { value: "draft", label: t("draft", language) },
+                    { value: "published", label: t("published", language) },
+                    { value: "archived", label: t("archived", language) },
+                  ]}
+                />
               </div>
 
               <div className="mb-4">
@@ -526,26 +526,25 @@ const ArticleEdit: React.FC = () => {
                 <label className="block text-xs font-bold mb-2">
                   {t("section_homepage", language)}
                 </label>
-                <select
-                  name="sectionId"
+                <CustomDropdown
                   value={article.section_id || ""}
-                  onChange={(e) =>
+                  onChange={(value) =>
                     setArticle((prev) => ({
                       ...prev,
-                      section_id: e.target.value,
+                      section_id: value,
                     }))
                   }
-                  className="custom-select w-full p-2.5 rounded-lg border border-border-color bg-card text-card-text text-sm"
-                >
-                  <option value="">{t("none", language)}</option>
-                  {sections.map((sec) => (
-                    <option key={sec.id} value={sec.id}>
-                      {language === "bn"
-                        ? sec.title_bn || sec.title_en
-                        : sec.title_en || sec.title_bn}
-                    </option>
-                  ))}
-                </select>
+                  options={[
+                    { value: "", label: t("none", language) },
+                    ...sections.map((sec) => ({
+                      value: sec.id,
+                      label:
+                        language === "bn"
+                          ? sec.title_bn || sec.title_en
+                          : sec.title_en || sec.title_bn,
+                    })),
+                  ]}
+                />
               </div>
             </div>
 

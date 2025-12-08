@@ -140,7 +140,7 @@ const Header: React.FC = () => {
               ) : (
                 <Link
                   to="/login"
-                  className="text-sm font-bold px-5 py-2.5 bg-bbcDark dark:bg-white text-white dark:text-black rounded-full hover:shadow-lg hover:-translate-y-0.5 transition-all active:scale-95"
+                  className="text-sm font-bold px-5 py-2.5 bg-bbcDark dark:bg-white text-white dark:text-black rounded-full hover:bg-opacity-90 dark:hover:bg-opacity-90 hover:shadow-lg hover:-translate-y-0.5 transition-all active:scale-95"
                 >
                   {t("sign_in", language)}
                 </Link>

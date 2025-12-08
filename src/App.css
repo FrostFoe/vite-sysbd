@@ -78,7 +78,7 @@
     --text-card: #000000;
     --border-color: #e5e5e5;
     --bg-muted: #f4f4f5;
-    --text-muted: #737373;
+    --text-muted: #4b5563;
   }
 
   :root.dark {

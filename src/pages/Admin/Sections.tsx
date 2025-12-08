@@ -3,6 +3,7 @@ import type { FormEvent } from "react";
 import { adminApi } from "../../lib/api";
 import type { Section } from "../../types";
 import { Plus, Edit2, Trash2, Layers as LayersIcon } from "lucide-react";
+import { CustomDropdown } from "../../components/common/CustomDropdown";
 
 // The 'Section' type from types.ts is for the public API.
 // This page needs a type that matches the database table.
@@ -109,23 +110,22 @@ const SectionModal: React.FC<{
           </div>
           <div>
             <label className="block text-sm font-bold mb-2">Type</label>
-            <select
-              name="type"
+            <CustomDropdown
               value={formData.type || "grid"}
-              onChange={(e) =>
+              onChange={(value) =>
                 setFormData({
                   ...formData,
-                  type: e.target.value as AdminSection["type"],
+                  type: value as AdminSection["type"],
                 })
               }
-              className="w-full p-2.5 rounded-lg border border-border-color bg-card text-card-text text-sm"
-            >
-              <option value="hero">Hero</option>
-              <option value="grid">Grid</option>
-              <option value="list">List</option>
-              <option value="carousel">Carousel</option>
-              <option value="highlight">Highlight</option>
-            </select>
+              options={[
+                { value: "hero", label: "Hero" },
+                { value: "grid", label: "Grid" },
+                { value: "list", label: "List" },
+                { value: "carousel", label: "Carousel" },
+                { value: "highlight", label: "Highlight" },
+              ]}
+            />
           </div>
           <div>
             <label className="block text-sm font-bold mb-1">Sort Order</label>

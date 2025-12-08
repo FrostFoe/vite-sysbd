@@ -5,6 +5,7 @@ import { t } from "../../lib/translations";
 import { adminApi } from "../../lib/api";
 import type { Conversation, Message } from "../../types";
 import { Loader, Send, MessageCircle, Menu, ArrowLeft } from "lucide-react";
+import { CustomDropdown } from "../../components/common/CustomDropdown";
 import { formatTimestamp, escapeHtml, showToastMsg } from "../../lib/utils";
 import { Link } from "react-router-dom";
 
@@ -147,20 +148,18 @@ const AdminInbox: React.FC = () => {
           </div>
         </div>
         <div className="flex items-center gap-3">
-          <select
+          <CustomDropdown
             id="sort-select"
             value={sortConversationsBy}
-            onChange={(e) =>
-              setSortConversationsBy(
-                e.target.value as typeof sortConversationsBy,
-              )
+            onChange={(value) =>
+              setSortConversationsBy(value as typeof sortConversationsBy)
             }
-            className="custom-select px-3 py-2 rounded-lg border border-border-color bg-card text-card-text text-sm"
-          >
-            <option value="latest">{t("latest", language)}</option>
-            <option value="unread">{t("unread", language)}</option>
-            <option value="oldest">{t("oldest", language)}</option>
-          </select>
+            options={[
+              { value: "latest", label: t("latest", language) },
+              { value: "unread", label: t("unread", language) },
+              { value: "oldest", label: t("oldest", language) },
+            ]}
+          />
           {getUnreadCount() > 0 && (
             <span
               id="unread-badge"

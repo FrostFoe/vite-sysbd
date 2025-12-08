@@ -214,6 +214,7 @@ export const publicApi = {
   postReply: async (
     parentCommentId: number,
     text: string,
+    lang?: string,
   ): Promise<{
     success: boolean;
     replyId?: number;
@@ -223,6 +224,7 @@ export const publicApi = {
     const response = await api.post("/post_reply.php", {
       parentCommentId,
       text,
+      lang: lang || "bn",
     });
     return response.data;
   },
