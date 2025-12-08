@@ -1,0 +1,69 @@
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
+import { Menu, Plus } from 'lucide-react';
+
+interface DashHeaderProps {
+  type: 'admin' | 'dashboard';
+  toggleSidebar: () => void;
+}
+
+const DashHeader: React.FC<DashHeaderProps> = ({ type, toggleSidebar }) => {
+  const { user } = useAuth();
+  const isAdmin = type === 'admin';
+
+  const userName = user?.email.split('@')[0] || 'User';
+  const userInitial = userName ? userName[0].toUpperCase() : 'U';
+
+  return (
+    <header className="h-[70px] border-b border-border-color bg-white/90 dark:bg-card/90 backdrop-blur-md z-50 transition-colors duration-300 shadow-sm shrink-0 flex items-center px-4 lg:px-8 justify-between relative min-w-0">
+      <div className="flex items-center gap-3 md:gap-4 min-w-0">
+        <button
+          type="button"
+          onClick={toggleSidebar}
+          className="md:hidden p-2 -ml-2 rounded-lg hover:bg-muted-bg text-muted-text hover:text-card-text transition-colors flex-shrink-0"
+        >
+          <Menu className="w-6 h-6" />
+        </button>
+        <Link to={isAdmin ? '/admin' : '/dashboard'} className="flex items-center select-none gap-2 group min-w-0">
+          <span className="bg-bbcRed text-white px-2.5 py-0.5 font-bold text-lg md:text-xl rounded shadow-md group-hover:bg-[var(--color-bbcRed-hover)] transition-colors duration-300 flex-shrink-0">
+            B
+          </span>
+          <span className="font-bold text-lg md:text-2xl tracking-tight leading-none text-card-text group-hover:text-muted-text transition-colors whitespace-nowrap">
+            BT{' '}
+            <span className="text-xs text-muted-text font-normal ml-2 uppercase tracking-widest hidden sm:inline-block">
+              {isAdmin ? 'Admin' : 'Dashboard'}
+            </span>
+          </span>
+        </Link>
+      </div>
+
+      <div className="flex items-center gap-2 md:gap-4 flex-shrink-0">
+        {isAdmin ? (
+          <Link
+            to="/admin/articles/new"
+            className="hidden sm:flex items-center gap-2 bg-bbcRed text-white px-2 md:px-4 py-2 rounded-lg text-xs md:text-sm font-bold hover:bg-red-700 transition-colors shadow-sm hover:shadow-md flex-shrink-0"
+          >
+            <Plus className="w-4 h-4 flex-shrink-0" />
+            <span className="hidden md:inline">New</span>
+            <span className="hidden lg:inline"> Article</span>
+          </Link>
+        ) : null}
+        
+        <div className="hidden md:flex items-center gap-2 md:gap-3 pl-2 md:pl-4 border-l border-border-color flex-shrink-0">
+          <div className="text-right hidden lg:block leading-tight flex-shrink-0">
+            <div className="font-bold text-sm truncate">{isAdmin ? 'Administrator' : userName}</div>
+            <div className="text-[10px] text-muted-text truncate">
+              {user?.email}
+            </div>
+          </div>
+          <div className="w-9 h-9 rounded-full bg-gradient-to-br from-bbcRed to-orange-600 text-white flex items-center justify-center font-bold text-sm shadow-md flex-shrink-0">
+            {isAdmin ? 'A' : userInitial}
+          </div>
+        </div>
+      </div>
+    </header>
+  );
+};
+
+export default DashHeader;

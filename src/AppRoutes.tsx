@@ -4,14 +4,14 @@ import { useAuth } from "./context/AuthContext";
 import { LayoutProvider } from "./context/LayoutContext";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import MainLayout from "./components/Layout/MainLayout"; // Import MainLayout
-
+import MainLayout from "./components/Layout/MainLayout";
+import DashLayout from "./components/Layout/DashLayout";
 import HomePage from "./pages/Home";
 import Dashboard from "./pages/Dashboard";
 import AdminDashboard from "./pages/AdminDashboard";
 import ArticleDetail from "./pages/ArticleDetail";
 import ArticleList from "./pages/Admin/ArticleList";
-import ArticleEdit from "./pages/Admin/ArticleEdit"; // Assuming this component is created
+import ArticleEdit from "./pages/Admin/ArticleEdit";
 import AdminInbox from "./pages/Admin/Inbox";
 import AdminUsers from "./pages/Admin/Users";
 import AdminComments from "./pages/Admin/Comments";
@@ -66,14 +66,14 @@ const AppRoutes: React.FC = () => {
           }
         />
 
-        {/* User Protected Routes with MainLayout */}
+        {/* User Protected Routes with DashLayout */}
         <Route
           path="/dashboard"
           element={
             <ProtectedRoute>
-              <MainLayout>
+              <DashLayout>
                 <Dashboard />
-              </MainLayout>
+              </DashLayout>
             </ProtectedRoute>
           }
         />
@@ -81,21 +81,21 @@ const AppRoutes: React.FC = () => {
           path="/dashboard/inbox"
           element={
             <ProtectedRoute>
-              <MainLayout>
+              <DashLayout>
                 <UserInbox />
-              </MainLayout>
+              </DashLayout>
             </ProtectedRoute>
           }
         />
 
-        {/* Admin Only Protected Routes with MainLayout */}
+        {/* Admin Only Protected Routes with DashLayout */}
         <Route
           path="/admin"
           element={
             <ProtectedRoute adminOnly>
-              <MainLayout>
+              <DashLayout>
                 <AdminDashboard />
-              </MainLayout>
+              </DashLayout>
             </ProtectedRoute>
           }
         />
@@ -103,9 +103,9 @@ const AppRoutes: React.FC = () => {
           path="/admin/articles"
           element={
             <ProtectedRoute adminOnly>
-              <MainLayout>
+              <DashLayout>
                 <ArticleList />
-              </MainLayout>
+              </DashLayout>
             </ProtectedRoute>
           }
         />
@@ -113,9 +113,9 @@ const AppRoutes: React.FC = () => {
           path="/admin/articles/new"
           element={
             <ProtectedRoute adminOnly>
-              <MainLayout>
+              <DashLayout>
                 <ArticleEdit />
-              </MainLayout>
+              </DashLayout>
             </ProtectedRoute>
           }
         />
@@ -123,9 +123,9 @@ const AppRoutes: React.FC = () => {
           path="/admin/articles/:id/edit"
           element={
             <ProtectedRoute adminOnly>
-              <MainLayout>
+              <DashLayout>
                 <ArticleEdit />
-              </MainLayout>
+              </DashLayout>
             </ProtectedRoute>
           }
         />
@@ -133,9 +133,9 @@ const AppRoutes: React.FC = () => {
           path="/admin/inbox"
           element={
             <ProtectedRoute adminOnly>
-              <MainLayout>
+              <DashLayout>
                 <AdminInbox />
-              </MainLayout>
+              </DashLayout>
             </ProtectedRoute>
           }
         />
@@ -143,9 +143,9 @@ const AppRoutes: React.FC = () => {
           path="/admin/users"
           element={
             <ProtectedRoute adminOnly>
-              <MainLayout>
+              <DashLayout>
                 <AdminUsers />
-              </MainLayout>
+              </DashLayout>
             </ProtectedRoute>
           }
         />
@@ -153,9 +153,9 @@ const AppRoutes: React.FC = () => {
           path="/admin/comments"
           element={
             <ProtectedRoute adminOnly>
-              <MainLayout>
+              <DashLayout>
                 <AdminComments />
-              </MainLayout>
+              </DashLayout>
             </ProtectedRoute>
           }
         />
@@ -163,9 +163,9 @@ const AppRoutes: React.FC = () => {
           path="/admin/submissions"
           element={
             <ProtectedRoute adminOnly>
-              <MainLayout>
+              <DashLayout>
                 <AdminSubmissions />
-              </MainLayout>
+              </DashLayout>
             </ProtectedRoute>
           }
         />
