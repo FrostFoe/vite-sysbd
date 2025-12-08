@@ -131,3 +131,4 @@ class LoggingService {
 }
 
 export default LoggingService;
+export const logger = LoggingService;

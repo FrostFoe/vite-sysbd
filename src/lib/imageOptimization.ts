@@ -5,28 +5,45 @@
 
 /**
  * Generate responsive image srcset with WebP format support
+ * Supports multiple responsive breakpoints for optimal image loading
  */
 export function generateImageSrcSet(
   basePath: string,
-  widths: number[] = [400, 800, 1200],
-): string {
-  return widths
-    .map((width) => `${basePath}?w=${width}&q=85 ${width}w`)
+  widths: number[] = [400, 800, 1200, 1600],
+): { srcSet: string; sizes: string } {
+  const srcSet = widths
+    .map((width) => `${basePath}?w=${width}&q=85&fmt=webp ${width}w`)
     .join(", ");
+
+  const sizes = "(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 80vw";
+
+  return { srcSet, sizes };
 }
 
 /**
- * Get WebP image source with fallback
+ * Get WebP image source with multiple format fallbacks
+ * Returns optimized srcset with WebP and JPEG formats
  */
-export function getImageWithWebP(path: string): {
+export function getImageWithWebP(
+  path: string,
+  alt: string = "Image",
+): {
   src: string;
   srcSet: string;
+  webpSrcSet: string;
+  sizes: string;
   alt: string;
 } {
+  const jpegSrcSet = [400, 800, 1200].map((w) => `${path}?w=${w}&q=85 ${w}w`).join(", ");
+  const webpSrcSet = [400, 800, 1200].map((w) => `${path}?w=${w}&q=85&fmt=webp ${w}w`).join(", ");
+  const sizes = "(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 80vw";
+
   return {
     src: path,
-    srcSet: `${path}?fmt=webp 1x, ${path}?fmt=webp&q=85 2x`,
-    alt: "Article image",
+    srcSet: jpegSrcSet,
+    webpSrcSet,
+    sizes,
+    alt,
   };
 }
 

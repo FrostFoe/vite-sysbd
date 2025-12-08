@@ -11,6 +11,7 @@ import type {
   ArticleWithDocCount,
   Document as DocType,
 } from "../types";
+import { setupApiInterceptors } from "./apiInterceptors";
 
 export interface AdminArticle {
   id: string;
@@ -37,6 +38,9 @@ const api = axios.create({
   baseURL: API_BASE_URL,
   withCredentials: true, // Important for session cookies
 });
+
+// Setup interceptors for logging and error handling
+setupApiInterceptors(api);
 
 export const authApi = {
   checkAuth: async (): Promise<{ authenticated: boolean; user?: User }> => {
