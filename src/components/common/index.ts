@@ -36,3 +36,4 @@ export type { Toast, ToastType } from "./Toast";
 export { default as ArticleCard } from "./ArticleCard";
 export { CustomDropdown } from "./CustomDropdown";
 export { default as MiniArticle } from "./MiniArticle";
+export { default as CustomEditor } from "./CustomEditor";

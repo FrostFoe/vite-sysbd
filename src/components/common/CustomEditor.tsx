@@ -1,0 +1,377 @@
+import React, { useCallback, useState } from "react";
+import { useEditor, EditorContent } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
+import Image from "@tiptap/extension-image";
+import Placeholder from "@tiptap/extension-placeholder";
+import { Upload, AlertCircle, Video } from "lucide-react";
+import VideoNode from "./VideoNode";
+
+interface CustomEditorProps {
+  value: string;
+  onChange: (content: string) => void;
+  placeholder?: string;
+  height?: string;
+  className?: string;
+}
+
+/**
+ * CustomEditor Component - TipTap based rich text editor
+ * Handles basic text formatting, images, and videos
+ */
+const CustomEditor: React.FC<CustomEditorProps> = ({
+  value,
+  onChange,
+  placeholder = "Start typing...",
+  height = "400px",
+  className = "",
+}) => {
+  const [uploadError, setUploadError] = useState<string>("");
+
+  const handleImageUpload = useCallback(async (file: File) => {
+    try {
+      setUploadError("");
+
+      // Validate file type
+      if (!file.type.startsWith("image/")) {
+        throw new Error("Please upload a valid image file");
+      }
+
+      // Validate file size (5MB max)
+      const maxSize = 5 * 1024 * 1024;
+      if (file.size > maxSize) {
+        throw new Error("Image size must be less than 5MB");
+      }
+
+      // Create FormData and upload
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("type", "image");
+
+      const response = await fetch("/api/upload-media.php", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await response.json();
+
+      if (!data.success) {
+        throw new Error(data.message || "Upload failed");
+      }
+
+      return data.file.url;
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Upload failed";
+      setUploadError(message);
+      console.error("Image upload error:", error);
+      return null;
+    }
+  }, []);
+
+  const handleVideoUpload = useCallback(async (file: File) => {
+    try {
+      setUploadError("");
+
+      // Validate file type
+      if (!file.type.startsWith("video/")) {
+        throw new Error("Please upload a valid video file");
+      }
+
+      // Validate file size (100MB max for videos)
+      const maxSize = 100 * 1024 * 1024;
+      if (file.size > maxSize) {
+        throw new Error("Video size must be less than 100MB");
+      }
+
+      // Create FormData and upload
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("type", "video");
+
+      const response = await fetch("/api/upload-media.php", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await response.json();
+
+      if (!data.success) {
+        throw new Error(data.message || "Upload failed");
+      }
+
+      return data.file.url;
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Upload failed";
+      setUploadError(message);
+      console.error("Video upload error:", error);
+      return null;
+    }
+  }, []);
+
+  const editor = useEditor({
+    extensions: [
+      StarterKit.configure({
+        // Configure starterkit as needed
+      }),
+      Image.configure({
+        inline: false,
+        allowBase64: true,
+      }),
+      VideoNode.configure({
+        inline: false,
+        allowBase64: true,
+      }),
+      Placeholder.configure({
+        placeholder,
+      }),
+    ],
+    content: value,
+    onUpdate: ({ editor }) => {
+      onChange(editor.getHTML());
+    },
+  });
+
+  // Handle drag and drop
+  const handleDrop = useCallback(
+    (e: React.DragEvent<HTMLDivElement>) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      const files = e.dataTransfer.files;
+      if (files && files.length > 0) {
+        const file = files[0];
+        if (file.type.startsWith("image/")) {
+          handleImageUpload(file).then((url) => {
+            if (url && editor) {
+              editor.chain().focus().setImage({ src: url }).run();
+            }
+          });
+        } else if (file.type.startsWith("video/")) {
+          handleVideoUpload(file).then((url) => {
+            if (url && editor) {
+              editor.chain().focus().setVideo({ src: url }).run();
+            }
+          });
+        }
+      }
+    },
+    [editor, handleImageUpload, handleVideoUpload]
+  );
+
+  const handleImageButtonClick = useCallback(() => {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = "image/*";
+    input.onchange = (e: Event) => {
+      const target = e.target as HTMLInputElement;
+      const file = target.files?.[0];
+      if (file) {
+        handleImageUpload(file).then((url) => {
+          if (url && editor) {
+            editor.chain().focus().setImage({ src: url }).run();
+          }
+        });
+      }
+    };
+    input.click();
+  }, [editor, handleImageUpload]);
+
+  const handleVideoButtonClick = useCallback(() => {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = "video/*";
+    input.onchange = (e: Event) => {
+      const target = e.target as HTMLInputElement;
+      const file = target.files?.[0];
+      if (file) {
+        handleVideoUpload(file).then((url) => {
+          if (url && editor) {
+            editor.chain().focus().setVideo({ src: url }).run();
+          }
+        });
+      }
+    };
+    input.click();
+  }, [editor, handleVideoUpload]);
+
+  if (!editor) {
+    return <div>Loading editor...</div>;
+  }
+
+  return (
+    <div className={`custom-editor-wrapper ${className}`}>
+      {/* Toolbar */}
+      <div className="border-b border-border-color bg-gray-50 p-2 rounded-t-lg flex flex-wrap gap-1">
+        <button
+          onClick={() => editor.chain().focus().toggleBold().run()}
+          className={`px-3 py-1 rounded text-sm font-medium ${
+            editor.isActive("bold")
+              ? "bg-primary-color text-white"
+              : "bg-white border border-border-color hover:bg-gray-100"
+          }`}
+          title="Bold (Ctrl+B)"
+        >
+          <strong>B</strong>
+        </button>
+
+        <button
+          onClick={() => editor.chain().focus().toggleItalic().run()}
+          className={`px-3 py-1 rounded text-sm font-medium ${
+            editor.isActive("italic")
+              ? "bg-primary-color text-white"
+              : "bg-white border border-border-color hover:bg-gray-100"
+          }`}
+          title="Italic (Ctrl+I)"
+        >
+          <em>I</em>
+        </button>
+
+        <button
+          onClick={() => editor.chain().focus().toggleStrike().run()}
+          className={`px-3 py-1 rounded text-sm font-medium ${
+            editor.isActive("strike")
+              ? "bg-primary-color text-white"
+              : "bg-white border border-border-color hover:bg-gray-100"
+          }`}
+          title="Strikethrough"
+        >
+          <s>S</s>
+        </button>
+
+        <div className="w-px bg-border-color"></div>
+
+        <button
+          onClick={() =>
+            editor.chain().focus().toggleHeading({ level: 1 }).run()
+          }
+          className={`px-3 py-1 rounded text-sm font-medium ${
+            editor.isActive("heading", { level: 1 })
+              ? "bg-primary-color text-white"
+              : "bg-white border border-border-color hover:bg-gray-100"
+          }`}
+          title="Heading 1"
+        >
+          H1
+        </button>
+
+        <button
+          onClick={() =>
+            editor.chain().focus().toggleHeading({ level: 2 }).run()
+          }
+          className={`px-3 py-1 rounded text-sm font-medium ${
+            editor.isActive("heading", { level: 2 })
+              ? "bg-primary-color text-white"
+              : "bg-white border border-border-color hover:bg-gray-100"
+          }`}
+          title="Heading 2"
+        >
+          H2
+        </button>
+
+        <button
+          onClick={() => editor.chain().focus().toggleBulletList().run()}
+          className={`px-3 py-1 rounded text-sm font-medium ${
+            editor.isActive("bulletList")
+              ? "bg-primary-color text-white"
+              : "bg-white border border-border-color hover:bg-gray-100"
+          }`}
+          title="Bullet List"
+        >
+          • List
+        </button>
+
+        <button
+          onClick={() => editor.chain().focus().toggleOrderedList().run()}
+          className={`px-3 py-1 rounded text-sm font-medium ${
+            editor.isActive("orderedList")
+              ? "bg-primary-color text-white"
+              : "bg-white border border-border-color hover:bg-gray-100"
+          }`}
+          title="Ordered List"
+        >
+          1. List
+        </button>
+
+        <div className="w-px bg-border-color"></div>
+
+        <button
+          onClick={handleImageButtonClick}
+          className="px-3 py-1 rounded text-sm font-medium bg-white border border-border-color hover:bg-gray-100 flex items-center gap-1"
+          title="Insert Image"
+        >
+          <Upload size={16} /> Image
+        </button>
+
+        <button
+          onClick={handleVideoButtonClick}
+          className="px-3 py-1 rounded text-sm font-medium bg-white border border-border-color hover:bg-gray-100 flex items-center gap-1"
+          title="Insert Video"
+        >
+          <Video size={16} /> Video
+        </button>
+
+        <button
+          onClick={() => editor.chain().focus().toggleBlockquote().run()}
+          className={`px-3 py-1 rounded text-sm font-medium ${
+            editor.isActive("blockquote")
+              ? "bg-primary-color text-white"
+              : "bg-white border border-border-color hover:bg-gray-100"
+          }`}
+          title="Blockquote"
+        >
+          " Quote
+        </button>
+
+        <button
+          onClick={() => editor.chain().focus().setHorizontalRule().run()}
+          className="px-3 py-1 rounded text-sm font-medium bg-white border border-border-color hover:bg-gray-100"
+          title="Horizontal Rule"
+        >
+          —
+        </button>
+
+        <div className="w-px bg-border-color"></div>
+
+        <button
+          onClick={() => editor.chain().focus().undo().run()}
+          className="px-3 py-1 rounded text-sm font-medium bg-white border border-border-color hover:bg-gray-100"
+          title="Undo"
+        >
+          ↶
+        </button>
+
+        <button
+          onClick={() => editor.chain().focus().redo().run()}
+          className="px-3 py-1 rounded text-sm font-medium bg-white border border-border-color hover:bg-gray-100"
+          title="Redo"
+        >
+          ↷
+        </button>
+      </div>
+
+      {/* Editor Content Area */}
+      <div
+        style={{ height, minHeight: height }}
+        className="border border-t-0 border-border-color rounded-b-lg overflow-y-auto bg-white p-3 prose prose-sm max-w-none"
+        onDrop={handleDrop}
+        onDragOver={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+        }}
+      >
+        <EditorContent editor={editor} />
+      </div>
+
+      {/* Error Message */}
+      {uploadError && (
+        <div className="mt-2 p-3 bg-red-50 border border-red-200 rounded-lg flex items-center gap-2 text-red-700">
+          <AlertCircle size={18} />
+          <span>{uploadError}</span>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default CustomEditor;

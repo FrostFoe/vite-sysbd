@@ -1,14 +1,13 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
-import ReactQuill from "react-quill-new";
-import "react-quill-new/dist/quill.snow.css"; // Import Quill styles
+import { CustomEditor } from "../../components/common";
 import { useLayout } from "../../context/LayoutContext";
 import type { AdminArticle, Category, Section } from "../../types";
 import { adminApi, publicApi } from "../../lib/api";
 import { t } from "../../lib/translations";
 import { Loader, Save, ExternalLink } from "lucide-react";
 import { CustomDropdown } from "../../components/common/CustomDropdown";
-import { showToastMsg } from "../../lib/utils"; // Assuming showToastMsg handles toasts
+import { showToastMsg } from "../../lib/utils";
 
 const ArticleEdit: React.FC = () => {
   const { id } = useParams<{ id: string }>(); // Article ID for editing, undefined for new
@@ -22,8 +21,9 @@ const ArticleEdit: React.FC = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [restoreAlert, setRestoreAlert] = useState(false);
 
-  const quillBnRef = useRef<ReactQuill>(null);
-  const quillEnRef = useRef<ReactQuill>(null);
+  // For tracking content changes
+  const contentBnRef = useRef<string>("");
+  const contentEnRef = useRef<string>("");
 
   const storageKey = `article-draft-${id || "new"}`;
 
@@ -116,12 +116,10 @@ const ArticleEdit: React.FC = () => {
   const autosaveArticle = useCallback(() => {
     const currentArticleData = {
       ...article,
-      content_bn: quillBnRef.current?.getEditor?.().root?.innerHTML || "",
-      content_en: quillEnRef.current?.getEditor?.().root?.innerHTML || "",
+      content_bn: contentBnRef.current,
+      content_en: contentEnRef.current,
     };
     localStorage.setItem(storageKey, JSON.stringify(currentArticleData));
-    // Show toast message instead of using state for display
-    // If we implement UI display, we would use the state
   }, [article, storageKey]);
 
   // Debounced autosave
@@ -192,14 +190,8 @@ const ArticleEdit: React.FC = () => {
       formData.append("title_en", article.title_en || "");
       formData.append("summary_bn", article.summary_bn || "");
       formData.append("summary_en", article.summary_en || "");
-      formData.append(
-        "content_bn",
-        quillBnRef.current?.getEditor?.().root?.innerHTML || "",
-      );
-      formData.append(
-        "content_en",
-        quillEnRef.current?.getEditor?.().root?.innerHTML || "",
-      );
+      formData.append("content_bn", contentBnRef.current);
+      formData.append("content_en", contentEnRef.current);
       formData.append("image", article.image || "");
       formData.append("category_id", article.category_id || "");
       formData.append("sectionId", article.section_id || "");
@@ -347,30 +339,20 @@ const ArticleEdit: React.FC = () => {
               ></textarea>
             </div>
 
-            {/* Content fields (Quill) */}
+            {/* Content fields (TipTap Editor) */}
             <div>
               <label className="block text-sm font-bold mb-2">
                 {t("content_bn", language)}
               </label>
-              <ReactQuill
-                ref={quillBnRef}
-                theme="snow"
+              <CustomEditor
                 value={article.content_bn || ""}
-                onChange={(content) =>
-                  setArticle((prev) => ({ ...prev, content_bn: content }))
-                }
-                modules={{
-                  toolbar: [
-                    [{ header: [1, 2, 3, false] }],
-                    ["bold", "italic", "underline", "strike"],
-                    ["blockquote", "code-block"],
-                    [{ list: "ordered" }, { list: "bullet" }],
-                    ["link", "image"],
-                    ["clean"],
-                  ],
+                onChange={(content: string) => {
+                  contentBnRef.current = content;
+                  setArticle((prev) => ({ ...prev, content_bn: content }));
                 }}
                 placeholder={t("write_in_bengali", language)}
-                className="bg-card h-96 rounded-lg border border-border-color"
+                height="400px"
+                className="rounded-lg border border-border-color"
               />
             </div>
 
@@ -378,25 +360,15 @@ const ArticleEdit: React.FC = () => {
               <label className="block text-sm font-bold mb-2">
                 {t("content_en", language)}
               </label>
-              <ReactQuill
-                ref={quillEnRef}
-                theme="snow"
+              <CustomEditor
                 value={article.content_en || ""}
-                onChange={(content) =>
-                  setArticle((prev) => ({ ...prev, content_en: content }))
-                }
-                modules={{
-                  toolbar: [
-                    [{ header: [1, 2, 3, false] }],
-                    ["bold", "italic", "underline", "strike"],
-                    ["blockquote", "code-block"],
-                    [{ list: "ordered" }, { list: "bullet" }],
-                    ["link", "image"],
-                    ["clean"],
-                  ],
+                onChange={(content: string) => {
+                  contentEnRef.current = content;
+                  setArticle((prev) => ({ ...prev, content_en: content }));
                 }}
                 placeholder={t("write_in_english", language)}
-                className="bg-card h-96 rounded-lg border border-border-color"
+                height="400px"
+                className="rounded-lg border border-border-color"
               />
             </div>
           </div>
