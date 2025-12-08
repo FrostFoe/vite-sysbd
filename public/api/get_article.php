@@ -1,7 +1,7 @@
 <?php
-require_once "../../src/config/db.php";
-require_once "../../src/lib/security.php";
-require_once "../../src/lib/functions.php";
+require_once __DIR__ . "/../config/db.php";
+require_once __DIR__ . "/../lib/security.php";
+require_once __DIR__ . "/../lib/functions.php";
 
 header("Content-Type: application/json");
 

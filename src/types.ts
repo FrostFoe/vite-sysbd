@@ -165,6 +165,5 @@ export interface Message {
   sender_type: "user" | "admin";
   recipient_id: number;
   content: string;
-  is_read: 0 | 1;
   created_at: string;
 }

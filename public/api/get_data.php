@@ -1,6 +1,6 @@
 <?php
-require_once __DIR__ . "/../../src/config/db.php";
-require_once __DIR__ . "/../../src/lib/functions.php"; // For time_ago
+require_once __DIR__ . "/../config/db.php";
+require_once __DIR__ . "/../lib/functions.php"; // For time_ago
 
 function get_data(
     $lang = "bn",

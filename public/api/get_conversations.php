@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once "../../src/config/db.php";
+require_once __DIR__ . "/../config/db.php";
 
 header("Content-Type: application/json");
 
@@ -64,7 +64,7 @@ try {
         // Get unread count
         $unreadStmt = $pdo->prepare("
             SELECT COUNT(*) as count FROM messages
-            WHERE sender_id = ? AND recipient_id = ? AND is_read = 0
+            WHERE sender_id = ? AND recipient_id = ?
         ");
         $unreadStmt->execute([$userId, $adminId]);
         $unread = $unreadStmt->fetch(PDO::FETCH_ASSOC);

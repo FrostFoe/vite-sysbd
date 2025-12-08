@@ -136,8 +136,6 @@ CREATE TABLE IF NOT EXISTS `messages` (
   `recipient_id` int(11) NOT NULL,
   `recipient_type` enum('user','admin') NOT NULL DEFAULT 'admin',
   `content` longtext NOT NULL,
-  `is_read` tinyint(1) DEFAULT 0,
-  `read_at` timestamp NULL,
   `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
@@ -145,7 +143,6 @@ CREATE TABLE IF NOT EXISTS `messages` (
   KEY `idx_recipient` (`recipient_id`, `recipient_type`),
   KEY `idx_conversation` (`sender_id`, `recipient_id`),
   KEY `idx_created_at` (`created_at` DESC),
-  KEY `idx_is_read` (`is_read`),
   CONSTRAINT `fk_sender` FOREIGN KEY (`sender_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 

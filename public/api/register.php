@@ -1,7 +1,7 @@
 <?php
-require_once "../../src/config/db.php";
-require_once "../../src/lib/constants.php";
-require_once "../../src/lib/security.php";
+require_once __DIR__ . "/../config/db.php";
+require_once __DIR__ . "/../lib/constants.php";
+require_once __DIR__ . "/../lib/security.php";
 
 header("Content-Type: application/json");
 session_start();
@@ -53,21 +53,14 @@ try {
         exit();
     }
 
-    // Generate email verification token
-    $verification_token = bin2hex(random_bytes(32));
-    $token_expiry = date('Y-m-d H:i:s', strtotime('+24 hours'));
-
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
     $stmt = $pdo->prepare(
-        "INSERT INTO users (email, password, role, email_verified, verification_token, token_expiry) 
-         VALUES (?, ?, 'user', 0, ?, ?)"
+        "INSERT INTO users (email, password, role) 
+         VALUES (?, ?, 'user')"
     );
-    $stmt->execute([$email, $hashedPassword, $verification_token, $token_expiry]);
+    $stmt->execute([$email, $hashedPassword]);
 
     $userId = $pdo->lastInsertId();
-
-    // Send verification email
-    sendVerificationEmail($email, $verification_token);
 
     // Set session
     $_SESSION["user_id"] = $userId;
@@ -80,7 +73,7 @@ try {
     http_response_code(201);
     echo json_encode([
         "success" => true,
-        "message" => "Registration successful. Please verify your email.",
+        "message" => "Registration successful.",
         "user" => [
             "email" => $email,
             "role" => "user",

@@ -367,14 +367,14 @@ foreach ($prefs as $pref) {
 // Seed Messages
 echo "\n--- Seeding Messages ---\n";
 $messages = [
-    [$johnId, "user", $adminId, "admin", "সাইবার নিরাপত্তা সম্পর্কে আরও তথ্য পেতে পারি কিনা?", 0],
-    [$sarahId, "user", $adminId, "admin", "আমার অ্যাকাউন্ট হ্যাক হয়েছে, কী করব?", 0],
-    [$adminId, "admin", $johnId, "user", "আমরা সাহায্য করতে প্রস্তুত। আপনার সমস্যার বিস্তারিত জানান।", 1],
+    [$johnId, "user", $adminId, "admin", "সাইবার নিরাপত্তা সম্পর্কে আরও তথ্য পেতে পারি কিনা?"],
+    [$sarahId, "user", $adminId, "admin", "আমার অ্যাকাউন্ট হ্যাক হয়েছে, কী করব?"],
+    [$adminId, "admin", $johnId, "user", "আমরা সাহায্য করতে প্রস্তুত। আপনার সমস্যার বিস্তারিত জানান।"],
 ];
 
 $stmt = $pdo->prepare(
-    "INSERT INTO messages (sender_id, sender_type, recipient_id, recipient_type, content, is_read) 
-    VALUES (?, ?, ?, ?, ?, ?)",
+    "INSERT INTO messages (sender_id, sender_type, recipient_id, recipient_type, content) 
+    VALUES (?, ?, ?, ?, ?)",
 );
 foreach ($messages as $msg) {
     $stmt->execute($msg);

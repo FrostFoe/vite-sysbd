@@ -4,7 +4,7 @@
  * Stores client-side errors to backend logs
  */
 
-require_once "../../src/config/db.php";
+require_once __DIR__ . "/../config/db.php";
 
 header("Content-Type: application/json");
 

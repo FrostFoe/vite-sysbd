@@ -1,10 +1,10 @@
 <?php
 header("Content-Type: application/json");
-require_once __DIR__ . "/../../src/config/db.php";
-require_once __DIR__ . "/../../src/lib/functions.php";
-require_once __DIR__ . "/../../src/lib/constants.php";
-require_once __DIR__ . "/../../src/lib/security.php";
-require_once __DIR__ . "/../../src/lib/pagination.php";
+require_once __DIR__ . "/../config/db.php";
+require_once __DIR__ . "/../lib/functions.php";
+require_once __DIR__ . "/../lib/constants.php";
+require_once __DIR__ . "/../lib/security.php";
+require_once __DIR__ . "/../lib/pagination.php";
 
 // Set security headers
 header('X-Content-Type-Options: nosniff');

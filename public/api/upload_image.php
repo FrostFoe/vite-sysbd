@@ -1,7 +1,7 @@
 <?php
-require_once "../../src/config/db.php";
-require_once "../../src/lib/security.php"; // Assuming security.php is still used for other things
-require_once "../../src/lib/FileUploader.php";
+require_once __DIR__ . "/../config/db.php";
+require_once __DIR__ . "/../lib/security.php"; // Assuming security.php is still used for other things
+require_once __DIR__ . "/../lib/FileUploader.php";
 
 header("Content-Type: application/json");
 

@@ -1,7 +1,7 @@
 <?php
-require_once "../../src/config/db.php";
-require_once "../../src/lib/constants.php";
-require_once "../../src/lib/security.php";
+require_once __DIR__ . "/../config/db.php";
+require_once __DIR__ . "/../lib/constants.php";
+require_once __DIR__ . "/../lib/security.php";
 
 header("Content-Type: application/json");
 session_start();
@@ -46,16 +46,6 @@ try {
     $user = $stmt->fetch();
 
     if ($user && password_verify($password, $user["password"])) {
-        // Check if email is verified
-        if (!$user['email_verified']) {
-            http_response_code(403);
-            echo json_encode([
-                "success" => false,
-                "message" => "Please verify your email before logging in"
-            ]);
-            exit();
-        }
-
         // Clear login attempts on successful login
         clearLoginAttempts($email);
 

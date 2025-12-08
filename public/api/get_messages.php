@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once "../../src/config/db.php";
+require_once __DIR__ . "/../config/db.php";
 
 header("Content-Type: application/json");
 
@@ -29,7 +29,6 @@ try {
             sender_type,
             recipient_id,
             content,
-            is_read,
             created_at
         FROM messages
         WHERE (sender_id = ? AND recipient_id = ?) 
@@ -40,16 +39,6 @@ try {
 
     $stmt->execute([$userId, $otherUserId, $otherUserId, $userId]);
     $messages = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-    // Mark messages as read if user is reading them
-    if (!$isAdmin || $isAdmin) {
-        $markStmt = $pdo->prepare("
-            UPDATE messages 
-            SET is_read = 1, read_at = NOW()
-            WHERE (sender_id = ? AND recipient_id = ? AND is_read = 0)
-        ");
-        $markStmt->execute([$otherUserId, $userId]);
-    }
 
     echo json_encode([
         "success" => true,

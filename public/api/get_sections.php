@@ -1,6 +1,6 @@
 <?php
 header("Content-Type: application/json");
-require_once __DIR__ . "/../../src/config/db.php";
+require_once __DIR__ . "/../config/db.php";
 require_once __DIR__ . "/check_auth.php";
 
 // Check admin role
@@ -14,21 +14,12 @@ if (!isset($_SESSION["user_role"]) || $_SESSION["user_role"] !== "admin") {
 }
 
 try {
-    $data = json_decode(file_get_contents("php://input"), true);
-
-    if (empty($data["id"])) {
-        throw new Exception("Section ID required");
-    }
-
-    $id = $data["id"];
-
-    // Delete section (unified)
-    $stmt = $pdo->prepare("DELETE FROM sections WHERE id = ?");
-    $stmt->execute([$id]);
+    $stmt = $pdo->query("SELECT * FROM sections ORDER BY sort_order ASC");
+    $sections = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     echo json_encode([
         "success" => true,
-        "message" => "সেকশন মুছে ফেলা হয়েছে",
+        "data" => $sections,
     ]);
 } catch (Exception $e) {
     http_response_code(500);
