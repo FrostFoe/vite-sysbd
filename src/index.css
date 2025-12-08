@@ -9,7 +9,7 @@
   --color-danger: #ef4444;
   --color-success: #22c55e;
   --color-warning: #f59e0b;
-  
+
   /* Semantic Colors mapped to CSS variables defined in base */
   --color-page: var(--bg-page);
   --color-page-text: var(--text-page);
@@ -20,8 +20,10 @@
   --color-muted-bg: var(--bg-muted);
   --color-muted-text: var(--text-muted);
 
-  --shadow-soft: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  --shadow-soft-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-soft:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-soft-hover:
+    0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
 
   --animate-fade-in: fadeIn 0.5s ease-out forwards;
   --animate-fade-in-up: fadeInUp 0.6s ease-out forwards;
@@ -29,20 +31,40 @@
   --animate-slide-in-right: slideInLeft 0.3s ease-out forwards;
 
   @keyframes fadeIn {
-    0% { opacity: 0; }
-    100% { opacity: 1; }
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
   }
   @keyframes fadeInUp {
-    0% { opacity: 0; transform: translateY(20px); }
-    100% { opacity: 1; transform: translateY(0); }
+    0% {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
   @keyframes zoomIn {
-    0% { opacity: 0; transform: scale(0.95); }
-    100% { opacity: 1; transform: scale(1); }
+    0% {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
   }
   @keyframes slideInLeft {
-    0% { transform: translateX(-100%); }
-    100% { transform: translateX(0); }
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(0);
+    }
   }
 }
 
@@ -75,7 +97,9 @@
     @apply font-sans bg-page text-page-text transition-colors duration-300 ease-out;
   }
 
-  html, body, * {
+  html,
+  body,
+  * {
     font-family: var(--font-sans) !important;
   }
 
@@ -90,7 +114,9 @@
 
   /* Prevent zoom on mobile inputs */
   @media (max-width: 768px) {
-    input, select, textarea {
+    input,
+    select,
+    textarea {
       font-size: 16px !important;
     }
   }
@@ -106,8 +132,14 @@
 
 /* Legacy Animations */
 @keyframes fade-in {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .animate-fade-in {
@@ -115,13 +147,23 @@
 }
 
 @keyframes shimmer {
-  0% { background-position: -1000px 0; }
-  100% { background-position: 1000px 0; }
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
 }
 
 @keyframes slide-up {
-  from { transform: translate(-50%, 100%); opacity: 0; }
-  to { transform: translate(-50%, 0); opacity: 1; }
+  from {
+    transform: translate(-50%, 100%);
+    opacity: 0;
+  }
+  to {
+    transform: translate(-50%, 0);
+    opacity: 1;
+  }
 }
 
 /* Quill Dark Mode Overrides & Fixes */
@@ -137,9 +179,15 @@
   @apply min-h-[200px] text-base text-card-text;
 }
 
-.dark .ql-toolbar .ql-stroke { stroke: var(--text-muted); }
-.dark .ql-toolbar .ql-fill { fill: var(--text-muted); }
-.dark .ql-editor.ql-blank::before { color: var(--text-muted); }
+.dark .ql-toolbar .ql-stroke {
+  stroke: var(--text-muted);
+}
+.dark .ql-toolbar .ql-fill {
+  fill: var(--text-muted);
+}
+.dark .ql-editor.ql-blank::before {
+  color: var(--text-muted);
+}
 
 /* Mobile Optimization & Enhancements (Specific IDs/Element overrides) */
 @media (max-width: 768px) {
@@ -159,7 +207,8 @@
     @apply !min-h-[40px] !min-w-[40px] !p-2;
   }
 
-  #reply-form-1, [id^="reply-form-"] {
+  #reply-form-1,
+  [id^="reply-form-"] {
     @apply !ml-0 mt-4;
   }
 
@@ -171,7 +220,8 @@
     @apply p-4;
   }
 
-  #char-count, .text-right.text-xs {
+  #char-count,
+  .text-right.text-xs {
     @apply text-xs mt-2;
   }
 
@@ -221,11 +271,13 @@
     @apply w-full justify-center mb-3;
   }
 
-  #reply-form-1, [id^="reply-form-"] {
+  #reply-form-1,
+  [id^="reply-form-"] {
     @apply w-full;
   }
 
-  button[onclick*="postComment"], button[onclick*="postReply"] {
+  button[onclick*="postComment"],
+  button[onclick*="postReply"] {
     @apply text-sm py-3 px-6;
   }
 
@@ -240,14 +292,24 @@
 }
 
 @keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 @keyframes pulse-pop {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.1); }
-  100% { transform: scale(1); }
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 .animate-pulse-pop {
@@ -259,9 +321,16 @@
 }
 
 @keyframes count-change {
-  0% { transform: scale(1.2); color: var(--color-success); }
-  50% { transform: scale(1.15); }
-  100% { transform: scale(1); }
+  0% {
+    transform: scale(1.2);
+    color: var(--color-success);
+  }
+  50% {
+    transform: scale(1.15);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 /* Form Elements */
@@ -271,8 +340,12 @@ textarea {
 
 #char-count {
   @apply font-bold text-inherit;
-  &.near-limit { @apply text-warning font-bold; }
-  &.over-limit { @apply text-danger font-bold; }
+  &.near-limit {
+    @apply text-warning font-bold;
+  }
+  &.over-limit {
+    @apply text-danger font-bold;
+  }
 }
 
 #sort-comments {
@@ -290,9 +363,16 @@ textarea {
 }
 
 @keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-5px); }
-  75% { transform: translateX(5px); }
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  75% {
+    transform: translateX(5px);
+  }
 }
 
 #post-btn:disabled {
@@ -300,17 +380,30 @@ textarea {
 }
 
 @media (max-width: 640px) {
-  table { @apply w-full text-sm; }
-  td, th { @apply p-2; }
+  table {
+    @apply w-full text-sm;
+  }
+  td,
+  th {
+    @apply p-2;
+  }
 }
 
 /* Accessibility */
-button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
   @apply outline-2 outline-bbcRed outline-offset-2;
 }
 
 @media (prefers-contrast: more) {
-  button, select, textarea, input { @apply border-2; }
+  button,
+  select,
+  textarea,
+  input {
+    @apply border-2;
+  }
 }
 
 /* Reduced Motion */

@@ -60,9 +60,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         alert(response.message || "Login failed");
         return false;
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Login error:", error);
-      alert(error.response?.data?.message || "Login failed");
+      const err = error as { response?: { data?: { message?: string } } };
+      alert(err.response?.data?.message || "Login failed");
       return false;
     } finally {
       setIsLoading(false);
@@ -84,9 +85,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         alert(response.message || "Registration failed");
         return false;
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Registration error:", error);
-      alert(error.response?.data?.message || "Registration failed");
+      const err = error as { response?: { data?: { message?: string } } };
+      alert(err.response?.data?.message || "Registration failed");
       return false;
     } finally {
       setIsLoading(false);
@@ -115,6 +117,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
+// Allow both components and hooks in context files
+// eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (context === undefined) {

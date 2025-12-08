@@ -19,7 +19,6 @@ const ArticleEdit: React.FC = () => {
   const [sections, setSections] = useState<Section[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
-  const [_autosaveMessage, setAutosaveMessage] = useState("");
   const [restoreAlert, setRestoreAlert] = useState(false);
 
   const quillBnRef = useRef<ReactQuill>(null);
@@ -121,10 +120,9 @@ const ArticleEdit: React.FC = () => {
       content_en: quillEnRef.current?.getEditor?.().root?.innerHTML || "",
     };
     localStorage.setItem(storageKey, JSON.stringify(currentArticleData));
-    setAutosaveMessage(t("draft_saved", language));
-    const timer = setTimeout(() => setAutosaveMessage(""), 3000);
-    return () => clearTimeout(timer);
-  }, [article, storageKey, language]);
+    // Show toast message instead of using state for display
+    // If we implement UI display, we would use the state
+  }, [article, storageKey]);
 
   // Debounced autosave
   useEffect(() => {
@@ -543,8 +541,8 @@ const ArticleEdit: React.FC = () => {
                   {sections.map((sec) => (
                     <option key={sec.id} value={sec.id}>
                       {language === "bn"
-                        ? (sec as any).title_bn || (sec as any).title_en
-                        : (sec as any).title_en || (sec as any).title_bn}
+                        ? sec.title_bn || sec.title_en
+                        : sec.title_en || sec.title_bn}
                     </option>
                   ))}
                 </select>

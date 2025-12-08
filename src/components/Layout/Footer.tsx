@@ -11,11 +11,7 @@ import {
   ChevronUp,
 } from "lucide-react";
 
-interface FooterProps {
-  // Add any specific props if needed
-}
-
-const Footer: React.FC<FooterProps> = () => {
+const Footer: React.FC = () => {
   const { language } = useLayout();
 
   const copyToClipboard = (text: string, successMsg: string) => {

@@ -8,7 +8,17 @@ import { showToastMsg, formatTimestamp, escapeHtml } from "../../lib/utils";
 
 const Comments: React.FC = () => {
   const { language } = useLayout();
-  const [comments, setComments] = useState<any[]>([]); // TODO: Define AdminComment type
+  interface AdminComment {
+    id: number;
+    text: string;
+    created_at: string;
+    user_name: string;
+    title_en?: string;
+    title_bn?: string;
+    article_id: string;
+  }
+
+  const [comments, setComments] = useState<AdminComment[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchComments = useCallback(async () => {

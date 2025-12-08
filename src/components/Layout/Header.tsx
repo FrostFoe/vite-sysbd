@@ -7,11 +7,7 @@ import { Menu, Sun, Moon, Search, Shield, LayoutDashboard } from "lucide-react";
 import type { Category } from "../../types";
 import { publicApi } from "../../lib/api"; // Import publicApi for categories
 
-interface HeaderProps {
-  // Add any specific props if needed
-}
-
-const Header: React.FC<HeaderProps> = () => {
+const Header: React.FC = () => {
   const { user, isAuthenticated, logout } = useAuth();
   const {
     theme,

@@ -30,29 +30,22 @@ const HomePage: React.FC = () => {
   }, []);
 
   // Toggle bookmark function
-  const toggleBookmark = useCallback(
-    (id: string) => {
-      setBookmarks((prevBookmarks) => {
-        const index = prevBookmarks.indexOf(id);
-        let newBookmarks: string[];
-        if (index > -1) {
-          newBookmarks = prevBookmarks.filter(
-            (bookmarkId) => bookmarkId !== id,
-          );
-          // showToastMsg(t('removed', language)); // Re-enable if showToastMsg is properly implemented
-        } else {
-          newBookmarks = [...prevBookmarks, id];
-          // showToastMsg(t('saved_successfully', language)); // Re-enable if showToastMsg is properly implemented
-        }
-        localStorage.setItem(
-          "breachtimes-bookmarks",
-          JSON.stringify(newBookmarks),
-        );
-        return newBookmarks;
-      });
-    },
-    [language],
-  );
+  const toggleBookmark = useCallback((id: string) => {
+    setBookmarks((prevBookmarks) => {
+      const index = prevBookmarks.indexOf(id);
+      let newBookmarks: string[];
+      if (index > -1) {
+        newBookmarks = prevBookmarks.filter((bookmarkId) => bookmarkId !== id);
+      } else {
+        newBookmarks = [...prevBookmarks, id];
+      }
+      localStorage.setItem(
+        "breachtimes-bookmarks",
+        JSON.stringify(newBookmarks),
+      );
+      return newBookmarks;
+    });
+  }, []);
 
   // Fetch home data
   useEffect(() => {

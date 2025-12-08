@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import type { FormEvent } from 'react';
-import { adminApi } from '../../lib/api';
-import type { Section } from '../../types';
-import { Plus, Edit2, Trash2, Layers as LayersIcon } from 'lucide-react';
+import React, { useState, useEffect, useMemo } from "react";
+import type { FormEvent } from "react";
+import { adminApi } from "../../lib/api";
+import type { Section } from "../../types";
+import { Plus, Edit2, Trash2, Layers as LayersIcon } from "lucide-react";
 
 // The 'Section' type from types.ts is for the public API.
 // This page needs a type that matches the database table.
@@ -10,7 +10,7 @@ interface AdminSection {
   id: string;
   title_bn: string;
   title_en: string;
-  type: Section['type']; // Reuse the type from the global Section type
+  type: Section["type"]; // Reuse the type from the global Section type
   sort_order: number;
 }
 
@@ -20,15 +20,39 @@ const SectionModal: React.FC<{
   onSave: (formData: Partial<AdminSection>) => void;
   section: Partial<AdminSection> | null;
 }> = ({ isOpen, onClose, onSave, section }) => {
-  const [formData, setFormData] = useState<Partial<AdminSection>>({});
-
-  useEffect(() => {
+  const [formData, setFormData] = useState<Partial<AdminSection>>(() => {
     if (section) {
-      setFormData(section);
+      return { ...section };
     } else {
-      setFormData({ id: '', title_bn: '', title_en: '', type: 'grid', sort_order: 0 });
+      return {
+        id: "",
+        title_bn: "",
+        title_en: "",
+        type: "grid",
+        sort_order: 0,
+      };
     }
-  }, [section]);
+  });
+
+  // Memoize initial form data to reset when the section changes
+  const initialFormData = useMemo(() => {
+    if (section) {
+      return { ...section };
+    } else {
+      return {
+        id: "",
+        title_bn: "",
+        title_en: "",
+        type: "grid",
+        sort_order: 0,
+      };
+    }
+  }, [section]); // Only depend on section directly
+
+  // Reset form data when modal opens with different section
+  useEffect(() => {
+    setFormData(initialFormData);
+  }, [initialFormData]);
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -41,14 +65,14 @@ const SectionModal: React.FC<{
     <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-[100]">
       <div className="bg-card w-full max-w-md p-6 rounded-xl shadow-2xl">
         <h2 className="text-xl font-bold mb-4">
-          {section?.id ? 'Edit Section' : 'New Section'}
+          {section?.id ? "Edit Section" : "New Section"}
         </h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-bold mb-1">ID (Slug)</label>
             <input
               name="id"
-              value={formData.id || ''}
+              value={formData.id || ""}
               onChange={(e) => setFormData({ ...formData, id: e.target.value })}
               required
               readOnly={!!section?.id}
@@ -56,31 +80,44 @@ const SectionModal: React.FC<{
             />
           </div>
           <div>
-            <label className="block text-sm font-bold mb-1">Title (Bangla)</label>
+            <label className="block text-sm font-bold mb-1">
+              Title (Bangla)
+            </label>
             <input
               name="title_bn"
-              value={formData.title_bn || ''}
-              onChange={(e) => setFormData({ ...formData, title_bn: e.target.value })}
+              value={formData.title_bn || ""}
+              onChange={(e) =>
+                setFormData({ ...formData, title_bn: e.target.value })
+              }
               required
               className="w-full p-2 rounded border border-border-color bg-muted-bg"
             />
           </div>
           <div>
-            <label className="block text-sm font-bold mb-1">Title (English)</label>
+            <label className="block text-sm font-bold mb-1">
+              Title (English)
+            </label>
             <input
               name="title_en"
-              value={formData.title_en || ''}
-              onChange={(e) => setFormData({ ...formData, title_en: e.target.value })}
+              value={formData.title_en || ""}
+              onChange={(e) =>
+                setFormData({ ...formData, title_en: e.target.value })
+              }
               required
               className="w-full p-2 rounded border border-border-color bg-muted-bg"
             />
           </div>
           <div>
             <label className="block text-sm font-bold mb-2">Type</label>
-            <select 
-              name="type" 
-              value={formData.type || 'grid'}
-              onChange={(e) => setFormData({ ...formData, type: e.target.value as AdminSection['type'] })}
+            <select
+              name="type"
+              value={formData.type || "grid"}
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  type: e.target.value as AdminSection["type"],
+                })
+              }
               className="w-full p-2.5 rounded-lg border border-border-color bg-card text-card-text text-sm"
             >
               <option value="hero">Hero</option>
@@ -96,7 +133,12 @@ const SectionModal: React.FC<{
               type="number"
               name="sort_order"
               value={formData.sort_order || 0}
-              onChange={(e) => setFormData({ ...formData, sort_order: parseInt(e.target.value, 10) })}
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  sort_order: parseInt(e.target.value, 10),
+                })
+              }
               className="w-full p-2 rounded border border-border-color bg-muted-bg"
             />
           </div>
@@ -108,7 +150,10 @@ const SectionModal: React.FC<{
             >
               Cancel
             </button>
-            <button type="submit" className="px-4 py-2 bg-bbcRed text-white rounded-lg font-bold text-sm">
+            <button
+              type="submit"
+              className="px-4 py-2 bg-bbcRed text-white rounded-lg font-bold text-sm"
+            >
               Save
             </button>
           </div>
@@ -123,7 +168,8 @@ const Sections: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isModalOpen, setModalOpen] = useState(false);
-  const [editingSection, setEditingSection] = useState<Partial<AdminSection> | null>(null);
+  const [editingSection, setEditingSection] =
+    useState<Partial<AdminSection> | null>(null);
 
   useEffect(() => {
     fetchSections();
@@ -136,18 +182,20 @@ const Sections: React.FC = () => {
       if (res.success && res.data) {
         // The data from the API matches our AdminSection type
         const typedData = res.data as unknown as AdminSection[];
-        setSections(typedData.sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0)));
+        setSections(
+          typedData.sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0)),
+        );
       } else {
-        throw new Error(res.message || 'Failed to fetch sections');
+        throw new Error(res.message || "Failed to fetch sections");
       }
     } catch (err) {
-      setError('Failed to fetch sections.');
+      setError("Failed to fetch sections.");
       console.error(err);
     } finally {
       setIsLoading(false);
     }
   };
-  
+
   const handleOpenModal = (section: AdminSection | null = null) => {
     setEditingSection(section);
     setModalOpen(true);
@@ -165,24 +213,24 @@ const Sections: React.FC = () => {
       handleCloseModal();
       fetchSections();
     } catch (err) {
-      console.error('Failed to save section', err);
+      console.error("Failed to save section", err);
     }
   };
 
   const handleDelete = async (id: string) => {
-    if (window.confirm('Are you sure you want to delete this section?')) {
+    if (window.confirm("Are you sure you want to delete this section?")) {
       try {
         await adminApi.deleteSection(id);
         fetchSections();
       } catch (err) {
-        console.error('Failed to delete section', err);
+        console.error("Failed to delete section", err);
       }
     }
   };
 
   return (
     <div>
-      <SectionModal 
+      <SectionModal
         isOpen={isModalOpen}
         onClose={handleCloseModal}
         onSave={handleSave}
@@ -190,7 +238,7 @@ const Sections: React.FC = () => {
       />
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Manage Sections</h1>
-        <button 
+        <button
           onClick={() => handleOpenModal()}
           className="bg-bbcRed text-white px-4 py-2 rounded-lg font-bold flex items-center gap-2"
         >
@@ -221,27 +269,36 @@ const Sections: React.FC = () => {
             </thead>
             <tbody className="divide-y divide-border-color">
               {sections.map((sec) => (
-                <tr key={sec.id} className="hover:bg-muted-bg transition-colors">
-                  <td className="p-4 font-bold text-muted-text">{sec.sort_order}</td>
+                <tr
+                  key={sec.id}
+                  className="hover:bg-muted-bg transition-colors"
+                >
+                  <td className="p-4 font-bold text-muted-text">
+                    {sec.sort_order}
+                  </td>
                   <td className="p-4 font-mono text-sm">{sec.id}</td>
                   <td className="p-4 font-bold">
                     <div className="flex flex-col">
                       <span>{sec.title_bn}</span>
-                      <span className="text-xs text-muted-text">{sec.title_en}</span>
+                      <span className="text-xs text-muted-text">
+                        {sec.title_en}
+                      </span>
                     </div>
                   </td>
                   <td className="p-4">
-                    <span className="px-2 py-1 bg-blue-50 text-blue-700 rounded text-xs font-bold uppercase">{sec.type}</span>
+                    <span className="px-2 py-1 bg-blue-50 text-blue-700 rounded text-xs font-bold uppercase">
+                      {sec.type}
+                    </span>
                   </td>
                   <td className="p-4 text-right">
                     <div className="flex justify-end gap-2">
-                      <button 
+                      <button
                         onClick={() => handleOpenModal(sec)}
                         className="p-2 text-blue-600 hover:bg-blue-50 rounded"
                       >
                         <Edit2 className="w-4 h-4" />
                       </button>
-                      <button 
+                      <button
                         onClick={() => handleDelete(sec.id)}
                         className="p-2 text-red-600 hover:bg-red-50 rounded"
                       >

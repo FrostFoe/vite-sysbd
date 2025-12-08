@@ -1,6 +1,6 @@
-import React from 'react';
-import { NavLink } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
+import React from "react";
+import { NavLink } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 import {
   LayoutDashboard,
   FileText,
@@ -12,30 +12,60 @@ import {
   LogOut,
   Bookmark,
   Shield,
-} from 'lucide-react';
+} from "lucide-react";
 
 interface DashSidebarProps {
-  type: 'admin' | 'dashboard';
+  type: "admin" | "dashboard";
   isSidebarOpen: boolean;
   toggleSidebar: () => void;
 }
 
 const adminNavItems = [
-  { name: 'Dashboard', to: '/admin', icon: LayoutDashboard, disabled: false },
-  { name: 'Articles', to: '/admin/articles', icon: FileText, disabled: false },
-  { name: 'Comments', to: '/admin/comments', icon: MessageCircle, disabled: false },
-  { name: 'Messages', to: '/admin/inbox', icon: Mail, disabled: false },
-  { name: 'Categories', to: '/admin/categories', icon: Folder, disabled: false },
-  { name: 'Sections', to: '/admin/sections', icon: Layers, disabled: false },
-  { name: 'Documents', to: '/admin/documents', icon: Download, disabled: false },
-  { name: 'Users', to: '/admin/users', icon: Shield, disabled: false },
-  { name: 'Submissions', to: '/admin/submissions', icon: Download, disabled: false },
+  { name: "Dashboard", to: "/admin", icon: LayoutDashboard, disabled: false },
+  { name: "Articles", to: "/admin/articles", icon: FileText, disabled: false },
+  {
+    name: "Comments",
+    to: "/admin/comments",
+    icon: MessageCircle,
+    disabled: false,
+  },
+  { name: "Messages", to: "/admin/inbox", icon: Mail, disabled: false },
+  {
+    name: "Categories",
+    to: "/admin/categories",
+    icon: Folder,
+    disabled: false,
+  },
+  { name: "Sections", to: "/admin/sections", icon: Layers, disabled: false },
+  {
+    name: "Documents",
+    to: "/admin/documents",
+    icon: Download,
+    disabled: false,
+  },
+  { name: "Users", to: "/admin/users", icon: Shield, disabled: false },
+  {
+    name: "Submissions",
+    to: "/admin/submissions",
+    icon: Download,
+    disabled: false,
+  },
 ];
 
 const userNavItems = [
-  { name: 'Overview', to: '/dashboard', icon: LayoutDashboard, disabled: false },
-  { name: 'Messages', to: '/dashboard/inbox', icon: Mail, disabled: false },
-  { name: 'Saved Articles', to: '/?category=saved', icon: Bookmark, disabled: false },
+  {
+    name: "Overview",
+    to: "/dashboard",
+    icon: LayoutDashboard,
+    disabled: false,
+  },
+  { name: "Messages", to: "/dashboard/inbox", icon: Mail, disabled: false },
+  {
+    name: "Saved Articles",
+    to: "/?category=saved",
+    icon: Bookmark,
+    disabled: false,
+  },
 ];
 
 const NavItem: React.FC<{
@@ -45,11 +75,11 @@ const NavItem: React.FC<{
   disabled?: boolean;
 }> = ({ to, icon: Icon, children, disabled }) => {
   const baseClasses =
-    'flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-all duration-200 group';
-  const activeClasses = 'bg-bbcRed text-white shadow-md shadow-red-900/20';
+    "flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-all duration-200 group";
+  const activeClasses = "bg-bbcRed text-white shadow-md shadow-red-900/20";
   const inactiveClasses =
-    'text-muted-text hover:bg-muted-bg hover:text-card-text';
-  const disabledClasses = 'opacity-50 cursor-not-allowed';
+    "text-muted-text hover:bg-muted-bg hover:text-card-text";
+  const disabledClasses = "opacity-50 cursor-not-allowed";
 
   const content = (
     <>
@@ -67,7 +97,7 @@ const NavItem: React.FC<{
   }
 
   // Handle external link for saved articles
-  if (to.startsWith('/?')) {
+  if (to.startsWith("/?")) {
     return (
       <a href={to} className={`${baseClasses} ${inactiveClasses}`}>
         {content}
@@ -88,8 +118,8 @@ const NavItem: React.FC<{
           <Icon
             className={`w-5 h-5 transition-colors ${
               isActive
-                ? 'text-white'
-                : 'text-muted-text group-hover:text-bbcRed'
+                ? "text-white"
+                : "text-muted-text group-hover:text-bbcRed"
             }`}
           />
           {children}
@@ -99,11 +129,15 @@ const NavItem: React.FC<{
   );
 };
 
-const DashSidebar: React.FC<DashSidebarProps> = ({ type, isSidebarOpen, toggleSidebar }) => {
+const DashSidebar: React.FC<DashSidebarProps> = ({
+  type,
+  isSidebarOpen,
+  toggleSidebar,
+}) => {
   const { user, logout } = useAuth();
-  const navItems = type === 'admin' ? adminNavItems : userNavItems;
-  const userName = user?.email.split('@')[0] || 'User';
-  const userInitial = userName ? userName[0].toUpperCase() : 'U';
+  const navItems = type === "admin" ? adminNavItems : userNavItems;
+  const userName = user?.email.split("@")[0] || "User";
+  const userInitial = userName ? userName[0].toUpperCase() : "U";
 
   return (
     <>
@@ -112,7 +146,7 @@ const DashSidebar: React.FC<DashSidebarProps> = ({ type, isSidebarOpen, toggleSi
         id="sidebar-overlay"
         onClick={toggleSidebar}
         className={`fixed inset-0 bg-black/60 z-30 md:hidden backdrop-blur-sm transition-opacity duration-300 ${
-          isSidebarOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
+          isSidebarOpen ? "opacity-100" : "opacity-0 pointer-events-none"
         }`}
       ></div>
 
@@ -120,12 +154,17 @@ const DashSidebar: React.FC<DashSidebarProps> = ({ type, isSidebarOpen, toggleSi
       <aside
         id="sidebar"
         className={`w-64 bg-card border-r border-border-color fixed inset-y-0 left-0 top-0 md:top-[70px] z-40 transform transition-transform duration-300 ${
-          isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
+          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
         } md:translate-x-0 md:static md:inset-auto md:transform-none flex flex-col h-full md:h-[calc(100vh-70px)] shadow-xl md:shadow-none overflow-y-auto`}
       >
         <nav className="p-4 space-y-1.5">
           {navItems.map((item) => (
-            <NavItem key={item.name} to={item.to} icon={item.icon} disabled={item.disabled}>
+            <NavItem
+              key={item.name}
+              to={item.to}
+              icon={item.icon}
+              disabled={item.disabled}
+            >
               {item.name}
             </NavItem>
           ))}

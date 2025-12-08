@@ -8,7 +8,18 @@ import { showToastMsg, formatTimestamp, escapeHtml } from "../../lib/utils";
 
 const Submissions: React.FC = () => {
   const { language } = useLayout();
-  const [submissions, setSubmissions] = useState<any[]>([]); // TODO: Define Submission type
+  interface Submission {
+    id: number;
+    article_id: string;
+    user_id?: number;
+    file_path: string;
+    message?: string;
+    created_at: string;
+    title_en?: string;
+    title_bn?: string;
+  }
+
+  const [submissions, setSubmissions] = useState<Submission[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchSubmissions = useCallback(async () => {

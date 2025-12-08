@@ -76,8 +76,12 @@ export function showToastMsg(
   toast.innerHTML = `<i data-lucide="${icon}" class="w-4 h-4 ${color}"></i> ${msg}`;
   container.appendChild(toast);
   // Re-render lucide icons if the library is available globally
-  if ((window as any).lucide && (window as any).lucide.createIcons) {
-    (window as any).lucide.createIcons();
+  if (
+    typeof window !== "undefined" &&
+    window.lucide &&
+    typeof window.lucide.createIcons === "function"
+  ) {
+    window.lucide.createIcons();
   }
   setTimeout(() => toast.remove(), 3000);
 }

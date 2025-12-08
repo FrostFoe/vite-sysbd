@@ -92,8 +92,26 @@ export const publicApi = {
     perPage: number,
     sort: string,
     lang: string,
-  ): Promise<any> => {
-    // TODO: Define proper type for comments response
+  ): Promise<{
+    success: boolean;
+    comments?: Array<{
+      id: number;
+      text: string;
+      created_at: string;
+      user_name: string;
+      user_id: number;
+      upvotes: number;
+      downvotes: number;
+      score: number;
+      user_muted: boolean;
+    }>;
+    pagination?: {
+      current_page: number;
+      total_pages: number;
+      total_count: number;
+    };
+    error?: string;
+  }> => {
     const response = await api.post("/get_comments.php", {
       articleId,
       page,
@@ -482,4 +500,3 @@ export const adminApi = {
     return response.data;
   },
 };
-

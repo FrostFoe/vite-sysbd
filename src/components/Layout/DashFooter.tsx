@@ -1,13 +1,13 @@
-import React from 'react';
+import React from "react";
 
 interface DashFooterProps {
-  type: 'admin' | 'dashboard';
+  type: "admin" | "dashboard";
 }
 
 const DashFooter: React.FC<DashFooterProps> = ({ type }) => {
   const year = new Date().getFullYear();
   const text =
-    type === 'admin'
+    type === "admin"
       ? `© ${year} BreachTimes Admin Panel. All rights reserved.`
       : `© ${year} BreachTimes Dashboard. All rights reserved.`;
 

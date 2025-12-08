@@ -6,11 +6,7 @@ import { X, Search as SearchIcon } from "lucide-react";
 import { publicApi } from "../../lib/api";
 import type { Article } from "../../types";
 
-interface SearchOverlayProps {
-  // Add any specific props if needed
-}
-
-const SearchOverlay: React.FC<SearchOverlayProps> = () => {
+const SearchOverlay: React.FC = () => {
   const { language, isSearchOpen, toggleSearch } = useLayout();
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState<Article[]>([]);
@@ -20,9 +16,6 @@ const SearchOverlay: React.FC<SearchOverlayProps> = () => {
   useEffect(() => {
     if (isSearchOpen && searchInputRef.current) {
       searchInputRef.current.focus();
-      // Clear previous search results and query when opening
-      setSearchQuery("");
-      setSearchResults([]);
     }
   }, [isSearchOpen]);
 

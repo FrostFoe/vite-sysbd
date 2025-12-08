@@ -13,7 +13,7 @@ const MiniArticle: React.FC<MiniArticleProps> = ({
   article,
   colorClass = "text-bbcRed",
 }) => {
-  const {} = useLayout();
+  useLayout();
   const titleColor = "text-card-text"; // Always from main theme
 
   return (

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { useLayout } from "../context/LayoutContext";
 import { useAuth } from "../context/AuthContext";
-import { publicApi } from "../lib/api";
+import { publicApi, adminApi } from "../lib/api";
 import type { Article, UserProfile } from "../types";
 import {
   escapeHtml,
@@ -303,17 +303,12 @@ const ArticleDetail: React.FC = () => {
 
   // Delete comment for admin
   const deleteComment = useCallback(
-    async (_commentId: number) => {
+    async (commentId: number) => {
       if (!isAdmin || !window.confirm(t("confirm_delete_comment", language)))
         return;
 
       try {
-        const response = await publicApi.postComment(
-          id!,
-          "delete_comment",
-          language,
-          user?.email,
-        ); // Assuming a delete_comment endpoint will be added
+        const response = await adminApi.deleteComment(commentId);
         if (response.success) {
           showToastMsg(t("comment_deleted", language));
           // Refetch article to update comments
@@ -338,7 +333,7 @@ const ArticleDetail: React.FC = () => {
         showToastMsg(t("server_error", language), "error");
       }
     },
-    [id, isAdmin, language, user],
+    [id, isAdmin, language],
   );
 
   // User Profile Modal

@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import type { ReactNode } from 'react';
-import { useLocation } from 'react-router-dom';
-import DashHeader from './DashHeader';
-import DashSidebar from './DashSidebar';
-import DashFooter from './DashFooter';
+import React, { useState, useEffect, useRef } from "react";
+import type { ReactNode } from "react";
+import { useLocation } from "react-router-dom";
+import DashHeader from "./DashHeader";
+import DashSidebar from "./DashSidebar";
+import DashFooter from "./DashFooter";
 
 interface DashLayoutProps {
   children: ReactNode;
@@ -14,21 +14,28 @@ const DashLayout: React.FC<DashLayoutProps> = ({ children }) => {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
 
   // Determine the layout type based on the URL path
-  const layoutType = location.pathname.startsWith('/admin')
-    ? 'admin'
-    : 'dashboard';
+  const layoutType = location.pathname.startsWith("/admin")
+    ? "admin"
+    : "dashboard";
 
   const toggleSidebar = () => {
     setSidebarOpen(!isSidebarOpen);
   };
-  
-    // Close sidebar on route change on mobile
-  useEffect(() => {
-    if (isSidebarOpen) {
-      setSidebarOpen(false);
-    }
-  }, [location.pathname]);
 
+  const prevPathnameRef = useRef(location.pathname);
+
+  // Close sidebar on route change on mobile
+  useEffect(() => {
+    setSidebarOpen((prev) => {
+      // Only close if the route changed and sidebar was open
+      if (location.pathname !== prevPathnameRef.current && prev) {
+        prevPathnameRef.current = location.pathname;
+        return false;
+      }
+      prevPathnameRef.current = location.pathname;
+      return prev;
+    });
+  }, [location.pathname]);
 
   return (
     <div className="bg-page text-page-text font-sans transition-colors duration-500 flex flex-col h-screen overflow-hidden">
@@ -52,11 +59,14 @@ const DashLayout: React.FC<DashLayoutProps> = ({ children }) => {
         />
 
         {/* Content Wrapper */}
-        <div className="flex-1 flex flex-col overflow-y-auto bg-page relative w-full scroll-smooth" id="main-scroll">
+        <div
+          className="flex-1 flex flex-col overflow-y-auto bg-page relative w-full scroll-smooth"
+          id="main-scroll"
+        >
           <main className="flex-grow container mx-auto px-4 lg:px-8 max-w-[1200px] py-8">
             {children}
           </main>
-          
+
           <DashFooter type={layoutType} />
         </div>
       </div>
