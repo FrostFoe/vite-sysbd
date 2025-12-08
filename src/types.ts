@@ -56,6 +56,13 @@ export interface AdminArticle {
   allow_submissions?: boolean;
 }
 
+export interface ArticleWithDocCount {
+  id: string;
+  title_bn: string;
+  title_en: string;
+  doc_count: number;
+}
+
 export interface Section {
   id: string;
   title: string; // Translated title

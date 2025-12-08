@@ -25,9 +25,9 @@ const adminNavItems = [
   { name: 'Articles', to: '/admin/articles', icon: FileText, disabled: false },
   { name: 'Comments', to: '/admin/comments', icon: MessageCircle, disabled: false },
   { name: 'Messages', to: '/admin/inbox', icon: Mail, disabled: false },
-  { name: 'Categories', to: '/admin/categories', icon: Folder, disabled: true },
-  { name: 'Sections', to: '/admin/sections', icon: Layers, disabled: true },
-  { name: 'Documents', to: '/admin/documents', icon: Download, disabled: true },
+  { name: 'Categories', to: '/admin/categories', icon: Folder, disabled: false },
+  { name: 'Sections', to: '/admin/sections', icon: Layers, disabled: false },
+  { name: 'Documents', to: '/admin/documents', icon: Download, disabled: false },
   { name: 'Users', to: '/admin/users', icon: Shield, disabled: false },
   { name: 'Submissions', to: '/admin/submissions', icon: Download, disabled: false },
 ];

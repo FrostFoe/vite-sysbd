@@ -8,6 +8,8 @@ import type {
   Message,
   Category,
   Section,
+  ArticleWithDocCount,
+  Document as DocType,
 } from "../types";
 
 export interface AdminArticle {
@@ -437,7 +439,7 @@ export const adminApi = {
 
   getArticleDocuments: async (
     articleId: string,
-  ): Promise<{ success: boolean; documents?: Document[]; error?: string }> => {
+  ): Promise<{ success: boolean; documents?: DocType[]; error?: string }> => {
     const response = await api.get(`/get_article_documents.php`, {
       params: { id: articleId },
     });
@@ -446,7 +448,7 @@ export const adminApi = {
 
   getDocument: async (
     docId: string,
-  ): Promise<{ success: boolean; document?: Document; error?: string }> => {
+  ): Promise<{ success: boolean; document?: DocType; error?: string }> => {
     const response = await api.get(`/get_document.php`, {
       params: { id: docId },
     });
@@ -470,4 +472,14 @@ export const adminApi = {
     const response = await api.post("/delete_document.php", { id });
     return response.data;
   },
+
+  getArticlesForDocs: async (): Promise<{
+    success: boolean;
+    data?: ArticleWithDocCount[];
+    message?: string;
+  }> => {
+    const response = await api.get("/get_articles_for_docs.php");
+    return response.data;
+  },
 };
+

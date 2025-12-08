@@ -16,6 +16,9 @@ import AdminInbox from "./pages/Admin/Inbox";
 import AdminUsers from "./pages/Admin/Users";
 import AdminComments from "./pages/Admin/Comments";
 import AdminSubmissions from "./pages/Admin/Submissions";
+import AdminCategories from "./pages/Admin/Categories";
+import AdminSections from "./pages/Admin/Sections";
+import AdminDocuments from "./pages/Admin/Documents";
 import UserInbox from "./pages/Dashboard/Inbox";
 
 // A simple Protected Route wrapper
@@ -165,6 +168,36 @@ const AppRoutes: React.FC = () => {
             <ProtectedRoute adminOnly>
               <DashLayout>
                 <AdminSubmissions />
+              </DashLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/categories"
+          element={
+            <ProtectedRoute adminOnly>
+              <DashLayout>
+                <AdminCategories />
+              </DashLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/sections"
+          element={
+            <ProtectedRoute adminOnly>
+              <DashLayout>
+                <AdminSections />
+              </DashLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/documents"
+          element={
+            <ProtectedRoute adminOnly>
+              <DashLayout>
+                <AdminDocuments />
               </DashLayout>
             </ProtectedRoute>
           }
