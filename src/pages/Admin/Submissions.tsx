@@ -1,4 +1,4 @@
-import { FileText, Inbox, Loader } from "lucide-react";
+import { FileText, Inbox, Loader, Trash2 } from "lucide-react";
 import type React from "react";
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
@@ -43,6 +43,22 @@ const Submissions: React.FC = () => {
     fetchSubmissions();
   }, [fetchSubmissions]);
 
+  const handleDeleteSubmission = async (_id: number) => {
+    try {
+      // Note: The API might not have a delete submission endpoint
+      // This is a placeholder - you may need to implement the backend API
+      showToastMsg(
+        "Delete functionality for submissions is not implemented",
+        "error"
+      );
+      // If API endpoint exists, it would be something like:
+      // await adminApi.deleteSubmission(id);
+      // fetchSubmissions(); // Refresh the list
+    } catch (_error) {
+      showToastMsg("Failed to delete submission", "error");
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="text-center py-8">
@@ -64,54 +80,68 @@ const Submissions: React.FC = () => {
             <p className="text-lg font-bold mb-2">No Submissions Found</p>
           </div>
         ) : (
-          <table className="w-full text-left border-collapse responsive-table">
-            <thead className="bg-muted-bg text-muted-text text-xs uppercase">
-              <tr>
-                <th className="p-3 sm:p-4">Article</th>
-                <th className="p-3 sm:p-4">Message</th>
-                <th className="p-3 sm:p-4">File</th>
-                <th className="hidden md:table-cell p-3 sm:p-4">Date</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-border-color">
-              {submissions.map((s) => (
-                <tr key={s.id} className="hover:bg-muted-bg transition-colors">
-                  <td className="p-3 sm:p-4">
-                    <Link
-                      to={`/admin/articles/${s.article_id}/edit`}
-                      className="font-bold text-sm block hover:text-bbcRed"
+          <div className="grid grid-cols-1 gap-4 p-4">
+            {submissions.map((s) => (
+              <div
+                key={s.id}
+                className="bg-card p-4 rounded-lg border border-border-color group"
+              >
+                <div className="flex items-start justify-between mb-3">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className="w-10 h-10 rounded-lg bg-muted-bg flex items-center justify-center shrink-0 border border-border-color font-bold text-card-text text-xs">
+                      {s.file_path ? "SUB" : "MSG"}
+                    </div>
+                    <div className="truncate">
+                      <Link
+                        to={`/admin/articles/${s.article_id}/edit`}
+                        className="font-bold text-sm truncate block hover:text-bbcRed"
+                      >
+                        {escapeHtml(
+                          s.title_en || s.title_bn || "Unknown Article"
+                        )}
+                      </Link>
+                      <p className="text-xs text-muted-text truncate">
+                        {s.article_id}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-1 shrink-0 ml-2">
+                    {s.file_path && (
+                      <a
+                        href={s.file_path} // Assuming this is accessible or proxied
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="p-2 hover:bg-muted-bg rounded-lg"
+                      >
+                        <FileText className="w-4 h-4" />
+                      </a>
+                    )}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (
+                          window.confirm(
+                            "Are you sure you want to delete this submission?"
+                          )
+                        ) {
+                          handleDeleteSubmission(s.id);
+                        }
+                      }}
+                      className="p-2 hover:bg-danger/10 text-danger rounded-lg"
                     >
-                      {escapeHtml(
-                        s.title_en || s.title_bn || "Unknown Article"
-                      )}
-                    </Link>
-                    <span className="text-xs text-muted-text">
-                      {s.article_id}
-                    </span>
-                  </td>
-                  <td
-                    className="p-3 sm:p-4 text-sm max-w-[120px] sm:max-w-md truncate"
-                    title={s.message}
-                  >
-                    {escapeHtml(s.message || "-")}
-                  </td>
-                  <td className="p-3 sm:p-4">
-                    <a
-                      href={s.file_path} // Assuming this is accessible or proxied
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-card-text hover:underline text-sm font-bold flex items-center gap-1"
-                    >
-                      <FileText className="w-4 h-4" /> Download
-                    </a>
-                  </td>
-                  <td className="hidden md:table-cell p-3 sm:p-4 text-xs text-muted-text">
-                    {formatTimestamp(s.created_at, language)}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+                <div className="text-sm text-card-text max-h-12 overflow-hidden">
+                  {escapeHtml(s.message || "-")}
+                </div>
+                <div className="text-xs text-muted-text mt-2">
+                  {formatTimestamp(s.created_at, language)}
+                </div>
+              </div>
+            ))}
+          </div>
         )}
       </div>
     </div>

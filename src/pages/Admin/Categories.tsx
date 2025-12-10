@@ -228,62 +228,53 @@ const Categories: React.FC = () => {
             <p className="text-lg font-bold mb-2">No Categories Found</p>
           </div>
         ) : (
-          <table className="w-full text-left border-collapse">
-            <thead className="bg-muted-bg text-muted-text text-xs uppercase">
-              <tr>
-                <th className="p-3 sm:p-4">ID</th>
-                <th className="p-3 sm:p-4">Title (BN)</th>
-                <th className="p-3 sm:p-4">Title (EN)</th>
-                <th className="hidden md:table-cell p-3 sm:p-4">Color</th>
-                <th className="p-3 sm:p-4 text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-border-color">
-              {categories.map((cat) => (
-                <tr
-                  key={cat.id}
-                  className="hover:bg-muted-bg transition-colors"
-                >
-                  <td className="p-3 sm:p-4 font-mono text-sm">{cat.id}</td>
-                  <td className="p-3 sm:p-4 font-bold max-w-[100px] truncate">
-                    {cat.title_bn}
-                  </td>
-                  <td className="p-3 sm:p-4 max-w-[100px] truncate">
-                    {cat.title_en}
-                  </td>
-                  <td className="hidden md:table-cell p-3 sm:p-4">
-                    <div className="flex items-center gap-2">
-                      <div
-                        className="w-6 h-6 rounded border border-border-color"
-                        style={{ backgroundColor: cat.color }}
-                      />
-                      <span className="text-xs text-muted-text">
-                        {cat.color}
-                      </span>
+          <div className="grid grid-cols-1 gap-4 p-4">
+            {categories.map((cat) => (
+              <div
+                key={cat.id}
+                className="bg-card p-4 rounded-lg border border-border-color group hover:bg-muted-bg transition-colors"
+              >
+                <div className="flex items-start justify-between">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className="font-mono text-sm font-bold text-card-text">
+                      {cat.id}
                     </div>
-                  </td>
-                  <td className="p-3 sm:p-4 text-right">
-                    <div className="flex justify-end gap-2">
-                      <button
-                        type="button"
-                        onClick={() => handleOpenModal(cat)}
-                        className="p-2 text-card-text hover:bg-muted-bg rounded"
-                      >
-                        <Edit2 className="w-4 h-4" />
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => handleDelete(cat.id)}
-                        className="p-2 text-danger hover:bg-danger/10 rounded"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
+                    <div className="truncate">
+                      <div className="font-bold text-sm truncate">
+                        {cat.title_bn}
+                      </div>
+                      <div className="text-sm truncate">{cat.title_en}</div>
                     </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div
+                      className="w-8 h-8 rounded-lg border border-border-color"
+                      style={{ backgroundColor: cat.color }}
+                    />
+                    <div className="text-xs text-muted-text hidden md:block">
+                      {cat.color}
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <button
+                      type="button"
+                      onClick={() => handleOpenModal(cat)}
+                      className="p-2 text-card-text hover:bg-muted-bg rounded"
+                    >
+                      <Edit2 className="w-4 h-4" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleDelete(cat.id)}
+                      className="p-2 text-danger hover:bg-danger/10 rounded"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
         )}
       </div>
     </div>

@@ -285,61 +285,54 @@ const Sections: React.FC = () => {
             <p className="text-lg font-bold mb-2">No Sections Found</p>
           </div>
         ) : (
-          <table className="w-full text-left border-collapse">
-            <thead className="bg-muted-bg text-muted-text text-xs uppercase">
-              <tr>
-                <th className="p-3 sm:p-4">Order</th>
-                <th className="p-3 sm:p-4">ID</th>
-                <th className="p-3 sm:p-4">Title (BN / EN)</th>
-                <th className="hidden md:table-cell p-3 sm:p-4">Type</th>
-                <th className="p-3 sm:p-4 text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-border-color">
-              {sections.map((sec) => (
-                <tr
-                  key={sec.id}
-                  className="hover:bg-muted-bg transition-colors"
-                >
-                  <td className="p-3 sm:p-4 font-bold text-muted-text">
-                    {sec.sort_order}
-                  </td>
-                  <td className="p-3 sm:p-4 font-mono text-sm">{sec.id}</td>
-                  <td className="p-3 sm:p-4 font-bold">
-                    <div className="flex flex-col max-w-[120px] truncate">
-                      <span className="truncate">{sec.title_bn}</span>
-                      <span className="text-xs text-muted-text truncate">
+          <div className="grid grid-cols-1 gap-4 p-4">
+            {sections.map((sec) => (
+              <div
+                key={sec.id}
+                className="bg-card p-4 rounded-lg border border-border-color group hover:bg-muted-bg transition-colors"
+              >
+                <div className="flex items-start justify-between">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className="w-10 h-10 rounded-lg bg-muted-bg flex items-center justify-center text-card-text text-sm font-bold border border-border-color">
+                      {sec.sort_order}
+                    </div>
+                    <div className="truncate">
+                      <div className="font-bold text-sm truncate">
+                        {sec.title_bn}
+                      </div>
+                      <div className="text-xs text-muted-text truncate">
                         {sec.title_en}
-                      </span>
+                      </div>
+                      <div className="mt-1">
+                        <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-muted-bg text-card-text text-xs font-bold">
+                          {sec.type}
+                        </span>
+                      </div>
                     </div>
-                  </td>
-                  <td className="hidden md:table-cell p-3 sm:p-4">
-                    <span className="px-2 py-1 bg-muted-bg text-card-text rounded text-xs font-bold uppercase">
-                      {sec.type}
-                    </span>
-                  </td>
-                  <td className="p-3 sm:p-4 text-right">
-                    <div className="flex justify-end gap-2">
-                      <button
-                        type="button"
-                        onClick={() => handleOpenModal(sec)}
-                        className="p-2 text-card-text hover:bg-muted-bg rounded"
-                      >
-                        <Edit2 className="w-4 h-4" />
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => handleDelete(sec.id)}
-                        className="p-2 text-danger hover:bg-danger/10 rounded"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                  </div>
+                  <div className="text-xs font-mono text-muted-text">
+                    {sec.id}
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <button
+                      type="button"
+                      onClick={() => handleOpenModal(sec)}
+                      className="p-2 text-card-text hover:bg-muted-bg rounded"
+                    >
+                      <Edit2 className="w-4 h-4" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleDelete(sec.id)}
+                      className="p-2 text-danger hover:bg-danger/10 rounded"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
         )}
       </div>
     </div>

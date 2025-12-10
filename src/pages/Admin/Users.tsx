@@ -104,67 +104,49 @@ const Users: React.FC = () => {
         {users.length === 0 ? (
           <div className="p-8 text-center text-muted-text">No users found.</div>
         ) : (
-          <table className="w-full text-left border-collapse responsive-table">
-            <thead className="bg-muted-bg text-muted-text text-xs uppercase">
-              <tr>
-                <th className="p-3 sm:p-4">Email</th>
-                <th className="p-3 sm:p-4">Role</th>
-                <th className="hidden md:table-cell p-3 sm:p-4">Joined</th>
-                <th className="p-3 sm:p-4">Status</th>
-                <th className="p-3 sm:p-4 text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-border-color">
-              {users.map((user) => {
-                const isMuted = !!user.is_muted;
-                return (
-                  <tr
-                    key={user.id}
-                    className={`hover:bg-muted-bg transition-colors ${isMuted ? "opacity-75" : ""}`}
-                  >
-                    <td className="p-3 sm:p-4">
-                      <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-bbcRed to-orange-600 flex items-center justify-center text-white text-xs font-bold">
-                          {user.email.charAt(0).toUpperCase()}
-                        </div>
-                        <div>
-                          <p className="font-bold text-sm">{user.email}</p>
-                          <p className="text-xs text-muted-text">
-                            ID: {user.id}
-                          </p>
-                        </div>
+          <div className="grid grid-cols-1 gap-4 p-4">
+            {users.map((user) => {
+              const isMuted = !!user.is_muted;
+              return (
+                <div
+                  key={user.id}
+                  className="bg-card p-4 rounded-lg border border-border-color group hover:bg-muted-bg transition-colors"
+                >
+                  <div className="flex items-start justify-between">
+                    <div className="flex items-center gap-3 min-w-0">
+                      <div className="w-12 h-12 rounded-full bg-gradient-to-br from-bbcRed to-orange-600 flex items-center justify-center text-white text-sm font-bold">
+                        {user.email.charAt(0).toUpperCase()}
                       </div>
-                    </td>
-                    <td className="p-3 sm:p-4">
-                      <span
-                        className={`inline-block px-3 py-1 rounded-full text-xs font-bold ${user.role === "admin" ? "bg-danger/10 dark:bg-danger/20 text-danger" : "bg-muted-bg text-card-text"}`}
-                      >
-                        {user.role}
-                      </span>
-                    </td>
-                    <td className="hidden md:table-cell p-3 sm:p-4 text-sm text-muted-text">
-                      {new Date(user.created_at).toLocaleDateString()}
-                    </td>
-                    <td className="p-3 sm:p-4">
-                      {isMuted ? (
-                        <div>
-                          <span className="inline-block px-3 py-1 rounded-full text-xs font-bold bg-danger/10 dark:bg-danger/20 text-danger flex items-center gap-1.5 w-fit">
-                            <Ban className="w-3 h-3" /> Muted
-                          </span>
-                          {user.reason && (
-                            <p className="text-xs text-muted-text mt-1">
-                              Reason: {user.reason}
-                            </p>
+                      <div className="truncate">
+                        <div className="font-bold text-sm truncate">
+                          {user.email}
+                        </div>
+                        <div className="text-xs text-muted-text truncate">
+                          ID: {user.id}
+                        </div>
+                        <div className="mt-1 text-xs font-bold">
+                          {isMuted ? (
+                            <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-danger/10 dark:bg-danger/20 text-danger">
+                              <Ban className="w-3 h-3" /> Muted
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-success/10 dark:bg-success/20 text-success">
+                              <CheckCircle className="w-3 h-3" /> Active
+                            </span>
                           )}
                         </div>
-                      ) : (
-                        <span className="inline-block px-3 py-1 rounded-full text-xs font-bold bg-success/10 dark:bg-success/20 text-success flex items-center gap-1.5 w-fit">
-                          <CheckCircle className="w-3 h-3" /> Active
-                        </span>
-                      )}
-                    </td>
-                    <td className="p-4 text-right">
-                      <div className="flex items-center justify-end gap-2">
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-1 shrink-0 ml-2">
+                      <div
+                        className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-bold ${user.role === "admin" ? "bg-danger/10 dark:bg-danger/20 text-danger" : "bg-muted-bg text-card-text"}`}
+                      >
+                        {user.role}
+                      </div>
+                      <div className="text-xs text-muted-text hidden sm:block">
+                        {new Date(user.created_at).toLocaleDateString()}
+                      </div>
+                      <div className="flex items-center gap-1">
                         {user.role !== "admin" && // Assuming current user is admin, can't mute admins generally, but logic depends on reqs
                           (isMuted ? (
                             <button
@@ -188,12 +170,17 @@ const Users: React.FC = () => {
                             </button>
                           ))}
                       </div>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+                    </div>
+                  </div>
+                  {isMuted && user.reason && (
+                    <div className="mt-2 text-xs text-muted-text bg-danger/5 p-2 rounded">
+                      Reason: {escapeHtml(user.reason)}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
         )}
       </div>
 
