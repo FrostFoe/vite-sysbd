@@ -66,7 +66,7 @@ const UserInbox: React.FC = () => {
       } else {
         showToastMsg(
           response.error || t("failed_to_send_message", language),
-          "error",
+          "error"
         );
       }
     } catch (_error) {

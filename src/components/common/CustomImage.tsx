@@ -47,7 +47,8 @@ const CustomImage: React.FC<CustomImageProps> = ({
 
   if (!showImage) {
     return (
-      <div
+      <button
+        type="button"
         className={`relative w-full bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg flex items-center justify-center cursor-pointer ${className}`}
         onClick={toggleVisibility}
         onKeyDown={(e) => {
@@ -55,8 +56,6 @@ const CustomImage: React.FC<CustomImageProps> = ({
             toggleVisibility();
           }
         }}
-        role="button"
-        tabIndex={0}
         aria-label={showImage ? "Hide image" : "Show image"}
       >
         <div className="text-center p-4">
@@ -68,7 +67,7 @@ const CustomImage: React.FC<CustomImageProps> = ({
             Click to show
           </p>
         </div>
-      </div>
+      </button>
     );
   }
 

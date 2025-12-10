@@ -207,7 +207,7 @@ const Sections: React.FC = () => {
         // The data from the API matches our AdminSection type
         const typedData = res.data as unknown as AdminSection[];
         setSections(
-          typedData.sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0)),
+          typedData.sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0))
         );
       } else {
         throw new Error(res.message || "Failed to fetch sections");

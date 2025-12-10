@@ -41,7 +41,7 @@ const HomePage: React.FC = () => {
       }
       localStorage.setItem(
         "breachtimes-bookmarks",
-        JSON.stringify(newBookmarks),
+        JSON.stringify(newBookmarks)
       );
       return newBookmarks;
     });
@@ -54,7 +54,7 @@ const HomePage: React.FC = () => {
       try {
         const data = await publicApi.getHomeData(
           language,
-          currentCategory === "saved" ? undefined : currentCategory,
+          currentCategory === "saved" ? undefined : currentCategory
         );
         setHomeData(data);
       } catch (error) {
@@ -230,13 +230,13 @@ const HomePage: React.FC = () => {
     if (currentCategory === "home") {
       // Find specific sections by ID as done in PHP code
       const worldNewsSection = sectionsToRender.find(
-        (s) => s.id === "virginia",
+        (s) => s.id === "virginia"
       );
       const businessNewsSection = sectionsToRender.find(
-        (s) => s.id === "vermont",
+        (s) => s.id === "vermont"
       );
       const collectionSection = sectionsToRender.find(
-        (s) => s.id === "wyoming",
+        (s) => s.id === "wyoming"
       );
 
       return (

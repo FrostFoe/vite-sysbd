@@ -73,7 +73,7 @@ const ArticleList: React.FC = () => {
         } else {
           showToastMsg(
             response.error || t("failed_to_delete_article", language),
-            "error",
+            "error"
           );
         }
       } catch (error) {
@@ -81,12 +81,12 @@ const ArticleList: React.FC = () => {
         showToastMsg(t("server_error", language), "error");
       }
     },
-    [language],
+    [language]
   );
 
   const handleFilterChange = (
     type: "search" | "cat" | "status",
-    value: string,
+    value: string
   ) => {
     const newParams = new URLSearchParams(searchParams.toString());
     if (value) {

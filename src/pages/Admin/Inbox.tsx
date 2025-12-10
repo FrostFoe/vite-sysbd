@@ -16,7 +16,7 @@ const AdminInbox: React.FC = () => {
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [currentUserId, setCurrentUserId] = useState<number | null>(null);
   const [currentUserName, setCurrentUserName] = useState<string>(
-    "Select a conversation",
+    "Select a conversation"
   );
   const [currentUserEmail, setCurrentUserEmail] = useState<string>("");
   const [messages, setMessages] = useState<Message[]>([]);
@@ -62,7 +62,7 @@ const AdminInbox: React.FC = () => {
         scrollToBottom();
       }
     },
-    [language, scrollToBottom],
+    [language, scrollToBottom]
   );
 
   useEffect(() => {
@@ -89,7 +89,7 @@ const AdminInbox: React.FC = () => {
       // On mobile, close sidebar after selecting conversation
       // toggleSidebar(false);
     },
-    [loadMessages],
+    [loadMessages]
   );
 
   const sendMessage = useCallback(async () => {
@@ -98,7 +98,7 @@ const AdminInbox: React.FC = () => {
     try {
       const response = await adminApi.sendAdminMessage(
         currentUserId,
-        messageInput.trim(),
+        messageInput.trim()
       );
       if (response.success) {
         setMessageInput("");
@@ -107,7 +107,7 @@ const AdminInbox: React.FC = () => {
       } else {
         showToastMsg(
           response.error || t("failed_to_send_message", language),
-          "error",
+          "error"
         );
       }
     } catch (error) {
@@ -204,7 +204,7 @@ const AdminInbox: React.FC = () => {
                     selectConversation(
                       conv.user_id,
                       conv.email,
-                      conv.email.split("@")[0],
+                      conv.email.split("@")[0]
                     )
                   }
                   onKeyDown={(e) => {
@@ -212,7 +212,7 @@ const AdminInbox: React.FC = () => {
                       selectConversation(
                         conv.user_id,
                         conv.email,
-                        conv.email.split("@")[0],
+                        conv.email.split("@")[0]
                       );
                     }
                   }}

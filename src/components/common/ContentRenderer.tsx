@@ -1,5 +1,5 @@
 import DOMPurify from "dompurify";
-import React from "react";
+import type React from "react";
 import { sanitizeHtml } from "../../lib/utils";
 import CustomImage from "./CustomImage";
 import CustomVideo from "./CustomVideo";

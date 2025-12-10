@@ -189,6 +189,16 @@
   color: var(--text-muted);
 }
 
+/* High Contrast */
+@media (prefers-contrast: more) {
+  button,
+  select,
+  textarea,
+  input {
+    @apply border-2;
+  }
+}
+
 /* Mobile Optimization & Enhancements (Specific IDs/Element overrides) */
 @media (max-width: 768px) {
   #comment-input {
@@ -313,7 +323,7 @@
 
   /* Document submission form mobile styles */
   .bg-card.p-6.rounded-2xl.shadow-soft.border.border-border-color
-    input[type="file"] {
+  input[type="file"] {
     @apply min-h-[44px];
   }
 
@@ -404,6 +414,11 @@ textarea {
   @apply text-card-text;
 }
 
+/* Fix for custom dropdown in dark mode */
+:is(.dark #sort-comments .custom-dropdown-button) {
+  color: var(--text-card);
+}
+
 #error-message {
   @apply animate-[shake_0.4s_ease-out] p-2 border-l-[3px] border-danger rounded-md bg-danger/10;
 }
@@ -457,4 +472,45 @@ textarea:focus-visible {
     animation-duration: 0.01ms;
     transition-duration: 0.01ms;
   }
+}
+
+/* Custom Dropdown Styles */
+.custom-dropdown-wrapper {
+  @apply relative w-full inline-block;
+}
+
+.custom-dropdown-button {
+  @apply w-full flex items-center justify-between px-3 py-3 text-sm bg-card text-card-text border border-border-color rounded-lg cursor-pointer transition-colors hover:border-bbcRed focus:outline-none focus:border-bbcRed;
+}
+
+.custom-dropdown-button.open {
+  @apply border-bbcRed ring-1 ring-bbcRed;
+}
+
+.custom-dropdown-menu {
+  @apply absolute z-[60] w-full mt-1 bg-card border border-border-color rounded-lg shadow-lg hidden max-h-60 overflow-y-auto;
+}
+
+.custom-dropdown-menu.open {
+  @apply block animate-zoom-in;
+}
+
+.custom-dropdown-item {
+  @apply px-3 py-2 text-sm cursor-pointer transition-colors text-card-text hover:bg-muted-bg;
+}
+
+.custom-dropdown-item.selected {
+  @apply bg-bbcRed text-white;
+}
+
+.custom-dropdown-item.placeholder {
+  @apply text-muted-text;
+}
+
+.custom-dropdown-icon {
+  @apply w-4 h-4 text-muted-text transition-transform duration-200;
+}
+
+.custom-dropdown-button.open .custom-dropdown-icon {
+  @apply rotate-180;
 }

@@ -17,8 +17,8 @@ import {
 import type React from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
-import { CustomDropdown } from "../components/common/CustomDropdown";
 import ContentRenderer from "../components/common/ContentRenderer";
+import { CustomDropdown } from "../components/common/CustomDropdown";
 import { useAuth } from "../context/AuthContext";
 import { useLayout } from "../context/LayoutContext";
 import { adminApi, publicApi } from "../lib/api";
@@ -112,7 +112,7 @@ const ArticleDetail: React.FC = () => {
         .flat()
         .forEach((cls) => {
           proseEl.classList.remove(
-            `[&_p]:${cls.replace("text-lg", "text-base")}`,
+            `[&_p]:${cls.replace("text-lg", "text-base")}`
           ); // Tailwind uses text-base for p
           proseEl.classList.remove(`[&_p]:${cls}`);
         });
@@ -138,10 +138,10 @@ const ArticleDetail: React.FC = () => {
           : [...prevBookmarks, id];
       localStorage.setItem(
         "breachtimes-bookmarks",
-        JSON.stringify(newBookmarks),
+        JSON.stringify(newBookmarks)
       );
       showToastMsg(
-        index > -1 ? t("removed", language) : t("saved_successfully", language),
+        index > -1 ? t("removed", language) : t("saved_successfully", language)
       );
       return newBookmarks;
     });
@@ -190,7 +190,7 @@ const ArticleDetail: React.FC = () => {
         }
       } else {
         setCommentError(
-          response.error || t("failed_to_post_comment", language),
+          response.error || t("failed_to_post_comment", language)
         );
       }
     } catch (error) {
@@ -226,7 +226,7 @@ const ArticleDetail: React.FC = () => {
                     upvotes: response.upvotes,
                     downvotes: response.downvotes,
                   }
-                : comment,
+                : comment
             );
             return { ...prevArticle, comments: updatedComments };
           });
@@ -234,7 +234,7 @@ const ArticleDetail: React.FC = () => {
         } else {
           showToastMsg(
             response.error || t("failed_to_vote", language),
-            "error",
+            "error"
           );
         }
       } catch (error) {
@@ -242,7 +242,7 @@ const ArticleDetail: React.FC = () => {
         showToastMsg(t("server_error", language), "error");
       }
     },
-    [id, language],
+    [id, language]
   );
 
   // Comment sorting
@@ -253,7 +253,7 @@ const ArticleDetail: React.FC = () => {
       // Optionally re-fetch comments with new sort order or re-sort locally
       // For now, re-sorting logic might be complex if replies are involved, will assume simple re-render.
     },
-    [id],
+    [id]
   );
 
   // Reply form toggle for admin
@@ -277,7 +277,7 @@ const ArticleDetail: React.FC = () => {
         const response = await publicApi.postReply(
           parentCommentId,
           text,
-          language,
+          language
         );
         if (response.success) {
           setReplyInput((prev) => ({ ...prev, [parentCommentId]: "" }));
@@ -286,7 +286,7 @@ const ArticleDetail: React.FC = () => {
           // Refetch article to update comments
           const updatedArticleResponse = await publicApi.getArticle(
             id,
-            language,
+            language
           );
           if (
             updatedArticleResponse.success &&
@@ -297,7 +297,7 @@ const ArticleDetail: React.FC = () => {
         } else {
           showToastMsg(
             response.error || t("failed_to_post_reply", language),
-            "error",
+            "error"
           );
         }
       } catch (error) {
@@ -305,7 +305,7 @@ const ArticleDetail: React.FC = () => {
         showToastMsg(t("server_error", language), "error");
       }
     },
-    [id, replyInput, language],
+    [id, replyInput, language]
   );
 
   // Delete comment for admin
@@ -322,7 +322,7 @@ const ArticleDetail: React.FC = () => {
           if (!id) return;
           const updatedArticleResponse = await publicApi.getArticle(
             id,
-            language,
+            language
           );
           if (
             updatedArticleResponse.success &&
@@ -333,7 +333,7 @@ const ArticleDetail: React.FC = () => {
         } else {
           showToastMsg(
             response.error || t("failed_to_delete_comment", language),
-            "error",
+            "error"
           );
         }
       } catch (error) {
@@ -341,7 +341,7 @@ const ArticleDetail: React.FC = () => {
         showToastMsg(t("server_error", language), "error");
       }
     },
-    [id, isAdmin, language],
+    [id, isAdmin, language]
   );
 
   // User Profile Modal
@@ -357,7 +357,7 @@ const ArticleDetail: React.FC = () => {
         } else {
           showToastMsg(
             response.error || t("failed_to_fetch_profile", language),
-            "error",
+            "error"
           );
         }
       } catch (error) {
@@ -367,7 +367,7 @@ const ArticleDetail: React.FC = () => {
         setProfileModalLoading(false);
       }
     },
-    [language],
+    [language]
   );
 
   const closeProfileModal = useCallback(() => {
@@ -391,7 +391,7 @@ const ArticleDetail: React.FC = () => {
         } else {
           showToastMsg(
             response.error || t("submission_failed", language),
-            "error",
+            "error"
           );
         }
       } catch (error) {
@@ -399,7 +399,7 @@ const ArticleDetail: React.FC = () => {
         showToastMsg(t("server_error", language), "error");
       }
     },
-    [id, language],
+    [id, language]
   );
 
   if (isLoading) {

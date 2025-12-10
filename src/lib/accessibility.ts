@@ -38,7 +38,7 @@ export const ARIA_LABELS = {
  */
 export function getContrastRatio(
   foreground: string,
-  background: string,
+  background: string
 ): number {
   const rgb1 = hexToRgb(foreground);
   const rgb2 = hexToRgb(background);
@@ -97,7 +97,7 @@ export function useKeyboardShortcut(
   key: string,
   callback: () => void,
   ctrlKey?: boolean,
-  shiftKey?: boolean,
+  shiftKey?: boolean
 ) {
   React.useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {
@@ -125,7 +125,7 @@ export function useFocusTrap(ref: React.RefObject<HTMLDivElement>) {
     if (!element) return;
 
     const focusableElements = element.querySelectorAll(
-      'a, button, input, select, textarea, [tabindex]:not([tabindex="-1"])',
+      'a, button, input, select, textarea, [tabindex]:not([tabindex="-1"])'
     ) as NodeListOf<HTMLElement>;
     const firstElement = focusableElements[0] as HTMLElement;
     const lastElement = focusableElements[
