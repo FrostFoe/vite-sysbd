@@ -26,7 +26,7 @@ const Login: React.FC = () => {
         <i data-lucide="x" className="w-8 h-8" />
       </Link>
       <div className="bg-card p-8 md:p-12 w-full max-w-[480px] shadow-2xl rounded-2xl border border-border-color text-center relative overflow-hidden animate-fade-in-up">
-        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-bbcRed to-orange-600" />
+        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-bbcRed to-bbcRed-hover" />
         <h1 className="text-2xl font-bold mb-2 text-card-text">Welcome!</h1>
         <p className="text-sm text-muted-text mb-8">Login to your account</p>
 
@@ -68,7 +68,7 @@ const Login: React.FC = () => {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full bg-bbcDark dark:bg-white text-white dark:text-black font-bold py-3.5 rounded-lg hover:shadow-lg hover:bg-opacity-90 dark:hover:bg-opacity-90 hover:-translate-y-0.5 transition-all disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:shadow-none disabled:hover:translate-y-0"
+            className="w-full bg-bbcRed text-white font-bold py-3.5 rounded-lg hover:shadow-lg hover:bg-opacity-90 dark:hover:bg-opacity-90 hover:-translate-y-0.5 transition-all disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:shadow-none disabled:hover:translate-y-0"
           >
             {isLoading ? "Logging in..." : "Sign In"}
           </button>

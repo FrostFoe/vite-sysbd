@@ -125,7 +125,7 @@ const ArticleList: React.FC = () => {
               placeholder={t("search_articles", language)}
               value={currentSearch}
               onChange={(e) => handleFilterChange("search", e.target.value)}
-              className="p-2 rounded border border-border-color bg-card text-sm w-full md:w-48 focus:border-bbcRed outline-none"
+              className="p-2.5 sm:p-2 rounded border border-border-color bg-card text-sm w-full md:w-48 focus:border-bbcRed outline-none"
             />
 
             <CustomDropdown
@@ -180,11 +180,19 @@ const ArticleList: React.FC = () => {
           <table className="w-full text-left border-collapse responsive-table">
             <thead className="bg-muted-bg text-muted-text text-xs uppercase">
               <tr>
-                <th className="p-4">{t("article", language)}</th>
-                <th className="p-4">{t("status", language)}</th>
-                <th className="p-4">{t("category", language)}</th>
-                <th className="p-4">{t("date", language)}</th>
-                <th className="p-4 text-right">{t("actions", language)}</th>
+                <th className="p-3 sm:p-4">{t("article", language)}</th>
+                <th className="hidden md:table-cell p-3 sm:p-4">
+                  {t("status", language)}
+                </th>
+                <th className="hidden md:table-cell p-3 sm:p-4">
+                  {t("category", language)}
+                </th>
+                <th className="hidden md:table-cell p-3 sm:p-4">
+                  {t("date", language)}
+                </th>
+                <th className="p-3 sm:p-4 text-right">
+                  {t("actions", language)}
+                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border-color">
@@ -203,24 +211,24 @@ const ArticleList: React.FC = () => {
                     key={a.id}
                     className="hover:bg-muted-bg transition-colors"
                   >
-                    <td className="p-4">
+                    <td className="p-3 sm:p-4">
                       <div className="flex items-center gap-4">
                         <img
                           src={a.image || PLACEHOLDER_IMAGE}
                           alt=""
                           className="w-12 h-12 rounded object-cover bg-gray-200"
                         />
-                        <div className="max-w-md">
+                        <div className="max-w-[120px] sm:max-w-md">
                           {a.title_bn && (
                             <Link
                               to={`/admin/articles/${a.id}/edit`}
-                              className="font-bold text-sm block hover:text-bbcRed line-clamp-1 font-hind mb-0.5"
+                              className="font-bold text-sm block hover:text-bbcRed line-clamp-1 font-hind mb-0.5 truncate"
                             >
                               {escapeHtml(a.title_bn)}
                             </Link>
                           )}
                           {a.title_en && (
-                            <span className="text-xs text-muted-text block line-clamp-1">
+                            <span className="text-xs text-muted-text block line-clamp-1 truncate">
                               {escapeHtml(a.title_en)}
                             </span>
                           )}
@@ -232,19 +240,21 @@ const ArticleList: React.FC = () => {
                         </div>
                       </div>
                     </td>
-                    <td className="p-4">
+                    <td className="hidden md:table-cell p-3 sm:p-4">
                       <span
                         className={`px-2 py-1 rounded-full text-xs font-bold border ${colorClass}`}
                       >
                         {escapeHtml(a.status)}
                       </span>
                     </td>
-                    <td className="p-4 text-sm">
-                      <div className="flex flex-col">
-                        <span className="font-hind">{a.category || "-"}</span>
+                    <td className="hidden md:table-cell p-3 sm:p-4 text-sm">
+                      <div className="flex flex-col max-w-[120px] truncate">
+                        <span className="font-hind truncate">
+                          {a.category || "-"}
+                        </span>
                       </div>
                     </td>
-                    <td className="p-4 text-xs text-muted-text">
+                    <td className="hidden md:table-cell p-3 sm:p-4 text-xs text-muted-text">
                       <div className="flex flex-col">
                         <span>
                           {t("pub", language)}: {pubDate}
@@ -254,18 +264,18 @@ const ArticleList: React.FC = () => {
                         </span>
                       </div>
                     </td>
-                    <td className="p-4 text-right">
+                    <td className="p-3 sm:p-4 text-right">
                       <div className="flex justify-end gap-2">
                         <Link
                           to={`/admin/articles/${a.id}/edit`}
-                          className="p-2 text-blue-600 hover:bg-blue-50 rounded"
+                          className="p-2 text-card-text hover:bg-muted-bg rounded"
                         >
                           <Edit2 className="w-4 h-4" />
                         </Link>
                         <button
                           type="button"
                           onClick={() => handleDeleteArticle(a.id)}
-                          className="p-2 text-red-600 hover:bg-red-50 rounded"
+                          className="p-2 text-danger hover:bg-danger/10 rounded"
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>

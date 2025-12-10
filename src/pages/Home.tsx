@@ -254,7 +254,7 @@ const HomePage: React.FC = () => {
               <div className="lg:col-span-1 h-full">
                 <div className="bg-card p-6 rounded-2xl shadow-soft border border-border-color h-full">
                   <div className="flex items-center gap-3 mb-6 pb-4 border-b border-border-color">
-                    <div className="w-1.5 h-6 rounded-full bg-blue-500" />
+                    <div className="w-1.5 h-6 rounded-full bg-bbcRed" />
                     <h3 className="text-xl font-bold text-card-text">
                       {t("more_world_news", language)}
                     </h3>
@@ -264,7 +264,7 @@ const HomePage: React.FC = () => {
                       <MiniArticle
                         key={article.id}
                         article={article}
-                        colorClass="text-blue-600 dark:text-blue-400"
+                        colorClass="text-bbcRed"
                       />
                     ))}
                   </ul>
@@ -275,7 +275,7 @@ const HomePage: React.FC = () => {
               <div className="lg:col-span-1 h-full">
                 <div className="bg-card p-6 rounded-2xl shadow-soft border border-border-color h-full">
                   <div className="flex items-center gap-3 mb-6 pb-4 border-b border-border-color">
-                    <div className="w-1.5 h-6 rounded-full bg-green-500" />
+                    <div className="w-1.5 h-6 rounded-full bg-success" />
                     <h3 className="text-xl font-bold text-card-text">
                       {t("business_news", language)}
                     </h3>

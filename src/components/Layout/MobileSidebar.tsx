@@ -104,7 +104,7 @@ const MobileSidebar: React.FC = () => {
                 <button
                   type="button"
                   onClick={handleLogout}
-                  className="w-full py-3 bg-muted-bg text-bbcDark dark:text-white rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-600 hover:shadow-md hover:-translate-y-0.5 transition-all active:scale-95"
+                  className="w-full py-3 bg-muted-bg text-bbcDark dark:text-white rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-danger/10 dark:hover:bg-danger/20 hover:text-danger hover:shadow-md hover:-translate-y-0.5 transition-all active:scale-95"
                 >
                   <LogOut className="w-5 h-5" /> {t("sign_out", language)}
                 </button>

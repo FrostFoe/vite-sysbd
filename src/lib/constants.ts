@@ -72,7 +72,7 @@ export const SEARCH_DEBOUNCE = 500; // 500ms
 export const WORDS_PER_MINUTE = 200;
 
 // Accessibility
-export const FOCUS_OUTLINE_COLOR = "#b80000";
+export const FOCUS_OUTLINE_COLOR = "var(--color-bbcRed)";
 export const SKIP_TO_CONTENT_ID = "main-content";
 
 // Error Messages

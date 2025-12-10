@@ -85,7 +85,7 @@ const SectionModal: React.FC<{
               onChange={(e) => setFormData({ ...formData, id: e.target.value })}
               required
               readOnly={!!section?.id}
-              className="w-full p-3 rounded-lg border border-border-color bg-card focus:border-bbcRed outline-none"
+              className="w-full p-3 sm:p-2.5 rounded-lg border border-border-color bg-card focus:border-bbcRed outline-none text-sm sm:text-base"
             />
           </div>
           <div>
@@ -103,7 +103,7 @@ const SectionModal: React.FC<{
                 setFormData({ ...formData, title_bn: e.target.value })
               }
               required
-              className="w-full p-3 rounded-lg border border-border-color bg-card focus:border-bbcRed outline-none font-hind"
+              className="w-full p-3 sm:p-2.5 rounded-lg border border-border-color bg-card focus:border-bbcRed outline-none font-hind text-sm sm:text-base"
             />
           </div>
           <div>
@@ -121,7 +121,7 @@ const SectionModal: React.FC<{
                 setFormData({ ...formData, title_en: e.target.value })
               }
               required
-              className="w-full p-3 rounded-lg border border-border-color bg-card focus:border-bbcRed outline-none font-hind"
+              className="w-full p-3 sm:p-2.5 rounded-lg border border-border-color bg-card focus:border-bbcRed outline-none font-hind text-sm sm:text-base"
             />
           </div>
           <div>
@@ -167,7 +167,7 @@ const SectionModal: React.FC<{
                   sort_order: parseInt(e.target.value, 10),
                 })
               }
-              className="w-full p-3 rounded-lg border border-border-color bg-card focus:border-bbcRed outline-none"
+              className="w-full p-3 sm:p-2.5 rounded-lg border border-border-color bg-card focus:border-bbcRed outline-none text-sm sm:text-base"
             />
           </div>
           <div className="flex justify-end gap-2 mt-6">
@@ -278,7 +278,7 @@ const Sections: React.FC = () => {
         {isLoading ? (
           <div className="p-8 text-center text-muted-text">Loading...</div>
         ) : error ? (
-          <div className="p-8 text-center text-red-500">{error}</div>
+          <div className="p-8 text-center text-danger">{error}</div>
         ) : sections.length === 0 ? (
           <div className="p-8 text-center text-muted-text">
             <LayersIcon className="w-16 h-16 mx-auto mb-4 text-border-color" />
@@ -288,11 +288,11 @@ const Sections: React.FC = () => {
           <table className="w-full text-left border-collapse">
             <thead className="bg-muted-bg text-muted-text text-xs uppercase">
               <tr>
-                <th className="p-4">Order</th>
-                <th className="p-4">ID</th>
-                <th className="p-4">Title (BN / EN)</th>
-                <th className="p-4">Type</th>
-                <th className="p-4 text-right">Actions</th>
+                <th className="p-3 sm:p-4">Order</th>
+                <th className="p-3 sm:p-4">ID</th>
+                <th className="p-3 sm:p-4">Title (BN / EN)</th>
+                <th className="hidden md:table-cell p-3 sm:p-4">Type</th>
+                <th className="p-3 sm:p-4 text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border-color">
@@ -301,36 +301,36 @@ const Sections: React.FC = () => {
                   key={sec.id}
                   className="hover:bg-muted-bg transition-colors"
                 >
-                  <td className="p-4 font-bold text-muted-text">
+                  <td className="p-3 sm:p-4 font-bold text-muted-text">
                     {sec.sort_order}
                   </td>
-                  <td className="p-4 font-mono text-sm">{sec.id}</td>
-                  <td className="p-4 font-bold">
-                    <div className="flex flex-col">
-                      <span>{sec.title_bn}</span>
-                      <span className="text-xs text-muted-text">
+                  <td className="p-3 sm:p-4 font-mono text-sm">{sec.id}</td>
+                  <td className="p-3 sm:p-4 font-bold">
+                    <div className="flex flex-col max-w-[120px] truncate">
+                      <span className="truncate">{sec.title_bn}</span>
+                      <span className="text-xs text-muted-text truncate">
                         {sec.title_en}
                       </span>
                     </div>
                   </td>
-                  <td className="p-4">
-                    <span className="px-2 py-1 bg-blue-50 text-blue-700 rounded text-xs font-bold uppercase">
+                  <td className="hidden md:table-cell p-3 sm:p-4">
+                    <span className="px-2 py-1 bg-muted-bg text-card-text rounded text-xs font-bold uppercase">
                       {sec.type}
                     </span>
                   </td>
-                  <td className="p-4 text-right">
+                  <td className="p-3 sm:p-4 text-right">
                     <div className="flex justify-end gap-2">
                       <button
                         type="button"
                         onClick={() => handleOpenModal(sec)}
-                        className="p-2 text-blue-600 hover:bg-blue-50 rounded"
+                        className="p-2 text-card-text hover:bg-muted-bg rounded"
                       >
                         <Edit2 className="w-4 h-4" />
                       </button>
                       <button
                         type="button"
                         onClick={() => handleDelete(sec.id)}
-                        className="p-2 text-red-600 hover:bg-red-50 rounded"
+                        className="p-2 text-danger hover:bg-danger/10 rounded"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>

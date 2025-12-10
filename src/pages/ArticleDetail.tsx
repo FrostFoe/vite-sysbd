@@ -412,7 +412,7 @@ const ArticleDetail: React.FC = () => {
 
   if (!article) {
     return (
-      <div className="text-center py-8 text-red-500">
+      <div className="text-center py-8 text-danger">
         {t("article_not_found", language)}
       </div>
     );
@@ -495,11 +495,11 @@ const ArticleDetail: React.FC = () => {
                   type="button"
                   aria-label="Toggle bookmark"
                   onClick={handleBookmarkToggle}
-                  className="p-2.5 rounded-full bg-muted-bg hover:bg-bbcRed hover:text-white text-black dark:text-white transition-all shadow-sm flex items-center justify-center group"
+                  className="p-2.5 rounded-full bg-muted-bg hover:bg-bbcRed hover:text-white text-card-text transition-all shadow-sm flex items-center justify-center group"
                 >
                   <Bookmark
                     className="w-5 h-5"
-                    fill={isArticleBookmarked ? "black" : "none"}
+                    fill={isArticleBookmarked ? "currentColor" : "none"}
                   />
                 </button>
               </div>
@@ -530,7 +530,7 @@ const ArticleDetail: React.FC = () => {
                         key={doc.id || doc.display_name_en}
                         className="group flex items-center gap-3 p-2 rounded-lg hover:bg-muted-bg transition-colors cursor-pointer"
                       >
-                        <div className="w-10 h-10 rounded-lg bg-red-50 dark:bg-red-900/20 flex items-center justify-center flex-shrink-0 text-bbcRed font-bold text-xs border border-bbcRed/20">
+                        <div className="w-10 h-10 rounded-lg bg-danger/10 dark:bg-danger/20 flex items-center justify-center flex-shrink-0 text-bbcRed font-bold text-xs border border-bbcRed/20">
                           {doc.file_type || "DOC"}
                         </div>
                         <div className="flex-grow min-w-0">
@@ -572,7 +572,7 @@ const ArticleDetail: React.FC = () => {
                       key={doc.id}
                       className="group flex items-center gap-3 p-3 rounded-lg hover:bg-muted-bg transition-colors cursor-pointer border border-transparent hover:border-bbcRed/30"
                     >
-                      <div className="w-10 h-10 rounded-lg bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center flex-shrink-0 text-blue-600 dark:text-blue-400 font-bold text-xs border border-blue-200/50">
+                      <div className="w-10 h-10 rounded-lg bg-muted-bg dark:bg-muted-bg flex items-center justify-center flex-shrink-0 text-card-text dark:text-card-text font-bold text-xs border border-border-color/50">
                         {doc.file_type}
                       </div>
                       <div className="flex-grow min-w-0">
@@ -666,7 +666,7 @@ const ArticleDetail: React.FC = () => {
                     <Lock className="w-5 h-5 text-muted-text" />
                     {t("submissions_closed", language)}
                   </h4>
-                  <p className="text-sm text-muted-text font-bold text-red-500">
+                  <p className="text-sm text-muted-text font-bold text-danger">
                     {t("submissions_turned_off_by_admin", language)}
                   </p>
                 </>
@@ -834,7 +834,7 @@ const ArticleDetail: React.FC = () => {
                           <button
                             type="button"
                             onClick={() => deleteComment(comment.id)}
-                            className="text-danger hover:text-red-700 p-1 rounded hover:bg-red-50 dark:hover:bg-red-900/20"
+                            className="text-danger hover:text-danger/80 p-1 rounded hover:bg-danger/10 dark:hover:bg-danger/20"
                           >
                             <Trash2 className="w-3 h-3" />
                           </button>
@@ -931,7 +931,7 @@ const ArticleDetail: React.FC = () => {
                 {commentInput.length}/5000
               </div>
               {commentError && (
-                <div className="text-xs text-red-500 font-bold">
+                <div className="text-xs text-danger font-bold">
                   {commentError}
                 </div>
               )}

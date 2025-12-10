@@ -189,7 +189,7 @@ const DashSidebar: React.FC<DashSidebarProps> = ({
           <button
             type="button"
             onClick={logout}
-            className="flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-600 transition-all duration-200 w-full"
+            className="flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-danger hover:bg-danger/10 dark:hover:bg-danger/20 hover:text-danger transition-all duration-200 w-full"
           >
             <LogOut className="w-5 h-5" />
             Sign Out

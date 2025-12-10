@@ -37,7 +37,7 @@ export const FormInput: FC<FormInputProps> = ({
           className="block text-sm font-medium text-card-text mb-2"
         >
           {label}
-          {props.required && <span className="text-red-500 ml-1">*</span>}
+          {props.required && <span className="text-danger ml-1">*</span>}
         </label>
       )}
 
@@ -56,9 +56,9 @@ export const FormInput: FC<FormInputProps> = ({
             ${rightIcon ? "pr-10" : ""}
             ${
               showError
-                ? "border-red-500 focus:ring-red-500 focus:border-transparent"
+                ? "border-danger focus:ring-danger/30 focus:border-transparent"
                 : success
-                  ? "border-green-500 focus:ring-green-500 focus:border-transparent"
+                  ? "border-success focus:ring-success/30 focus:border-transparent"
                   : "border-border bg-card text-card-text focus:border-primary focus:ring-2 focus:ring-primary/20"
             }
             ${className}
@@ -72,16 +72,16 @@ export const FormInput: FC<FormInputProps> = ({
         )}
 
         {showError && (
-          <AlertCircle className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-red-500" />
+          <AlertCircle className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-danger" />
         )}
 
         {!showError && success && (
-          <CheckCircle className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-green-500" />
+          <CheckCircle className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-success" />
         )}
       </div>
 
       {showError && (
-        <p className="text-sm text-red-500 mt-1 flex items-center gap-1">
+        <p className="text-sm text-danger mt-1 flex items-center gap-1">
           <AlertCircle className="w-4 h-4" />
           {errorMessage}
         </p>
@@ -125,7 +125,7 @@ export const FormTextArea: FC<FormTextAreaProps> = ({
           className="block text-sm font-medium text-card-text mb-2"
         >
           {label}
-          {props.required && <span className="text-red-500 ml-1">*</span>}
+          {props.required && <span className="text-danger ml-1">*</span>}
         </label>
       )}
 
@@ -137,7 +137,7 @@ export const FormTextArea: FC<FormTextAreaProps> = ({
           bg-card text-card-text
           ${
             showError
-              ? "border-red-500 focus:ring-red-500"
+              ? "border-danger focus:ring-danger/30"
               : "border-border focus:border-primary focus:ring-2 focus:ring-primary/20"
           }
           ${className}
@@ -145,7 +145,7 @@ export const FormTextArea: FC<FormTextAreaProps> = ({
       />
 
       {showError && (
-        <p className="text-sm text-red-500 mt-1 flex items-center gap-1">
+        <p className="text-sm text-danger mt-1 flex items-center gap-1">
           <AlertCircle className="w-4 h-4" />
           {errorMessage}
         </p>
@@ -189,7 +189,7 @@ export const FormSelect: FC<FormSelectProps> = ({
           className="block text-sm font-medium text-card-text mb-2"
         >
           {label}
-          {props.required && <span className="text-red-500 ml-1">*</span>}
+          {props.required && <span className="text-danger ml-1">*</span>}
         </label>
       )}
 
@@ -200,7 +200,7 @@ export const FormSelect: FC<FormSelectProps> = ({
           bg-card text-card-text
           ${
             showError
-              ? "border-red-500 focus:ring-red-500"
+              ? "border-danger focus:ring-danger/30"
               : "border-border focus:border-primary focus:ring-2 focus:ring-primary/20"
           }
           ${className}
@@ -215,7 +215,7 @@ export const FormSelect: FC<FormSelectProps> = ({
       </select>
 
       {showError && (
-        <p className="text-sm text-red-500 mt-1 flex items-center gap-1">
+        <p className="text-sm text-danger mt-1 flex items-center gap-1">
           <AlertCircle className="w-4 h-4" />
           {errorMessage}
         </p>
@@ -260,7 +260,7 @@ export const FormCheckbox: FC<FormCheckboxProps> = ({
       </label>
 
       {errorMessage && (
-        <p className="text-sm text-red-500 mt-1 flex items-center gap-1">
+        <p className="text-sm text-danger mt-1 flex items-center gap-1">
           <AlertCircle className="w-4 h-4" />
           {errorMessage}
         </p>

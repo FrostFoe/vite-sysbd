@@ -45,10 +45,10 @@ export class ErrorBoundary extends React.Component<Props, State> {
         this.props.fallback || (
           <div className="min-h-screen bg-card flex items-center justify-center p-4">
             <div className="max-w-md w-full">
-              <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-6">
+              <div className="bg-danger/10 dark:bg-danger/20 border border-danger/30 dark:border-danger/50 rounded-lg p-6">
                 <div className="flex items-center gap-3 mb-4">
-                  <AlertTriangle className="w-6 h-6 text-red-600" />
-                  <h1 className="text-lg font-bold text-red-600">
+                  <AlertTriangle className="w-6 h-6 text-danger" />
+                  <h1 className="text-lg font-bold text-danger">
                     Something went wrong
                   </h1>
                 </div>

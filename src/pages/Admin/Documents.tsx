@@ -170,7 +170,7 @@ const Documents: React.FC = () => {
                     type="button"
                     key={article.id}
                     onClick={() => handleSelectArticle(article.id)}
-                    className={`w-full text-left p-3 rounded-lg hover:bg-muted-bg transition-all border-2 ${selectedArticleId === article.id ? "border-bbcRed bg-red-50/10" : "border-transparent"}`}
+                    className={`w-full text-left p-3 rounded-lg hover:bg-muted-bg transition-all border-2 ${selectedArticleId === article.id ? "border-bbcRed bg-danger/5" : "border-transparent"}`}
                   >
                     <div className="font-bold text-sm truncate">
                       {article.title_en || article.title_bn}
@@ -236,7 +236,7 @@ const Documents: React.FC = () => {
                     >
                       <div className="flex items-start justify-between mb-3">
                         <div className="flex items-center gap-3 min-w-0">
-                          <div className="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center shrink-0 border border-blue-200 font-bold text-blue-600 text-xs">
+                          <div className="w-10 h-10 rounded-lg bg-muted-bg flex items-center justify-center shrink-0 border border-border-color font-bold text-card-text text-xs">
                             {doc.file_type
                               .split("/")[1]
                               ?.substring(0, 3)
@@ -262,7 +262,7 @@ const Documents: React.FC = () => {
                           <button
                             type="button"
                             onClick={() => handleDelete(doc.id)}
-                            className="p-2 hover:bg-red-50 text-red-600 rounded-lg"
+                            className="p-2 hover:bg-danger/10 text-danger rounded-lg"
                           >
                             <Trash2 className="w-4 h-4" />
                           </button>
@@ -412,9 +412,9 @@ const DocumentModal: React.FC<{
               onChange={handleFileChange}
               className="hidden"
             />
-            {file && <p className="text-green-600 text-sm mt-2">{file.name}</p>}
+            {file && <p className="text-success text-sm mt-2">{file.name}</p>}
             {!file && doc?.file_name && (
-              <p className="text-blue-600 text-sm mt-2">{doc.file_name}</p>
+              <p className="text-card-text text-sm mt-2">{doc.file_name}</p>
             )}
           </button>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -426,7 +426,7 @@ const DocumentModal: React.FC<{
               }
               placeholder="Name (BN)"
               required
-              className="w-full p-2 rounded border bg-muted-bg"
+              className="w-full p-2.5 sm:p-3 rounded border bg-muted-bg text-sm sm:text-base"
             />
             <input
               name="display_name_en"
@@ -436,7 +436,7 @@ const DocumentModal: React.FC<{
               }
               placeholder="Name (EN)"
               required
-              className="w-full p-2 rounded border bg-muted-bg"
+              className="w-full p-2.5 sm:p-3 rounded border bg-muted-bg text-sm sm:text-base"
             />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -448,7 +448,7 @@ const DocumentModal: React.FC<{
               }
               placeholder="Description (BN)"
               rows={3}
-              className="w-full p-2 rounded border bg-muted-bg"
+              className="w-full p-2.5 sm:p-3 rounded border bg-muted-bg text-sm sm:text-base"
             />
             <textarea
               name="description_en"
@@ -458,7 +458,7 @@ const DocumentModal: React.FC<{
               }
               placeholder="Description (EN)"
               rows={3}
-              className="w-full p-2 rounded border bg-muted-bg"
+              className="w-full p-2.5 sm:p-3 rounded border bg-muted-bg text-sm sm:text-base"
             />
           </div>
           <input
@@ -469,7 +469,7 @@ const DocumentModal: React.FC<{
               setFormData({ ...formData, download_url: e.target.value })
             }
             placeholder="External URL (optional)"
-            className="w-full p-2 rounded border bg-muted-bg"
+            className="w-full p-2.5 sm:p-3 rounded border bg-muted-bg text-sm sm:text-base"
           />
           <input
             type="number"
@@ -482,11 +482,11 @@ const DocumentModal: React.FC<{
               })
             }
             placeholder="Sort Order"
-            className="w-full p-2 rounded border bg-muted-bg"
+            className="w-full p-2.5 sm:p-3 rounded border bg-muted-bg text-sm sm:text-base"
           />
 
           {error && (
-            <div className="text-red-500 text-sm p-2 bg-red-50 rounded">
+            <div className="text-danger text-sm p-2 bg-danger/10 rounded">
               <AlertCircle className="inline w-4 h-4 mr-2" />
               {error}
             </div>

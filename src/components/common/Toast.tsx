@@ -144,24 +144,24 @@ const ToastItem: FC<{
   onRemove: (id: string) => void;
 }> = ({ toast, onRemove }) => {
   const bgColors = {
-    success: "bg-green-50 dark:bg-green-900/20",
-    error: "bg-red-50 dark:bg-red-900/20",
-    warning: "bg-yellow-50 dark:bg-yellow-900/20",
-    info: "bg-blue-50 dark:bg-blue-900/20",
+    success: "bg-success/10 dark:bg-success/20",
+    error: "bg-danger/10 dark:bg-danger/20",
+    warning: "bg-warning/10 dark:bg-warning/20",
+    info: "bg-muted-bg",
   };
 
   const textColors = {
-    success: "text-green-600",
-    error: "text-red-600",
-    warning: "text-yellow-600",
-    info: "text-blue-600",
+    success: "text-success",
+    error: "text-danger",
+    warning: "text-warning",
+    info: "text-card-text",
   };
 
   const borderColors = {
-    success: "border-green-200 dark:border-green-800",
-    error: "border-red-200 dark:border-red-800",
-    warning: "border-yellow-200 dark:border-yellow-800",
-    info: "border-blue-200 dark:border-blue-800",
+    success: "border-success/30 dark:border-success/50",
+    error: "border-danger/30 dark:border-danger/50",
+    warning: "border-warning/30 dark:border-warning/50",
+    info: "border-border-color",
   };
 
   const icons = {

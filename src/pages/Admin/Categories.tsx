@@ -61,7 +61,7 @@ const CategoryModal: React.FC<{
               onChange={(e) => setFormData({ ...formData, id: e.target.value })}
               required
               readOnly={!!category?.id}
-              className="w-full p-3 rounded-lg border border-border-color bg-card focus:border-bbcRed outline-none"
+              className="w-full p-3 sm:p-2.5 rounded-lg border border-border-color bg-card focus:border-bbcRed outline-none text-sm sm:text-base"
             />
           </div>
           <div>
@@ -221,7 +221,7 @@ const Categories: React.FC = () => {
         {isLoading ? (
           <div className="p-8 text-center text-muted-text">Loading...</div>
         ) : error ? (
-          <div className="p-8 text-center text-red-500">{error}</div>
+          <div className="p-8 text-center text-danger">{error}</div>
         ) : categories.length === 0 ? (
           <div className="p-8 text-center text-muted-text">
             <FolderIcon className="w-16 h-16 mx-auto mb-4 text-border-color" />
@@ -231,11 +231,11 @@ const Categories: React.FC = () => {
           <table className="w-full text-left border-collapse">
             <thead className="bg-muted-bg text-muted-text text-xs uppercase">
               <tr>
-                <th className="p-4">ID</th>
-                <th className="p-4">Title (BN)</th>
-                <th className="p-4">Title (EN)</th>
-                <th className="p-4">Color</th>
-                <th className="p-4 text-right">Actions</th>
+                <th className="p-3 sm:p-4">ID</th>
+                <th className="p-3 sm:p-4">Title (BN)</th>
+                <th className="p-3 sm:p-4">Title (EN)</th>
+                <th className="hidden md:table-cell p-3 sm:p-4">Color</th>
+                <th className="p-3 sm:p-4 text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border-color">
@@ -244,10 +244,14 @@ const Categories: React.FC = () => {
                   key={cat.id}
                   className="hover:bg-muted-bg transition-colors"
                 >
-                  <td className="p-4 font-mono text-sm">{cat.id}</td>
-                  <td className="p-4 font-bold">{cat.title_bn}</td>
-                  <td className="p-4">{cat.title_en}</td>
-                  <td className="p-4">
+                  <td className="p-3 sm:p-4 font-mono text-sm">{cat.id}</td>
+                  <td className="p-3 sm:p-4 font-bold max-w-[100px] truncate">
+                    {cat.title_bn}
+                  </td>
+                  <td className="p-3 sm:p-4 max-w-[100px] truncate">
+                    {cat.title_en}
+                  </td>
+                  <td className="hidden md:table-cell p-3 sm:p-4">
                     <div className="flex items-center gap-2">
                       <div
                         className="w-6 h-6 rounded border border-border-color"
@@ -258,19 +262,19 @@ const Categories: React.FC = () => {
                       </span>
                     </div>
                   </td>
-                  <td className="p-4 text-right">
+                  <td className="p-3 sm:p-4 text-right">
                     <div className="flex justify-end gap-2">
                       <button
                         type="button"
                         onClick={() => handleOpenModal(cat)}
-                        className="p-2 text-blue-600 hover:bg-blue-50 rounded"
+                        className="p-2 text-card-text hover:bg-muted-bg rounded"
                       >
                         <Edit2 className="w-4 h-4" />
                       </button>
                       <button
                         type="button"
                         onClick={() => handleDelete(cat.id)}
-                        className="p-2 text-red-600 hover:bg-red-50 rounded"
+                        className="p-2 text-danger hover:bg-danger/10 rounded"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>

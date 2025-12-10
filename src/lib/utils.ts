@@ -154,8 +154,7 @@ export function showToastMsg(
 
   const toast = document.createElement("div");
   const icon = type === "error" ? "alert-circle" : "check-circle";
-  const color =
-    type === "error" ? "text-red-500" : "text-green-400 dark:text-green-600";
+  const color = type === "error" ? "text-danger" : "text-success";
 
   toast.className =
     "animate-[slide-up_0.4s_cubic-bezier(0.16,1,0.3,1)_forwards] fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-black/80 dark:bg-white/90 backdrop-blur text-white dark:text-black px-6 py-3 rounded-full shadow-lg font-bold flex items-center gap-2 mb-2 text-sm w-auto";

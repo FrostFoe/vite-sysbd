@@ -67,16 +67,16 @@ const Submissions: React.FC = () => {
           <table className="w-full text-left border-collapse responsive-table">
             <thead className="bg-muted-bg text-muted-text text-xs uppercase">
               <tr>
-                <th className="p-4">Article</th>
-                <th className="p-4">Message</th>
-                <th className="p-4">File</th>
-                <th className="p-4">Date</th>
+                <th className="p-3 sm:p-4">Article</th>
+                <th className="p-3 sm:p-4">Message</th>
+                <th className="p-3 sm:p-4">File</th>
+                <th className="hidden md:table-cell p-3 sm:p-4">Date</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border-color">
               {submissions.map((s) => (
                 <tr key={s.id} className="hover:bg-muted-bg transition-colors">
-                  <td className="p-4">
+                  <td className="p-3 sm:p-4">
                     <Link
                       to={`/admin/articles/${s.article_id}/edit`}
                       className="font-bold text-sm block hover:text-bbcRed"
@@ -90,22 +90,22 @@ const Submissions: React.FC = () => {
                     </span>
                   </td>
                   <td
-                    className="p-4 text-sm max-w-xs truncate"
+                    className="p-3 sm:p-4 text-sm max-w-[120px] sm:max-w-md truncate"
                     title={s.message}
                   >
                     {escapeHtml(s.message || "-")}
                   </td>
-                  <td className="p-4">
+                  <td className="p-3 sm:p-4">
                     <a
                       href={s.file_path} // Assuming this is accessible or proxied
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-blue-600 hover:underline text-sm font-bold flex items-center gap-1"
+                      className="text-card-text hover:underline text-sm font-bold flex items-center gap-1"
                     >
                       <FileText className="w-4 h-4" /> Download
                     </a>
                   </td>
-                  <td className="p-4 text-xs text-muted-text">
+                  <td className="hidden md:table-cell p-3 sm:p-4 text-xs text-muted-text">
                     {formatTimestamp(s.created_at, language)}
                   </td>
                 </tr>

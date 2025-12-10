@@ -87,23 +87,26 @@ const Comments: React.FC = () => {
           <table className="w-full text-left border-collapse responsive-table">
             <thead className="bg-muted-bg text-muted-text text-xs uppercase">
               <tr>
-                <th className="p-4">User</th>
-                <th className="p-4">Comment</th>
-                <th className="p-4">Article</th>
-                <th className="p-4">Time</th>
-                <th className="p-4 text-right">Actions</th>
+                <th className="p-3 sm:p-4">User</th>
+                <th className="p-3 sm:p-4">Comment</th>
+                <th className="hidden md:table-cell p-3 sm:p-4">Article</th>
+                <th className="p-3 sm:p-4">Time</th>
+                <th className="p-3 sm:p-4 text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border-color">
               {comments.map((c) => (
                 <tr key={c.id} className="hover:bg-muted-bg transition-colors">
-                  <td className="p-4 font-bold text-sm">
+                  <td className="p-3 sm:p-4 font-bold text-sm">
                     {escapeHtml(c.user_name)}
                   </td>
-                  <td className="p-4 text-sm max-w-md truncate" title={c.text}>
+                  <td
+                    className="p-3 sm:p-4 text-sm max-w-md truncate"
+                    title={c.text}
+                  >
                     {escapeHtml(c.text)}
                   </td>
-                  <td className="p-4 text-xs text-muted-text">
+                  <td className="hidden md:table-cell p-3 sm:p-4 text-xs text-muted-text">
                     <Link
                       to={`/article/${c.article_id}`}
                       target="_blank"
@@ -113,15 +116,15 @@ const Comments: React.FC = () => {
                       <ExternalLink className="w-3 h-3" />
                     </Link>
                   </td>
-                  <td className="p-4 text-xs text-muted-text">
+                  <td className="p-3 sm:p-4 text-xs text-muted-text">
                     {formatTimestamp(c.created_at, language)}
                   </td>
-                  <td className="p-4 text-right">
+                  <td className="p-3 sm:p-4 text-right">
                     <div className="flex items-center justify-end gap-2">
                       <button
                         type="button"
                         onClick={() => handleDeleteComment(c.id)}
-                        className="text-red-500 hover:text-red-700 p-2 rounded hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                        className="text-danger hover:text-danger/80 p-2 rounded hover:bg-danger/10 dark:hover:bg-danger/20 transition-colors"
                         title="Delete"
                       >
                         <Trash2 className="w-4 h-4" />

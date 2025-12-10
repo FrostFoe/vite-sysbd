@@ -135,7 +135,7 @@ const Header: React.FC = () => {
                   <button
                     type="button"
                     onClick={handleLogout}
-                    className="text-sm font-bold px-4 py-2 hover:bg-red-50 dark:hover:bg-red-900/20 text-bbcRed rounded-full transition-all flex items-center gap-2 active:scale-95"
+                    className="text-sm font-bold px-4 py-2 hover:bg-danger/10 dark:hover:bg-danger/20 text-bbcRed rounded-full transition-all flex items-center gap-2 active:scale-95"
                   >
                     <div className="w-4 h-4 bg-bbcRed rounded-full text-white flex items-center justify-center text-[10px]">
                       {user?.email[0].toUpperCase()}
@@ -146,7 +146,7 @@ const Header: React.FC = () => {
               ) : (
                 <Link
                   to="/login"
-                  className="text-sm font-bold px-5 py-2.5 bg-bbcDark dark:bg-white text-white dark:text-black rounded-full hover:bg-opacity-90 dark:hover:bg-opacity-90 hover:shadow-lg hover:-translate-y-0.5 transition-all active:scale-95"
+                  className="text-sm font-bold px-5 py-2.5 bg-card text-card-text rounded-full hover:bg-card/90 hover:shadow-lg hover:-translate-y-0.5 transition-all active:scale-95"
                 >
                   {t("sign_in", language)}
                 </Link>

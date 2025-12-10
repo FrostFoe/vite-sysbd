@@ -107,11 +107,11 @@ const Users: React.FC = () => {
           <table className="w-full text-left border-collapse responsive-table">
             <thead className="bg-muted-bg text-muted-text text-xs uppercase">
               <tr>
-                <th className="p-4">Email</th>
-                <th className="p-4">Role</th>
-                <th className="p-4">Joined</th>
-                <th className="p-4">Status</th>
-                <th className="p-4 text-right">Actions</th>
+                <th className="p-3 sm:p-4">Email</th>
+                <th className="p-3 sm:p-4">Role</th>
+                <th className="hidden md:table-cell p-3 sm:p-4">Joined</th>
+                <th className="p-3 sm:p-4">Status</th>
+                <th className="p-3 sm:p-4 text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border-color">
@@ -122,7 +122,7 @@ const Users: React.FC = () => {
                     key={user.id}
                     className={`hover:bg-muted-bg transition-colors ${isMuted ? "opacity-75" : ""}`}
                   >
-                    <td className="p-4">
+                    <td className="p-3 sm:p-4">
                       <div className="flex items-center gap-2">
                         <div className="w-8 h-8 rounded-full bg-gradient-to-br from-bbcRed to-orange-600 flex items-center justify-center text-white text-xs font-bold">
                           {user.email.charAt(0).toUpperCase()}
@@ -135,20 +135,20 @@ const Users: React.FC = () => {
                         </div>
                       </div>
                     </td>
-                    <td className="p-4">
+                    <td className="p-3 sm:p-4">
                       <span
-                        className={`inline-block px-3 py-1 rounded-full text-xs font-bold ${user.role === "admin" ? "bg-red-100 dark:bg-red-900/20 text-bbcRed" : "bg-blue-100 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400"}`}
+                        className={`inline-block px-3 py-1 rounded-full text-xs font-bold ${user.role === "admin" ? "bg-danger/10 dark:bg-danger/20 text-danger" : "bg-muted-bg text-card-text"}`}
                       >
                         {user.role}
                       </span>
                     </td>
-                    <td className="p-4 text-sm text-muted-text">
+                    <td className="hidden md:table-cell p-3 sm:p-4 text-sm text-muted-text">
                       {new Date(user.created_at).toLocaleDateString()}
                     </td>
-                    <td className="p-4">
+                    <td className="p-3 sm:p-4">
                       {isMuted ? (
                         <div>
-                          <span className="inline-block px-3 py-1 rounded-full text-xs font-bold bg-red-100 dark:bg-red-900/20 text-red-600 dark:text-red-400 flex items-center gap-1.5 w-fit">
+                          <span className="inline-block px-3 py-1 rounded-full text-xs font-bold bg-danger/10 dark:bg-danger/20 text-danger flex items-center gap-1.5 w-fit">
                             <Ban className="w-3 h-3" /> Muted
                           </span>
                           {user.reason && (
@@ -158,7 +158,7 @@ const Users: React.FC = () => {
                           )}
                         </div>
                       ) : (
-                        <span className="inline-block px-3 py-1 rounded-full text-xs font-bold bg-green-100 dark:bg-green-900/20 text-green-600 dark:text-green-400 flex items-center gap-1.5 w-fit">
+                        <span className="inline-block px-3 py-1 rounded-full text-xs font-bold bg-success/10 dark:bg-success/20 text-success flex items-center gap-1.5 w-fit">
                           <CheckCircle className="w-3 h-3" /> Active
                         </span>
                       )}
@@ -170,7 +170,7 @@ const Users: React.FC = () => {
                             <button
                               type="button"
                               onClick={() => handleUnmuteUser(user.id)}
-                              className="text-green-500 hover:text-green-700 hover:bg-green-50 dark:hover:bg-green-900/20 p-2 rounded transition-colors"
+                              className="text-success hover:text-success/80 hover:bg-success/10 dark:hover:bg-success/20 p-2 rounded transition-colors"
                               title="Unmute"
                             >
                               <CheckCircle className="w-4 h-4" />
@@ -181,7 +181,7 @@ const Users: React.FC = () => {
                               onClick={() =>
                                 openMuteDialog(user.id, user.email)
                               }
-                              className="text-yellow-600 hover:text-yellow-700 hover:bg-yellow-50 dark:hover:bg-yellow-900/20 p-2 rounded transition-colors"
+                              className="text-warning hover:text-warning/80 hover:bg-warning/10 dark:hover:bg-warning/20 p-2 rounded transition-colors"
                               title="Mute"
                             >
                               <Ban className="w-4 h-4" />
@@ -218,7 +218,7 @@ const Users: React.FC = () => {
             onKeyDown={(e) => e.stopPropagation()}
           >
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 rounded-full bg-yellow-100 dark:bg-yellow-900/20 flex items-center justify-center text-yellow-600 dark:text-yellow-400">
+              <div className="w-10 h-10 rounded-full bg-warning/10 dark:bg-warning/20 flex items-center justify-center text-warning dark:text-warning">
                 <AlertCircle className="w-5 h-5" />
               </div>
               <h2 className="text-lg font-bold text-card-text">Mute User</h2>
@@ -242,7 +242,7 @@ const Users: React.FC = () => {
                 value={muteReason}
                 onChange={(e) => setMuteReason(e.target.value)}
                 placeholder="Enter reason for muting this user..."
-                className="w-full p-3 rounded-lg border border-border-color bg-muted-bg text-card-text focus:ring-2 focus:ring-yellow-500/20 focus:border-yellow-500 outline-none transition-all resize-none text-sm"
+                className="w-full p-3 rounded-lg border border-border-color bg-muted-bg text-card-text focus:ring-2 focus:ring-warning/20 focus:border-warning outline-none transition-all resize-none text-sm"
                 rows={3}
               />
             </div>
@@ -257,7 +257,7 @@ const Users: React.FC = () => {
               <button
                 type="button"
                 onClick={handleMuteUser}
-                className="px-4 py-2 rounded-lg bg-yellow-600 hover:bg-yellow-700 text-white font-bold transition-colors flex items-center gap-2"
+                className="px-4 py-2 rounded-lg bg-warning hover:bg-warning/80 text-white font-bold transition-colors flex items-center gap-2"
               >
                 <Ban className="w-4 h-4" /> Mute User
               </button>

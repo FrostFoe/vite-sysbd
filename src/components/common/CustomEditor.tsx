@@ -385,7 +385,7 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
 
       {/* Error Message */}
       {uploadError && (
-        <div className="mt-2 p-3 bg-red-50 border border-red-200 rounded-lg flex items-center gap-2 text-red-700">
+        <div className="mt-2 p-3 bg-danger/10 border border-danger/30 rounded-lg flex items-center gap-2 text-danger">
           <AlertCircle size={18} />
           <span>{uploadError}</span>
         </div>

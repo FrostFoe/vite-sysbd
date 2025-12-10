@@ -246,14 +246,14 @@ const ArticleEdit: React.FC = () => {
             <Link
               to={`/article/${id}?lang=bn`}
               target="_blank"
-              className="text-blue-600 hover:underline text-sm flex items-center gap-1"
+              className="text-card-text hover:underline text-sm flex items-center gap-1"
             >
               {t("view_bn", language)} <ExternalLink className="w-3 h-3" />
             </Link>
             <Link
               to={`/article/${id}?lang=en`}
               target="_blank"
-              className="text-blue-600 hover:underline text-sm flex items-center gap-1"
+              className="text-card-text hover:underline text-sm flex items-center gap-1"
             >
               {t("view_en", language)} <ExternalLink className="w-3 h-3" />
             </Link>
@@ -261,10 +261,10 @@ const ArticleEdit: React.FC = () => {
         )}
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Main Content */}
-          <div className="lg:col-span-2 space-y-8 bg-card p-6 rounded-xl border border-border-color shadow-sm">
+          <div className="lg:col-span-2 space-y-6 bg-card p-4 sm:p-6 rounded-xl border border-border-color shadow-sm">
             <h3 className="font-bold text-lg mb-4 border-b border-border-color pb-2">
               {t("content_unified", language)}
             </h3>
@@ -285,7 +285,7 @@ const ArticleEdit: React.FC = () => {
                   setArticle((prev) => ({ ...prev, title_bn: e.target.value }))
                 }
                 required
-                className="w-full p-3 rounded-lg border border-border-color bg-card focus:border-bbcRed outline-none font-hind"
+                className="w-full p-3 sm:p-2.5 rounded-lg border border-border-color bg-card focus:border-bbcRed outline-none font-hind text-sm sm:text-base"
                 placeholder={t("enter_article_title_bn", language)}
               />
             </div>
@@ -304,7 +304,7 @@ const ArticleEdit: React.FC = () => {
                 onChange={(e) =>
                   setArticle((prev) => ({ ...prev, title_en: e.target.value }))
                 }
-                className="w-full p-3 rounded-lg border border-border-color bg-card focus:border-bbcRed outline-none font-hind"
+                className="w-full p-3 sm:p-2.5 rounded-lg border border-border-color bg-card focus:border-bbcRed outline-none font-hind text-sm sm:text-base"
                 placeholder={t("enter_article_title_en", language)}
               />
             </div>
@@ -328,7 +328,7 @@ const ArticleEdit: React.FC = () => {
                     summary_bn: e.target.value,
                   }))
                 }
-                className="w-full p-3 rounded-lg border border-border-color bg-card focus:border-bbcRed outline-none font-hind"
+                className="w-full p-3 sm:p-2.5 rounded-lg border border-border-color bg-card focus:border-bbcRed outline-none font-hind text-sm sm:text-base"
                 placeholder={t("brief_summary_bn", language)}
               />
             </div>
@@ -351,7 +351,7 @@ const ArticleEdit: React.FC = () => {
                     summary_en: e.target.value,
                   }))
                 }
-                className="w-full p-3 rounded-lg border border-border-color bg-card focus:border-bbcRed outline-none font-hind"
+                className="w-full p-3 sm:p-2.5 rounded-lg border border-border-color bg-card focus:border-bbcRed outline-none font-hind text-sm sm:text-base"
                 placeholder={t("brief_summary_en", language)}
               />
             </div>
@@ -401,21 +401,21 @@ const ArticleEdit: React.FC = () => {
             {restoreAlert && (
               <div
                 id="restore-alert"
-                className="bg-blue-50 border border-blue-200 rounded-xl p-4"
+                className="bg-muted-bg border border-border-color rounded-xl p-4"
               >
                 <div className="flex items-start gap-3">
-                  <Save className="w-5 h-5 text-blue-600 mt-0.5" />
+                  <Save className="w-5 h-5 text-card-text mt-0.5" />
                   <div>
-                    <h4 className="text-sm font-bold text-blue-800">
+                    <h4 className="text-sm font-bold text-card-text">
                       {t("unsaved_draft_found", language)}
                     </h4>
-                    <p className="text-xs text-blue-600 mt-1">
+                    <p className="text-xs text-card-text mt-1">
                       {t("newer_version_found_in_browser", language)}
                     </p>
                     <button
                       type="button"
                       onClick={restoreDraft}
-                      className="mt-2 text-xs bg-blue-600 text-white px-3 py-1.5 rounded hover:bg-blue-700 transition-colors font-bold"
+                      className="mt-2 text-xs bg-card text-card-text px-3 py-1.5 rounded hover:bg-card/90 transition-colors font-bold"
                     >
                       {t("restore_draft", language)}
                     </button>
@@ -424,8 +424,8 @@ const ArticleEdit: React.FC = () => {
               </div>
             )}
 
-            <div className="bg-card p-5 rounded-xl border border-border-color shadow-sm">
-              <h3 className="font-bold mb-4 text-sm uppercase text-muted-text">
+            <div className="bg-card p-4 rounded-xl border border-border-color shadow-sm">
+              <h3 className="font-bold mb-3 text-sm uppercase text-muted-text">
                 {t("publishing", language)}
               </h3>
 
@@ -465,7 +465,7 @@ const ArticleEdit: React.FC = () => {
                         allow_submissions: e.target.checked,
                       }))
                     }
-                    className="form-checkbox text-bbcRed rounded"
+                    className="form-checkbox h-5 w-5 text-bbcRed rounded"
                   />
                   <span className="text-sm font-bold text-card-text">
                     {t("allow_user_submissions", language)}
@@ -488,8 +488,8 @@ const ArticleEdit: React.FC = () => {
               </button>
             </div>
 
-            <div className="bg-card p-5 rounded-xl border border-border-color shadow-sm">
-              <h3 className="font-bold mb-4 text-sm uppercase text-muted-text">
+            <div className="bg-card p-4 rounded-xl border border-border-color shadow-sm">
+              <h3 className="font-bold mb-3 text-sm uppercase text-muted-text">
                 {t("organization", language)}
               </h3>
 
@@ -551,8 +551,8 @@ const ArticleEdit: React.FC = () => {
               </div>
             </div>
 
-            <div className="bg-card p-5 rounded-xl border border-border-color shadow-sm">
-              <h3 className="font-bold mb-4 text-sm uppercase text-muted-text">
+            <div className="bg-card p-4 rounded-xl border border-border-color shadow-sm">
+              <h3 className="font-bold mb-3 text-sm uppercase text-muted-text">
                 {t("media", language)}
               </h3>
 

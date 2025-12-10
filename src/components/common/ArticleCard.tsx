@@ -68,7 +68,7 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
         </div>
         <div className="flex flex-col flex-grow p-5">
           <div className="mb-2 flex items-center gap-2">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-bbcRed bg-red-50 dark:bg-red-900/20 px-2 py-0.5 rounded">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-bbcRed bg-danger/10 dark:bg-danger/20 px-2 py-0.5 rounded">
               {escapeHtml(article.category)}
             </span>
             <span className="text-[10px] text-muted-text">• {timeAgo}</span>

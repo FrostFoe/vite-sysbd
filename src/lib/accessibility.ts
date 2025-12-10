@@ -85,7 +85,7 @@ export function createSkipLink(): HTMLAnchorElement {
   const link = document.createElement("a");
   link.href = "#main-content";
   link.className =
-    "sr-only focus:not-sr-only focus:fixed focus:top-0 focus:left-0 focus:z-50 focus:p-3 focus:bg-bbcRed focus:text-white";
+    "sr-only focus:not-sr-only focus:fixed focus:top-0 focus:left-0 focus:z-50 focus:p-3 focus:bg-bbcRed focus:text-page-text";
   link.textContent = "Skip to main content";
   return link;
 }
