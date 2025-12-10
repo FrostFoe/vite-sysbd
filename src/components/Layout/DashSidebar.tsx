@@ -1,18 +1,18 @@
-import React from "react";
-import { NavLink } from "react-router-dom";
-import { useAuth } from "../../context/AuthContext";
 import {
-  LayoutDashboard,
+  Bookmark,
+  Download,
   FileText,
-  MessageCircle,
-  Mail,
   Folder,
   Layers,
-  Download,
+  LayoutDashboard,
   LogOut,
-  Bookmark,
+  Mail,
+  MessageCircle,
   Shield,
 } from "lucide-react";
+import type React from "react";
+import { NavLink } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 
 interface DashSidebarProps {
   type: "admin" | "dashboard";
@@ -142,13 +142,14 @@ const DashSidebar: React.FC<DashSidebarProps> = ({
   return (
     <>
       {/* Sidebar Overlay (Mobile) */}
-      <div
+      <button
+        type="button"
         id="sidebar-overlay"
         onClick={toggleSidebar}
         className={`fixed inset-0 bg-black/60 z-30 md:hidden backdrop-blur-sm transition-opacity duration-300 ${
           isSidebarOpen ? "opacity-100" : "opacity-0 pointer-events-none"
         }`}
-      ></div>
+      />
 
       {/* Sidebar */}
       <aside
@@ -186,6 +187,7 @@ const DashSidebar: React.FC<DashSidebarProps> = ({
             </div>
           </div>
           <button
+            type="button"
             onClick={logout}
             className="flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-600 transition-all duration-200 w-full"
           >

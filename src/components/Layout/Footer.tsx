@@ -1,16 +1,16 @@
+import {
+  Bitcoin,
+  ChevronUp,
+  Coins,
+  Copy,
+  Facebook,
+  Twitter,
+  Youtube,
+} from "lucide-react";
 import React, { useEffect } from "react";
 import { useLayout } from "../../context/LayoutContext";
 import { t } from "../../lib/translations";
 import { showToastMsg } from "../../lib/utils";
-import {
-  Facebook,
-  Twitter,
-  Youtube,
-  Coins,
-  Bitcoin,
-  Copy,
-  ChevronUp,
-} from "lucide-react";
 
 const Footer: React.FC = () => {
   const { language } = useLayout();
@@ -60,19 +60,25 @@ const Footer: React.FC = () => {
           </div>
           <div className="flex gap-6">
             <a
-              href="#"
+              href="https://www.facebook.com/"
+              target="_blank"
+              rel="noopener noreferrer"
               className="p-2 bg-muted-bg rounded-full hover:bg-bbcRed transition-colors"
             >
               <Facebook className="w-5 h-5" />
             </a>
             <a
-              href="#"
+              href="https://twitter.com/"
+              target="_blank"
+              rel="noopener noreferrer"
               className="p-2 bg-muted-bg rounded-full hover:bg-bbcRed transition-colors"
             >
               <Twitter className="w-5 h-5" />
             </a>
             <a
-              href="#"
+              href="https://www.youtube.com/"
+              target="_blank"
+              rel="noopener noreferrer"
               className="p-2 bg-muted-bg rounded-full hover:bg-bbcRed transition-colors"
             >
               <Youtube className="w-5 h-5" />
@@ -95,10 +101,11 @@ const Footer: React.FC = () => {
                 className="p-3 bg-muted-bg text-card-text rounded-lg border border-border-color focus:outline-none focus:border-bbcRed flex-grow"
               />
               <button
+                type="button"
                 onClick={() =>
                   copyToClipboard(
                     "subscribed",
-                    t("subscribed_successfully", language),
+                    t("subscribed_successfully", language)
                   )
                 }
                 className="bg-bbcDark text-white dark:bg-white dark:text-black font-bold px-6 py-3 rounded-lg hover:bg-opacity-90 dark:hover:bg-opacity-90 hover:shadow-md transition-all"
@@ -129,10 +136,11 @@ const Footer: React.FC = () => {
                     TNztLXjP7zYWotPRpzdtPCNVu8JB3DG5jV
                   </code>
                   <button
+                    type="button"
                     onClick={() =>
                       copyToClipboard(
                         "TNztLXjP7zYWotPRpzdtPCNVu8JB3DG5jV",
-                        t("link_copied", language),
+                        t("link_copied", language)
                       )
                     }
                     className="text-bbcRed hover:text-red-700 p-1"
@@ -154,10 +162,11 @@ const Footer: React.FC = () => {
                     18kgAYsUMVF51MNUeMt6vr1WhfgHtzcWai
                   </code>
                   <button
+                    type="button"
                     onClick={() =>
                       copyToClipboard(
                         "18kgAYsUMVF51MNUeMt6vr1WhfgHtzcWai",
-                        t("link_copied", language),
+                        t("link_copied", language)
                       )
                     }
                     className="text-bbcRed hover:text-red-700 p-1"
@@ -175,6 +184,7 @@ const Footer: React.FC = () => {
       </div>
 
       <button
+        type="button"
         id="back-to-top"
         onClick={scrollToTop}
         className={`fixed bottom-8 right-8 p-3 rounded-full shadow-xl z-50 transition-all duration-300 bg-black/80 backdrop-blur text-white hover:bg-black dark:bg-white/90 dark:text-black dark:hover:bg-white hover:scale-110 ${

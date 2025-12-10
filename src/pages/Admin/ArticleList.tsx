@@ -1,17 +1,18 @@
-import React, { useState, useEffect, useCallback } from "react";
+import { Edit2, FileText, Loader, Plus, Search, Trash2 } from "lucide-react";
+import type React from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
+import { CustomDropdown } from "../../components/common/CustomDropdown";
 import { useLayout } from "../../context/LayoutContext";
-import type { AdminArticle, Category } from "../../types";
 import { adminApi } from "../../lib/api";
 import { t } from "../../lib/translations";
-import { FileText, Plus, Search, Edit2, Trash2, Loader } from "lucide-react";
-import { CustomDropdown } from "../../components/common/CustomDropdown";
 import {
-  formatTimestamp,
   escapeHtml,
+  formatTimestamp,
   PLACEHOLDER_IMAGE,
   showToastMsg,
 } from "../../lib/utils";
+import type { AdminArticle, Category } from "../../types";
 
 const ArticleList: React.FC = () => {
   const { language } = useLayout();
@@ -72,7 +73,7 @@ const ArticleList: React.FC = () => {
         } else {
           showToastMsg(
             response.error || t("failed_to_delete_article", language),
-            "error",
+            "error"
           );
         }
       } catch (error) {
@@ -80,12 +81,12 @@ const ArticleList: React.FC = () => {
         showToastMsg(t("server_error", language), "error");
       }
     },
-    [language],
+    [language]
   );
 
   const handleFilterChange = (
     type: "search" | "cat" | "status",
-    value: string,
+    value: string
   ) => {
     const newParams = new URLSearchParams(searchParams.toString());
     if (value) {
@@ -193,8 +194,7 @@ const ArticleList: React.FC = () => {
                   draft: "bg-yellow-100 text-yellow-700 border-yellow-200",
                   archived: "bg-gray-100 text-gray-700 border-gray-200",
                 };
-                const colorClass =
-                  statusColors[a.status] || statusColors["draft"];
+                const colorClass = statusColors[a.status] || statusColors.draft;
                 const pubDate = formatTimestamp(a.published_at, language);
                 const createdDate = formatTimestamp(a.created_at, language);
 
@@ -263,6 +263,7 @@ const ArticleList: React.FC = () => {
                           <Edit2 className="w-4 h-4" />
                         </Link>
                         <button
+                          type="button"
                           onClick={() => handleDeleteArticle(a.id)}
                           className="p-2 text-red-600 hover:bg-red-50 rounded"
                         >

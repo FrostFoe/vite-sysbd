@@ -1,4 +1,4 @@
-import { Node, mergeAttributes } from "@tiptap/core";
+import { mergeAttributes, Node } from "@tiptap/core";
 
 declare module "@tiptap/core" {
   interface Commands<ReturnType> {
@@ -6,7 +6,11 @@ declare module "@tiptap/core" {
       /**
        * Insert a video
        */
-      setVideo: (options: { src: string; alt?: string; title?: string }) => ReturnType;
+      setVideo: (options: {
+        src: string;
+        alt?: string;
+        title?: string;
+      }) => ReturnType;
     };
   }
 }

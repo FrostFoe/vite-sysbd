@@ -1,8 +1,8 @@
-import React from "react";
+import type React from "react";
 import { Link } from "react-router-dom";
-import type { Article } from "../../types";
 import { useLayout } from "../../context/LayoutContext";
 import { escapeHtml, PLACEHOLDER_IMAGE } from "../../lib/utils"; // Assuming PLACEHOLDER_IMAGE is in utils
+import type { Article } from "../../types";
 
 interface MiniArticleProps {
   article: Article;

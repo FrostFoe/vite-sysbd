@@ -1,34 +1,35 @@
-import React, { useState, useEffect, useCallback, useRef } from "react";
-import { useParams } from "react-router-dom";
-import { useLayout } from "../context/LayoutContext";
-import { useAuth } from "../context/AuthContext";
-import { publicApi, adminApi } from "../lib/api";
-import type { Article, UserProfile } from "../types";
 import {
-  escapeHtml,
-  sanitizeHtml,
-  formatTimestamp,
-  PLACEHOLDER_IMAGE,
-  showToastMsg,
-} from "../lib/utils";
-import { t } from "../lib/translations";
-import { CustomDropdown } from "../components/common/CustomDropdown";
-import {
-  Clock,
-  FileText,
-  Share2,
   Bookmark,
-  FileWarning,
+  Clock,
   Download,
-  Upload,
+  FileText,
+  FileWarning,
+  Loader,
   Lock,
   MessageCircle,
-  ThumbsUp,
+  Share2,
   ThumbsDown,
+  ThumbsUp,
   Trash2,
-  Loader,
+  Upload,
   X,
 } from "lucide-react";
+import type React from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useParams } from "react-router-dom";
+import { CustomDropdown } from "../components/common/CustomDropdown";
+import { useAuth } from "../context/AuthContext";
+import { useLayout } from "../context/LayoutContext";
+import { adminApi, publicApi } from "../lib/api";
+import { t } from "../lib/translations";
+import {
+  escapeHtml,
+  formatTimestamp,
+  PLACEHOLDER_IMAGE,
+  sanitizeHtml,
+  showToastMsg,
+} from "../lib/utils";
+import type { Article, UserProfile } from "../types";
 
 const ArticleDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -110,7 +111,7 @@ const ArticleDetail: React.FC = () => {
         .flat()
         .forEach((cls) => {
           proseEl.classList.remove(
-            `[&_p]:${cls.replace("text-lg", "text-base")}`,
+            `[&_p]:${cls.replace("text-lg", "text-base")}`
           ); // Tailwind uses text-base for p
           proseEl.classList.remove(`[&_p]:${cls}`);
         });
@@ -123,7 +124,7 @@ const ArticleDetail: React.FC = () => {
 
   useEffect(() => {
     handleFontSizeChange(fontSize); // Apply initial font size
-  }, [article, fontSize, handleFontSizeChange]);
+  }, [fontSize, handleFontSizeChange]);
 
   // Bookmark toggle
   const handleBookmarkToggle = useCallback(() => {
@@ -136,10 +137,10 @@ const ArticleDetail: React.FC = () => {
           : [...prevBookmarks, id];
       localStorage.setItem(
         "breachtimes-bookmarks",
-        JSON.stringify(newBookmarks),
+        JSON.stringify(newBookmarks)
       );
       showToastMsg(
-        index > -1 ? t("removed", language) : t("saved_successfully", language),
+        index > -1 ? t("removed", language) : t("saved_successfully", language)
       );
       return newBookmarks;
     });
@@ -188,7 +189,7 @@ const ArticleDetail: React.FC = () => {
         }
       } else {
         setCommentError(
-          response.error || t("failed_to_post_comment", language),
+          response.error || t("failed_to_post_comment", language)
         );
       }
     } catch (error) {
@@ -224,7 +225,7 @@ const ArticleDetail: React.FC = () => {
                     upvotes: response.upvotes,
                     downvotes: response.downvotes,
                   }
-                : comment,
+                : comment
             );
             return { ...prevArticle, comments: updatedComments };
           });
@@ -232,7 +233,7 @@ const ArticleDetail: React.FC = () => {
         } else {
           showToastMsg(
             response.error || t("failed_to_vote", language),
-            "error",
+            "error"
           );
         }
       } catch (error) {
@@ -240,7 +241,7 @@ const ArticleDetail: React.FC = () => {
         showToastMsg(t("server_error", language), "error");
       }
     },
-    [id, language],
+    [id, language]
   );
 
   // Comment sorting
@@ -251,7 +252,7 @@ const ArticleDetail: React.FC = () => {
       // Optionally re-fetch comments with new sort order or re-sort locally
       // For now, re-sorting logic might be complex if replies are involved, will assume simple re-render.
     },
-    [id],
+    [id]
   );
 
   // Reply form toggle for admin
@@ -272,7 +273,11 @@ const ArticleDetail: React.FC = () => {
       }
 
       try {
-        const response = await publicApi.postReply(parentCommentId, text, language);
+        const response = await publicApi.postReply(
+          parentCommentId,
+          text,
+          language
+        );
         if (response.success) {
           setReplyInput((prev) => ({ ...prev, [parentCommentId]: "" }));
           setActiveReplyForm(null);
@@ -280,7 +285,7 @@ const ArticleDetail: React.FC = () => {
           // Refetch article to update comments
           const updatedArticleResponse = await publicApi.getArticle(
             id,
-            language,
+            language
           );
           if (
             updatedArticleResponse.success &&
@@ -291,7 +296,7 @@ const ArticleDetail: React.FC = () => {
         } else {
           showToastMsg(
             response.error || t("failed_to_post_reply", language),
-            "error",
+            "error"
           );
         }
       } catch (error) {
@@ -299,7 +304,7 @@ const ArticleDetail: React.FC = () => {
         showToastMsg(t("server_error", language), "error");
       }
     },
-    [id, isAdmin, replyInput, language],
+    [id, replyInput, language]
   );
 
   // Delete comment for admin
@@ -313,9 +318,10 @@ const ArticleDetail: React.FC = () => {
         if (response.success) {
           showToastMsg(t("comment_deleted", language));
           // Refetch article to update comments
+          if (!id) return;
           const updatedArticleResponse = await publicApi.getArticle(
-            id!,
-            language,
+            id,
+            language
           );
           if (
             updatedArticleResponse.success &&
@@ -326,7 +332,7 @@ const ArticleDetail: React.FC = () => {
         } else {
           showToastMsg(
             response.error || t("failed_to_delete_comment", language),
-            "error",
+            "error"
           );
         }
       } catch (error) {
@@ -334,7 +340,7 @@ const ArticleDetail: React.FC = () => {
         showToastMsg(t("server_error", language), "error");
       }
     },
-    [id, isAdmin, language],
+    [id, isAdmin, language]
   );
 
   // User Profile Modal
@@ -350,7 +356,7 @@ const ArticleDetail: React.FC = () => {
         } else {
           showToastMsg(
             response.error || t("failed_to_fetch_profile", language),
-            "error",
+            "error"
           );
         }
       } catch (error) {
@@ -360,7 +366,7 @@ const ArticleDetail: React.FC = () => {
         setProfileModalLoading(false);
       }
     },
-    [language],
+    [language]
   );
 
   const closeProfileModal = useCallback(() => {
@@ -384,7 +390,7 @@ const ArticleDetail: React.FC = () => {
         } else {
           showToastMsg(
             response.error || t("submission_failed", language),
-            "error",
+            "error"
           );
         }
       } catch (error) {
@@ -392,7 +398,7 @@ const ArticleDetail: React.FC = () => {
         showToastMsg(t("server_error", language), "error");
       }
     },
-    [id, language],
+    [id, language]
   );
 
   if (isLoading) {
@@ -454,18 +460,21 @@ const ArticleDetail: React.FC = () => {
             <div className="flex items-center justify-between border-y border-border-color py-4 mb-8">
               <div className="flex items-center gap-1 bg-muted-bg rounded-lg p-1">
                 <button
+                  type="button"
                   onClick={() => handleFontSizeChange("sm")}
                   className={`w-8 h-8 flex items-center justify-center hover:bg-card rounded transition-colors text-xs font-bold text-card-text ${fontSize === "sm" ? "bg-card" : ""}`}
                 >
                   A
                 </button>
                 <button
+                  type="button"
                   onClick={() => handleFontSizeChange("md")}
                   className={`w-8 h-8 flex items-center justify-center hover:bg-card rounded transition-colors text-sm font-bold text-card-text ${fontSize === "md" ? "bg-card" : ""}`}
                 >
                   A
                 </button>
                 <button
+                  type="button"
                   onClick={() => handleFontSizeChange("lg")}
                   className={`w-8 h-8 flex items-center justify-center hover:bg-card rounded transition-colors text-lg font-bold text-card-text ${fontSize === "lg" ? "bg-card" : ""}`}
                 >
@@ -474,6 +483,7 @@ const ArticleDetail: React.FC = () => {
               </div>
               <div className="flex gap-3">
                 <button
+                  type="button"
                   aria-label="Share article"
                   onClick={handleShare}
                   className="flex items-center gap-2 px-4 py-2 rounded-full bg-muted-bg hover:bg-bbcRed hover:text-white transition-all text-sm font-bold text-card-text"
@@ -481,6 +491,7 @@ const ArticleDetail: React.FC = () => {
                   <Share2 className="w-4 h-4" /> {t("share", language)}
                 </button>
                 <button
+                  type="button"
                   aria-label="Toggle bookmark"
                   onClick={handleBookmarkToggle}
                   className="p-2.5 rounded-full bg-muted-bg hover:bg-bbcRed hover:text-white text-black dark:text-white transition-all shadow-sm flex items-center justify-center group"
@@ -496,8 +507,11 @@ const ArticleDetail: React.FC = () => {
             {/* Article Content */}
             <div
               className="prose max-w-none [&_p]:text-lg [&_p]:leading-[1.8] [&_p]:mb-[1em] space-y-8 text-card-text transition-all duration-300"
-              dangerouslySetInnerHTML={{ __html: sanitizeHtml(article.content) }}
-            ></div>
+              // biome-ignore lint/security/noDangerouslySetInnerHtml: Content is properly sanitized with sanitizeHtml to prevent XSS
+              dangerouslySetInnerHTML={{
+                __html: sanitizeHtml(article.content),
+              }}
+            />
           </article>
         </div>
 
@@ -611,10 +625,14 @@ const ArticleDetail: React.FC = () => {
                   >
                     <input type="hidden" name="article_id" value={article.id} />
                     <div>
-                      <label className="block text-xs font-bold mb-2 text-muted-text">
+                      <label
+                        htmlFor="document-input"
+                        className="block text-xs font-bold mb-2 text-muted-text"
+                      >
                         {t("your_file", language)}
                       </label>
                       <input
+                        id="document-input"
                         type="file"
                         name="document"
                         required
@@ -622,15 +640,19 @@ const ArticleDetail: React.FC = () => {
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-bold mb-2 text-muted-text">
+                      <label
+                        htmlFor="message-textarea"
+                        className="block text-xs font-bold mb-2 text-muted-text"
+                      >
                         {t("message_optional", language)}
                       </label>
                       <textarea
+                        id="message-textarea"
                         name="message"
                         rows={3}
                         className="w-full p-3 rounded-lg border border-border-color bg-muted-bg text-card-text text-sm focus:border-bbcRed outline-none"
                         placeholder={t("write_details", language)}
-                      ></textarea>
+                      />
                     </div>
                     <button
                       type="submit"
@@ -698,7 +720,10 @@ const ArticleDetail: React.FC = () => {
               {t("comments", language)}
             </h3>
             <div className="flex items-center gap-2">
-              <label className="text-xs font-bold text-muted-text">
+              <label
+                htmlFor="sort-comments"
+                className="text-xs font-bold text-muted-text"
+              >
                 {t("sort_by", language)}
               </label>
               <CustomDropdown
@@ -730,11 +755,19 @@ const ArticleDetail: React.FC = () => {
                   .sort((a, b) => {
                     // Sort by newest first
                     if (commentSort === "newest") {
-                      return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+                      return (
+                        new Date(b.created_at).getTime() -
+                        new Date(a.created_at).getTime()
+                      );
                     } else if (commentSort === "oldest") {
-                      return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
+                      return (
+                        new Date(a.created_at).getTime() -
+                        new Date(b.created_at).getTime()
+                      );
                     } else if (commentSort === "helpful") {
-                      return (b.upvotes - b.downvotes) - (a.upvotes - a.downvotes);
+                      return (
+                        b.upvotes - b.downvotes - (a.upvotes - a.downvotes)
+                      );
                     } else if (commentSort === "discussed") {
                       const aReplies = a.replies?.length || 0;
                       const bReplies = b.replies?.length || 0;
@@ -749,12 +782,13 @@ const ArticleDetail: React.FC = () => {
                           {comment.user[0].toUpperCase()}
                         </div>
                         <div className="flex-grow min-w-0">
-                          <span
+                          <button
+                            type="button"
                             onClick={() => openProfileModal(comment.user)}
-                            className="font-bold text-sm text-card-text block hover:text-bbcRed cursor-pointer transition-colors"
+                            className="font-bold text-sm text-card-text block hover:text-bbcRed cursor-pointer transition-colors bg-transparent border-none p-0"
                           >
                             {escapeHtml(comment.user)}
-                          </span>
+                          </button>
                           <span className="text-xs text-muted-text">
                             {comment.time}
                           </span>
@@ -763,12 +797,16 @@ const ArticleDetail: React.FC = () => {
 
                       <p
                         className="text-sm text-card-text ml-12 leading-relaxed mb-3"
-                        dangerouslySetInnerHTML={{ __html: sanitizeHtml(comment.text) }}
-                      ></p>
+                        // biome-ignore lint/security/noDangerouslySetInnerHtml: Content is properly sanitized with sanitizeHtml to prevent XSS
+                        dangerouslySetInnerHTML={{
+                          __html: sanitizeHtml(comment.text),
+                        }}
+                      />
 
                       <div className="ml-12 flex items-center gap-3 text-xs">
                         <div className="flex items-center gap-1">
                           <button
+                            type="button"
                             onClick={() => voteComment(comment.id, "upvote")}
                             className={`p-1 hover:text-success transition-colors text-muted-text vote-btn-up flex items-center justify-center min-w-[36px] min-h-[36px] ${userVotes[comment.id] === "upvote" ? "text-success font-bold" : ""}`}
                             title="Upvote"
@@ -779,6 +817,7 @@ const ArticleDetail: React.FC = () => {
                             {comment.upvotes - comment.downvotes}
                           </span>
                           <button
+                            type="button"
                             onClick={() => voteComment(comment.id, "downvote")}
                             className={`p-1 hover:text-danger transition-colors text-muted-text vote-btn-down flex items-center justify-center min-w-[36px] min-h-[36px] ${userVotes[comment.id] === "downvote" ? "text-danger font-bold" : ""}`}
                             title="Downvote"
@@ -787,6 +826,7 @@ const ArticleDetail: React.FC = () => {
                           </button>
                         </div>
                         <button
+                          type="button"
                           onClick={() => toggleReplyForm(comment.id)}
                           className="px-3 py-1 hover:bg-bbcRed/10 dark:hover:bg-bbcRed/20 text-bbcRed rounded transition-colors font-bold text-sm"
                         >
@@ -794,6 +834,7 @@ const ArticleDetail: React.FC = () => {
                         </button>
                         {isAdmin && (
                           <button
+                            type="button"
                             onClick={() => deleteComment(comment.id)}
                             className="text-danger hover:text-red-700 p-1 rounded hover:bg-red-50 dark:hover:bg-red-900/20"
                           >
@@ -821,8 +862,11 @@ const ArticleDetail: React.FC = () => {
                               </div>
                               <p
                                 className="text-xs text-card-text ml-9 leading-relaxed"
-                                dangerouslySetInnerHTML={{ __html: sanitizeHtml(reply.text) }}
-                              ></p>
+                                // biome-ignore lint/security/noDangerouslySetInnerHtml: Content is properly sanitized with sanitizeHtml to prevent XSS
+                                dangerouslySetInnerHTML={{
+                                  __html: sanitizeHtml(reply.text),
+                                }}
+                              />
                             </div>
                           ))}
                         </div>
@@ -830,7 +874,9 @@ const ArticleDetail: React.FC = () => {
 
                       {activeReplyForm === comment.id && (
                         <div className="ml-12 mt-4 p-4 rounded-lg">
-                          <h4 className="text-xs font-bold text-card-text mb-3">{t("write_your_reply", language)}</h4>
+                          <h4 className="text-xs font-bold text-card-text mb-3">
+                            {t("write_your_reply", language)}
+                          </h4>
                           <textarea
                             value={replyInput[comment.id] || ""}
                             onChange={(e) =>
@@ -841,15 +887,17 @@ const ArticleDetail: React.FC = () => {
                             }
                             placeholder={t("write_your_reply", language)}
                             className="w-full p-3 rounded-lg bg-card border border-border-color text-card-text focus:ring-2 focus:ring-bbcRed/30 focus:border-bbcRed outline-none transition-all resize-none text-sm mb-3 min-h-[80px]"
-                          ></textarea>
+                          />
                           <div className="flex justify-end gap-2">
                             <button
+                              type="button"
                               onClick={() => toggleReplyForm(comment.id)}
                               className="px-4 py-2 rounded-lg bg-card border border-border-color hover:bg-border-color transition-colors text-sm font-bold text-card-text"
                             >
                               {t("cancel", language)}
                             </button>
                             <button
+                              type="button"
                               onClick={() => postReply(comment.id)}
                               className="px-4 py-2 rounded-lg bg-bbcRed hover:bg-bbcRed-hover text-white transition-colors text-sm font-bold shadow-soft hover:shadow-soft-hover"
                             >
@@ -879,7 +927,7 @@ const ArticleDetail: React.FC = () => {
               placeholder={t("write_your_comment", language)}
               value={commentInput}
               onChange={(e) => setCommentInput(e.target.value)}
-            ></textarea>
+            />
             <div className="flex justify-between items-center mt-3 gap-4">
               <div className="text-xs text-muted-text">
                 {commentInput.length}/5000
@@ -890,6 +938,7 @@ const ArticleDetail: React.FC = () => {
                 </div>
               )}
               <button
+                type="button"
                 onClick={postComment}
                 className="bg-bbcDark dark:bg-white text-white dark:text-black px-6 py-2.5 rounded-full font-bold hover:bg-opacity-90 dark:hover:bg-opacity-90 hover:shadow-lg hover:-translate-y-0.5 transition-all text-sm"
               >
@@ -902,19 +951,30 @@ const ArticleDetail: React.FC = () => {
 
       {/* User Profile Modal */}
       {profileModalOpen && (
-        <div
-          className="fixed inset-0 bg-black/50 dark:bg-black/70 z-[200] flex items-center justify-center p-4 backdrop-blur-sm"
+        <button
+          type="button"
           onClick={closeProfileModal}
+          onKeyDown={(e) => {
+            if (e.key === "Escape") {
+              closeProfileModal();
+            }
+          }}
+          className="fixed inset-0 bg-black/50 dark:bg-black/70 z-[200] flex items-center justify-center p-4 border-none"
         >
           <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="profile-modal-title"
             className="bg-card rounded-2xl shadow-2xl border border-border-color max-w-md w-full max-h-[90vh] overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
+            onKeyDown={(e) => e.stopPropagation()}
           >
             <div className="sticky top-0 bg-card border-b border-border-color p-4 flex items-center justify-between">
               <h3 className="text-xl font-bold text-card-text">
                 👤 {t("user_profile", language)}
               </h3>
               <button
+                type="button"
                 onClick={closeProfileModal}
                 className="p-2 hover:bg-muted-bg rounded-lg transition-colors"
               >
@@ -997,7 +1057,7 @@ const ArticleDetail: React.FC = () => {
               )}
             </div>
           </div>
-        </div>
+        </button>
       )}
     </div>
   );

@@ -119,7 +119,6 @@ function getCachedArticle($articleId, $lang = 'bn') {
         "published_at" => $articleRaw["published_at"],
         "category_id" => $articleRaw["category_id"],
         "section_id" => $articleRaw["section_id"],
-        "is_video" => (bool) $articleRaw["is_video"],
         "status" => $articleRaw["status"],
     ];
     

@@ -28,7 +28,6 @@ export interface Article {
   image: string;
   published_at: string; // ISO date string
   status: "published" | "draft" | "archived";
-  is_video: boolean;
   leaked_documents?: Document[]; // Array of Document type, if not empty
   documents?: Document[]; // Array of Document type
   allow_submissions: boolean;
@@ -66,15 +65,7 @@ export interface ArticleWithDocCount {
 export interface Section {
   id: string;
   title: string; // Translated title
-  type:
-    | "hero"
-    | "hero-grid"
-    | "grid"
-    | "list"
-    | "carousel"
-    | "highlight"
-    | "reel"
-    | "audio";
+  type: "hero" | "hero-grid" | "grid" | "list" | "carousel" | "highlight";
   highlightColor: string | null;
   associatedCategory: string | null;
   style: "light" | "dark" | null;

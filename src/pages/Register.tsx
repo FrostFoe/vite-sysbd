@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import type React from "react";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
 
 const Register: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -23,20 +23,24 @@ const Register: React.FC = () => {
         to="/"
         className="absolute top-6 right-6 text-muted-text hover:text-card-text p-2 rounded-full hover:bg-muted-bg transition-all"
       >
-        <i data-lucide="x" className="w-8 h-8"></i>
+        <i data-lucide="x" className="w-8 h-8" />
       </Link>
       <div className="bg-card p-8 md:p-12 w-full max-w-[480px] shadow-2xl rounded-2xl border border-border-color text-center relative overflow-hidden animate-fade-in-up">
-        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-bbcRed to-orange-600"></div>
+        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-bbcRed to-orange-600" />
         <h1 className="text-2xl font-bold mb-2 text-card-text">Register</h1>
         <p className="text-sm text-muted-text mb-8">Create a new account</p>
 
         <form onSubmit={handleSubmit} className="space-y-4 text-left">
           <div>
-            <label className="block text-xs font-bold uppercase text-muted-text mb-1">
+            <label
+              htmlFor="email"
+              className="block text-xs font-bold uppercase text-muted-text mb-1"
+            >
               Email
             </label>
             <input
               type="email"
+              id="email"
               name="email"
               required
               value={email}
@@ -45,11 +49,15 @@ const Register: React.FC = () => {
             />
           </div>
           <div>
-            <label className="block text-xs font-bold uppercase text-muted-text mb-1">
+            <label
+              htmlFor="password"
+              className="block text-xs font-bold uppercase text-muted-text mb-1"
+            >
               Password
             </label>
             <input
               type="password"
+              id="password"
               name="password"
               required
               value={password}

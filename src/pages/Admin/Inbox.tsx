@@ -1,13 +1,14 @@
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import { ArrowLeft, Loader, Menu, MessageCircle, Send } from "lucide-react";
+import type React from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
+import { CustomDropdown } from "../../components/common/CustomDropdown";
 import { useAuth } from "../../context/AuthContext";
 import { useLayout } from "../../context/LayoutContext";
-import { t } from "../../lib/translations";
 import { adminApi } from "../../lib/api";
+import { t } from "../../lib/translations";
+import { escapeHtml, formatTimestamp, showToastMsg } from "../../lib/utils";
 import type { Conversation, Message } from "../../types";
-import { Loader, Send, MessageCircle, Menu, ArrowLeft } from "lucide-react";
-import { CustomDropdown } from "../../components/common/CustomDropdown";
-import { formatTimestamp, escapeHtml, showToastMsg } from "../../lib/utils";
-import { Link } from "react-router-dom";
 
 const AdminInbox: React.FC = () => {
   const { user } = useAuth();
@@ -15,7 +16,7 @@ const AdminInbox: React.FC = () => {
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [currentUserId, setCurrentUserId] = useState<number | null>(null);
   const [currentUserName, setCurrentUserName] = useState<string>(
-    "Select a conversation",
+    "Select a conversation"
   );
   const [currentUserEmail, setCurrentUserEmail] = useState<string>("");
   const [messages, setMessages] = useState<Message[]>([]);
@@ -27,9 +28,9 @@ const AdminInbox: React.FC = () => {
   >("latest");
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  const scrollToBottom = () => {
+  const scrollToBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
+  }, []);
 
   const loadConversations = useCallback(async () => {
     setIsLoadingConversations(true);
@@ -39,7 +40,7 @@ const AdminInbox: React.FC = () => {
       if (response.success && response.conversations) {
         setConversations(response.conversations);
       }
-    } catch (error) {
+    } catch (_error) {
       showToastMsg(t("failed_to_load_conversations", language), "error");
     } finally {
       setIsLoadingConversations(false);
@@ -54,14 +55,14 @@ const AdminInbox: React.FC = () => {
         if (response.success && response.messages) {
           setMessages(response.messages);
         }
-      } catch (error) {
+      } catch (_error) {
         showToastMsg(t("failed_to_load_messages", language), "error");
       } finally {
         setIsLoadingMessages(false);
         scrollToBottom();
       }
     },
-    [language],
+    [language, scrollToBottom]
   );
 
   useEffect(() => {
@@ -88,7 +89,7 @@ const AdminInbox: React.FC = () => {
       // On mobile, close sidebar after selecting conversation
       // toggleSidebar(false);
     },
-    [loadMessages],
+    [loadMessages]
   );
 
   const sendMessage = useCallback(async () => {
@@ -97,7 +98,7 @@ const AdminInbox: React.FC = () => {
     try {
       const response = await adminApi.sendAdminMessage(
         currentUserId,
-        messageInput.trim(),
+        messageInput.trim()
       );
       if (response.success) {
         setMessageInput("");
@@ -106,7 +107,7 @@ const AdminInbox: React.FC = () => {
       } else {
         showToastMsg(
           response.error || t("failed_to_send_message", language),
-          "error",
+          "error"
         );
       }
     } catch (error) {
@@ -136,6 +137,7 @@ const AdminInbox: React.FC = () => {
             <ArrowLeft className="w-6 h-6" />
           </Link>
           <button
+            type="button"
             onClick={() => toggleSidebar(true)}
             className="md:hidden p-2 -ml-2 rounded-lg hover:bg-muted-bg text-muted-text hover:text-card-text transition-colors flex-shrink-0"
           >
@@ -195,16 +197,26 @@ const AdminInbox: React.FC = () => {
               </div>
             ) : (
               conversations.map((conv) => (
-                <div
+                <button
+                  type="button"
                   key={conv.user_id}
                   onClick={() =>
                     selectConversation(
                       conv.user_id,
                       conv.email,
-                      conv.email.split("@")[0],
+                      conv.email.split("@")[0]
                     )
                   }
-                  className={`p-3 rounded-lg hover:bg-muted-bg cursor-pointer transition-colors border border-transparent hover:border-border-color ${currentUserId === conv.user_id ? "bg-bbcRed/10 border-bbcRed" : ""}`}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      selectConversation(
+                        conv.user_id,
+                        conv.email,
+                        conv.email.split("@")[0]
+                      );
+                    }
+                  }}
+                  className={`w-full text-left p-3 rounded-lg hover:bg-muted-bg cursor-pointer transition-colors border border-transparent hover:border-border-color ${currentUserId === conv.user_id ? "bg-bbcRed/10 border-bbcRed" : ""}`}
                 >
                   <div className="flex items-center gap-3">
                     <div className="w-12 h-12 rounded-full bg-gradient-to-br from-bbcRed to-orange-600 text-white flex items-center justify-center font-bold text-sm shadow-md flex-shrink-0">
@@ -224,7 +236,7 @@ const AdminInbox: React.FC = () => {
                       )}
                     </div>
                   </div>
-                </div>
+                </button>
               ))
             )}
           </div>
@@ -317,6 +329,7 @@ const AdminInbox: React.FC = () => {
                 disabled={!currentUserId}
               />
               <button
+                type="button"
                 onClick={sendMessage}
                 className="bg-bbcRed text-white px-5 py-3 rounded-full hover:bg-[var(--color-bbcRed-hover)] transition-colors font-bold shadow-md hover:shadow-lg flex-shrink-0 flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                 title={t("send_message_enter", language)}

@@ -61,7 +61,6 @@ $article = [
     "published_at" => $articleRaw["published_at"],
     "category_id" => $articleRaw["category_id"],
     "section_id" => $articleRaw["section_id"],
-    "is_video" => (bool) $articleRaw["is_video"],
     "allow_submissions" => (bool) $articleRaw["allow_submissions"],
     "status" => $status,
 ];

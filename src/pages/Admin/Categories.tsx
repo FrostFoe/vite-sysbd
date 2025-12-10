@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useMemo } from "react";
+import { Edit2, Folder as FolderIcon, Plus, Trash2 } from "lucide-react";
+import type React from "react";
 import type { FormEvent } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { adminApi } from "../../lib/api";
 import type { Category } from "../../types";
-import { Plus, Edit2, Trash2, Folder as FolderIcon } from "lucide-react";
 
 const CategoryModal: React.FC<{
   isOpen: boolean;
@@ -47,8 +48,14 @@ const CategoryModal: React.FC<{
         </h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-bold mb-1">ID (Slug)</label>
+            <label
+              htmlFor="category-id"
+              className="block text-sm font-bold mb-1"
+            >
+              ID (Slug)
+            </label>
             <input
+              id="category-id"
               name="id"
               value={formData.id || ""}
               onChange={(e) => setFormData({ ...formData, id: e.target.value })}
@@ -58,10 +65,14 @@ const CategoryModal: React.FC<{
             />
           </div>
           <div>
-            <label className="block text-sm font-bold mb-1">
+            <label
+              htmlFor="category-title-bn"
+              className="block text-sm font-bold mb-1"
+            >
               Title (Bangla)
             </label>
             <input
+              id="category-title-bn"
               name="title_bn"
               value={formData.title_bn || ""}
               onChange={(e) =>
@@ -72,10 +83,14 @@ const CategoryModal: React.FC<{
             />
           </div>
           <div>
-            <label className="block text-sm font-bold mb-1">
+            <label
+              htmlFor="category-title-en"
+              className="block text-sm font-bold mb-1"
+            >
               Title (English)
             </label>
             <input
+              id="category-title-en"
               name="title_en"
               value={formData.title_en || ""}
               onChange={(e) =>
@@ -86,9 +101,15 @@ const CategoryModal: React.FC<{
             />
           </div>
           <div>
-            <label className="block text-sm font-bold mb-1">Color</label>
+            <label
+              htmlFor="category-color"
+              className="block text-sm font-bold mb-1"
+            >
+              Color
+            </label>
             <input
               type="color"
+              id="category-color"
               name="color"
               value={formData.color || "#b80000"}
               onChange={(e) =>
@@ -126,11 +147,7 @@ const Categories: React.FC = () => {
   const [editingCategory, setEditingCategory] =
     useState<Partial<Category> | null>(null);
 
-  useEffect(() => {
-    fetchCategories();
-  }, []);
-
-  const fetchCategories = async () => {
+  const fetchCategories = useCallback(async () => {
     setIsLoading(true);
     try {
       const res = await adminApi.getCategories();
@@ -139,12 +156,16 @@ const Categories: React.FC = () => {
       } else {
         throw new Error(res.message || "Failed to fetch categories");
       }
-    } catch (err) {
+    } catch (_err) {
       setError("Failed to fetch categories.");
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    fetchCategories();
+  }, [fetchCategories]);
 
   const handleOpenModal = (category: Category | null = null) => {
     setEditingCategory(category);
@@ -161,7 +182,7 @@ const Categories: React.FC = () => {
       await adminApi.saveCategory(formData);
       handleCloseModal();
       fetchCategories(); // Refetch to show changes
-    } catch (err) {
+    } catch (_err) {
       // Error silently handled, user can retry
     }
   };
@@ -171,7 +192,7 @@ const Categories: React.FC = () => {
       try {
         await adminApi.deleteCategory(id);
         fetchCategories(); // Refetch to show changes
-      } catch (err) {
+      } catch (_err) {
         // Error silently handled, user can retry
       }
     }
@@ -188,6 +209,7 @@ const Categories: React.FC = () => {
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Manage Categories</h1>
         <button
+          type="button"
           onClick={() => handleOpenModal()}
           className="bg-bbcRed text-white px-4 py-2 rounded-lg font-bold flex items-center gap-2"
         >
@@ -230,7 +252,7 @@ const Categories: React.FC = () => {
                       <div
                         className="w-6 h-6 rounded border border-border-color"
                         style={{ backgroundColor: cat.color }}
-                      ></div>
+                      />
                       <span className="text-xs text-muted-text">
                         {cat.color}
                       </span>
@@ -239,12 +261,14 @@ const Categories: React.FC = () => {
                   <td className="p-4 text-right">
                     <div className="flex justify-end gap-2">
                       <button
+                        type="button"
                         onClick={() => handleOpenModal(cat)}
                         className="p-2 text-blue-600 hover:bg-blue-50 rounded"
                       >
                         <Edit2 className="w-4 h-4" />
                       </button>
                       <button
+                        type="button"
                         onClick={() => handleDelete(cat.id)}
                         className="p-2 text-red-600 hover:bg-red-50 rounded"
                       >

@@ -1,24 +1,24 @@
 /**
  * Authentication Context
  * Manages user authentication state across the application
- * 
+ *
  * @provides User login, registration, logout functionality
  * @provides User authentication state and loading states
  * @example
  * const { user, isAuthenticated, login } = useAuth();
  */
 
+import type { ReactNode } from "react";
 import {
   createContext,
-  useContext,
-  useState,
-  useEffect,
   useCallback,
+  useContext,
+  useEffect,
+  useState,
 } from "react";
-import type { ReactNode } from "react";
 import { authApi } from "../lib/api";
-import type { User } from "../types";
 import { showToastMsg } from "../lib/utils";
+import type { User } from "../types";
 
 /**
  * Authentication context type definition
@@ -92,7 +92,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const register = async (
     email: string,
-    password: string,
+    password: string
   ): Promise<boolean> => {
     setIsLoading(true);
     try {
@@ -107,7 +107,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
     } catch (error: unknown) {
       const err = error as { response?: { data?: { message?: string } } };
-      showToastMsg(err.response?.data?.message || "Registration failed", "error");
+      showToastMsg(
+        err.response?.data?.message || "Registration failed",
+        "error"
+      );
       return false;
     } finally {
       setIsLoading(false);
@@ -136,19 +139,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
-// Allow both components and hooks in context files
-// eslint-disable-next-line react-refresh/only-export-components
-
 /**
  * useAuth Hook
  * Access authentication state and methods
- * 
+ *
  * @throws Error if used outside AuthProvider
  * @returns {AuthContextType} Authentication context
- * 
+ *
  * @example
  * const { user, login, isLoading } = useAuth();
- * 
+ *
  * const handleLogin = async () => {
  *   const success = await login('user@example.com', 'password');
  *   if (success) {
@@ -156,6 +156,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
  *   }
  * };
  */
+// eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (context === undefined) {

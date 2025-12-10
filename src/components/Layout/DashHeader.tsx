@@ -1,8 +1,8 @@
-import React from "react";
+import { Menu, Moon, Plus, Sun } from "lucide-react";
+import type React from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { useLayout } from "../../context/LayoutContext";
-import { Menu, Plus, Sun, Moon } from "lucide-react";
 
 interface DashHeaderProps {
   type: "admin" | "dashboard";
@@ -46,6 +46,7 @@ const DashHeader: React.FC<DashHeaderProps> = ({ type, toggleSidebar }) => {
       <div className="flex items-center gap-2 md:gap-4 flex-shrink-0">
         {/* Theme Toggle Button */}
         <button
+          type="button"
           onClick={toggleTheme}
           className="p-2 md:p-2.5 rounded-full hover:bg-muted-bg text-muted-text dark:text-yellow-400 transition-all active:scale-90 theme-toggle-btn"
         >

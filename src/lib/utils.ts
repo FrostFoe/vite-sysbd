@@ -1,5 +1,13 @@
 import { t } from "./translations";
 
+declare global {
+  interface Window {
+    lucide?: {
+      createIcons: () => void;
+    };
+  }
+}
+
 export const PLACEHOLDER_IMAGE =
   "https://placehold.co/600x400/1a1a1a/FFF?text=BreachTimes";
 
@@ -16,22 +24,44 @@ export function escapeHtml(unsafe: string | null | undefined): string {
  */
 export function sanitizeHtml(html: string | null | undefined): string {
   if (!html) return "";
-  
+
   const div = document.createElement("div");
   div.innerHTML = html;
-  
+
   // List of allowed tags
-  const allowedTags = ["p", "br", "strong", "em", "b", "i", "u", "a", "ul", "li", "ol", "h1", "h2", "h3", "blockquote", "img", "video", "source", "div", "span"];
-  
+  const allowedTags = [
+    "p",
+    "br",
+    "strong",
+    "em",
+    "b",
+    "i",
+    "u",
+    "a",
+    "ul",
+    "li",
+    "ol",
+    "h1",
+    "h2",
+    "h3",
+    "blockquote",
+    "img",
+    "video",
+    "source",
+    "div",
+    "span",
+  ];
+
   // Recursive function to remove disallowed tags
   const sanitize = (node: Node): void => {
     const nodesToRemove: Node[] = [];
-    
+
     Array.from(node.childNodes).forEach((child) => {
-      if (child.nodeType === 1) { // Element node
+      if (child.nodeType === 1) {
+        // Element node
         const element = child as Element;
         const tagName = element.tagName.toLowerCase();
-        
+
         if (!allowedTags.includes(tagName)) {
           // Replace element with its content
           while (element.firstChild) {
@@ -42,45 +72,49 @@ export function sanitizeHtml(html: string | null | undefined): string {
           // Remove dangerous attributes from allowed tags
           Array.from(element.attributes).forEach((attr) => {
             const attrName = attr.name.toLowerCase();
-            if (attrName.startsWith("on") || attrName.startsWith("javascript")) {
+            if (
+              attrName.startsWith("on") ||
+              attrName.startsWith("javascript")
+            ) {
               element.removeAttribute(attr.name);
             }
           });
           sanitize(child);
         }
-      } else if (child.nodeType === 8) { // Comment node
+      } else if (child.nodeType === 8) {
+        // Comment node
         nodesToRemove.push(child);
-      } else if (child.nodeType === 1) {
-        sanitize(child);
       }
     });
-    
-    nodesToRemove.forEach((node) => node.parentNode?.removeChild(node));
+
+    nodesToRemove.forEach((node) => {
+      node.parentNode?.removeChild(node);
+    });
   };
-  
+
   sanitize(div);
   return div.innerHTML;
 }
 
 export function formatTimestamp(
   timestampString: string | null | undefined,
-  lang: "en" | "bn",
+  lang: "en" | "bn"
 ): string {
   if (!timestampString) return "";
   let date = new Date(timestampString);
-  if (isNaN(date.getTime())) {
+  if (Number.isNaN(date.getTime())) {
     // Try parsing MySQL format
     const parts = timestampString.match(
-      /^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})$/,
+      /^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})$/
     );
     if (parts)
       date = new Date(
-        parseInt(parts[1]),
-        parseInt(parts[2]) - 1,
-        parseInt(parts[3]),
-        parseInt(parts[4]),
-        parseInt(parts[5]),
-        parseInt(parts[6]),
+        parseInt(parts[1], 10),
+        parseInt(parts[2], 10) - 1,
+        parseInt(parts[3], 10),
+        parseInt(parts[4], 10),
+        parseInt(parts[5], 10),
+        parseInt(parts[6], 10)
       );
     else return timestampString;
   }
@@ -113,7 +147,7 @@ export function formatTimestamp(
 
 export function showToastMsg(
   msg: string,
-  type: "success" | "error" = "success",
+  type: "success" | "error" = "success"
 ) {
   const container = document.getElementById("toast-container");
   if (!container) return;
@@ -130,10 +164,10 @@ export function showToastMsg(
   // Re-render lucide icons if the library is available globally
   if (
     typeof window !== "undefined" &&
-    (window as any).lucide &&
-    typeof (window as any).lucide.createIcons === "function"
+    window.lucide &&
+    typeof window.lucide.createIcons === "function"
   ) {
-    (window as any).lucide.createIcons();
+    window.lucide.createIcons();
   }
   setTimeout(() => toast.remove(), 3000);
 }

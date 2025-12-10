@@ -1,19 +1,20 @@
-import React, { useState, useEffect, useCallback, useRef } from "react";
-import { useAuth } from "../../context/AuthContext";
-import { useLayout } from "../../context/LayoutContext";
-import { t } from "../../lib/translations";
-import { publicApi } from "../../lib/api";
-import type { Message } from "../../types";
 import {
   ArrowLeft,
+  Inbox as InboxIcon,
+  Info,
+  Loader,
   Menu,
   Send,
-  Inbox as InboxIcon,
-  Loader,
-  Info,
 } from "lucide-react";
+import type React from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
+import { useLayout } from "../../context/LayoutContext";
+import { publicApi } from "../../lib/api";
+import { t } from "../../lib/translations";
 import { escapeHtml, formatTimestamp, showToastMsg } from "../../lib/utils";
+import type { Message } from "../../types";
 
 const UserInbox: React.FC = () => {
   const { user } = useAuth();
@@ -24,9 +25,9 @@ const UserInbox: React.FC = () => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const adminId = 1; // Assuming admin user ID is 1 as per database seed
 
-  const scrollToBottom = () => {
+  const scrollToBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
+  }, []);
 
   const loadMessages = useCallback(async () => {
     if (!user?.id) return;
@@ -41,7 +42,7 @@ const UserInbox: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [user?.id, adminId]);
+  }, [user?.id]);
 
   useEffect(() => {
     loadMessages();
@@ -51,7 +52,7 @@ const UserInbox: React.FC = () => {
 
   useEffect(() => {
     scrollToBottom();
-  }, [messages]);
+  }, [scrollToBottom]);
 
   const sendMessage = useCallback(async () => {
     if (!user?.id || !messageInput.trim()) return;
@@ -65,10 +66,10 @@ const UserInbox: React.FC = () => {
       } else {
         showToastMsg(
           response.error || t("failed_to_send_message", language),
-          "error",
+          "error"
         );
       }
-    } catch (error) {
+    } catch (_error) {
       showToastMsg(t("server_error", language), "error");
     }
   }, [user?.id, messageInput, loadMessages, language]);
@@ -99,6 +100,7 @@ const UserInbox: React.FC = () => {
             <ArrowLeft className="w-6 h-6" />
           </Link>
           <button
+            type="button"
             onClick={() => toggleSidebar(true)}
             className="md:hidden p-2 -ml-2 rounded-lg hover:bg-muted-bg text-muted-text hover:text-card-text transition-colors flex-shrink-0"
           >
@@ -116,7 +118,10 @@ const UserInbox: React.FC = () => {
             </div>
           </div>
         </div>
-        <button className="p-2 hover:bg-muted-bg rounded-lg text-muted-text transition-colors flex-shrink-0">
+        <button
+          type="button"
+          className="p-2 hover:bg-muted-bg rounded-lg text-muted-text transition-colors flex-shrink-0"
+        >
           <Info className="w-5 h-5" />
         </button>
       </header>
@@ -176,6 +181,7 @@ const UserInbox: React.FC = () => {
                 maxLength={5000}
               />
               <button
+                type="button"
                 onClick={sendMessage}
                 className="bg-bbcRed text-white px-5 py-3 rounded-full hover:bg-[var(--color-bbcRed-hover)] transition-colors font-bold shadow-md hover:shadow-lg flex-shrink-0 flex items-center gap-2"
                 title={t("send_message_enter", language)}

@@ -1,7 +1,7 @@
-import React from "react";
+import type React from "react";
 import type { ReactNode } from "react";
-import Header from "./Header";
 import Footer from "./Footer";
+import Header from "./Header";
 import MobileSidebar from "./MobileSidebar";
 import SearchOverlay from "./SearchOverlay";
 
@@ -18,7 +18,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
         className="fixed top-0 left-0 h-1 bg-bbcRed z-[100] shadow-[0_0_10px_var(--color-bbcRed)]"
         style={{ width: "0%" }}
         aria-hidden="true"
-      ></div>
+      />
 
       <Header />
       <MobileSidebar />
@@ -32,7 +32,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
       <div
         id="toast-container"
         className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-[110] pointer-events-none w-full max-w-sm flex flex-col items-center gap-2"
-      ></div>
+      />
 
       <Footer />
     </div>

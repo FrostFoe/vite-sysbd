@@ -1,9 +1,9 @@
-import React from "react";
+import { Bookmark, Mail } from "lucide-react";
+import type React from "react";
+import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useLayout } from "../context/LayoutContext";
 import { t } from "../lib/translations";
-import { Link } from "react-router-dom";
-import { Mail, Bookmark } from "lucide-react";
 
 const Dashboard: React.FC = () => {
   const { user } = useAuth();
@@ -16,7 +16,7 @@ const Dashboard: React.FC = () => {
   return (
     <div className="bg-card p-8 rounded-2xl shadow-soft border border-border-color">
       <div className="flex items-center gap-3 mb-8">
-        <span className="w-2 h-8 rounded-full bg-bbcRed"></span>
+        <span className="w-2 h-8 rounded-full bg-bbcRed" />
         <h2 className="text-2xl font-bold">
           {t("dashboard_overview", language)}
         </h2>

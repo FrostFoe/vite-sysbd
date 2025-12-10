@@ -1,6 +1,6 @@
-import { createContext, useContext, useState, useCallback } from "react";
+import { AlertCircle, AlertTriangle, CheckCircle, Info, X } from "lucide-react";
 import type { FC, ReactNode } from "react";
-import { AlertCircle, CheckCircle, AlertTriangle, Info, X } from "lucide-react";
+import { createContext, useCallback, useContext, useState } from "react";
 
 export type ToastType = "success" | "error" | "warning" | "info";
 
@@ -13,6 +13,7 @@ export interface Toast {
     label: string;
     onClick: () => void;
   };
+  timer?: NodeJS.Timeout | number;
 }
 
 interface NotificationContextType {
@@ -25,7 +26,9 @@ interface NotificationContextType {
   info: (message: string, duration?: number) => void;
 }
 
-const NotificationContext = createContext<NotificationContextType | undefined>(undefined);
+const NotificationContext = createContext<NotificationContextType | undefined>(
+  undefined
+);
 
 /**
  * Toast Provider Component
@@ -34,43 +37,58 @@ const NotificationContext = createContext<NotificationContextType | undefined>(u
 export const ToastProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [toasts, setToasts] = useState<Toast[]>([]);
 
-  const addToast = useCallback((message: string, type: ToastType, duration = 5000) => {
-    const id = Date.now().toString();
-    const toast: Toast = { id, message, type, duration };
+  const addToast = useCallback(
+    (message: string, type: ToastType, duration = 5000) => {
+      const id = Date.now().toString();
+      const toast: Toast = { id, message, type, duration };
 
-    setToasts((prev) => [...prev, toast]);
+      setToasts((prev) => [...prev, toast]);
 
-    if (duration > 0) {
-      const timer = setTimeout(() => {
-        setToasts((prev) => prev.filter((t) => t.id !== id));
-      }, duration);
+      if (duration > 0) {
+        const timer = setTimeout(() => {
+          setToasts((prev) => prev.filter((t) => t.id !== id));
+        }, duration);
 
-      // Store timer for cleanup
-      (toast as any).timer = timer;
-    }
+        // Store timer for cleanup
+        toast.timer = timer;
+      }
 
-    return id;
-  }, []);
+      return id;
+    },
+    []
+  );
 
   const removeToast = useCallback((id: string) => {
     setToasts((prev) => prev.filter((t) => t.id !== id));
   }, []);
 
-  const success = useCallback((message: string, duration?: number) => {
-    addToast(message, "success", duration);
-  }, [addToast]);
+  const success = useCallback(
+    (message: string, duration?: number) => {
+      addToast(message, "success", duration);
+    },
+    [addToast]
+  );
 
-  const error = useCallback((message: string, duration?: number) => {
-    addToast(message, "error", duration);
-  }, [addToast]);
+  const error = useCallback(
+    (message: string, duration?: number) => {
+      addToast(message, "error", duration);
+    },
+    [addToast]
+  );
 
-  const warning = useCallback((message: string, duration?: number) => {
-    addToast(message, "warning", duration);
-  }, [addToast]);
+  const warning = useCallback(
+    (message: string, duration?: number) => {
+      addToast(message, "warning", duration);
+    },
+    [addToast]
+  );
 
-  const info = useCallback((message: string, duration?: number) => {
-    addToast(message, "info", duration);
-  }, [addToast]);
+  const info = useCallback(
+    (message: string, duration?: number) => {
+      addToast(message, "info", duration);
+    },
+    [addToast]
+  );
 
   return (
     <NotificationContext.Provider
@@ -93,6 +111,7 @@ export const ToastProvider: FC<{ children: ReactNode }> = ({ children }) => {
 /**
  * Hook to use toast notifications
  */
+// eslint-disable-next-line react-refresh/only-export-components
 export const useToast = () => {
   const context = useContext(NotificationContext);
   if (!context) {
@@ -171,8 +190,9 @@ const ToastItem: FC<{
         </p>
         {toast.action && (
           <button
+            type="button"
             onClick={() => {
-              toast.action!.onClick();
+              toast.action?.onClick();
               onRemove(toast.id);
             }}
             className={`${textColors[toast.type]} underline text-xs mt-1 hover:opacity-80`}
@@ -183,6 +203,7 @@ const ToastItem: FC<{
       </div>
 
       <button
+        type="button"
         onClick={() => onRemove(toast.id)}
         className={`${textColors[toast.type]} flex-shrink-0 hover:opacity-80`}
       >

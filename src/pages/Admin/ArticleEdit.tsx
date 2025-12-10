@@ -1,13 +1,14 @@
-import React, { useState, useEffect, useCallback, useRef } from "react";
-import { useParams, useNavigate, Link } from "react-router-dom";
+import { ExternalLink, Loader, Save } from "lucide-react";
+import type React from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { CustomEditor } from "../../components/common";
+import { CustomDropdown } from "../../components/common/CustomDropdown";
 import { useLayout } from "../../context/LayoutContext";
-import type { AdminArticle, Category, Section } from "../../types";
 import { adminApi, publicApi } from "../../lib/api";
 import { t } from "../../lib/translations";
-import { Loader, Save, ExternalLink } from "lucide-react";
-import { CustomDropdown } from "../../components/common/CustomDropdown";
 import { showToastMsg } from "../../lib/utils";
+import type { AdminArticle, Category, Section } from "../../types";
 
 const ArticleEdit: React.FC = () => {
   const { id } = useParams<{ id: string }>(); // Article ID for editing, undefined for new
@@ -49,8 +50,8 @@ const ArticleEdit: React.FC = () => {
                 ({
                   ...s,
                   title: s.title || "Untitled Section",
-                }) as unknown as Section,
-            ),
+                }) as unknown as Section
+            )
           );
         }
 
@@ -75,7 +76,7 @@ const ArticleEdit: React.FC = () => {
           } else {
             showToastMsg(
               articleRes.error || t("failed_to_load_article", language),
-              "error",
+              "error"
             );
             // navigate('/admin/articles'); // Redirect if article not found
           }
@@ -90,7 +91,7 @@ const ArticleEdit: React.FC = () => {
             section_id: "",
           });
         }
-      } catch (error) {
+      } catch (_error) {
         showToastMsg(t("server_error", language), "error");
       } finally {
         setIsLoading(false);
@@ -98,7 +99,7 @@ const ArticleEdit: React.FC = () => {
     };
 
     fetchData();
-  }, [id, language, navigate]);
+  }, [id, language]);
 
   // Autosave Logic
   useEffect(() => {
@@ -131,7 +132,7 @@ const ArticleEdit: React.FC = () => {
     return () => {
       clearTimeout(handler);
     };
-  }, [article, autosaveArticle]);
+  }, [autosaveArticle]);
 
   const restoreDraft = useCallback(() => {
     const saved = localStorage.getItem(storageKey);
@@ -167,14 +168,14 @@ const ArticleEdit: React.FC = () => {
         } else {
           showToastMsg(
             response.error || t("image_upload_failed", language),
-            "error",
+            "error"
           );
         }
-      } catch (error) {
+      } catch (_error) {
         showToastMsg(t("server_error", language), "error");
       }
     },
-    [language],
+    [language]
   );
 
   // Handle form submission
@@ -198,7 +199,7 @@ const ArticleEdit: React.FC = () => {
       formData.append("status", article.status || "draft");
       formData.append(
         "allow_submissions",
-        article.allow_submissions ? "1" : "0",
+        article.allow_submissions ? "1" : "0"
       );
 
       try {
@@ -212,16 +213,16 @@ const ArticleEdit: React.FC = () => {
         } else {
           showToastMsg(
             response.error || t("failed_to_save_article", language),
-            "error",
+            "error"
           );
         }
-      } catch (error) {
+      } catch (_error) {
         showToastMsg(t("server_error", language), "error");
       } finally {
         setIsSaving(false);
       }
     },
-    [article, id, language, navigate, storageKey],
+    [article, id, language, navigate, storageKey]
   );
 
   if (isLoading) {
@@ -270,10 +271,14 @@ const ArticleEdit: React.FC = () => {
 
             {/* Title fields */}
             <div>
-              <label className="block text-sm font-bold mb-2">
+              <label
+                htmlFor="title-bn"
+                className="block text-sm font-bold mb-2"
+              >
                 {t("title_bn", language)}
               </label>
               <input
+                id="title-bn"
                 name="title_bn"
                 value={article.title_bn || ""}
                 onChange={(e) =>
@@ -286,10 +291,14 @@ const ArticleEdit: React.FC = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-bold mb-2">
+              <label
+                htmlFor="title-en"
+                className="block text-sm font-bold mb-2"
+              >
                 {t("title_en", language)}
               </label>
               <input
+                id="title-en"
                 name="title_en"
                 value={article.title_en || ""}
                 onChange={(e) =>
@@ -302,10 +311,14 @@ const ArticleEdit: React.FC = () => {
 
             {/* Summary fields */}
             <div>
-              <label className="block text-sm font-bold mb-2">
+              <label
+                htmlFor="summary-bn"
+                className="block text-sm font-bold mb-2"
+              >
                 {t("summary_bn", language)}
               </label>
               <textarea
+                id="summary-bn"
                 name="summary_bn"
                 rows={3}
                 value={article.summary_bn || ""}
@@ -317,14 +330,18 @@ const ArticleEdit: React.FC = () => {
                 }
                 className="w-full p-3 rounded-lg border border-border-color bg-card focus:border-bbcRed outline-none font-hind"
                 placeholder={t("brief_summary_bn", language)}
-              ></textarea>
+              />
             </div>
 
             <div>
-              <label className="block text-sm font-bold mb-2">
+              <label
+                htmlFor="summary-en"
+                className="block text-sm font-bold mb-2"
+              >
                 {t("summary_en", language)}
               </label>
               <textarea
+                id="summary-en"
                 name="summary_en"
                 rows={3}
                 value={article.summary_en || ""}
@@ -336,12 +353,15 @@ const ArticleEdit: React.FC = () => {
                 }
                 className="w-full p-3 rounded-lg border border-border-color bg-card focus:border-bbcRed outline-none font-hind"
                 placeholder={t("brief_summary_en", language)}
-              ></textarea>
+              />
             </div>
 
             {/* Content fields (TipTap Editor) */}
             <div>
-              <label className="block text-sm font-bold mb-2">
+              <label
+                htmlFor="content-bn"
+                className="block text-sm font-bold mb-2"
+              >
                 {t("content_bn", language)}
               </label>
               <CustomEditor
@@ -357,7 +377,10 @@ const ArticleEdit: React.FC = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-bold mb-2">
+              <label
+                htmlFor="content-en"
+                className="block text-sm font-bold mb-2"
+              >
                 {t("content_en", language)}
               </label>
               <CustomEditor
@@ -407,10 +430,14 @@ const ArticleEdit: React.FC = () => {
               </h3>
 
               <div className="mb-4">
-                <label className="block text-xs font-bold mb-2">
+                <label
+                  htmlFor="status-dropdown"
+                  className="block text-xs font-bold mb-2"
+                >
                   {t("status", language)}
                 </label>
                 <CustomDropdown
+                  id="status-dropdown"
                   value={article.status || "draft"}
                   onChange={(value) =>
                     setArticle((prev) => ({
@@ -467,10 +494,14 @@ const ArticleEdit: React.FC = () => {
               </h3>
 
               <div className="mb-4">
-                <label className="block text-xs font-bold mb-2">
+                <label
+                  htmlFor="category-dropdown"
+                  className="block text-xs font-bold mb-2"
+                >
                   {t("category", language)}
                 </label>
                 <select
+                  id="category-dropdown"
                   name="category_id"
                   value={article.category_id || ""}
                   onChange={(e) =>
@@ -491,10 +522,14 @@ const ArticleEdit: React.FC = () => {
               </div>
 
               <div className="mb-4">
-                <label className="block text-xs font-bold mb-2">
+                <label
+                  htmlFor="section-dropdown"
+                  className="block text-xs font-bold mb-2"
+                >
                   {t("section_homepage", language)}
                 </label>
                 <CustomDropdown
+                  id="section-dropdown"
                   value={article.section_id || ""}
                   onChange={(value) =>
                     setArticle((prev) => ({
@@ -522,10 +557,14 @@ const ArticleEdit: React.FC = () => {
               </h3>
 
               <div className="mb-4">
-                <label className="block text-xs font-bold mb-1">
+                <label
+                  htmlFor="featured-image-url"
+                  className="block text-xs font-bold mb-1"
+                >
                   {t("featured_image_url", language)}
                 </label>
                 <input
+                  id="featured-image-url"
                   name="image"
                   value={article.image || ""}
                   onChange={(e) =>
@@ -536,10 +575,14 @@ const ArticleEdit: React.FC = () => {
               </div>
 
               <div className="mb-4">
-                <label className="block text-xs font-bold mb-1">
+                <label
+                  htmlFor="image-upload"
+                  className="block text-xs font-bold mb-1"
+                >
                   {t("or_upload", language)}
                 </label>
                 <input
+                  id="image-upload"
                   type="file"
                   onChange={handleImageUpload}
                   className="w-full text-xs"

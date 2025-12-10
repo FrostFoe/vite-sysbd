@@ -1,10 +1,11 @@
-import React, { lazy, Suspense } from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
+import type React from "react";
+import { lazy, Suspense } from "react";
+import { Navigate, Route, Routes } from "react-router-dom";
+import { LoadingSpinner } from "./components/common/LoadingSpinner";
+import DashLayout from "./components/Layout/DashLayout";
+import MainLayout from "./components/Layout/MainLayout";
 import { useAuth } from "./context/AuthContext";
 import { LayoutProvider } from "./context/LayoutContext";
-import { LoadingSpinner } from "./components/common/LoadingSpinner";
-import MainLayout from "./components/Layout/MainLayout";
-import DashLayout from "./components/Layout/DashLayout";
 
 // Lazy load pages for code splitting
 const Login = lazy(() => import("./pages/Login"));

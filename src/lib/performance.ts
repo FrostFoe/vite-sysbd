@@ -1,21 +1,21 @@
-import { useEffect } from 'react';
+import { useEffect } from "react";
 
 // Hook to prefetch resources when browser is idle
-export const useIdleCallback = (callback: () => void, deps: any[] = []) => {
+export const useIdleCallback = (callback: () => void) => {
   useEffect(() => {
     const handle = requestIdleCallback(() => {
       callback();
     });
 
     return () => cancelIdleCallback(handle);
-  }, deps);
+  }, [callback]);
 };
 
 // Prefetch a resource when idle
 export const usePrefetchResource = (resource: string) => {
   useEffect(() => {
-    const link = document.createElement('link');
-    link.rel = 'prefetch';
+    const link = document.createElement("link");
+    link.rel = "prefetch";
     link.href = resource;
     document.head.appendChild(link);
 
@@ -28,9 +28,9 @@ export const usePrefetchResource = (resource: string) => {
 // Component to prefetch resources
 export const ResourcePrefetcher = ({ resources }: { resources: string[] }) => {
   useEffect(() => {
-    resources.forEach(resource => {
-      const link = document.createElement('link');
-      link.rel = 'prefetch';
+    resources.forEach((resource) => {
+      const link = document.createElement("link");
+      link.rel = "prefetch";
       link.href = resource;
       document.head.appendChild(link);
     });

@@ -1,9 +1,10 @@
-import React, { useState, useEffect, useRef } from "react";
+import type React from "react";
 import type { ReactNode } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
+import DashFooter from "./DashFooter";
 import DashHeader from "./DashHeader";
 import DashSidebar from "./DashSidebar";
-import DashFooter from "./DashFooter";
 
 interface DashLayoutProps {
   children: ReactNode;
@@ -40,12 +41,11 @@ const DashLayout: React.FC<DashLayoutProps> = ({ children }) => {
   return (
     <div className="bg-page text-page-text font-sans transition-colors duration-500 flex flex-col h-screen overflow-hidden">
       {/* Toast Container Placeholder */}
-      <div
+      <output
         id="toast-container"
-        role="status"
         aria-live="polite"
         className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-[120] pointer-events-none w-full max-w-sm flex flex-col items-center gap-2"
-      ></div>
+      />
 
       {/* Header is part of the main layout, not the sidebar/content flex container */}
       <DashHeader type={layoutType} toggleSidebar={toggleSidebar} />

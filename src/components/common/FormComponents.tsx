@@ -1,6 +1,6 @@
-import React from "react";
-import type { FC, InputHTMLAttributes } from "react";
 import { AlertCircle, CheckCircle } from "lucide-react";
+import type React from "react";
+import type { FC, InputHTMLAttributes } from "react";
 
 interface FormInputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
@@ -32,7 +32,10 @@ export const FormInput: FC<FormInputProps> = ({
   return (
     <div className="w-full">
       {label && (
-        <label className="block text-sm font-medium text-card-text mb-2">
+        <label
+          htmlFor={props.id}
+          className="block text-sm font-medium text-card-text mb-2"
+        >
           {label}
           {props.required && <span className="text-red-500 ml-1">*</span>}
         </label>
@@ -117,7 +120,10 @@ export const FormTextArea: FC<FormTextAreaProps> = ({
   return (
     <div className="w-full">
       {label && (
-        <label className="block text-sm font-medium text-card-text mb-2">
+        <label
+          htmlFor={props.id}
+          className="block text-sm font-medium text-card-text mb-2"
+        >
           {label}
           {props.required && <span className="text-red-500 ml-1">*</span>}
         </label>
@@ -125,7 +131,7 @@ export const FormTextArea: FC<FormTextAreaProps> = ({
 
       <textarea
         rows={rows}
-        {...(props as any)}
+        {...props}
         className={`
           w-full px-4 py-2 rounded-lg border transition-colors
           bg-card text-card-text
@@ -178,14 +184,17 @@ export const FormSelect: FC<FormSelectProps> = ({
   return (
     <div className="w-full">
       {label && (
-        <label className="block text-sm font-medium text-card-text mb-2">
+        <label
+          htmlFor={props.id}
+          className="block text-sm font-medium text-card-text mb-2"
+        >
           {label}
           {props.required && <span className="text-red-500 ml-1">*</span>}
         </label>
       )}
 
       <select
-        {...(props as any)}
+        {...props}
         className={`
           w-full px-4 py-2 rounded-lg border transition-colors
           bg-card text-card-text

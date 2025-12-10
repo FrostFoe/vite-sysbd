@@ -26,7 +26,6 @@ $sql = "SELECT
             a.category_id,
             a.published_at,
             a.{$readTimeCol} as read_time,
-            a.is_video,
             COALESCE(c.title_{$lang}, c.title_bn) as category_title
         FROM articles a
         LEFT JOIN categories c ON a.category_id = c.id
@@ -47,7 +46,6 @@ foreach ($results as &$article) {
     }
     $article["category"] = $catName ?? ($lang === "bn" ? "অন্যান্য" : "Other");
     $article["timestamp"] = $article["published_at"];
-    $article["isVideo"] = (bool) $article["is_video"];
     // Clean up temporary field
     unset($article["category_title"]);
 }

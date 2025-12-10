@@ -1,10 +1,11 @@
-import React, { useState, useEffect, useCallback } from "react";
+import { FileText, Inbox, Loader } from "lucide-react";
+import type React from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useLayout } from "../../context/LayoutContext";
 import { adminApi } from "../../lib/api";
 import { t } from "../../lib/translations";
-import { Inbox, FileText, Loader } from "lucide-react";
-import { showToastMsg, formatTimestamp, escapeHtml } from "../../lib/utils";
+import { escapeHtml, formatTimestamp, showToastMsg } from "../../lib/utils";
 
 const Submissions: React.FC = () => {
   const { language } = useLayout();
@@ -31,7 +32,7 @@ const Submissions: React.FC = () => {
       } else {
         showToastMsg(response.error || "Failed to fetch submissions", "error");
       }
-    } catch (error) {
+    } catch (_error) {
       showToastMsg(t("server_error", language), "error");
     } finally {
       setIsLoading(false);
@@ -81,7 +82,7 @@ const Submissions: React.FC = () => {
                       className="font-bold text-sm block hover:text-bbcRed"
                     >
                       {escapeHtml(
-                        s.title_en || s.title_bn || "Unknown Article",
+                        s.title_en || s.title_bn || "Unknown Article"
                       )}
                     </Link>
                     <span className="text-xs text-muted-text">

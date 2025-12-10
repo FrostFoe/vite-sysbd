@@ -1,4 +1,4 @@
-import React from "react";
+import type React from "react";
 
 interface LoadingSpinnerProps {
   size?: "sm" | "md" | "lg";
@@ -29,7 +29,10 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 24 24"
+          role="img"
+          aria-label="Loading spinner"
         >
+          <title>Loading spinner</title>
           <circle
             className="opacity-25"
             cx="12"
@@ -93,7 +96,7 @@ export const Skeleton: React.FC<{
     <div className="space-y-3">
       {Array.from({ length: count }).map((_, i) => (
         <div
-          key={i}
+          key={`skeleton-${i}-${width}-${height}`}
           className={`${width} ${height} bg-muted-bg rounded animate-pulse ${
             circle ? "rounded-full" : ""
           }`}
@@ -110,7 +113,10 @@ export const Skeleton: React.FC<{
 export const TextSkeleton: React.FC<{ lines?: number }> = ({ lines = 3 }) => (
   <div className="space-y-3">
     {Array.from({ length: lines }).map((_, i) => (
-      <div key={i} className={`h-4 bg-muted-bg rounded animate-pulse ${i === lines - 1 ? "w-3/4" : ""}`} />
+      <div
+        key={`text-skeleton-${i}-${lines}`}
+        className={`h-4 bg-muted-bg rounded animate-pulse ${i === lines - 1 ? "w-3/4" : ""}`}
+      />
     ))}
   </div>
 );
@@ -152,7 +158,10 @@ export const ImageSkeleton: React.FC<{
 export const ListSkeleton: React.FC<{ count?: number }> = ({ count = 5 }) => (
   <div className="space-y-3">
     {Array.from({ length: count }).map((_, i) => (
-      <div key={i} className="flex gap-4 p-4 bg-card rounded-lg">
+      <div
+        key={`list-skeleton-${i}-${count}`}
+        className="flex gap-4 p-4 bg-card rounded-lg"
+      >
         <Skeleton width="w-16" height="h-16" circle />
         <div className="flex-1 space-y-2">
           <Skeleton width="w-3/4" height="h-4" />
@@ -180,7 +189,9 @@ export const ProgressBar: React.FC<{
 
   return (
     <div className="flex flex-col gap-2">
-      <div className={`w-full ${sizeClass[size]} bg-muted-bg rounded-full overflow-hidden`}>
+      <div
+        className={`w-full ${sizeClass[size]} bg-muted-bg rounded-full overflow-hidden`}
+      >
         <div
           className="bg-primary h-full transition-all duration-300 rounded-full"
           style={{ width: `${Math.min(progress, 100)}%` }}

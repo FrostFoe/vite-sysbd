@@ -1,10 +1,11 @@
-import React, { useState, useEffect, useCallback } from "react";
+import { ExternalLink, Loader, MessageCircle, Trash2 } from "lucide-react";
+import type React from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useLayout } from "../../context/LayoutContext";
 import { adminApi } from "../../lib/api";
 import { t } from "../../lib/translations";
-import { MessageCircle, Trash2, Loader, ExternalLink } from "lucide-react";
-import { showToastMsg, formatTimestamp, escapeHtml } from "../../lib/utils";
+import { escapeHtml, formatTimestamp, showToastMsg } from "../../lib/utils";
 
 const Comments: React.FC = () => {
   const { language } = useLayout();
@@ -30,7 +31,7 @@ const Comments: React.FC = () => {
       } else {
         showToastMsg(response.error || "Failed to fetch comments", "error");
       }
-    } catch (error) {
+    } catch (_error) {
       showToastMsg(t("server_error", language), "error");
     } finally {
       setIsLoading(false);
@@ -51,10 +52,10 @@ const Comments: React.FC = () => {
       } else {
         showToastMsg(
           response.error || t("failed_to_delete_comment", language),
-          "error",
+          "error"
         );
       }
-    } catch (error) {
+    } catch (_error) {
       showToastMsg(t("server_error", language), "error");
     }
   };
@@ -118,6 +119,7 @@ const Comments: React.FC = () => {
                   <td className="p-4 text-right">
                     <div className="flex items-center justify-end gap-2">
                       <button
+                        type="button"
                         onClick={() => handleDeleteComment(c.id)}
                         className="text-red-500 hover:text-red-700 p-2 rounded hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
                         title="Delete"

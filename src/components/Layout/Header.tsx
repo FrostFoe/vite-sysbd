@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from "react";
+import { LayoutDashboard, Menu, Moon, Search, Shield, Sun } from "lucide-react";
+import type React from "react";
+import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { useLayout } from "../../context/LayoutContext";
-import { t } from "../../lib/translations";
-import { Menu, Sun, Moon, Search, Shield, LayoutDashboard } from "lucide-react";
-import type { Category } from "../../types";
 import { publicApi } from "../../lib/api"; // Import publicApi for categories
+import { t } from "../../lib/translations";
+import type { Category } from "../../types";
 
 const Header: React.FC = () => {
   const { user, isAuthenticated, logout } = useAuth();
@@ -63,6 +64,7 @@ const Header: React.FC = () => {
         <div className="h-[70px] flex items-center justify-between">
           <div className="flex items-center gap-3 md:gap-6">
             <button
+              type="button"
               onClick={() => toggleSidebar(true)}
               className="p-2 md:p-2.5 hover:bg-muted-bg rounded-full text-muted-text dark:text-card-text transition-colors active:scale-95"
             >
@@ -84,6 +86,7 @@ const Header: React.FC = () => {
           </div>
           <div className="flex items-center gap-2 md:gap-4">
             <button
+              type="button"
               onClick={toggleLanguage}
               className="p-2 md:p-2.5 rounded-full hover:bg-muted-bg text-muted-text dark:text-green-400 transition-all active:scale-90"
             >
@@ -92,6 +95,7 @@ const Header: React.FC = () => {
               </span>
             </button>
             <button
+              type="button"
               onClick={toggleTheme}
               className="p-2 md:p-2.5 rounded-full hover:bg-muted-bg text-muted-text dark:text-yellow-400 transition-all active:scale-90 theme-toggle-btn"
             >
@@ -102,6 +106,7 @@ const Header: React.FC = () => {
               )}
             </button>
             <button
+              type="button"
               onClick={() => toggleSearch(true)}
               className="p-2 md:p-2.5 hover:bg-muted-bg rounded-full text-muted-text dark:text-white transition-all active:scale-95"
             >
@@ -128,6 +133,7 @@ const Header: React.FC = () => {
                     </Link>
                   )}
                   <button
+                    type="button"
                     onClick={handleLogout}
                     className="text-sm font-bold px-4 py-2 hover:bg-red-50 dark:hover:bg-red-900/20 text-bbcRed rounded-full transition-all flex items-center gap-2 active:scale-95"
                   >

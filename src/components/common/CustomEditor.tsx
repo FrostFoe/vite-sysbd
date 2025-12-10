@@ -1,9 +1,10 @@
-import React, { useCallback, useState } from "react";
-import { useEditor, EditorContent } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
 import Image from "@tiptap/extension-image";
 import Placeholder from "@tiptap/extension-placeholder";
-import { Upload, AlertCircle, Video } from "lucide-react";
+import { EditorContent, useEditor } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
+import { AlertCircle, Upload, Video } from "lucide-react";
+import type React from "react";
+import { useCallback, useState } from "react";
 import VideoNode from "./VideoNode";
 
 interface CustomEditorProps {
@@ -12,6 +13,7 @@ interface CustomEditorProps {
   placeholder?: string;
   height?: string;
   className?: string;
+  id?: string;
 }
 
 /**
@@ -60,8 +62,7 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
 
       return data.file.url;
     } catch (error) {
-      const message =
-        error instanceof Error ? error.message : "Upload failed";
+      const message = error instanceof Error ? error.message : "Upload failed";
       setUploadError(message);
       console.error("Image upload error:", error);
       return null;
@@ -101,8 +102,7 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
 
       return data.file.url;
     } catch (error) {
-      const message =
-        error instanceof Error ? error.message : "Upload failed";
+      const message = error instanceof Error ? error.message : "Upload failed";
       setUploadError(message);
       console.error("Video upload error:", error);
       return null;
@@ -132,9 +132,9 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
     },
     editorProps: {
       attributes: {
-        class: 'focus:outline-none min-h-full p-3'
-      }
-    }
+        class: "focus:outline-none min-h-full p-3",
+      },
+    },
   });
 
   // Handle drag and drop
@@ -209,6 +209,7 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
       {/* Toolbar */}
       <div className="border-b border-border-color bg-muted-bg p-2 rounded-t-lg flex flex-wrap gap-1">
         <button
+          type="button"
           onClick={() => editor.chain().focus().toggleBold().run()}
           className={`px-3 py-1 rounded text-sm font-medium ${
             editor.isActive("bold")
@@ -221,6 +222,7 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
         </button>
 
         <button
+          type="button"
           onClick={() => editor.chain().focus().toggleItalic().run()}
           className={`px-3 py-1 rounded text-sm font-medium ${
             editor.isActive("italic")
@@ -233,6 +235,7 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
         </button>
 
         <button
+          type="button"
           onClick={() => editor.chain().focus().toggleStrike().run()}
           className={`px-3 py-1 rounded text-sm font-medium ${
             editor.isActive("strike")
@@ -244,9 +247,10 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
           <s>S</s>
         </button>
 
-        <div className="w-px bg-border-color"></div>
+        <div className="w-px bg-border-color" />
 
         <button
+          type="button"
           onClick={() =>
             editor.chain().focus().toggleHeading({ level: 1 }).run()
           }
@@ -261,6 +265,7 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
         </button>
 
         <button
+          type="button"
           onClick={() =>
             editor.chain().focus().toggleHeading({ level: 2 }).run()
           }
@@ -275,6 +280,7 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
         </button>
 
         <button
+          type="button"
           onClick={() => editor.chain().focus().toggleBulletList().run()}
           className={`px-3 py-1 rounded text-sm font-medium ${
             editor.isActive("bulletList")
@@ -287,6 +293,7 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
         </button>
 
         <button
+          type="button"
           onClick={() => editor.chain().focus().toggleOrderedList().run()}
           className={`px-3 py-1 rounded text-sm font-medium ${
             editor.isActive("orderedList")
@@ -298,9 +305,10 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
           1. List
         </button>
 
-        <div className="w-px bg-border-color"></div>
+        <div className="w-px bg-border-color" />
 
         <button
+          type="button"
           onClick={handleImageButtonClick}
           className="px-3 py-1 rounded text-sm font-medium bg-card border border-border-color hover:bg-muted-bg flex items-center gap-1"
           title="Insert Image"
@@ -309,6 +317,7 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
         </button>
 
         <button
+          type="button"
           onClick={handleVideoButtonClick}
           className="px-3 py-1 rounded text-sm font-medium bg-card border border-border-color hover:bg-muted-bg flex items-center gap-1"
           title="Insert Video"
@@ -317,6 +326,7 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
         </button>
 
         <button
+          type="button"
           onClick={() => editor.chain().focus().toggleBlockquote().run()}
           className={`px-3 py-1 rounded text-sm font-medium ${
             editor.isActive("blockquote")
@@ -329,6 +339,7 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
         </button>
 
         <button
+          type="button"
           onClick={() => editor.chain().focus().setHorizontalRule().run()}
           className="px-3 py-1 rounded text-sm font-medium bg-card border border-border-color hover:bg-muted-bg"
           title="Horizontal Rule"
@@ -336,9 +347,10 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
           —
         </button>
 
-        <div className="w-px bg-border-color"></div>
+        <div className="w-px bg-border-color" />
 
         <button
+          type="button"
           onClick={() => editor.chain().focus().undo().run()}
           className="px-3 py-1 rounded text-sm font-medium bg-card border border-border-color hover:bg-muted-bg"
           title="Undo"
@@ -347,6 +359,7 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
         </button>
 
         <button
+          type="button"
           onClick={() => editor.chain().focus().redo().run()}
           className="px-3 py-1 rounded text-sm font-medium bg-card border border-border-color hover:bg-muted-bg"
           title="Redo"
@@ -357,6 +370,8 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
 
       {/* Editor Content Area */}
       <div
+        role="application"
+        tabIndex={-1}
         style={{ height, minHeight: height }}
         className="border border-t-0 border-border-color rounded-b-lg overflow-y-auto bg-card p-3 prose prose-sm max-w-none text-card-text"
         onDrop={handleDrop}
@@ -365,7 +380,7 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
           e.stopPropagation();
         }}
       >
-        <EditorContent editor={editor} />
+        <EditorContent editor={editor} aria-label="Editor content area" />
       </div>
 
       {/* Error Message */}

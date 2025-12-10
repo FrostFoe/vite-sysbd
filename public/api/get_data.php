@@ -94,7 +94,6 @@ function get_data(
             a.created_at,
             a.category_id,
             {$artReadTimeCol} as read_time,
-            a.is_video,
             a.status,
             COALESCE(c.title_{$lang}, c.title_bn) as category_title
         FROM articles a
@@ -163,7 +162,6 @@ function get_data(
                         ($lang === "bn" ? "অন্যান্য" : "Other"),
                     "category_id" => $article["category_id"] ?? null,
                     "read_time" => $article["read_time"],
-                    "isVideo" => (bool) $article["is_video"],
                     "status" => $article["status"],
                 ];
                 $sectionData["articles"][] = $articleData;

@@ -100,7 +100,7 @@
   html,
   body,
   * {
-    font-family: var(--font-sans) !important;
+    font-family: var(--font-sans);
   }
 
   html {
@@ -117,7 +117,7 @@
     input,
     select,
     textarea {
-      font-size: 16px !important;
+      font-size: 16px;
     }
   }
 }
@@ -260,11 +260,14 @@
     @apply w-full;
   }
 
-  .bg-card.p-6.rounded-2xl.shadow-soft.border.border-border-color .flex.items-center.gap-3 {
+  .bg-card.p-6.rounded-2xl.shadow-soft.border.border-border-color
+    .flex.items-center.gap-3 {
     @apply flex-col gap-2;
   }
 
-  .bg-card.p-6.rounded-2xl.shadow-soft.border.border-border-color .flex.items-center.gap-3 > div {
+  .bg-card.p-6.rounded-2xl.shadow-soft.border.border-border-color
+    .flex.items-center.gap-3
+    > div {
     @apply w-full;
   }
 }
@@ -309,7 +312,8 @@
   }
 
   /* Document submission form mobile styles */
-  .bg-card.p-6.rounded-2xl.shadow-soft.border.border-border-color input[type="file"] {
+  .bg-card.p-6.rounded-2xl.shadow-soft.border.border-border-color
+  input[type="file"] {
     @apply min-h-[44px];
   }
 
@@ -317,11 +321,13 @@
     @apply min-h-[100px];
   }
 
-  .bg-card.p-6.rounded-2xl.shadow-soft.border.border-border-color button[type="submit"] {
+  .bg-card.p-6.rounded-2xl.shadow-soft.border.border-border-color
+    button[type="submit"] {
     @apply py-3;
   }
 
-  .bg-card.p-6.rounded-2xl.shadow-soft.border.border-border-color .text-xs.font-bold.mb-2 {
+  .bg-card.p-6.rounded-2xl.shadow-soft.border.border-border-color
+    .text-xs.font-bold.mb-2 {
     @apply text-[10px];
   }
 }
@@ -438,11 +444,9 @@ textarea:focus-visible {
 }
 
 @media (prefers-contrast: more) {
-  button,
-  select,
-  textarea,
-  input {
-    @apply border-2;
+  :where(button, select, textarea, input) {
+    border: 2px solid;
+    border-color: ButtonText;
   }
 }
 
@@ -450,8 +454,7 @@ textarea:focus-visible {
 @media (prefers-reduced-motion: reduce) {
   * {
     @apply !animate-none !transition-none;
-    animation-duration: 0.01ms !important;
-    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms;
+    transition-duration: 0.01ms;
   }
 }
-

@@ -1,5 +1,6 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown } from "lucide-react";
+import type React from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface CustomDropdownProps {
   value: string;
@@ -15,8 +16,8 @@ export const CustomDropdown: React.FC<CustomDropdownProps> = ({
   value,
   onChange,
   options,
-  placeholder = 'Select an option',
-  className = '',
+  placeholder = "Select an option",
+  className = "",
   disabled = false,
   id,
 }) => {
@@ -35,11 +36,11 @@ export const CustomDropdown: React.FC<CustomDropdownProps> = ({
     };
 
     if (isOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener("mousedown", handleClickOutside);
     }
 
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isOpen]);
 
@@ -62,22 +63,18 @@ export const CustomDropdown: React.FC<CustomDropdownProps> = ({
         type="button"
         onClick={() => !disabled && setIsOpen(!isOpen)}
         disabled={disabled}
-        className={`custom-dropdown-button ${isOpen ? 'open' : ''} ${
-          disabled ? 'opacity-50 cursor-not-allowed' : ''
+        className={`custom-dropdown-button ${isOpen ? "open" : ""} ${
+          disabled ? "opacity-50 cursor-not-allowed" : ""
         }`}
       >
-        <span
-          className={`${
-            !value ? 'custom-dropdown-item placeholder' : ''
-          }`}
-        >
+        <span className={`${!value ? "custom-dropdown-item placeholder" : ""}`}>
           {displayLabel}
         </span>
         <ChevronDown className="custom-dropdown-icon" />
       </button>
 
       {/* Dropdown Menu */}
-      <div className={`custom-dropdown-menu ${isOpen ? 'open' : ''}`}>
+      <div className={`custom-dropdown-menu ${isOpen ? "open" : ""}`}>
         {options.length === 0 ? (
           <div className="px-3 py-2 text-sm text-muted-text">
             No options available
@@ -89,7 +86,7 @@ export const CustomDropdown: React.FC<CustomDropdownProps> = ({
               type="button"
               onClick={() => handleSelect(option.value)}
               className={`custom-dropdown-item w-full text-left ${
-                value === option.value ? 'selected' : ''
+                value === option.value ? "selected" : ""
               }`}
             >
               {option.label}

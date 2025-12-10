@@ -1,9 +1,10 @@
-import React, { useState, useEffect, useRef } from "react";
+import { Search as SearchIcon, X } from "lucide-react";
+import type React from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { useLayout } from "../../context/LayoutContext";
-import { t } from "../../lib/translations";
-import { X, Search as SearchIcon } from "lucide-react";
 import { publicApi } from "../../lib/api";
+import { t } from "../../lib/translations";
 import type { Article } from "../../types";
 
 const SearchOverlay: React.FC = () => {
@@ -49,6 +50,7 @@ const SearchOverlay: React.FC = () => {
       <div className="max-w-[1000px] mx-auto p-6 pt-12">
         <div className="flex justify-end mb-12">
           <button
+            type="button"
             onClick={() => toggleSearch(false)}
             className="p-3 bg-muted-bg rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 text-black dark:text-white transition-all hover:rotate-90"
           >

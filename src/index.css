@@ -100,7 +100,7 @@
   html,
   body,
   * {
-    font-family: var(--font-sans) !important;
+    font-family: var(--font-sans);
   }
 
   html {
@@ -117,7 +117,7 @@
     input,
     select,
     textarea {
-      font-size: 16px !important;
+      font-size: 16px;
     }
   }
 }
@@ -187,6 +187,16 @@
 }
 .dark .ql-editor.ql-blank::before {
   color: var(--text-muted);
+}
+
+/* High Contrast */
+@media (prefers-contrast: more) {
+  button,
+  select,
+  textarea,
+  input {
+    @apply border-2;
+  }
 }
 
 /* Mobile Optimization & Enhancements (Specific IDs/Element overrides) */
@@ -392,21 +402,12 @@ textarea:focus-visible {
   @apply outline-2 outline-bbcRed outline-offset-2;
 }
 
-@media (prefers-contrast: more) {
-  button,
-  select,
-  textarea,
-  input {
-    @apply border-2;
-  }
-}
-
 /* Reduced Motion */
 @media (prefers-reduced-motion: reduce) {
   * {
     @apply !animate-none !transition-none;
-    animation-duration: 0.01ms !important;
-    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms;
+    transition-duration: 0.01ms;
   }
 }
 

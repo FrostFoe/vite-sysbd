@@ -17,7 +17,14 @@ export const SEARCH_RESULTS_PER_PAGE = 15;
 // File Upload
 export const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB
 export const MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5MB
-export const ALLOWED_FILE_EXTENSIONS = ["pdf", "doc", "docx", "jpg", "jpeg", "png"];
+export const ALLOWED_FILE_EXTENSIONS = [
+  "pdf",
+  "doc",
+  "docx",
+  "jpg",
+  "jpeg",
+  "png",
+];
 
 // Polling Intervals (in milliseconds)
 export const COMMENT_POLL_INTERVAL = 5000; // 5 seconds

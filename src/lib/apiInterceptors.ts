@@ -1,4 +1,4 @@
-import type { AxiosInstance, AxiosError, AxiosResponse } from "axios";
+import type { AxiosError, AxiosInstance, AxiosResponse } from "axios";
 
 /**
  * Setup request/response interceptors for API client
@@ -12,7 +12,7 @@ export function setupApiInterceptors(api: AxiosInstance): void {
     },
     (error: AxiosError) => {
       return Promise.reject(error);
-    },
+    }
   );
 
   // Response interceptor
@@ -35,6 +35,6 @@ export function setupApiInterceptors(api: AxiosInstance): void {
       }
 
       return Promise.reject(error);
-    },
+    }
   );
 }

@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from "react";
+import { Edit3, FileText, Loader, MessageSquare, Users } from "lucide-react";
+import type React from "react";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useLayout } from "../context/LayoutContext";
-import { t } from "../lib/translations";
-import { Link } from "react-router-dom";
-import { FileText, MessageSquare, Edit3, Users, Loader } from "lucide-react";
 import { adminApi } from "../lib/api";
+import { t } from "../lib/translations";
 
 interface AdminStats {
   articles: string;

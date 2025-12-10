@@ -70,7 +70,6 @@ $sections = [
     ["latest-news", "সর্বশেষ খবর", "Latest News", "list", "#ff6600", "news", NULL, 2],
     ["security-alerts", "নিরাপত্তা সতর্কতা", "Security Alerts", "carousel", "#ff0000", "security", NULL, 3],
     ["tech-insights", "প্রযুক্তি অন্তর্দৃষ্টি", "Tech Insights", "grid", "#0066cc", "tech", NULL, 4],
-    ["viral-reels", "ভাইরাল রিলস", "Viral Reels", "reel", "#ff1493", "news", NULL, 5],
     ["video-library", "ভিডিও লাইব্রেরি", "Video Library", "carousel", "#1e90ff", "tech", NULL, 6],
     ["podcast-hub", "পডকাস্ট হাব", "Podcast Hub", "list", "#ff8c00", "analysis", NULL, 7],
 ];
@@ -145,36 +144,7 @@ $articles = [
         "",
         "published"
     ],
-    [
-        "art_005",
-        "viral-reels",
-        "news",
-        "হ্যাকিং প্রতিরোধের সহজ পদ্ধতি",
-        "৩০ সেকেন্ডের ভিডিওতে শিখুন কীভাবে আপনার অ্যাকাউন্ট সুরক্ষিত রাখতে হয়।",
-        "<h2>Quick Security Tips</h2><p>সহজ এবং কার্যকর নিরাপত্তা টিপস যা আপনি আজই প্রয়োগ করতে পারেন।</p>",
-        "১ মিনিট",
-        "Easy Hacking Prevention Tips",
-        "Learn simple methods to protect your account in 30 seconds",
-        "<h2>Quick Security Tips</h2><p>Easy and effective security tips that you can apply today.</p>",
-        "1 min",
-        "",
-        "published"
-    ],
-    [
-        "art_006",
-        "viral-reels",
-        "tech",
-        "নতুন প্রযুক্তি ট্রেন্ড ২০২৫",
-        "আগামী বছরের সবচেয়ে জনপ্রিয় প্রযুক্তি ট্রেন্ড সম্পর্কে জানুন।",
-        "<h2>Technology Trends 2025</h2><p>আইটি ইন্ডাস্ট্রিতে নতুন পরিবর্তন আসছে যা আপনার ব্যবসাকে এগিয়ে নিয়ে যাবে।</p>",
-        "২ মিনিট",
-        "2025 Technology Trends",
-        "Discover the hottest tech trends coming in 2025",
-        "<h2>Technology Trends 2025</h2><p>New changes are coming to the IT industry that will move your business forward.</p>",
-        "2 min",
-        "",
-        "published"
-    ],
+
     [
         "art_007",
         "video-library",

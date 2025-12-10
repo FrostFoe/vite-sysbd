@@ -1,6 +1,6 @@
-import React from "react";
-import type { ReactNode, ErrorInfo } from "react";
 import { AlertTriangle } from "lucide-react";
+import type { ErrorInfo, ReactNode } from "react";
+import React from "react";
 
 interface Props {
   children: ReactNode;
@@ -72,6 +72,7 @@ export class ErrorBoundary extends React.Component<Props, State> {
                 )}
 
                 <button
+                  type="button"
                   onClick={() => window.location.reload()}
                   className="mt-4 w-full px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
                 >

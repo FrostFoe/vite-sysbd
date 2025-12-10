@@ -1,12 +1,12 @@
-import React, { useState, useEffect, useCallback } from "react";
+import { Bookmark, ChevronRight, Newspaper } from "lucide-react"; // Import icons needed
+import React, { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { useLayout } from "../context/LayoutContext";
-import { publicApi } from "../lib/api";
-import type { Section, Category } from "../types";
-import { t } from "../lib/translations";
-import { Bookmark, Newspaper, ChevronRight } from "lucide-react"; // Import icons needed
 import ArticleCard from "../components/common/ArticleCard";
 import MiniArticle from "../components/common/MiniArticle";
+import { useLayout } from "../context/LayoutContext";
+import { publicApi } from "../lib/api";
+import { t } from "../lib/translations";
+import type { Category, Section } from "../types";
 
 const HomePage: React.FC = () => {
   const { language, currentCategory } = useLayout();
@@ -41,7 +41,7 @@ const HomePage: React.FC = () => {
       }
       localStorage.setItem(
         "breachtimes-bookmarks",
-        JSON.stringify(newBookmarks),
+        JSON.stringify(newBookmarks)
       );
       return newBookmarks;
     });
@@ -54,7 +54,7 @@ const HomePage: React.FC = () => {
       try {
         const data = await publicApi.getHomeData(
           language,
-          currentCategory === "saved" ? undefined : currentCategory,
+          currentCategory === "saved" ? undefined : currentCategory
         );
         setHomeData(data);
       } catch (error) {
@@ -106,59 +106,7 @@ const HomePage: React.FC = () => {
       );
     } else if (section.type === "list") {
       content = (
-        <div className="bg-card p-6 rounded-2xl shadow-soft border border-border-color h-full">
-          <div className="flex items-center gap-3 mb-6 pb-4 border-b border-border-color">
-            <div
-              className="w-1.5 h-6 rounded-full"
-              style={{
-                backgroundColor:
-                  section.highlightColor || "var(--color-bbcRed)",
-              }}
-            ></div>
-            <h3 className={`text-xl font-bold ${titleColor}`}>
-              {section.title}
-            </h3>
-          </div>
-          <ul className="space-y-4">
-            {section.articles.map((article) => (
-              <MiniArticle
-                key={article.id}
-                article={article}
-                colorClass="text-bbcRed"
-              />
-            ))}
-          </ul>
-        </div>
-      );
-    } else if (section.type === "reel") {
-      content = (
-        <div className="flex overflow-x-auto no-scrollbar gap-5 pb-8 snap-x scroll-smooth px-1">
-          {section.articles.map((article) => (
-            <ArticleCard
-              key={article.id}
-              article={article}
-              type="reel"
-              isSectionDark={isSectionDark}
-              onBookmarkToggle={toggleBookmark}
-              isBookmarked={bookmarks.includes(article.id)}
-            />
-          ))}
-        </div>
-      );
-    } else if (section.type === "audio") {
-      content = (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-          {section.articles.map((article) => (
-            <ArticleCard
-              key={article.id}
-              article={article}
-              type="audio"
-              isSectionDark={isSectionDark}
-              onBookmarkToggle={toggleBookmark}
-              isBookmarked={bookmarks.includes(article.id)}
-            />
-          ))}
-        </div>
+        <div className="bg-card p-6 rounded-2xl shadow-soft border border-border-color h-full" />
       );
     } else {
       // Default to grid layout
@@ -189,7 +137,7 @@ const HomePage: React.FC = () => {
             <span
               className="w-2 h-8 rounded-full"
               style={{ backgroundColor: borderColor }}
-            ></span>
+            />
             {section.title}
           </h2>
           {section.type !== "hero-grid" && (
@@ -203,7 +151,7 @@ const HomePage: React.FC = () => {
         </div>
         {content}
         {section.style === "dark" && (
-          <div className="absolute -right-20 -bottom-20 w-64 h-64 bg-white/5 rounded-full blur-3xl pointer-events-none"></div>
+          <div className="absolute -right-20 -bottom-20 w-64 h-64 bg-white/5 rounded-full blur-3xl pointer-events-none" />
         )}
       </section>
     );
@@ -214,16 +162,16 @@ const HomePage: React.FC = () => {
       return (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8 animate-pulse">
           <div className="col-span-1 md:col-span-2 lg:col-span-2">
-            <div className="bg-muted-bg w-full aspect-video mb-5 rounded-xl"></div>
-            <div className="bg-muted-bg w-3/4 h-8 mb-3 rounded"></div>
-            <div className="bg-muted-bg w-full h-4 mb-2 rounded"></div>
-            <div className="bg-muted-bg w-2/3 h-4 rounded"></div>
+            <div className="bg-muted-bg w-full aspect-video mb-5 rounded-xl" />
+            <div className="bg-muted-bg w-3/4 h-8 mb-3 rounded" />
+            <div className="bg-muted-bg w-full h-4 mb-2 rounded" />
+            <div className="bg-muted-bg w-2/3 h-4 rounded" />
           </div>
           <div className="col-span-1 md:col-span-2 lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-8">
             {[1, 2, 3, 4].map((i) => (
               <div key={i}>
-                <div className="bg-muted-bg w-full aspect-video mb-3 rounded-lg"></div>
-                <div className="bg-muted-bg w-full h-5 rounded"></div>
+                <div className="bg-muted-bg w-full aspect-video mb-3 rounded-lg" />
+                <div className="bg-muted-bg w-full h-5 rounded" />
               </div>
             ))}
           </div>
@@ -282,21 +230,19 @@ const HomePage: React.FC = () => {
     if (currentCategory === "home") {
       // Find specific sections by ID as done in PHP code
       const worldNewsSection = sectionsToRender.find(
-        (s) => s.id === "virginia",
+        (s) => s.id === "virginia"
       );
       const businessNewsSection = sectionsToRender.find(
-        (s) => s.id === "vermont",
+        (s) => s.id === "vermont"
       );
       const collectionSection = sectionsToRender.find(
-        (s) => s.id === "wyoming",
+        (s) => s.id === "wyoming"
       );
 
       return (
         <>
           {sectionsToRender.map((section) => (
-            <div key={section.id}>
-              {renderSection(section)}
-            </div>
+            <div key={section.id}>{renderSection(section)}</div>
           ))}
           <section className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12 animate-fade-in">
             {collectionSection && (
@@ -308,7 +254,7 @@ const HomePage: React.FC = () => {
               <div className="lg:col-span-1 h-full">
                 <div className="bg-card p-6 rounded-2xl shadow-soft border border-border-color h-full">
                   <div className="flex items-center gap-3 mb-6 pb-4 border-b border-border-color">
-                    <div className="w-1.5 h-6 rounded-full bg-blue-500"></div>
+                    <div className="w-1.5 h-6 rounded-full bg-blue-500" />
                     <h3 className="text-xl font-bold text-card-text">
                       {t("more_world_news", language)}
                     </h3>
@@ -329,7 +275,7 @@ const HomePage: React.FC = () => {
               <div className="lg:col-span-1 h-full">
                 <div className="bg-card p-6 rounded-2xl shadow-soft border border-border-color h-full">
                   <div className="flex items-center gap-3 mb-6 pb-4 border-b border-border-color">
-                    <div className="w-1.5 h-6 rounded-full bg-green-500"></div>
+                    <div className="w-1.5 h-6 rounded-full bg-green-500" />
                     <h3 className="text-xl font-bold text-card-text">
                       {t("business_news", language)}
                     </h3>

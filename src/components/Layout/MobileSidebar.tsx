@@ -1,11 +1,11 @@
+import { ChevronRight, LayoutDashboard, LogOut, Shield, X } from "lucide-react";
 import React from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { useLayout } from "../../context/LayoutContext";
-import { t } from "../../lib/translations";
-import { X, Shield, LayoutDashboard, LogOut, ChevronRight } from "lucide-react";
-import type { Category } from "../../types";
 import { publicApi } from "../../lib/api";
+import { t } from "../../lib/translations";
+import type { Category } from "../../types";
 
 const MobileSidebar: React.FC = () => {
   const { user, isAuthenticated, logout } = useAuth();
@@ -41,10 +41,11 @@ const MobileSidebar: React.FC = () => {
     <>
       {/* Sidebar Overlay (Mobile) */}
       {isSidebarOpen && (
-        <div
+        <button
+          type="button"
           className="fixed inset-0 bg-black/60 z-30 md:hidden backdrop-blur-sm transition-opacity duration-300 opacity-100"
           onClick={() => toggleSidebar(false)}
-        ></div>
+        />
       )}
 
       {/* Sidebar */}
@@ -58,6 +59,7 @@ const MobileSidebar: React.FC = () => {
             {t("menu", language)}
           </div>
           <button
+            type="button"
             onClick={() => toggleSidebar(false)}
             className="p-2 hover:bg-muted-bg rounded-full transition-transform hover:rotate-90 dark:text-white active:scale-95"
           >
@@ -100,6 +102,7 @@ const MobileSidebar: React.FC = () => {
                   </Link>
                 )}
                 <button
+                  type="button"
                   onClick={handleLogout}
                   className="w-full py-3 bg-muted-bg text-bbcDark dark:text-white rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-600 hover:shadow-md hover:-translate-y-0.5 transition-all active:scale-95"
                 >

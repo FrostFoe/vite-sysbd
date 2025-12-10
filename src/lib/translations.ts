@@ -23,8 +23,7 @@ const translations: Translations = {
     your_email: "Your email address",
     subscribe: "Subscribe",
     subscribed_successfully: "Subscribed successfully!",
-    copyright:
-      "© " + new Date().getFullYear() + " BreachTimes. All rights reserved.",
+    copyright: `© ${new Date().getFullYear()} BreachTimes. All rights reserved.`,
     support_work: "Support Our Work",
     support_text: "We depend 100% on donations to stay independent.",
     link_copied: "Link copied to clipboard",
@@ -222,8 +221,7 @@ const translations: Translations = {
     write_details: "বিস্তারিত লিখুন...",
     submit: "জমা দিন",
     submissions_closed: "তথ্য জমা বন্ধ",
-    submissions_turned_off_by_admin:
-      "অ্যাডমিন কর্তৃক জমা দেওয়া বন্ধ করা হয়েছে।",
+    submissions_turned_off_by_admin: "অ্যাডমিন কর্তৃক জমা দেওয়া বন্ধ করা হয়েছে।",
     article_info: "নিবন্ধ তথ্য",
     category: "বিভাগ:",
     published: "প্রকাশনা:",
@@ -280,8 +278,7 @@ const translations: Translations = {
     saved_articles: "সংরক্ষিত নিবন্ধ",
     messages: "মেসেজ",
     your_activity: "আপনার কার্যকলাপ",
-    activity_placeholder:
-      "সাম্প্রতিক কার্যকলাপ বা পরিসংখ্যান এখানে দেখানো যেতে পারে।",
+    activity_placeholder: "সাম্প্রতিক কার্যকলাপ বা পরিসংখ্যান এখানে দেখানো যেতে পারে।",
 
     // AdminDashboard Specific
     failed_to_load_stats: "পরিসংখ্যান লোড করতে ব্যর্থ হয়েছে।",
@@ -311,8 +308,7 @@ const translations: Translations = {
     date: "তারিখ",
     actions: "ক্রিয়াকলাপ",
     no_articles_found: "কোনো নিবন্ধ পাওয়া যায়নি",
-    no_articles_matching_criteria:
-      "আপনার মানদণ্ডের সাথে মেলে এমন কোনো নিবন্ধ নেই।",
+    no_articles_matching_criteria: "আপনার মানদণ্ডের সাথে মেলে এমন কোনো নিবন্ধ নেই।",
     create_new_article: "নতুন নিবন্ধ তৈরি করুন",
     no_title: "(শিরোনাম নেই)",
     pub: "প্রকাশিত",

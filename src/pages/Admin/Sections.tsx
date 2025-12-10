@@ -1,9 +1,10 @@
-import React, { useState, useEffect, useMemo } from "react";
+import { Edit2, Layers as LayersIcon, Plus, Trash2 } from "lucide-react";
+import type React from "react";
 import type { FormEvent } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { CustomDropdown } from "../../components/common/CustomDropdown";
 import { adminApi } from "../../lib/api";
 import type { Section } from "../../types";
-import { Plus, Edit2, Trash2, Layers as LayersIcon } from "lucide-react";
-import { CustomDropdown } from "../../components/common/CustomDropdown";
 
 // The 'Section' type from types.ts is for the public API.
 // This page needs a type that matches the database table.
@@ -52,6 +53,7 @@ const SectionModal: React.FC<{
 
   // Reset form data when modal opens with different section
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     setFormData(initialFormData as Partial<AdminSection>);
   }, [initialFormData]);
 
@@ -70,8 +72,14 @@ const SectionModal: React.FC<{
         </h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-bold mb-1">ID (Slug)</label>
+            <label
+              htmlFor="section-id"
+              className="block text-sm font-bold mb-1"
+            >
+              ID (Slug)
+            </label>
             <input
+              id="section-id"
               name="id"
               value={formData.id || ""}
               onChange={(e) => setFormData({ ...formData, id: e.target.value })}
@@ -81,10 +89,14 @@ const SectionModal: React.FC<{
             />
           </div>
           <div>
-            <label className="block text-sm font-bold mb-1">
+            <label
+              htmlFor="section-title-bn"
+              className="block text-sm font-bold mb-1"
+            >
               Title (Bangla)
             </label>
             <input
+              id="section-title-bn"
               name="title_bn"
               value={formData.title_bn || ""}
               onChange={(e) =>
@@ -95,10 +107,14 @@ const SectionModal: React.FC<{
             />
           </div>
           <div>
-            <label className="block text-sm font-bold mb-1">
+            <label
+              htmlFor="section-title-en"
+              className="block text-sm font-bold mb-1"
+            >
               Title (English)
             </label>
             <input
+              id="section-title-en"
               name="title_en"
               value={formData.title_en || ""}
               onChange={(e) =>
@@ -109,8 +125,14 @@ const SectionModal: React.FC<{
             />
           </div>
           <div>
-            <label className="block text-sm font-bold mb-1">Type</label>
+            <label
+              htmlFor="section-type"
+              className="block text-sm font-bold mb-1"
+            >
+              Type
+            </label>
             <CustomDropdown
+              id="section-type"
               value={formData.type || "grid"}
               onChange={(value) =>
                 setFormData({
@@ -128,8 +150,14 @@ const SectionModal: React.FC<{
             />
           </div>
           <div>
-            <label className="block text-sm font-bold mb-1">Sort Order</label>
+            <label
+              htmlFor="section-sort-order"
+              className="block text-sm font-bold mb-1"
+            >
+              Sort Order
+            </label>
             <input
+              id="section-sort-order"
               type="number"
               name="sort_order"
               value={formData.sort_order || 0}
@@ -171,11 +199,7 @@ const Sections: React.FC = () => {
   const [editingSection, setEditingSection] =
     useState<Partial<AdminSection> | null>(null);
 
-  useEffect(() => {
-    fetchSections();
-  }, []);
-
-  const fetchSections = async () => {
+  const fetchSections = useCallback(async () => {
     setIsLoading(true);
     try {
       const res = await adminApi.getSections();
@@ -183,17 +207,21 @@ const Sections: React.FC = () => {
         // The data from the API matches our AdminSection type
         const typedData = res.data as unknown as AdminSection[];
         setSections(
-          typedData.sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0)),
+          typedData.sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0))
         );
       } else {
         throw new Error(res.message || "Failed to fetch sections");
       }
-    } catch (err) {
+    } catch (_err) {
       setError("Failed to fetch sections.");
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    fetchSections();
+  }, [fetchSections]);
 
   const handleOpenModal = (section: AdminSection | null = null) => {
     setEditingSection(section);
@@ -211,7 +239,7 @@ const Sections: React.FC = () => {
       await adminApi.saveSection(formData as Partial<Section>);
       handleCloseModal();
       fetchSections();
-    } catch (err) {
+    } catch (_err) {
       // Error silently handled, user can retry
     }
   };
@@ -221,7 +249,7 @@ const Sections: React.FC = () => {
       try {
         await adminApi.deleteSection(id);
         fetchSections();
-      } catch (err) {
+      } catch (_err) {
         // Error silently handled, user can retry
       }
     }
@@ -238,6 +266,7 @@ const Sections: React.FC = () => {
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Manage Sections</h1>
         <button
+          type="button"
           onClick={() => handleOpenModal()}
           className="bg-bbcRed text-white px-4 py-2 rounded-lg font-bold flex items-center gap-2"
         >
@@ -292,12 +321,14 @@ const Sections: React.FC = () => {
                   <td className="p-4 text-right">
                     <div className="flex justify-end gap-2">
                       <button
+                        type="button"
                         onClick={() => handleOpenModal(sec)}
                         className="p-2 text-blue-600 hover:bg-blue-50 rounded"
                       >
                         <Edit2 className="w-4 h-4" />
                       </button>
                       <button
+                        type="button"
                         onClick={() => handleDelete(sec.id)}
                         className="p-2 text-red-600 hover:bg-red-50 rounded"
                       >

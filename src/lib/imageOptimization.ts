@@ -9,7 +9,7 @@
  */
 export function generateImageSrcSet(
   basePath: string,
-  widths: number[] = [400, 800, 1200, 1600],
+  widths: number[] = [400, 800, 1200, 1600]
 ): { srcSet: string; sizes: string } {
   const srcSet = widths
     .map((width) => `${basePath}?w=${width}&q=85&fmt=webp ${width}w`)
@@ -26,7 +26,7 @@ export function generateImageSrcSet(
  */
 export function getImageWithWebP(
   path: string,
-  alt: string = "Image",
+  alt: string = "Image"
 ): {
   src: string;
   srcSet: string;
@@ -34,8 +34,12 @@ export function getImageWithWebP(
   sizes: string;
   alt: string;
 } {
-  const jpegSrcSet = [400, 800, 1200].map((w) => `${path}?w=${w}&q=85 ${w}w`).join(", ");
-  const webpSrcSet = [400, 800, 1200].map((w) => `${path}?w=${w}&q=85&fmt=webp ${w}w`).join(", ");
+  const jpegSrcSet = [400, 800, 1200]
+    .map((w) => `${path}?w=${w}&q=85 ${w}w`)
+    .join(", ");
+  const webpSrcSet = [400, 800, 1200]
+    .map((w) => `${path}?w=${w}&q=85&fmt=webp ${w}w`)
+    .join(", ");
   const sizes = "(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 80vw";
 
   return {

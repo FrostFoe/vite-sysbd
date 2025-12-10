@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useCallback } from "react";
+import { AlertCircle, Ban, CheckCircle, Loader } from "lucide-react";
+import type React from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useLayout } from "../../context/LayoutContext";
 import { adminApi } from "../../lib/api";
 import { t } from "../../lib/translations";
-import { Ban, CheckCircle, Loader, AlertCircle } from "lucide-react";
 import { showToastMsg } from "../../lib/utils";
 
 interface AdminUser {
@@ -33,7 +34,7 @@ const Users: React.FC = () => {
       } else {
         showToastMsg(response.error || "Failed to fetch users", "error");
       }
-    } catch (error) {
+    } catch (_error) {
       showToastMsg(t("server_error", language), "error");
     } finally {
       setIsLoading(false);
@@ -67,7 +68,7 @@ const Users: React.FC = () => {
       } else {
         showToastMsg(response.error || "Failed to mute user", "error");
       }
-    } catch (error) {
+    } catch (_error) {
       showToastMsg(t("server_error", language), "error");
     }
   };
@@ -82,7 +83,7 @@ const Users: React.FC = () => {
       } else {
         showToastMsg(response.error || "Failed to unmute user", "error");
       }
-    } catch (error) {
+    } catch (_error) {
       showToastMsg(t("server_error", language), "error");
     }
   };
@@ -167,6 +168,7 @@ const Users: React.FC = () => {
                         {user.role !== "admin" && // Assuming current user is admin, can't mute admins generally, but logic depends on reqs
                           (isMuted ? (
                             <button
+                              type="button"
                               onClick={() => handleUnmuteUser(user.id)}
                               className="text-green-500 hover:text-green-700 hover:bg-green-50 dark:hover:bg-green-900/20 p-2 rounded transition-colors"
                               title="Unmute"
@@ -175,6 +177,7 @@ const Users: React.FC = () => {
                             </button>
                           ) : (
                             <button
+                              type="button"
                               onClick={() =>
                                 openMuteDialog(user.id, user.email)
                               }
@@ -196,13 +199,23 @@ const Users: React.FC = () => {
 
       {/* Mute Modal */}
       {muteModalOpen && (
-        <div
-          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+        <button
+          type="button"
           onClick={closeMuteDialog}
+          onKeyDown={(e) => {
+            if (e.key === "Escape") {
+              closeMuteDialog();
+            }
+          }}
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 border-none"
         >
           <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="mute-dialog-title"
             className="bg-card rounded-xl border border-border-color shadow-xl max-w-md w-full p-6 animate-zoom-in"
             onClick={(e) => e.stopPropagation()}
+            onKeyDown={(e) => e.stopPropagation()}
           >
             <div className="flex items-center gap-3 mb-4">
               <div className="w-10 h-10 rounded-full bg-yellow-100 dark:bg-yellow-900/20 flex items-center justify-center text-yellow-600 dark:text-yellow-400">
@@ -218,25 +231,31 @@ const Users: React.FC = () => {
               . This user will no longer be able to post comments.
             </p>
             <div className="mb-4">
-              <label className="block text-xs font-bold text-muted-text mb-2 uppercase tracking-wide">
+              <label
+                htmlFor="mute-reason"
+                className="block text-xs font-bold text-muted-text mb-2 uppercase tracking-wide"
+              >
                 Reason (Optional)
               </label>
               <textarea
+                id="mute-reason"
                 value={muteReason}
                 onChange={(e) => setMuteReason(e.target.value)}
                 placeholder="Enter reason for muting this user..."
                 className="w-full p-3 rounded-lg border border-border-color bg-muted-bg text-card-text focus:ring-2 focus:ring-yellow-500/20 focus:border-yellow-500 outline-none transition-all resize-none text-sm"
                 rows={3}
-              ></textarea>
+              />
             </div>
             <div className="flex gap-3 justify-end">
               <button
+                type="button"
                 onClick={closeMuteDialog}
                 className="px-4 py-2 rounded-lg bg-muted-bg hover:bg-border-color text-card-text font-bold transition-colors"
               >
                 Cancel
               </button>
               <button
+                type="button"
                 onClick={handleMuteUser}
                 className="px-4 py-2 rounded-lg bg-yellow-600 hover:bg-yellow-700 text-white font-bold transition-colors flex items-center gap-2"
               >
@@ -244,7 +263,7 @@ const Users: React.FC = () => {
               </button>
             </div>
           </div>
-        </div>
+        </button>
       )}
     </div>
   );

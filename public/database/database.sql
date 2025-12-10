@@ -61,7 +61,6 @@ CREATE TABLE IF NOT EXISTS `articles` (
   `image` longtext,
   `published_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
   `status` ENUM('published', 'draft', 'archived') DEFAULT 'draft',
-  `is_video` tinyint(1) DEFAULT 0,
   `leaked_documents` longtext DEFAULT NULL,
   `allow_submissions` tinyint(1) DEFAULT 0,
   `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,

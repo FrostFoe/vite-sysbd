@@ -38,7 +38,7 @@ export const ARIA_LABELS = {
  */
 export function getContrastRatio(
   foreground: string,
-  background: string,
+  background: string
 ): number {
   const rgb1 = hexToRgb(foreground);
   const rgb2 = hexToRgb(background);
@@ -69,14 +69,10 @@ function hexToRgb(hex: string): { r: number; g: number; b: number } {
 /**
  * Calculate relative luminance
  */
-function calculateLuminance(rgb: {
-  r: number;
-  g: number;
-  b: number;
-}): number {
+function calculateLuminance(rgb: { r: number; g: number; b: number }): number {
   const [r, g, b] = [rgb.r, rgb.g, rgb.b].map((val) => {
     val = val / 255;
-    return val <= 0.03928 ? val / 12.92 : Math.pow((val + 0.055) / 1.055, 2.4);
+    return val <= 0.03928 ? val / 12.92 : ((val + 0.055) / 1.055) ** 2.4;
   });
 
   return 0.2126 * r + 0.7152 * g + 0.0722 * b;
@@ -101,7 +97,7 @@ export function useKeyboardShortcut(
   key: string,
   callback: () => void,
   ctrlKey?: boolean,
-  shiftKey?: boolean,
+  shiftKey?: boolean
 ) {
   React.useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {
@@ -129,10 +125,12 @@ export function useFocusTrap(ref: React.RefObject<HTMLDivElement>) {
     if (!element) return;
 
     const focusableElements = element.querySelectorAll(
-      "a, button, input, select, textarea, [tabindex]:not([tabindex=\"-1\"])",
+      'a, button, input, select, textarea, [tabindex]:not([tabindex="-1"])'
     ) as NodeListOf<HTMLElement>;
     const firstElement = focusableElements[0] as HTMLElement;
-    const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement;
+    const lastElement = focusableElements[
+      focusableElements.length - 1
+    ] as HTMLElement;
 
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key !== "Tab") return;
