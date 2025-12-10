@@ -15,7 +15,7 @@ if ($_SERVER["REQUEST_METHOD"] !== "GET") {
 
 // Create cache key for users list
 $cache = new CacheManager();
-$cacheKey = $cache->generateKey(['admin_users']);
+$cacheKey = $cache->generateKey(["admin_users"]);
 
 // Try to get from cache first (admin data changes less frequently)
 $cachedUsers = $cache->get($cacheKey);

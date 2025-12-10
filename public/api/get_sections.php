@@ -16,7 +16,7 @@ if (!isset($_SESSION["user_role"]) || $_SESSION["user_role"] !== "admin") {
 
 // Create cache key for sections
 $cache = new CacheManager();
-$cacheKey = $cache->generateKey(['sections_all']);
+$cacheKey = $cache->generateKey(["sections_all"]);
 
 // Try to get from cache first
 $cachedSections = $cache->get($cacheKey);

@@ -16,7 +16,7 @@ if ($_SERVER["REQUEST_METHOD"] !== "GET") {
 
 // Create cache key for admin stats
 $cache = new CacheManager();
-$cacheKey = $cache->generateKey(['admin_stats']);
+$cacheKey = $cache->generateKey(["admin_stats"]);
 
 // Try to get from cache first (stats change relatively infrequently)
 $cachedStats = $cache->get($cacheKey);

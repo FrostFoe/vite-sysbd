@@ -52,7 +52,7 @@ const Comments: React.FC = () => {
       } else {
         showToastMsg(
           response.error || t("failed_to_delete_comment", language),
-          "error"
+          "error",
         );
       }
     } catch (_error) {

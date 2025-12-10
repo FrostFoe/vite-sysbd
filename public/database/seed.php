@@ -27,13 +27,19 @@ try {
 // Seed Demo Users
 echo "\n--- Seeding Users ---\n";
 $users = [
-    ["admin@breachtimes.com", password_hash("admin123", PASSWORD_BCRYPT), "admin"],
+    [
+        "admin@breachtimes.com",
+        password_hash("admin123", PASSWORD_BCRYPT),
+        "admin",
+    ],
     ["john@example.com", password_hash("user123", PASSWORD_BCRYPT), "user"],
     ["sarah@example.com", password_hash("user123", PASSWORD_BCRYPT), "user"],
     ["mike@example.com", password_hash("user123", PASSWORD_BCRYPT), "user"],
     ["emma@example.com", password_hash("user123", PASSWORD_BCRYPT), "user"],
 ];
-$stmt = $pdo->prepare("INSERT INTO users (email, password, role) VALUES (?, ?, ?)");
+$stmt = $pdo->prepare(
+    "INSERT INTO users (email, password, role) VALUES (?, ?, ?)",
+);
 foreach ($users as $user) {
     try {
         $stmt->execute($user);
@@ -44,10 +50,18 @@ foreach ($users as $user) {
 }
 
 // Get user IDs
-$adminId = $pdo->query("SELECT id FROM users WHERE email = 'admin@breachtimes.com'")->fetch(PDO::FETCH_ASSOC)['id'];
-$johnId = $pdo->query("SELECT id FROM users WHERE email = 'john@example.com'")->fetch(PDO::FETCH_ASSOC)['id'];
-$sarahId = $pdo->query("SELECT id FROM users WHERE email = 'sarah@example.com'")->fetch(PDO::FETCH_ASSOC)['id'];
-$mikeId = $pdo->query("SELECT id FROM users WHERE email = 'mike@example.com'")->fetch(PDO::FETCH_ASSOC)['id'];
+$adminId = $pdo
+    ->query("SELECT id FROM users WHERE email = 'admin@breachtimes.com'")
+    ->fetch(PDO::FETCH_ASSOC)["id"];
+$johnId = $pdo
+    ->query("SELECT id FROM users WHERE email = 'john@example.com'")
+    ->fetch(PDO::FETCH_ASSOC)["id"];
+$sarahId = $pdo
+    ->query("SELECT id FROM users WHERE email = 'sarah@example.com'")
+    ->fetch(PDO::FETCH_ASSOC)["id"];
+$mikeId = $pdo
+    ->query("SELECT id FROM users WHERE email = 'mike@example.com'")
+    ->fetch(PDO::FETCH_ASSOC)["id"];
 
 // Seed Categories
 echo "\n--- Seeding Categories ---\n";
@@ -57,7 +71,9 @@ $cats = [
     ["tech", "প্রযুক্তি", "Technology", "#0066cc"],
     ["analysis", "বিশ্লেষণ", "Analysis", "#00cc66"],
 ];
-$stmt = $pdo->prepare("INSERT INTO categories (id, title_bn, title_en, color) VALUES (?, ?, ?, ?)");
+$stmt = $pdo->prepare(
+    "INSERT INTO categories (id, title_bn, title_en, color) VALUES (?, ?, ?, ?)",
+);
 foreach ($cats as $cat) {
     $stmt->execute($cat);
     echo "✓ Category created: " . $cat[1] . " / " . $cat[2] . "\n";
@@ -66,12 +82,66 @@ foreach ($cats as $cat) {
 // Seed Sections
 echo "\n--- Seeding Sections ---\n";
 $sections = [
-    ["hero-stories", "প্রধান খবর", "Top Stories", "hero", "#b80000", "news", NULL, 1],
-    ["latest-news", "সর্বশেষ খবর", "Latest News", "list", "#ff6600", "news", NULL, 2],
-    ["security-alerts", "নিরাপত্তা সতর্কতা", "Security Alerts", "carousel", "#ff0000", "security", NULL, 3],
-    ["tech-insights", "প্রযুক্তি অন্তর্দৃষ্টি", "Tech Insights", "grid", "#0066cc", "tech", NULL, 4],
-    ["video-library", "ভিডিও লাইব্রেরি", "Video Library", "carousel", "#1e90ff", "tech", NULL, 6],
-    ["podcast-hub", "পডকাস্ট হাব", "Podcast Hub", "list", "#ff8c00", "analysis", NULL, 7],
+    [
+        "hero-stories",
+        "প্রধান খবর",
+        "Top Stories",
+        "hero",
+        "#b80000",
+        "news",
+        null,
+        1,
+    ],
+    [
+        "latest-news",
+        "সর্বশেষ খবর",
+        "Latest News",
+        "list",
+        "#ff6600",
+        "news",
+        null,
+        2,
+    ],
+    [
+        "security-alerts",
+        "নিরাপত্তা সতর্কতা",
+        "Security Alerts",
+        "carousel",
+        "#ff0000",
+        "security",
+        null,
+        3,
+    ],
+    [
+        "tech-insights",
+        "প্রযুক্তি অন্তর্দৃষ্টি",
+        "Tech Insights",
+        "grid",
+        "#0066cc",
+        "tech",
+        null,
+        4,
+    ],
+    [
+        "video-library",
+        "ভিডিও লাইব্রেরি",
+        "Video Library",
+        "carousel",
+        "#1e90ff",
+        "tech",
+        null,
+        6,
+    ],
+    [
+        "podcast-hub",
+        "পডকাস্ট হাব",
+        "Podcast Hub",
+        "list",
+        "#ff8c00",
+        "analysis",
+        null,
+        7,
+    ],
 ];
 $stmt = $pdo->prepare(
     "INSERT INTO sections (id, title_bn, title_en, type, highlight_color, associated_category, style, sort_order) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
@@ -97,7 +167,7 @@ $articles = [
         "<h2>Importance of Cybersecurity</h2><p>In the digital age, cybersecurity is extremely important. Thousands of hacking incidents occur worldwide every day. Take proper steps to keep your personal information safe.</p><p>Strong passwords, two-factor authentication, and regular updates keep your devices secure.</p>",
         "4 min",
         "",
-        "published"
+        "published",
     ],
     [
         "art_002",
@@ -112,7 +182,7 @@ $articles = [
         "<h2>Banking Security Crisis</h2><p>A major banking institution has fallen victim to hacking with sensitive customer information stolen.</p><p>Banks are now strengthening security measures and warning customers about protective steps.</p>",
         "5 min",
         "",
-        "published"
+        "published",
     ],
     [
         "art_003",
@@ -127,7 +197,7 @@ $articles = [
         "<h2>AI and Cybersecurity</h2><p>Using artificial intelligence technology, security experts can now detect threats much faster.</p><p>Machine learning algorithms are helping prevent new types of attacks.</p>",
         "6 min",
         "",
-        "published"
+        "published",
     ],
     [
         "art_004",
@@ -142,7 +212,7 @@ $articles = [
         "<h2>New Malware Threat</h2><p>Security researchers have discovered a new malware strain that is highly dangerous and spreads easily.</p><p>Users are advised to keep their systems updated.</p>",
         "3 min",
         "",
-        "published"
+        "published",
     ],
 
     [
@@ -158,7 +228,7 @@ $articles = [
         "<h2>Complete Cybersecurity Course</h2><p>Learn everything about cybersecurity from experts.</p>",
         "15 min",
         "",
-        "published"
+        "published",
     ],
     [
         "art_008",
@@ -173,7 +243,7 @@ $articles = [
         "<h2>The Future of AI</h2><p>Deep discussion on how artificial intelligence will shape the future.</p>",
         "20 min",
         "",
-        "published"
+        "published",
     ],
     [
         "art_009",
@@ -188,7 +258,7 @@ $articles = [
         "<h2>Cybersecurity Podcast Episode 1</h2><p>Insightful discussion from cybersecurity experts.</p>",
         "45 min",
         "",
-        "published"
+        "published",
     ],
     [
         "art_010",
@@ -203,7 +273,7 @@ $articles = [
         "<h2>Data Privacy Podcast Episode 1</h2><p>About data privacy and ways to protect personal information.</p>",
         "50 min",
         "",
-        "published"
+        "published",
     ],
 ];
 
@@ -221,13 +291,35 @@ foreach ($articles as $article) {
 // Seed Comments and Replies
 echo "\n--- Seeding Comments and Replies ---\n";
 $comments = [
-    ["art_001", $johnId, "John Doe", "<p>এটি সত্যিই দরকারী তথ্য। আমি এই টিপসগুলি অবশ্যই অনুসরণ করব।</p>"],
-    ["art_001", $sarahId, "Sarah Smith", "<p>সাইবার নিরাপত্তা সবার জন্য গুরুত্বপূর্ণ। ধন্যবাদ এই নিবন্ধের জন্য।</p>"],
-    ["art_002", $mikeId, "Mike Johnson", "<p>এটি খুবই উদ্বেগজনক। আমাদের অ্যাকাউন্ট সুরক্ষিত আছে কিনা তা যাচাই করতে হবে।</p>"],
-    ["art_003", $johnId, "John Doe", "<p>এআই সত্যিই প্রযুক্তিতে অসাধারণ পরিবর্তন আনছে।</p>"],
+    [
+        "art_001",
+        $johnId,
+        "John Doe",
+        "<p>এটি সত্যিই দরকারী তথ্য। আমি এই টিপসগুলি অবশ্যই অনুসরণ করব।</p>",
+    ],
+    [
+        "art_001",
+        $sarahId,
+        "Sarah Smith",
+        "<p>সাইবার নিরাপত্তা সবার জন্য গুরুত্বপূর্ণ। ধন্যবাদ এই নিবন্ধের জন্য।</p>",
+    ],
+    [
+        "art_002",
+        $mikeId,
+        "Mike Johnson",
+        "<p>এটি খুবই উদ্বেগজনক। আমাদের অ্যাকাউন্ট সুরক্ষিত আছে কিনা তা যাচাই করতে হবে।</p>",
+    ],
+    [
+        "art_003",
+        $johnId,
+        "John Doe",
+        "<p>এআই সত্যিই প্রযুক্তিতে অসাধারণ পরিবর্তন আনছে।</p>",
+    ],
 ];
 
-$stmt = $pdo->prepare("INSERT INTO comments (article_id, user_id, user_name, text) VALUES (?, ?, ?, ?)");
+$stmt = $pdo->prepare(
+    "INSERT INTO comments (article_id, user_id, user_name, text) VALUES (?, ?, ?, ?)",
+);
 $commentIds = [];
 foreach ($comments as $index => $comment) {
     $stmt->execute($comment);
@@ -238,14 +330,33 @@ foreach ($comments as $index => $comment) {
 // Add replies to comments
 echo "\n--- Seeding Replies ---\n";
 $replies = [
-    [$commentIds[0], $sarahId, "Sarah Smith", "<p>আমিও এই মত। এই টিপসগুলি খুবই কার্যকর।</p>"],
-    [$commentIds[1], $adminId, "ব্রিচটাইমস", "<p>আপনার মন্তব্যের জন্য ধন্যবাদ! নিরাপত্তা সবার জন্য জরুরি।</p>"],
-    [$commentIds[2], $johnId, "John Doe", "<p>হ্যাঁ, অবশ্যই আপনার অ্যাকাউন্ট পরীক্ষা করুন এবং পাসওয়ার্ড পরিবর্তন করুন।</p>"],
+    [
+        $commentIds[0],
+        $sarahId,
+        "Sarah Smith",
+        "<p>আমিও এই মত। এই টিপসগুলি খুবই কার্যকর।</p>",
+    ],
+    [
+        $commentIds[1],
+        $adminId,
+        "ব্রিচটাইমস",
+        "<p>আপনার মন্তব্যের জন্য ধন্যবাদ! নিরাপত্তা সবার জন্য জরুরি।</p>",
+    ],
+    [
+        $commentIds[2],
+        $johnId,
+        "John Doe",
+        "<p>হ্যাঁ, অবশ্যই আপনার অ্যাকাউন্ট পরীক্ষা করুন এবং পাসওয়ার্ড পরিবর্তন করুন।</p>",
+    ],
 ];
 
-$stmt = $pdo->prepare("INSERT INTO comments (article_id, user_id, user_name, text, parent_comment_id) VALUES (?, ?, ?, ?, ?)");
+$stmt = $pdo->prepare(
+    "INSERT INTO comments (article_id, user_id, user_name, text, parent_comment_id) VALUES (?, ?, ?, ?, ?)",
+);
 foreach ($replies as $index => $reply) {
-    $articleId = $pdo->query("SELECT article_id FROM comments WHERE id = " . $reply[0])->fetch(PDO::FETCH_ASSOC)['article_id'];
+    $articleId = $pdo
+        ->query("SELECT article_id FROM comments WHERE id = " . $reply[0])
+        ->fetch(PDO::FETCH_ASSOC)["article_id"];
     $stmt->execute([$articleId, $reply[1], $reply[2], $reply[3], $reply[0]]);
     echo "✓ Reply created by: " . $reply[2] . "\n";
 }
@@ -259,7 +370,9 @@ $votes = [
     [$commentIds[2], $sarahId, "downvote"],
 ];
 
-$stmt = $pdo->prepare("INSERT INTO comment_votes (comment_id, user_id, vote_type) VALUES (?, ?, ?)");
+$stmt = $pdo->prepare(
+    "INSERT INTO comment_votes (comment_id, user_id, vote_type) VALUES (?, ?, ?)",
+);
 foreach ($votes as $vote) {
     $stmt->execute($vote);
     echo "✓ Vote created\n";
@@ -280,7 +393,7 @@ $documents = [
         "Cybersecurity Guide",
         "বিস্তারিত নিরাপত্তা গাইড এবং সর্বোত্তম অনুশীলন।",
         "Comprehensive security guide with best practices.",
-        1
+        1,
     ],
     [
         "doc_002",
@@ -294,7 +407,7 @@ $documents = [
         "Banking Security Report",
         "নিরাপত্তা লঙ্ঘনের বিস্তারিত বিশ্লেষণ।",
         "Detailed analysis of the security breach.",
-        2
+        2,
     ],
 ];
 
@@ -310,11 +423,23 @@ foreach ($documents as $doc) {
 // Seed Article Submissions
 echo "\n--- Seeding Article Submissions ---\n";
 $submissions = [
-    ["art_001", $johnId, "/uploads/submissions/document1.pdf", "এটি একটি গুরুত্বপূর্ণ নিরাপত্তা নথি যা শেয়ার করতে চাই।"],
-    ["art_002", $sarahId, "/uploads/submissions/document2.pdf", "ব্যাংকিং নিরাপত্তা সম্পর্কিত অতিরিক্ত তথ্য।"],
+    [
+        "art_001",
+        $johnId,
+        "/uploads/submissions/document1.pdf",
+        "এটি একটি গুরুত্বপূর্ণ নিরাপত্তা নথি যা শেয়ার করতে চাই।",
+    ],
+    [
+        "art_002",
+        $sarahId,
+        "/uploads/submissions/document2.pdf",
+        "ব্যাংকিং নিরাপত্তা সম্পর্কিত অতিরিক্ত তথ্য।",
+    ],
 ];
 
-$stmt = $pdo->prepare("INSERT INTO article_submissions (article_id, user_id, file_path, message) VALUES (?, ?, ?, ?)");
+$stmt = $pdo->prepare(
+    "INSERT INTO article_submissions (article_id, user_id, file_path, message) VALUES (?, ?, ?, ?)",
+);
 foreach ($submissions as $sub) {
     $stmt->execute($sub);
     echo "✓ Submission created\n";
@@ -322,13 +447,11 @@ foreach ($submissions as $sub) {
 
 // Seed Messaging Preferences
 echo "\n--- Seeding Messaging Preferences ---\n";
-$prefs = [
-    [$johnId, 1, 0],
-    [$sarahId, 1, 1],
-    [$mikeId, 0, 0],
-];
+$prefs = [[$johnId, 1, 0], [$sarahId, 1, 1], [$mikeId, 0, 0]];
 
-$stmt = $pdo->prepare("INSERT INTO messaging_preferences (user_id, notifications_enabled, email_notifications) VALUES (?, ?, ?)");
+$stmt = $pdo->prepare(
+    "INSERT INTO messaging_preferences (user_id, notifications_enabled, email_notifications) VALUES (?, ?, ?)",
+);
 foreach ($prefs as $pref) {
     $stmt->execute($pref);
     echo "✓ Messaging preference set\n";
@@ -337,9 +460,27 @@ foreach ($prefs as $pref) {
 // Seed Messages
 echo "\n--- Seeding Messages ---\n";
 $messages = [
-    [$johnId, "user", $adminId, "admin", "সাইবার নিরাপত্তা সম্পর্কে আরও তথ্য পেতে পারি কিনা?"],
-    [$sarahId, "user", $adminId, "admin", "আমার অ্যাকাউন্ট হ্যাক হয়েছে, কী করব?"],
-    [$adminId, "admin", $johnId, "user", "আমরা সাহায্য করতে প্রস্তুত। আপনার সমস্যার বিস্তারিত জানান।"],
+    [
+        $johnId,
+        "user",
+        $adminId,
+        "admin",
+        "সাইবার নিরাপত্তা সম্পর্কে আরও তথ্য পেতে পারি কিনা?",
+    ],
+    [
+        $sarahId,
+        "user",
+        $adminId,
+        "admin",
+        "আমার অ্যাকাউন্ট হ্যাক হয়েছে, কী করব?",
+    ],
+    [
+        $adminId,
+        "admin",
+        $johnId,
+        "user",
+        "আমরা সাহায্য করতে প্রস্তুত। আপনার সমস্যার বিস্তারিত জানান।",
+    ],
 ];
 
 $stmt = $pdo->prepare(

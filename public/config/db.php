@@ -32,6 +32,6 @@ try {
     error_log("Database connection failed: " . $e->getMessage());
     // You can include a file that renders a user-friendly error page.
     // include 'error_500.php';
-    exit('A database error occurred. Please try again later.');
+    exit("A database error occurred. Please try again later.");
 }
 ?>

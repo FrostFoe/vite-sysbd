@@ -15,7 +15,7 @@ if ($_SERVER["REQUEST_METHOD"] !== "GET") {
 
 // Create cache key for admin submissions
 $cache = new CacheManager();
-$cacheKey = $cache->generateKey(['admin_submissions']);
+$cacheKey = $cache->generateKey(["admin_submissions"]);
 
 // Try to get from cache first (admin submissions list might be accessed frequently)
 $cachedSubmissions = $cache->get($cacheKey);

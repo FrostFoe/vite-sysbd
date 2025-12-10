@@ -82,7 +82,7 @@ const Submissions: React.FC = () => {
                       className="font-bold text-sm block hover:text-bbcRed"
                     >
                       {escapeHtml(
-                        s.title_en || s.title_bn || "Unknown Article"
+                        s.title_en || s.title_bn || "Unknown Article",
                       )}
                     </Link>
                     <span className="text-xs text-muted-text">

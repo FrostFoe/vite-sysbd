@@ -31,7 +31,18 @@ if (!is_dir($log_dir)) {
     mkdir($log_dir, 0755, true);
 }
 
-$log_entry = "[" . $timestamp . "] [" . strtoupper($level) . "] [User: " . ($user_id ?? "Anonymous") . "] " . $message . " - " . substr($data_json, 0, 200) . "\n";
+$log_entry =
+    "[" .
+    $timestamp .
+    "] [" .
+    strtoupper($level) .
+    "] [User: " .
+    ($user_id ?? "Anonymous") .
+    "] " .
+    $message .
+    " - " .
+    substr($data_json, 0, 200) .
+    "\n";
 
 file_put_contents($log_file, $log_entry, FILE_APPEND | LOCK_EX);
 

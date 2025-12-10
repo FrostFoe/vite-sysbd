@@ -5,7 +5,7 @@ require_once "api_header.php";
 
 // Create cache key for categories
 $cache = new CacheManager();
-$cacheKey = $cache->generateKey(['categories_all']);
+$cacheKey = $cache->generateKey(["categories_all"]);
 
 // Try to get from cache first
 $cachedCategories = $cache->get($cacheKey);
@@ -48,7 +48,6 @@ try {
     header("ETag: " . $etag);
     header("Cache-Control: public, max-age=3600");
     echo $json;
-
 } catch (Exception $e) {
     http_response_code(500);
     echo json_encode([

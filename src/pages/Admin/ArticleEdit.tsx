@@ -50,8 +50,8 @@ const ArticleEdit: React.FC = () => {
                 ({
                   ...s,
                   title: s.title || "Untitled Section",
-                }) as unknown as Section
-            )
+                }) as unknown as Section,
+            ),
           );
         }
 
@@ -76,7 +76,7 @@ const ArticleEdit: React.FC = () => {
           } else {
             showToastMsg(
               articleRes.error || t("failed_to_load_article", language),
-              "error"
+              "error",
             );
             // navigate('/admin/articles'); // Redirect if article not found
           }
@@ -168,14 +168,14 @@ const ArticleEdit: React.FC = () => {
         } else {
           showToastMsg(
             response.error || t("image_upload_failed", language),
-            "error"
+            "error",
           );
         }
       } catch (_error) {
         showToastMsg(t("server_error", language), "error");
       }
     },
-    [language]
+    [language],
   );
 
   // Handle form submission
@@ -199,7 +199,7 @@ const ArticleEdit: React.FC = () => {
       formData.append("status", article.status || "draft");
       formData.append(
         "allow_submissions",
-        article.allow_submissions ? "1" : "0"
+        article.allow_submissions ? "1" : "0",
       );
 
       try {
@@ -213,7 +213,7 @@ const ArticleEdit: React.FC = () => {
         } else {
           showToastMsg(
             response.error || t("failed_to_save_article", language),
-            "error"
+            "error",
           );
         }
       } catch (_error) {
@@ -222,7 +222,7 @@ const ArticleEdit: React.FC = () => {
         setIsSaving(false);
       }
     },
-    [article, id, language, navigate, storageKey]
+    [article, id, language, navigate, storageKey],
   );
 
   if (isLoading) {

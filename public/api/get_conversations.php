@@ -7,7 +7,10 @@ session_start();
 
 // Check if admin is logged in
 if (!isset($_SESSION["user_role"]) || $_SESSION["user_role"] !== "admin") {
-    send_response(["success" => false, "error" => "Admin access required"], 403);
+    send_response(
+        ["success" => false, "error" => "Admin access required"],
+        403,
+    );
     exit();
 }
 
@@ -21,7 +24,7 @@ if (!$adminId) {
 
 // Create cache key for admin conversations
 $cache = new CacheManager();
-$cacheKey = $cache->generateKey(['admin_conversations', $adminId, $sortBy]);
+$cacheKey = $cache->generateKey(["admin_conversations", $adminId, $sortBy]);
 
 // Try to get from cache first (admin conversations change less frequently)
 $cachedConversations = $cache->get($cacheKey);
@@ -71,16 +74,21 @@ try {
             LIMIT 1
         ";
         $msg_stmt = $pdo->prepare($msg_sql);
-        $msg_stmt->execute([$row['user_id'], $adminId, $adminId, $row['user_id']]);
+        $msg_stmt->execute([
+            $row["user_id"],
+            $adminId,
+            $adminId,
+            $row["user_id"],
+        ]);
         $last_msg = $msg_stmt->fetch(PDO::FETCH_ASSOC);
 
         $conversations[] = [
             "user_id" => $row["user_id"],
             "email" => $row["email"],
             "user_joined" => $row["user_joined"],
-            "last_message" => $last_msg['content'] ?? null,
-            "last_message_time" => $last_msg['created_at'] ?? null,
-            "last_sender_id" => $last_msg['sender_id'] ?? null,
+            "last_message" => $last_msg["content"] ?? null,
+            "last_message_time" => $last_msg["created_at"] ?? null,
+            "last_sender_id" => $last_msg["sender_id"] ?? null,
             "unread_count" => (int) ($row["unread_count"] ?? 0),
         ];
     }
@@ -88,14 +96,16 @@ try {
     // Apply sorting based on parameter after fetching data
     if ($sortBy === "unread") {
         usort($conversations, function ($a, $b) {
-            if ($b['unread_count'] !== $a['unread_count']) {
-                return $b['unread_count'] - $a['unread_count'];
+            if ($b["unread_count"] !== $a["unread_count"]) {
+                return $b["unread_count"] - $a["unread_count"];
             }
-            return strtotime($b['last_message_time'] ?? '1970-01-01') - strtotime($a['last_message_time'] ?? '1970-01-01');
+            return strtotime($b["last_message_time"] ?? "1970-01-01") -
+                strtotime($a["last_message_time"] ?? "1970-01-01");
         });
     } elseif ($sortBy === "oldest") {
         usort($conversations, function ($a, $b) {
-            return strtotime($a['last_message_time'] ?? '1970-01-01') - strtotime($b['last_message_time'] ?? '1970-01-01');
+            return strtotime($a["last_message_time"] ?? "1970-01-01") -
+                strtotime($b["last_message_time"] ?? "1970-01-01");
         });
     }
 

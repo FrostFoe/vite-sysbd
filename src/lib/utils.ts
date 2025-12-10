@@ -98,14 +98,14 @@ export function sanitizeHtml(html: string | null | undefined): string {
 
 export function formatTimestamp(
   timestampString: string | null | undefined,
-  lang: "en" | "bn"
+  lang: "en" | "bn",
 ): string {
   if (!timestampString) return "";
   let date = new Date(timestampString);
   if (Number.isNaN(date.getTime())) {
     // Try parsing MySQL format
     const parts = timestampString.match(
-      /^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})$/
+      /^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})$/,
     );
     if (parts)
       date = new Date(
@@ -114,7 +114,7 @@ export function formatTimestamp(
         parseInt(parts[3], 10),
         parseInt(parts[4], 10),
         parseInt(parts[5], 10),
-        parseInt(parts[6], 10)
+        parseInt(parts[6], 10),
       );
     else return timestampString;
   }
@@ -147,7 +147,7 @@ export function formatTimestamp(
 
 export function showToastMsg(
   msg: string,
-  type: "success" | "error" = "success"
+  type: "success" | "error" = "success",
 ) {
   const container = document.getElementById("toast-container");
   if (!container) return;

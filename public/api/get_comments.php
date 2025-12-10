@@ -8,10 +8,10 @@ if ($_SERVER["REQUEST_METHOD"] !== "POST") {
 }
 
 $data = json_decode(file_get_contents("php://input"), true);
-$articleId = validateAndSanitize($data["articleId"] ?? null, 'int');
-$page = validateAndSanitize($data["page"] ?? 1, 'int');
-$sort = validateAndSanitize($data["sort"] ?? "newest", 'string');
-$lang = validateAndSanitize($data["lang"] ?? "bn", 'string');
+$articleId = validateAndSanitize($data["articleId"] ?? null, "int");
+$page = validateAndSanitize($data["page"] ?? 1, "int");
+$sort = validateAndSanitize($data["sort"] ?? "newest", "string");
+$lang = validateAndSanitize($data["lang"] ?? "bn", "string");
 
 if (!$articleId || $page < 1) {
     send_response(["error" => "Invalid parameters"], 400);
@@ -47,7 +47,8 @@ $totalCount = $countStmt->fetch(PDO::FETCH_ASSOC)["count"];
 $pagination = new Pagination($page, DEFAULT_PAGE_SIZE, $totalCount);
 
 // Optimized query: Get comments with pre-joined vote counts and user info
-$commentStmt = $pdo->prepare("
+$commentStmt = $pdo->prepare(
+    "
     SELECT
         c.id, c.text, c.created_at, c.user_name, c.user_id, c.is_pinned, c.pin_order,
         COALESCE(u.email, '') as email,
@@ -73,8 +74,11 @@ $commentStmt = $pdo->prepare("
         GROUP BY parent_comment_id
     ) r ON c.id = r.parent_comment_id
     WHERE c.article_id = ? AND c.parent_comment_id IS NULL
-    ORDER BY c.is_pinned DESC, c.pin_order ASC, " . $orderBy . "
-    " . $pagination->getLimitClause()
+    ORDER BY c.is_pinned DESC, c.pin_order ASC, " .
+        $orderBy .
+        "
+    " .
+        $pagination->getLimitClause(),
 );
 $commentStmt->execute([$articleId]);
 $rawComments = $commentStmt->fetchAll(PDO::FETCH_ASSOC);
@@ -124,9 +128,10 @@ foreach ($rawComments as $c) {
             "user" => $replyDisplayName,
             "text" => htmlspecialchars($r["text"]),
             "time" => time_ago($r["created_at"], $lang),
-            "upvotes" => (int)$r["upvotes"],
-            "downvotes" => (int)$r["downvotes"],
-            "isAdmin" => !empty($r["email"]) && strpos($r["email"], "admin") !== false,
+            "upvotes" => (int) $r["upvotes"],
+            "downvotes" => (int) $r["downvotes"],
+            "isAdmin" =>
+                !empty($r["email"]) && strpos($r["email"], "admin") !== false,
         ];
     }
 
@@ -135,8 +140,8 @@ foreach ($rawComments as $c) {
         "user" => $displayName,
         "text" => htmlspecialchars($c["text"]),
         "time" => time_ago($c["created_at"], $lang),
-        "upvotes" => (int)$c["upvotes"],
-        "downvotes" => (int)$c["downvotes"],
+        "upvotes" => (int) $c["upvotes"],
+        "downvotes" => (int) $c["downvotes"],
         "isPinned" => (bool) $c["is_pinned"],
         "replies" => $replies,
         "userId" => $c["user_id"],

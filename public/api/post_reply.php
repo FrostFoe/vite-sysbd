@@ -42,7 +42,9 @@ if (!$parent) {
 
 // Get user info from session or use anonymous
 $userId = isset($_SESSION["user_id"]) ? $_SESSION["user_id"] : null;
-$userName = isset($_SESSION["user_name"]) ? $_SESSION["user_name"] : "Anonymous";
+$userName = isset($_SESSION["user_name"])
+    ? $_SESSION["user_name"]
+    : "Anonymous";
 
 if (!$userName || empty(trim($userName))) {
     $userName = "Anonymous User";

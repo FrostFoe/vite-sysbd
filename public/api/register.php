@@ -10,7 +10,10 @@ $data = json_decode(file_get_contents("php://input"), true);
 
 if (!$data || !isset($data["email"]) || !isset($data["password"])) {
     http_response_code(400);
-    echo json_encode(["success" => false, "message" => "Email and password required"]);
+    echo json_encode([
+        "success" => false,
+        "message" => "Email and password required",
+    ]);
     exit();
 }
 
@@ -27,7 +30,10 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
 // Basic password validation (min 6 chars)
 if (strlen($password) < 6) {
     http_response_code(400);
-    echo json_encode(["success" => false, "message" => "Password must be at least 6 characters"]);
+    echo json_encode([
+        "success" => false,
+        "message" => "Password must be at least 6 characters",
+    ]);
     exit();
 }
 
@@ -37,13 +43,18 @@ try {
     $stmt->execute([$email]);
     if ($stmt->fetch()) {
         http_response_code(409);
-        echo json_encode(["success" => false, "message" => "User already exists"]);
+        echo json_encode([
+            "success" => false,
+            "message" => "User already exists",
+        ]);
         exit();
     }
 
     // Hash password and insert
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-    $stmt = $pdo->prepare("INSERT INTO users (email, password, role) VALUES (?, ?, 'user')");
+    $stmt = $pdo->prepare(
+        "INSERT INTO users (email, password, role) VALUES (?, ?, 'user')",
+    );
     $stmt->execute([$email, $hashedPassword]);
 
     $userId = $pdo->lastInsertId();

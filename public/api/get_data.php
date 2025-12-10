@@ -19,14 +19,18 @@ function get_data(
     $cache = new CacheManager();
 
     // Get categories from cache or database
-    $categories = $cache->get($cache->generateKey(['categories', $lang]));
+    $categories = $cache->get($cache->generateKey(["categories", $lang]));
     if (!$categories) {
         $stmt = $pdo->query(
-            "SELECT id, title_bn, title_en, color FROM categories ORDER BY id ASC"
+            "SELECT id, title_bn, title_en, color FROM categories ORDER BY id ASC",
         );
         $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
         // Cache for 60 minutes as categories rarely change
-        $cache->set($cache->generateKey(['categories', $lang]), $categories, 3600);
+        $cache->set(
+            $cache->generateKey(["categories", $lang]),
+            $categories,
+            3600,
+        );
     }
 
     // Create Category Map for O(1) Lookup
@@ -39,7 +43,9 @@ function get_data(
     }
 
     // Get sections from cache or database
-    $sections = $cache->get($cache->generateKey(['sections', $lang, $categoryFilter]));
+    $sections = $cache->get(
+        $cache->generateKey(["sections", $lang, $categoryFilter]),
+    );
     if (!$sections) {
         $sectionParams = [];
         $whereSectionListClause = "1=1"; // Always true
@@ -62,7 +68,11 @@ function get_data(
         $stmt->execute($sectionParams);
         $sections = $stmt->fetchAll(PDO::FETCH_ASSOC);
         // Cache for 60 minutes as sections rarely change
-        $cache->set($cache->generateKey(['sections', $lang, $categoryFilter]), $sections, 3600);
+        $cache->set(
+            $cache->generateKey(["sections", $lang, $categoryFilter]),
+            $sections,
+            3600,
+        );
     }
 
     // 3. Fetch Articles (Unified) - now with JOIN to get category info in one query
@@ -112,7 +122,7 @@ function get_data(
         // Filter out empty translations if necessary
         if (!empty($article["title"])) {
             // Add category title to the article for easier access
-            $article['category_title'] = $article['category_title'] ?? null;
+            $article["category_title"] = $article["category_title"] ?? null;
             $articlesBySection[$article["section_id"]][] = $article;
         }
     }
@@ -149,7 +159,7 @@ function get_data(
             }
 
             foreach ($sectionArticles as $article) {
-                $categoryName = $article['category_title'] ?? null;
+                $categoryName = $article["category_title"] ?? null;
 
                 $articleData = [
                     "id" => $article["id"],
@@ -205,12 +215,12 @@ if (count(debug_backtrace()) == 0) {
     // Create cache key for the entire response
     $cache = new CacheManager();
     $cacheKey = $cache->generateKey([
-        'get_data',
+        "get_data",
         $lang,
         $page,
         $limit,
         $categoryFilter,
-        $includeDrafts
+        $includeDrafts,
     ]);
 
     // Try to get from cache first

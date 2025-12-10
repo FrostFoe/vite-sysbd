@@ -1,52 +1,53 @@
 {
-	"name": "my-react-app",
-	"private": true,
-	"version": "0.0.0",
-	"type": "module",
-	"scripts": {
-		"dev": "vite",
-		"build": "tsc -b && vite build",
-		"lint": "biome check .",
-		"lint:fix": "biome check --apply .",
-		"preview": "vite preview",
-		"format": "biome format .",
-		"format:write": "biome format --write .",
-		"server": "/usr/bin/php -S localhost:8000 -t public",
-		"migrate": "mysql -h 127.0.0.1 -u root -prootpass breachtimes < public/database/database.sql",
-		"db:reset": "mysql -h 127.0.0.1 -u root -prootpass -e \"DROP DATABASE IF EXISTS breachtimes; CREATE DATABASE breachtimes;\"",
-		"db:start": "sudo service mysql start",
-		"seed": "/usr/bin/php public/database/seed.php",
-		"push": "git add . && git commit -m 'update' && git push"
-	},
-	"dependencies": {
-		"@tailwindcss/vite": "^4.1.17",
-		"@tiptap/core": "^3.13.0",
-		"@tiptap/extension-image": "^3.13.0",
-		"@tiptap/extension-placeholder": "^3.13.0",
-		"@tiptap/react": "^3.13.0",
-		"@tiptap/starter-kit": "^3.13.0",
-		"axios": "^1.13.2",
-		"lucide-react": "^0.556.0",
-		"react": "^19.2.1",
-		"react-dom": "^19.2.1",
-		"react-router-dom": "^7.10.1",
-		"tailwindcss": "^4.1.17"
-	},
-	"devDependencies": {
-		"@biomejs/biome": "^2.3.8",
-		"@prettier/plugin-php": "^0.24.0",
-		"@types/node": "^24.10.2",
-		"@types/react": "^19.2.7",
-		"@types/react-dom": "^19.2.3",
-		"@vitejs/plugin-react": "^5.1.2",
-		"babel-plugin-react-compiler": "^1.0.0",
-		"globals": "^16.5.0",
-		"typescript": "~5.9.3",
-		"vite": "npm:rolldown-vite@7.2.10"
-	},
-	"pnpm": {
-		"overrides": {
-			"vite": "npm:rolldown-vite@7.2.5"
-		}
-	}
+  "name": "my-react-app",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "lint": "biome check .",
+    "lint:fix": "biome check --apply .",
+    "preview": "vite preview",
+    "format": "biome format .",
+    "format:write": "biome format --write .",
+    "server": "/usr/bin/php -S localhost:8000 -t public",
+    "migrate": "mysql -h 127.0.0.1 -u root -prootpass breachtimes < public/database/database.sql",
+    "db:reset": "mysql -h 127.0.0.1 -u root -prootpass -e \"DROP DATABASE IF EXISTS breachtimes; CREATE DATABASE breachtimes;\"",
+    "db:start": "sudo service mysql start",
+    "seed": "/usr/bin/php public/database/seed.php",
+    "push": "git add . && git commit -m 'update' && git push"
+  },
+  "dependencies": {
+    "@tailwindcss/vite": "^4.1.17",
+    "@tiptap/core": "^3.13.0",
+    "@tiptap/extension-image": "^3.13.0",
+    "@tiptap/extension-placeholder": "^3.13.0",
+    "@tiptap/react": "^3.13.0",
+    "@tiptap/starter-kit": "^3.13.0",
+    "axios": "^1.13.2",
+    "dompurify": "^3.3.1",
+    "lucide-react": "^0.556.0",
+    "react": "^19.2.1",
+    "react-dom": "^19.2.1",
+    "react-router-dom": "^7.10.1",
+    "tailwindcss": "^4.1.17"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.3.8",
+    "@prettier/plugin-php": "^0.24.0",
+    "@types/node": "^24.10.2",
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^5.1.2",
+    "babel-plugin-react-compiler": "^1.0.0",
+    "globals": "^16.5.0",
+    "typescript": "~5.9.3",
+    "vite": "npm:rolldown-vite@7.2.10"
+  },
+  "pnpm": {
+    "overrides": {
+      "vite": "npm:rolldown-vite@7.2.5"
+    }
+  }
 }

@@ -10,7 +10,10 @@ $data = json_decode(file_get_contents("php://input"), true);
 
 if (!$data || !isset($data["email"]) || !isset($data["password"])) {
     http_response_code(400);
-    echo json_encode(["success" => false, "message" => "Email and password required"]);
+    echo json_encode([
+        "success" => false,
+        "message" => "Email and password required",
+    ]);
     exit();
 }
 
@@ -25,7 +28,9 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
 }
 
 try {
-    $stmt = $pdo->prepare("SELECT id, email, password, role FROM users WHERE email = ?");
+    $stmt = $pdo->prepare(
+        "SELECT id, email, password, role FROM users WHERE email = ?",
+    );
     $stmt->execute([$email]);
     $user = $stmt->fetch();
 
@@ -45,7 +50,10 @@ try {
         ]);
     } else {
         http_response_code(401);
-        echo json_encode(["success" => false, "message" => "Invalid email or password"]);
+        echo json_encode([
+            "success" => false,
+            "message" => "Invalid email or password",
+        ]);
     }
 } catch (PDOException $e) {
     error_log("Login error: " . $e->getMessage());

@@ -15,7 +15,7 @@ if ($_SERVER["REQUEST_METHOD"] !== "GET") {
 
 // Create cache key for admin comments
 $cache = new CacheManager();
-$cacheKey = $cache->generateKey(['admin_all_comments']);
+$cacheKey = $cache->generateKey(["admin_all_comments"]);
 
 // Try to get from cache first (admin comments list might be accessed frequently)
 $cachedComments = $cache->get($cacheKey);

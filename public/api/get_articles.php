@@ -20,7 +20,12 @@ $catFilter = isset($_GET["cat"]) ? $_GET["cat"] : "";
 
 // Create cache key for this specific query
 $cache = new CacheManager();
-$cacheKey = $cache->generateKey(['admin_articles', $status, $search, $catFilter]);
+$cacheKey = $cache->generateKey([
+    "admin_articles",
+    $status,
+    $search,
+    $catFilter,
+]);
 
 // Don't cache if there are filters applied or for admin views that might change frequently
 if (empty($search) && $catFilter === "" && $status === "all") {
