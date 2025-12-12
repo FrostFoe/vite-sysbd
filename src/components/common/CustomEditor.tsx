@@ -161,7 +161,7 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
         }
       }
     },
-    [editor, handleImageUpload, handleVideoUpload]
+    [editor, handleImageUpload, handleVideoUpload],
   );
 
   const handleImageButtonClick = useCallback(() => {

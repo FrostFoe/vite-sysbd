@@ -19,7 +19,7 @@
     "push": "git add . && git commit -m 'update' && git push"
   },
   "dependencies": {
-    "@tailwindcss/vite": "^4.1.17",
+    "@tailwindcss/vite": "^4.1.18",
     "@tiptap/core": "^3.13.0",
     "@tiptap/extension-image": "^3.13.0",
     "@tiptap/extension-placeholder": "^3.13.0",
@@ -27,23 +27,23 @@
     "@tiptap/starter-kit": "^3.13.0",
     "axios": "^1.13.2",
     "dompurify": "^3.3.1",
-    "lucide-react": "^0.556.0",
-    "react": "^19.2.1",
-    "react-dom": "^19.2.1",
+    "lucide-react": "^0.560.0",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3",
     "react-router-dom": "^7.10.1",
-    "tailwindcss": "^4.1.17"
+    "tailwindcss": "^4.1.18"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.3.8",
     "@prettier/plugin-php": "^0.24.0",
-    "@types/node": "^24.10.2",
+    "@types/node": "^25.0.1",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^5.1.2",
     "babel-plugin-react-compiler": "^1.0.0",
     "globals": "^16.5.0",
     "typescript": "~5.9.3",
-    "vite": "npm:rolldown-vite@7.2.10"
+    "vite": "npm:rolldown-vite@7.2.11"
   },
   "pnpm": {
     "overrides": {

@@ -56,7 +56,7 @@ const initialState: MessageState = {
 
 const messageReducer = (
   state: MessageState,
-  action: MessageAction
+  action: MessageAction,
 ): MessageState => {
   switch (action.type) {
     case "SET_CONVERSATIONS":
@@ -113,7 +113,7 @@ const messageReducer = (
                 last_message: action.payload.message.content,
                 last_message_time: action.payload.message.created_at,
               }
-            : conv
+            : conv,
         ),
       };
     case "UPDATE_MESSAGE_STATUS":
@@ -125,9 +125,9 @@ const messageReducer = (
             userMessages.map((msg) =>
               msg.id === action.payload.messageId
                 ? { ...msg, status: action.payload.status }
-                : msg
+                : msg,
             ),
-          ])
+          ]),
         ),
       };
     case "SET_LOADING_CONVERSATIONS":
@@ -163,7 +163,7 @@ interface MessageContextType {
   sendMessage: (
     recipientId: number,
     content: string,
-    type?: "text" | "image" | "file"
+    type?: "text" | "image" | "file",
   ) => Promise<void>;
   setActiveConversation: (conversation: Conversation) => void;
   markMessagesAsRead: (userId: number) => Promise<void>;
@@ -249,13 +249,13 @@ export const MessageProvider: React.FC<{ children: React.ReactNode }> = ({
     async (
       recipientId: number,
       content: string,
-      type: "text" | "image" | "file" = "text"
+      type: "text" | "image" | "file" = "text",
     ) => {
       try {
         const response = await MessageService.sendMessage(
           recipientId,
           content,
-          type
+          type,
         );
         if (response.success) {
           // The message will be added via WebSocket event
@@ -269,7 +269,7 @@ export const MessageProvider: React.FC<{ children: React.ReactNode }> = ({
         throw error;
       }
     },
-    []
+    [],
   );
 
   const markMessagesAsRead = useCallback(
@@ -280,7 +280,7 @@ export const MessageProvider: React.FC<{ children: React.ReactNode }> = ({
         dispatch({
           type: "SET_CONVERSATIONS",
           payload: state.conversations.map((conv) =>
-            conv.user_id === userId ? { ...conv, unread_count: 0 } : conv
+            conv.user_id === userId ? { ...conv, unread_count: 0 } : conv,
           ),
         });
       } catch (error) {
@@ -291,7 +291,7 @@ export const MessageProvider: React.FC<{ children: React.ReactNode }> = ({
         dispatch({ type: "SET_ERROR", payload: errorMessage });
       }
     },
-    [state.conversations]
+    [state.conversations],
   );
 
   const setActiveConversation = useCallback((conversation: Conversation) => {

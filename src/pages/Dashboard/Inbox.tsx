@@ -66,12 +66,12 @@ const UserInbox: React.FC = () => {
         sendMessage(
           adminId,
           content,
-          file.type.startsWith("image/") ? "image" : "file"
+          file.type.startsWith("image/") ? "image" : "file",
         );
       };
       reader.readAsDataURL(file);
     },
-    [sendMessage]
+    [sendMessage],
   );
 
   const currentMessages = messageState.messages[adminId] || [];

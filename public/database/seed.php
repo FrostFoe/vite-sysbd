@@ -417,7 +417,7 @@ $messages = [
         "admin",
         "সাইবার নিরাপত্তা সম্পর্কে আরও তথ্য পেতে পারি কিনা?",
         "text",
-        "sent"
+        "sent",
     ],
     [
         $sarahId,
@@ -426,7 +426,7 @@ $messages = [
         "admin",
         "আমার অ্যাকাউন্ট হ্যাক হয়েছে, কী করব?",
         "text",
-        "delivered"
+        "delivered",
     ],
     [
         $adminId,
@@ -435,17 +435,9 @@ $messages = [
         "user",
         "আমরা সাহায্য করতে প্রস্তুত। আপনার সমস্যার বিস্তারিত জানান।",
         "text",
-        "read"
+        "read",
     ],
-    [
-        $mikeId,
-        "user",
-        $adminId,
-        "admin",
-        "তথ্য আপডেট পেতে চাই",
-        "text",
-        "sent"
-    ],
+    [$mikeId, "user", $adminId, "admin", "তথ্য আপডেট পেতে চাই", "text", "sent"],
     [
         $adminId,
         "admin",
@@ -453,7 +445,7 @@ $messages = [
         "user",
         "আপনার সমস্যা সমাধান হয়েছে। নিরাপত্তা বাড়ানোর জন্য আপডেট করুন।",
         "text",
-        "delivered"
+        "delivered",
     ],
 ];
 

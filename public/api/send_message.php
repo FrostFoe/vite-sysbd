@@ -18,10 +18,10 @@ $isAdmin = $_SESSION["user_role"] === "admin";
 $data = json_decode(file_get_contents("php://input"), true);
 $recipientId = $data["recipient_id"] ?? null;
 $content = $data["content"] ?? null;
-$type = $data["type"] ?? 'text'; // Default to 'text'
+$type = $data["type"] ?? "text"; // Default to 'text'
 
 // Validate type
-if (!in_array($type, ['text', 'image', 'file'])) {
+if (!in_array($type, ["text", "image", "file"])) {
     http_response_code(400);
     echo json_encode([
         "success" => false,
@@ -84,7 +84,7 @@ try {
         $recipientId,
         $recipientType,
         $content,
-        $type
+        $type,
     ]);
 
     echo json_encode([

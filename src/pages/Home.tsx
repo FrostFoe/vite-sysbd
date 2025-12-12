@@ -2,7 +2,6 @@ import { Bookmark, ChevronRight, Newspaper } from "lucide-react"; // Import icon
 import React, { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import ArticleCard from "../components/common/ArticleCard";
-import MiniArticle from "../components/common/MiniArticle";
 import { useLayout } from "../context/LayoutContext";
 import { publicApi } from "../lib/api";
 import { t } from "../lib/translations";
@@ -41,7 +40,7 @@ const HomePage: React.FC = () => {
       }
       localStorage.setItem(
         "breachtimes-bookmarks",
-        JSON.stringify(newBookmarks)
+        JSON.stringify(newBookmarks),
       );
       return newBookmarks;
     });
@@ -54,7 +53,7 @@ const HomePage: React.FC = () => {
       try {
         const data = await publicApi.getHomeData(
           language,
-          currentCategory === "saved" ? undefined : currentCategory
+          currentCategory === "saved" ? undefined : currentCategory,
         );
         setHomeData(data);
       } catch (error) {
@@ -226,7 +225,7 @@ const HomePage: React.FC = () => {
     // Show only প্রধান খবর (hero-stories) section with all articles in hero-grid layout
     if (currentCategory === "home" || currentCategory === null) {
       const heroStoriesSection = homeData.sections.find(
-        (s) => s.id === "hero-stories"
+        (s) => s.id === "hero-stories",
       );
 
       if (heroStoriesSection) {

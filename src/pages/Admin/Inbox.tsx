@@ -69,7 +69,7 @@ const AdminInbox: React.FC = () => {
       await sendMessage(
         messageState.activeConversation.user_id,
         messageInput.trim(),
-        "text"
+        "text",
       );
       setMessageInput("");
     } catch (_error) {
@@ -94,13 +94,13 @@ const AdminInbox: React.FC = () => {
           sendMessage(
             messageState.activeConversation.user_id,
             content,
-            file.type.startsWith("image/") ? "image" : "file"
+            file.type.startsWith("image/") ? "image" : "file",
           );
         }
       };
       reader.readAsDataURL(file);
     },
-    [sendMessage, messageState.activeConversation?.user_id]
+    [sendMessage, messageState.activeConversation?.user_id],
   );
 
   const selectConversation = useCallback(
@@ -108,13 +108,13 @@ const AdminInbox: React.FC = () => {
       setActiveConversation(conversation);
       setMessageInput("");
     },
-    [setActiveConversation]
+    [setActiveConversation],
   );
 
   const getUnreadCount = () =>
     messageState.conversations.reduce(
       (sum, conv) => sum + conv.unread_count,
-      0
+      0,
     );
 
   const currentMessages = messageState.activeConversation?.user_id

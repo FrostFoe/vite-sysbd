@@ -105,7 +105,7 @@ const Footer: React.FC = () => {
                 onClick={() =>
                   copyToClipboard(
                     "subscribed",
-                    t("subscribed_successfully", language)
+                    t("subscribed_successfully", language),
                   )
                 }
                 className="bg-bbcDark text-white dark:bg-white dark:text-black font-bold px-6 py-3 rounded-lg hover:bg-opacity-90 dark:hover:bg-opacity-90 hover:shadow-md transition-all"
@@ -140,7 +140,7 @@ const Footer: React.FC = () => {
                     onClick={() =>
                       copyToClipboard(
                         "TNztLXjP7zYWotPRpzdtPCNVu8JB3DG5jV",
-                        t("link_copied", language)
+                        t("link_copied", language),
                       )
                     }
                     className="text-bbcRed hover:text-red-700 p-1"
@@ -166,7 +166,7 @@ const Footer: React.FC = () => {
                     onClick={() =>
                       copyToClipboard(
                         "18kgAYsUMVF51MNUeMt6vr1WhfgHtzcWai",
-                        t("link_copied", language)
+                        t("link_copied", language),
                       )
                     }
                     className="text-bbcRed hover:text-red-700 p-1"

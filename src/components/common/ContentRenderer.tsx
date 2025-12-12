@@ -50,11 +50,11 @@ const ContentRenderer: React.FC<ContentRendererProps> = ({
             width={widthMatch ? widthMatch[1] : undefined}
             height={heightMatch ? heightMatch[1] : undefined}
             className="my-4"
-          />
+          />,
         );
 
         return `__CUSTOM_COMPONENT_PLACEHOLDER_${componentIndex}__`;
-      }
+      },
     );
 
     // Replace video tags with placeholders and store components (handles both self-closing and closing tags)
@@ -86,16 +86,16 @@ const ContentRenderer: React.FC<ContentRendererProps> = ({
             muted={muted}
             controls={controls}
             className="my-4"
-          />
+          />,
         );
 
         return `__CUSTOM_COMPONENT_PLACEHOLDER_${componentIndex}__`;
-      }
+      },
     );
 
     // Now split the processed content by placeholders and reconstruct with components
     const parts = processedContent.split(
-      /(__CUSTOM_COMPONENT_PLACEHOLDER_\d+__)/
+      /(__CUSTOM_COMPONENT_PLACEHOLDER_\d+__)/,
     );
 
     let keyCounter = 0;
@@ -104,7 +104,7 @@ const ContentRenderer: React.FC<ContentRendererProps> = ({
         keyCounter++;
         if (part.startsWith("__CUSTOM_COMPONENT_PLACEHOLDER_")) {
           const matchResult = part.match(
-            /__CUSTOM_COMPONENT_PLACEHOLDER_(\d+)__/
+            /__CUSTOM_COMPONENT_PLACEHOLDER_(\d+)__/,
           );
           if (matchResult) {
             const componentIndex = parseInt(matchResult[1], 10);

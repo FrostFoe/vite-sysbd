@@ -16,7 +16,7 @@ class MessageServiceClass {
   private newMessageCallbacks: ((message: Message) => void)[] = [];
   private messageStatusCallbacks: ((
     messageId: number,
-    status: "sent" | "delivered" | "read"
+    status: "sent" | "delivered" | "read",
   ) => void)[] = [];
   private pollingInterval: NodeJS.Timeout | null = null;
 
@@ -42,7 +42,7 @@ class MessageServiceClass {
     } catch (error) {
       console.warn(
         "WebSocket connection failed, falling back to polling:",
-        error
+        error,
       );
       this.startPolling();
     }
@@ -73,25 +73,28 @@ class MessageServiceClass {
     this.newMessageCallbacks.push(callback);
     return () => {
       this.newMessageCallbacks = this.newMessageCallbacks.filter(
-        (cb) => cb !== callback
+        (cb) => cb !== callback,
       );
     };
   }
 
   onMessageStatusUpdate(
-    callback: (messageId: number, status: "sent" | "delivered" | "read") => void
+    callback: (
+      messageId: number,
+      status: "sent" | "delivered" | "read",
+    ) => void,
   ) {
     this.messageStatusCallbacks.push(callback);
     return () => {
       this.messageStatusCallbacks = this.messageStatusCallbacks.filter(
-        (cb) => cb !== callback
+        (cb) => cb !== callback,
       );
     };
   }
 
   // API methods
   async getConversations(
-    sort: string = "latest"
+    sort: string = "latest",
   ): Promise<ApiResponse<{ conversations: Conversation[]; count?: number }>> {
     try {
       const response = await this.api.get("/get_conversations.php", {
@@ -114,7 +117,7 @@ class MessageServiceClass {
   }
 
   async getMessages(
-    userId: number
+    userId: number,
   ): Promise<ApiResponse<{ messages: Message[]; count?: number }>> {
     try {
       const response = await this.api.get("/get_messages.php", {
@@ -137,7 +140,7 @@ class MessageServiceClass {
   async sendMessage(
     recipientId: number,
     content: string,
-    type: "text" | "image" | "file" = "text"
+    type: "text" | "image" | "file" = "text",
   ): Promise<ApiResponse<{ message_id?: number; timestamp?: string }>> {
     try {
       const response = await this.api.post("/send_message.php", {

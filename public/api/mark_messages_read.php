@@ -20,7 +20,7 @@ if (!$otherUserId) {
 try {
     // Mark messages as read where:
     // 1. The other user sent messages to the current user
-    // 2. Messages are currently in 'sent' or 'delivered' status 
+    // 2. Messages are currently in 'sent' or 'delivered' status
     $stmt = $pdo->prepare("
         UPDATE messages 
         SET status = 'read' 
@@ -30,7 +30,7 @@ try {
     ");
 
     $stmt->execute([$otherUserId, $userId]);
-    
+
     $updatedCount = $stmt->rowCount();
 
     send_response([

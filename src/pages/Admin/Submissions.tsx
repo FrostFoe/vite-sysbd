@@ -49,7 +49,7 @@ const Submissions: React.FC = () => {
       // This is a placeholder - you may need to implement the backend API
       showToastMsg(
         "Delete functionality for submissions is not implemented",
-        "error"
+        "error",
       );
       // If API endpoint exists, it would be something like:
       // await adminApi.deleteSubmission(id);
@@ -97,7 +97,7 @@ const Submissions: React.FC = () => {
                         className="font-bold text-sm truncate block hover:text-bbcRed"
                       >
                         {escapeHtml(
-                          s.title_en || s.title_bn || "Unknown Article"
+                          s.title_en || s.title_bn || "Unknown Article",
                         )}
                       </Link>
                       <p className="text-xs text-muted-text truncate">
@@ -121,7 +121,7 @@ const Submissions: React.FC = () => {
                       onClick={() => {
                         if (
                           window.confirm(
-                            "Are you sure you want to delete this submission?"
+                            "Are you sure you want to delete this submission?",
                           )
                         ) {
                           handleDeleteSubmission(s.id);
