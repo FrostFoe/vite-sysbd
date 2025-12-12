@@ -78,9 +78,9 @@ const HomePage: React.FC = () => {
       const heroArticle = section.articles[0];
       const subArticles = section.articles.slice(1);
       content = (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 auto-rows-max">
           {heroArticle && (
-            <div className="col-span-1 md:col-span-2 lg:col-span-2">
+            <div className="col-span-1 md:col-span-2 lg:col-span-2 row-span-2">
               <ArticleCard
                 article={heroArticle}
                 type="hero-grid"
@@ -90,18 +90,16 @@ const HomePage: React.FC = () => {
               />
             </div>
           )}
-          <div className="col-span-1 md:col-span-2 lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-6">
-            {subArticles.map((article) => (
-              <ArticleCard
-                key={article.id}
-                article={article}
-                type="grid"
-                isSectionDark={isSectionDark}
-                onBookmarkToggle={toggleBookmark}
-                isBookmarked={bookmarks.includes(article.id)}
-              />
-            ))}
-          </div>
+          {subArticles.map((article) => (
+            <ArticleCard
+              key={article.id}
+              article={article}
+              type="grid"
+              isSectionDark={isSectionDark}
+              onBookmarkToggle={toggleBookmark}
+              isBookmarked={bookmarks.includes(article.id)}
+            />
+          ))}
         </div>
       );
     } else if (section.type === "list") {
@@ -156,7 +154,6 @@ const HomePage: React.FC = () => {
       </section>
     );
   };
-
   const renderHomeContent = () => {
     if (isLoading) {
       return (
