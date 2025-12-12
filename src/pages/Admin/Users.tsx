@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useLayout } from "../../context/LayoutContext";
 import { adminApi } from "../../lib/api";
 import { t } from "../../lib/translations";
-import { showToastMsg } from "../../lib/utils";
+import { escapeHtml, showToastMsg } from "../../lib/utils";
 
 interface AdminUser {
   id: number;

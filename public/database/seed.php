@@ -466,6 +466,8 @@ $messages = [
         $adminId,
         "admin",
         "সাইবার নিরাপত্তা সম্পর্কে আরও তথ্য পেতে পারি কিনা?",
+        "text",
+        "sent"
     ],
     [
         $sarahId,
@@ -473,6 +475,8 @@ $messages = [
         $adminId,
         "admin",
         "আমার অ্যাকাউন্ট হ্যাক হয়েছে, কী করব?",
+        "text",
+        "delivered"
     ],
     [
         $adminId,
@@ -480,12 +484,32 @@ $messages = [
         $johnId,
         "user",
         "আমরা সাহায্য করতে প্রস্তুত। আপনার সমস্যার বিস্তারিত জানান।",
+        "text",
+        "read"
+    ],
+    [
+        $mikeId,
+        "user",
+        $adminId,
+        "admin",
+        "তথ্য আপডেট পেতে চাই",
+        "text",
+        "sent"
+    ],
+    [
+        $adminId,
+        "admin",
+        $sarahId,
+        "user",
+        "আপনার সমস্যা সমাধান হয়েছে। নিরাপত্তা বাড়ানোর জন্য আপডেট করুন।",
+        "text",
+        "delivered"
     ],
 ];
 
 $stmt = $pdo->prepare(
-    "INSERT INTO messages (sender_id, sender_type, recipient_id, recipient_type, content) 
-    VALUES (?, ?, ?, ?, ?)",
+    "INSERT INTO messages (sender_id, sender_type, recipient_id, recipient_type, content, type, status)
+    VALUES (?, ?, ?, ?, ?, ?, ?)",
 );
 foreach ($messages as $msg) {
     $stmt->execute($msg);

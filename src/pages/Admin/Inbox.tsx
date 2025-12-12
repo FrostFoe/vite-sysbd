@@ -1,130 +1,87 @@
-import { ArrowLeft, Loader, Menu, MessageCircle, Send } from "lucide-react";
+import { ArrowLeft, Loader, Menu, MessageCircle } from "lucide-react";
 import type React from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { CustomDropdown } from "../../components/common/CustomDropdown";
 import { useAuth } from "../../context/AuthContext";
 import { useLayout } from "../../context/LayoutContext";
-import { adminApi } from "../../lib/api";
+import { useMessage } from "../../context/messages/MessageContext";
 import { t } from "../../lib/translations";
-import { escapeHtml, formatTimestamp, showToastMsg } from "../../lib/utils";
-import type { Conversation, Message } from "../../types";
+import { escapeHtml, showToastMsg } from "../../lib/utils";
+import type { Conversation } from "../../types";
+import MessageBubble from "../../components/messages/MessageBubble";
+import MessageInput from "../../components/messages/MessageInput";
 
 const AdminInbox: React.FC = () => {
   const { user } = useAuth();
   const { language, toggleSidebar } = useLayout();
-  const [conversations, setConversations] = useState<Conversation[]>([]);
-  const [currentUserId, setCurrentUserId] = useState<number | null>(null);
-  const [currentUserName, setCurrentUserName] = useState<string>(
-    "Select a conversation"
-  );
-  const [currentUserEmail, setCurrentUserEmail] = useState<string>("");
-  const [messages, setMessages] = useState<Message[]>([]);
+  const { state: messageState, loadConversations, loadMessages, sendMessage, setActiveConversation, markMessagesAsRead } = useMessage();
   const [messageInput, setMessageInput] = useState("");
-  const [isLoadingConversations, setIsLoadingConversations] = useState(true);
-  const [isLoadingMessages, setIsLoadingMessages] = useState(false);
-  const [sortConversationsBy, setSortConversationsBy] = useState<
-    "latest" | "unread" | "oldest"
-  >("latest");
+  const [sortConversationsBy, setSortConversationsBy] = useState<"latest" | "unread" | "oldest">("latest");
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
 
   const scrollToBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, []);
 
-  const loadConversations = useCallback(async () => {
-    setIsLoadingConversations(true);
+  useEffect(() => {
+    loadConversations(sortConversationsBy);
+  }, [loadConversations, sortConversationsBy]);
+
+  useEffect(() => {
+    if (messageState.activeConversation?.user_id) {
+      loadMessages(messageState.activeConversation.user_id);
+    }
+  }, [messageState.activeConversation?.user_id, loadMessages]);
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messageState.messages[messageState.activeConversation?.user_id || 0], scrollToBottom]);
+
+  useEffect(() => {
+    // Mark messages as read when they become visible
+    if (messageState.activeConversation?.user_id && messageState.messages[messageState.activeConversation.user_id]) {
+      markMessagesAsRead(messageState.activeConversation.user_id);
+    }
+  }, [messageState.messages[messageState.activeConversation?.user_id || 0], markMessagesAsRead, messageState.activeConversation?.user_id]);
+
+  const handleSendMessage = useCallback(async () => {
+    if (!messageState.activeConversation?.user_id || !messageInput.trim()) return;
+
     try {
-      const response =
-        await adminApi.getAdminConversations(sortConversationsBy);
-      if (response.success && response.conversations) {
-        setConversations(response.conversations);
-      }
-    } catch (_error) {
-      showToastMsg(t("failed_to_load_conversations", language), "error");
-    } finally {
-      setIsLoadingConversations(false);
-    }
-  }, [sortConversationsBy, language]);
-
-  const loadMessages = useCallback(
-    async (userId: number) => {
-      setIsLoadingMessages(true);
-      try {
-        const response = await adminApi.getAdminMessages(userId);
-        if (response.success && response.messages) {
-          setMessages(response.messages);
-        }
-      } catch (_error) {
-        showToastMsg(t("failed_to_load_messages", language), "error");
-      } finally {
-        setIsLoadingMessages(false);
-        scrollToBottom();
-      }
-    },
-    [language, scrollToBottom]
-  );
-
-  useEffect(() => {
-    loadConversations();
-    const interval = setInterval(loadConversations, 3000); // Poll for new conversations
-    return () => clearInterval(interval);
-  }, [loadConversations]);
-
-  useEffect(() => {
-    if (currentUserId) {
-      loadMessages(currentUserId);
-      const interval = setInterval(() => loadMessages(currentUserId), 2000); // Poll for new messages
-      return () => clearInterval(interval);
-    }
-  }, [currentUserId, loadMessages]);
-
-  const selectConversation = useCallback(
-    (convUserId: number, convUserEmail: string, convUserName: string) => {
-      setCurrentUserId(convUserId);
-      setCurrentUserEmail(convUserEmail);
-      setCurrentUserName(convUserName);
-      loadMessages(convUserId);
+      await sendMessage(messageState.activeConversation.user_id, messageInput.trim(), 'text');
       setMessageInput("");
-      // On mobile, close sidebar after selecting conversation
-      // toggleSidebar(false);
-    },
-    [loadMessages]
-  );
-
-  const sendMessage = useCallback(async () => {
-    if (!currentUserId || !messageInput.trim()) return;
-
-    try {
-      const response = await adminApi.sendAdminMessage(
-        currentUserId,
-        messageInput.trim()
-      );
-      if (response.success) {
-        setMessageInput("");
-        loadMessages(currentUserId); // Reload messages after sending
-        loadConversations(); // Update conversation list (e.g., unread count)
-      } else {
-        showToastMsg(
-          response.error || t("failed_to_send_message", language),
-          "error"
-        );
-      }
-    } catch (error) {
-      console.error("Error sending message:", error);
+    } catch (_error) {
       showToastMsg(t("server_error", language), "error");
     }
-  }, [currentUserId, messageInput, loadMessages, loadConversations, language]);
+  }, [messageState.activeConversation?.user_id, messageInput, sendMessage, language]);
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      sendMessage();
-    }
-  };
+  const handleFileSelect = useCallback((file: File) => {
+    // Handle file upload
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const content = e.target?.result as string;
+      // For now, we'll send the file as a base64 string
+      // In a real implementation, we'd upload the file to a server and send the URL
+      if (messageState.activeConversation?.user_id) {
+        sendMessage(messageState.activeConversation.user_id, content, file.type.startsWith('image/') ? 'image' : 'file');
+      }
+    };
+    reader.readAsDataURL(file);
+  }, [sendMessage, messageState.activeConversation?.user_id]);
+
+  const selectConversation = useCallback((conversation: Conversation) => {
+    setActiveConversation(conversation);
+    setMessageInput("");
+  }, [setActiveConversation]);
 
   const getUnreadCount = () =>
-    conversations.reduce((sum, conv) => sum + conv.unread_count, 0);
+    messageState.conversations.reduce((sum, conv) => sum + conv.unread_count, 0);
+
+  const currentMessages = messageState.activeConversation?.user_id 
+    ? messageState.messages[messageState.activeConversation.user_id] || [] 
+    : [];
 
   return (
     <div className="flex flex-col h-[calc(100vh-70px)] md:h-full overflow-hidden font-sans antialiased">
@@ -186,37 +143,27 @@ const AdminInbox: React.FC = () => {
             id="conversations-list"
             className="flex-1 overflow-y-auto space-y-1 p-2"
           >
-            {isLoadingConversations ? (
+            {messageState.loading.conversations ? (
               <div className="text-center text-muted-text text-sm py-8">
                 <Loader className="w-5 h-5 inline animate-spin" />{" "}
                 {t("loading", language)}
               </div>
-            ) : conversations.length === 0 ? (
+            ) : messageState.conversations.length === 0 ? (
               <div className="text-center text-muted-text text-sm py-8">
                 {t("no_conversations_yet", language)}
               </div>
             ) : (
-              conversations.map((conv) => (
+              messageState.conversations.map((conv) => (
                 <button
                   type="button"
                   key={conv.user_id}
-                  onClick={() =>
-                    selectConversation(
-                      conv.user_id,
-                      conv.email,
-                      conv.email.split("@")[0]
-                    )
-                  }
+                  onClick={() => selectConversation(conv)}
                   onKeyDown={(e) => {
                     if (e.key === "Enter" || e.key === " ") {
-                      selectConversation(
-                        conv.user_id,
-                        conv.email,
-                        conv.email.split("@")[0]
-                      );
+                      selectConversation(conv);
                     }
                   }}
-                  className={`w-full text-left p-3 rounded-lg hover:bg-muted-bg cursor-pointer transition-colors border border-transparent hover:border-border-color ${currentUserId === conv.user_id ? "bg-bbcRed/10 border-bbcRed" : ""}`}
+                  className={`w-full text-left p-3 rounded-lg hover:bg-muted-bg cursor-pointer transition-colors border border-transparent hover:border-border-color ${messageState.activeConversation?.user_id === conv.user_id ? "bg-bbcRed/10 border-bbcRed" : ""}`}
                 >
                   <div className="flex items-center gap-3">
                     <div className="w-12 h-12 rounded-full bg-gradient-to-br from-bbcRed to-orange-600 text-white flex items-center justify-center font-bold text-sm shadow-md flex-shrink-0">
@@ -243,106 +190,90 @@ const AdminInbox: React.FC = () => {
         </aside>
 
         {/* Chat Area */}
-        <div className="flex-1 flex flex-col overflow-hidden bg-page">
-          <div
-            id="chat-header"
-            className="h-[70px] border-b border-border-color bg-card flex items-center justify-between px-4 md:px-6 flex-shrink-0"
-          >
-            <div className="flex items-center gap-3 flex-1 min-w-0">
-              <div
-                id="user-avatar"
-                className="w-10 h-10 rounded-full bg-gradient-to-br from-bbcRed to-orange-600 text-white flex items-center justify-center font-bold text-sm shadow-md flex-shrink-0"
-              >
-                {currentUserName.charAt(0).toUpperCase()}
-              </div>
-              <div className="flex-1 min-w-0">
+        {messageState.activeConversation ? (
+          <div className="flex-1 flex flex-col overflow-hidden bg-page">
+            <div
+              id="chat-header"
+              className="h-[70px] border-b border-border-color bg-card flex items-center justify-between px-4 md:px-6 flex-shrink-0"
+            >
+              <div className="flex items-center gap-3 flex-1 min-w-0">
                 <div
-                  id="chat-with-name"
-                  className="font-bold text-sm leading-none"
+                  id="user-avatar"
+                  className="w-10 h-10 rounded-full bg-gradient-to-br from-bbcRed to-orange-600 text-white flex items-center justify-center font-bold text-sm shadow-md flex-shrink-0"
                 >
-                  {currentUserName}
+                  {messageState.activeConversation.email.charAt(0).toUpperCase()}
                 </div>
-                <div
-                  id="chat-with-email"
-                  className="text-xs text-muted-text leading-none mt-1"
-                >
-                  {currentUserEmail}
-                </div>
-              </div>
-            </div>
-            {/* Online indicator can be added here if backend supports presence */}
-          </div>
-
-          <div
-            id="messages-container"
-            className="flex-1 overflow-y-auto p-4 md:p-6 space-y-4 flex flex-col justify-start"
-          >
-            {isLoadingMessages ? (
-              <div className="text-center text-muted-text py-12">
-                <Loader className="w-8 h-8 inline animate-spin" />{" "}
-                {t("loading_messages", language)}
-              </div>
-            ) : messages.length === 0 ? (
-              <div className="text-center text-muted-text py-12">
-                <MessageCircle className="w-12 h-12 mx-auto mb-3 opacity-50" />
-                <p className="text-base">
-                  {t("no_messages_in_this_conversation", language)}
-                </p>
-              </div>
-            ) : (
-              messages.map((msg) => {
-                const isOwn = msg.sender_id === user?.id; // Assuming user.id is admin ID
-                return (
+                <div className="flex-1 min-w-0">
                   <div
-                    key={msg.id}
-                    className={`flex ${isOwn ? "justify-end" : "justify-start"} animate-in fade-in slide-in-from-bottom-2`}
+                    id="chat-with-name"
+                    className="font-bold text-sm leading-none"
                   >
-                    <div
-                      className={`max-w-xs md:max-w-sm lg:max-w-md ${isOwn ? "bg-bbcRed text-white rounded-3xl rounded-tr-sm shadow-md" : "bg-muted-bg text-card-text rounded-3xl rounded-tl-sm shadow-sm"} px-5 py-3`}
-                    >
-                      <p className="text-sm break-words leading-relaxed">
-                        {escapeHtml(msg.content)}
-                      </p>
-                      <p
-                        className={`text-xs ${isOwn ? "text-white/70" : "text-muted-text"} mt-2 text-right`}
-                      >
-                        {formatTimestamp(msg.created_at, language)}
-                      </p>
-                    </div>
+                    {messageState.activeConversation.email.split("@")[0]}
                   </div>
-                );
-              })
-            )}
-            <div ref={messagesEndRef} />
-          </div>
+                  <div
+                    id="chat-with-email"
+                    className="text-xs text-muted-text leading-none mt-1"
+                  >
+                    {messageState.activeConversation.email}
+                  </div>
+                </div>
+              </div>
+              {/* Online indicator can be added here if backend supports presence */}
+            </div>
 
-          <div className="border-t border-border-color bg-card p-4 md:p-6 flex-shrink-0">
-            <div className="flex gap-3">
-              <input
-                type="text"
-                value={messageInput}
-                onChange={(e) => setMessageInput(e.target.value)}
-                onKeyDown={handleKeyDown}
-                placeholder={t("type_a_message", language)}
-                className="flex-1 px-4 py-3 rounded-full border border-border-color bg-muted-bg outline-none focus:border-bbcRed transition-colors text-sm"
-                maxLength={5000}
-                disabled={!currentUserId}
-              />
-              <button
-                type="button"
-                onClick={sendMessage}
-                className="bg-bbcRed text-white px-5 py-3 rounded-full hover:bg-[var(--color-bbcRed-hover)] transition-colors font-bold shadow-md hover:shadow-lg flex-shrink-0 flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-                title={t("send_message_enter", language)}
-                disabled={!currentUserId || !messageInput.trim()}
-              >
-                <Send className="w-5 h-5" />
-              </button>
+            <div
+              id="messages-container"
+              className="flex-1 overflow-y-auto p-4 md:p-6 space-y-4 flex flex-col justify-start"
+            >
+              {messageState.loading.messages[messageState.activeConversation.user_id] ? (
+                <div className="text-center text-muted-text py-12">
+                  <Loader className="w-8 h-8 inline animate-spin" />{" "}
+                  {t("loading_messages", language)}
+                </div>
+              ) : currentMessages.length === 0 ? (
+                <div className="text-center text-muted-text py-12">
+                  <MessageCircle className="w-12 h-12 mx-auto mb-3 opacity-50" />
+                  <p className="text-base">
+                    {t("no_messages_in_this_conversation", language)}
+                  </p>
+                </div>
+              ) : (
+                currentMessages.map((msg) => {
+                  const isOwn = msg.sender_id === user?.id; // Assuming user.id is admin ID
+                  return (
+                    <MessageBubble
+                      key={msg.id}
+                      message={msg}
+                      isOwn={isOwn}
+                      language={language}
+                    />
+                  );
+                })
+              )}
+              <div ref={messagesEndRef} />
             </div>
-            <div className="text-xs text-muted-text mt-2 px-1">
-              <span>{messageInput.length}</span>/5000
+
+            <div className="border-t border-border-color bg-card p-4 md:p-6 flex-shrink-0">
+              <MessageInput
+                value={messageInput}
+                onChange={setMessageInput}
+                onSendMessage={handleSendMessage}
+                onFileSelect={handleFileSelect}
+                placeholder={t("type_a_message", language)}
+                disabled={!messageState.activeConversation || messageState.loading.messages[messageState.activeConversation.user_id]}
+                maxChars={5000}
+              />
             </div>
           </div>
-        </div>
+        ) : (
+          <div className="flex-1 flex flex-col items-center justify-center bg-page text-center p-8">
+            <MessageCircle className="w-16 h-16 text-muted-text mb-4" />
+            <h3 className="text-xl font-bold mb-2">{t("select_conversation", language)}</h3>
+            <p className="text-muted-text">
+              {t("choose_conversation_to_start_messaging", language)}
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );

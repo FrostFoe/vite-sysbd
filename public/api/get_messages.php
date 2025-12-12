@@ -28,6 +28,8 @@ try {
             sender_type,
             recipient_id,
             content,
+            type,
+            status,
             created_at
         FROM messages
         WHERE (sender_id = ? AND recipient_id = ?)

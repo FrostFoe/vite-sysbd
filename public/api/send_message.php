@@ -18,6 +18,17 @@ $isAdmin = $_SESSION["user_role"] === "admin";
 $data = json_decode(file_get_contents("php://input"), true);
 $recipientId = $data["recipient_id"] ?? null;
 $content = $data["content"] ?? null;
+$type = $data["type"] ?? 'text'; // Default to 'text'
+
+// Validate type
+if (!in_array($type, ['text', 'image', 'file'])) {
+    http_response_code(400);
+    echo json_encode([
+        "success" => false,
+        "error" => "Invalid message type. Must be 'text', 'image', or 'file'",
+    ]);
+    exit();
+}
 
 if (!$recipientId || !$content) {
     http_response_code(400);
@@ -58,10 +69,10 @@ try {
         exit();
     }
 
-    // Insert message
+    // Insert message with new fields
     $stmt = $pdo->prepare("
-        INSERT INTO messages (sender_id, sender_type, recipient_id, recipient_type, content, created_at)
-        VALUES (?, ?, ?, ?, ?, NOW())
+        INSERT INTO messages (sender_id, sender_type, recipient_id, recipient_type, content, type, status, created_at)
+        VALUES (?, ?, ?, ?, ?, ?, 'sent', NOW())
     ");
 
     $senderType = $isAdmin ? "admin" : "user";
@@ -73,6 +84,7 @@ try {
         $recipientId,
         $recipientType,
         $content,
+        $type
     ]);
 
     echo json_encode([
@@ -85,32 +97,3 @@ try {
     echo json_encode(["success" => false, "error" => $e->getMessage()]);
 }
 ?>
-    
-    $senderType = $isAdmin ? "admin" : "user";
-    $recipientType = $isAdmin ? "user" : "admin";
-    
-    $success = $stmt->execute([
-        $sender_id,
-        $senderType,
-        $recipient_id,
-        $recipientType,
-        $subject ?: null,
-        $content
-    ]);
-
-    if ($success) {
-        $messageId = $pdo->lastInsertId();
-        echo json_encode([
-            "success" => true,
-            "message" => "Message sent successfully",
-            "id" => $messageId,
-            "created_at" => date("Y-m-d H:i:s")
-        ]);
-    } else {
-        http_response_code(500);
-        echo json_encode(["success" => false, "error" => "Failed to send message"]);
-    }
-} catch (Exception $e) {
-    http_response_code(500);
-    echo json_encode(["success" => false, "error" => "Server error: " . $e->getMessage()]);
-}

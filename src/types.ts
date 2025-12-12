@@ -156,5 +156,8 @@ export interface Message {
   sender_type: "user" | "admin";
   recipient_id: number;
   content: string;
+  type: "text" | "image" | "file";
+  status: "sent" | "delivered" | "read";
   created_at: string;
+  updated_at?: string;
 }
