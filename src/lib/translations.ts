@@ -186,7 +186,8 @@ const translations: Translations = {
     attach_file: "Attach file",
     start_conversation: "Start a conversation with BreachTimes Support!",
     select_conversation: "Select a conversation",
-    choose_conversation_to_start_messaging: "Choose a conversation to start messaging",
+    choose_conversation_to_start_messaging:
+      "Choose a conversation to start messaging",
   },
   bn: {
     home: "হোম",

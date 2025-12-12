@@ -1,7 +1,7 @@
-import type { Conversation, Message } from '../types';
-import { API_BASE_URL } from '../lib/constants';
-import { setupApiInterceptors } from '../lib/apiInterceptors';
-import axios, { type AxiosInstance } from 'axios';
+import type { Conversation, Message } from "../types";
+import { API_BASE_URL } from "../lib/constants";
+import { setupApiInterceptors } from "../lib/apiInterceptors";
+import axios, { type AxiosInstance } from "axios";
 
 export interface ApiResponse<T> {
   success: boolean;
@@ -14,7 +14,10 @@ class MessageServiceClass {
   private api: AxiosInstance;
   private ws: WebSocket | null = null;
   private newMessageCallbacks: ((message: Message) => void)[] = [];
-  private messageStatusCallbacks: ((messageId: number, status: 'sent' | 'delivered' | 'read') => void)[] = [];
+  private messageStatusCallbacks: ((
+    messageId: number,
+    status: "sent" | "delivered" | "read"
+  ) => void)[] = [];
   private pollingInterval: NodeJS.Timeout | null = null;
 
   constructor() {
@@ -37,7 +40,10 @@ class MessageServiceClass {
       // Start polling as a fallback for real-time updates
       this.startPolling();
     } catch (error) {
-      console.warn('WebSocket connection failed, falling back to polling:', error);
+      console.warn(
+        "WebSocket connection failed, falling back to polling:",
+        error
+      );
       this.startPolling();
     }
   }
@@ -66,21 +72,29 @@ class MessageServiceClass {
   onNewMessage(callback: (message: Message) => void) {
     this.newMessageCallbacks.push(callback);
     return () => {
-      this.newMessageCallbacks = this.newMessageCallbacks.filter(cb => cb !== callback);
+      this.newMessageCallbacks = this.newMessageCallbacks.filter(
+        (cb) => cb !== callback
+      );
     };
   }
 
-  onMessageStatusUpdate(callback: (messageId: number, status: 'sent' | 'delivered' | 'read') => void) {
+  onMessageStatusUpdate(
+    callback: (messageId: number, status: "sent" | "delivered" | "read") => void
+  ) {
     this.messageStatusCallbacks.push(callback);
     return () => {
-      this.messageStatusCallbacks = this.messageStatusCallbacks.filter(cb => cb !== callback);
+      this.messageStatusCallbacks = this.messageStatusCallbacks.filter(
+        (cb) => cb !== callback
+      );
     };
   }
 
   // API methods
-  async getConversations(sort: string = 'latest'): Promise<ApiResponse<{ conversations: Conversation[]; count?: number }>> {
+  async getConversations(
+    sort: string = "latest"
+  ): Promise<ApiResponse<{ conversations: Conversation[]; count?: number }>> {
     try {
-      const response = await this.api.get('/get_conversations.php', {
+      const response = await this.api.get("/get_conversations.php", {
         params: { sort },
       });
 
@@ -91,14 +105,19 @@ class MessageServiceClass {
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error.message : 'Failed to get conversations',
+        error:
+          error instanceof Error
+            ? error.message
+            : "Failed to get conversations",
       };
     }
   }
 
-  async getMessages(userId: number): Promise<ApiResponse<{ messages: Message[]; count?: number }>> {
+  async getMessages(
+    userId: number
+  ): Promise<ApiResponse<{ messages: Message[]; count?: number }>> {
     try {
-      const response = await this.api.get('/get_messages.php', {
+      const response = await this.api.get("/get_messages.php", {
         params: { user_id: userId },
       });
 
@@ -109,14 +128,19 @@ class MessageServiceClass {
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error.message : 'Failed to get messages',
+        error:
+          error instanceof Error ? error.message : "Failed to get messages",
       };
     }
   }
 
-  async sendMessage(recipientId: number, content: string, type: 'text' | 'image' | 'file' = 'text'): Promise<ApiResponse<{ message_id?: number; timestamp?: string }>> {
+  async sendMessage(
+    recipientId: number,
+    content: string,
+    type: "text" | "image" | "file" = "text"
+  ): Promise<ApiResponse<{ message_id?: number; timestamp?: string }>> {
     try {
-      const response = await this.api.post('/send_message.php', {
+      const response = await this.api.post("/send_message.php", {
         recipient_id: recipientId,
         content,
         type,
@@ -131,14 +155,15 @@ class MessageServiceClass {
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error.message : 'Failed to send message',
+        error:
+          error instanceof Error ? error.message : "Failed to send message",
       };
     }
   }
 
   async markMessagesAsRead(userId: number): Promise<ApiResponse<void>> {
     try {
-      await this.api.post('/mark_messages_read.php', {
+      await this.api.post("/mark_messages_read.php", {
         user_id: userId,
       });
 
@@ -148,7 +173,10 @@ class MessageServiceClass {
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error.message : 'Failed to mark messages as read',
+        error:
+          error instanceof Error
+            ? error.message
+            : "Failed to mark messages as read",
       };
     }
   }

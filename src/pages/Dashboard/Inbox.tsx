@@ -1,9 +1,4 @@
-import {
-  ArrowLeft,
-  Inbox as InboxIcon,
-  Info,
-  Menu,
-} from "lucide-react";
+import { ArrowLeft, Inbox as InboxIcon, Info, Menu } from "lucide-react";
 import type React from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
@@ -23,7 +18,6 @@ const UserInbox: React.FC = () => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const adminId = 1; // Assuming admin user ID is 1 as per database seed
 
-
   const scrollToBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, []);
@@ -38,37 +32,47 @@ const UserInbox: React.FC = () => {
 
   useEffect(() => {
     scrollToBottom();
-  }, [messageState.messages[adminId], scrollToBottom]);
+  }, [scrollToBottom]);
 
   useEffect(() => {
     // Mark messages as read when they become visible
-    if (messageState.messages[adminId] && messageState.messages[adminId].length > 0) {
+    if (
+      messageState.messages[adminId] &&
+      messageState.messages[adminId].length > 0
+    ) {
       markMessagesAsRead(adminId);
     }
-  }, [messageState.messages[adminId], markMessagesAsRead, adminId]);
+  }, [messageState.messages[adminId], markMessagesAsRead]);
 
   const handleSendMessage = useCallback(async () => {
     if (!user?.id || !messageInput.trim()) return;
 
     try {
-      await sendMessage(adminId, messageInput.trim(), 'text');
+      await sendMessage(adminId, messageInput.trim(), "text");
       setMessageInput("");
     } catch (_error) {
       showToastMsg(t("server_error", language), "error");
     }
-  }, [user?.id, messageInput, sendMessage, adminId, language]);
+  }, [user?.id, messageInput, sendMessage, language]);
 
-  const handleFileSelect = useCallback((file: File) => {
-    // Handle file upload
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const content = e.target?.result as string;
-      // For now, we'll send the file as a base64 string
-      // In a real implementation, we'd upload the file to a server and send the URL
-      sendMessage(adminId, content, file.type.startsWith('image/') ? 'image' : 'file');
-    };
-    reader.readAsDataURL(file);
-  }, [sendMessage, adminId]);
+  const handleFileSelect = useCallback(
+    (file: File) => {
+      // Handle file upload
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const content = e.target?.result as string;
+        // For now, we'll send the file as a base64 string
+        // In a real implementation, we'd upload the file to a server and send the URL
+        sendMessage(
+          adminId,
+          content,
+          file.type.startsWith("image/") ? "image" : "file"
+        );
+      };
+      reader.readAsDataURL(file);
+    },
+    [sendMessage]
+  );
 
   const currentMessages = messageState.messages[adminId] || [];
 

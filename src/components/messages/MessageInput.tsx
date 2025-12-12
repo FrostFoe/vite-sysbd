@@ -1,7 +1,7 @@
-import React, { useRef, useEffect } from 'react';
-import { Send, Paperclip } from 'lucide-react';
-import { useLayout } from '../../context/LayoutContext';
-import { t } from '../../lib/translations';
+import React, { useRef, useEffect } from "react";
+import { Send, Paperclip } from "lucide-react";
+import { useLayout } from "../../context/LayoutContext";
+import { t } from "../../lib/translations";
 
 interface MessageInputProps {
   value: string;
@@ -29,13 +29,13 @@ const MessageInput: React.FC<MessageInputProps> = ({
   useEffect(() => {
     if (textareaRef.current) {
       // Auto-resize textarea
-      textareaRef.current.style.height = 'auto';
+      textareaRef.current.style.height = "auto";
       textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 150)}px`;
     }
-  }, [value]);
+  }, []);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
+    if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       if (value.trim()) {
         onSendMessage();
@@ -59,7 +59,7 @@ const MessageInput: React.FC<MessageInputProps> = ({
   const handlePaste = (e: React.ClipboardEvent<HTMLTextAreaElement>) => {
     const items = e.clipboardData.items;
     for (let i = 0; i < items.length; i++) {
-      if (items[i].type.indexOf('image') !== -1) {
+      if (items[i].type.indexOf("image") !== -1) {
         e.preventDefault();
         const file = items[i].getAsFile();
         if (file && onFileSelect) {
@@ -80,7 +80,7 @@ const MessageInput: React.FC<MessageInputProps> = ({
             onChange={(e) => onChange(e.target.value)}
             onKeyDown={handleKeyDown}
             onPaste={handlePaste}
-            placeholder={placeholder || t('type_a_message', language)}
+            placeholder={placeholder || t("type_a_message", language)}
             className="w-full px-4 py-3 pr-12 rounded-2xl border border-border-color bg-muted-bg outline-none focus:border-bbcRed transition-colors text-sm resize-none max-h-40"
             maxLength={maxChars}
             disabled={disabled}
@@ -92,28 +92,28 @@ const MessageInput: React.FC<MessageInputProps> = ({
             </span>
           </div>
         </div>
-        
+
         <button
           type="button"
           onClick={() => fileInputRef.current?.click()}
           className="p-3 rounded-full bg-muted-bg hover:bg-border-color transition-colors text-muted-text disabled:opacity-50 disabled:cursor-not-allowed"
-          title={t('attach_file', language)}
+          title={t("attach_file", language)}
           disabled={disabled}
         >
           <Paperclip className="w-5 h-5" />
         </button>
-        
+
         <button
           type="button"
           onClick={handleSendClick}
           className="bg-bbcRed text-white p-3 rounded-full hover:bg-[var(--color-bbcRed-hover)] transition-colors font-bold shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
-          title={t('send_message_enter', language)}
+          title={t("send_message_enter", language)}
           disabled={disabled || !value.trim()}
         >
           <Send className="w-5 h-5" />
         </button>
       </div>
-      
+
       {/* Hidden file input */}
       <input
         type="file"

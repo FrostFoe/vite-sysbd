@@ -15,11 +15,19 @@ import MessageInput from "../../components/messages/MessageInput";
 const AdminInbox: React.FC = () => {
   const { user } = useAuth();
   const { language, toggleSidebar } = useLayout();
-  const { state: messageState, loadConversations, loadMessages, sendMessage, setActiveConversation, markMessagesAsRead } = useMessage();
+  const {
+    state: messageState,
+    loadConversations,
+    loadMessages,
+    sendMessage,
+    setActiveConversation,
+    markMessagesAsRead,
+  } = useMessage();
   const [messageInput, setMessageInput] = useState("");
-  const [sortConversationsBy, setSortConversationsBy] = useState<"latest" | "unread" | "oldest">("latest");
+  const [sortConversationsBy, setSortConversationsBy] = useState<
+    "latest" | "unread" | "oldest"
+  >("latest");
   const messagesEndRef = useRef<HTMLDivElement>(null);
-
 
   const scrollToBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -37,50 +45,80 @@ const AdminInbox: React.FC = () => {
 
   useEffect(() => {
     scrollToBottom();
-  }, [messageState.messages[messageState.activeConversation?.user_id || 0], scrollToBottom]);
+  }, [scrollToBottom]);
 
   useEffect(() => {
     // Mark messages as read when they become visible
-    if (messageState.activeConversation?.user_id && messageState.messages[messageState.activeConversation.user_id]) {
+    if (
+      messageState.activeConversation?.user_id &&
+      messageState.messages[messageState.activeConversation.user_id]
+    ) {
       markMessagesAsRead(messageState.activeConversation.user_id);
     }
-  }, [messageState.messages[messageState.activeConversation?.user_id || 0], markMessagesAsRead, messageState.activeConversation?.user_id]);
+  }, [
+    messageState.messages[messageState.activeConversation?.user_id || 0],
+    markMessagesAsRead,
+    messageState.activeConversation?.user_id,
+  ]);
 
   const handleSendMessage = useCallback(async () => {
-    if (!messageState.activeConversation?.user_id || !messageInput.trim()) return;
+    if (!messageState.activeConversation?.user_id || !messageInput.trim())
+      return;
 
     try {
-      await sendMessage(messageState.activeConversation.user_id, messageInput.trim(), 'text');
+      await sendMessage(
+        messageState.activeConversation.user_id,
+        messageInput.trim(),
+        "text"
+      );
       setMessageInput("");
     } catch (_error) {
       showToastMsg(t("server_error", language), "error");
     }
-  }, [messageState.activeConversation?.user_id, messageInput, sendMessage, language]);
+  }, [
+    messageState.activeConversation?.user_id,
+    messageInput,
+    sendMessage,
+    language,
+  ]);
 
-  const handleFileSelect = useCallback((file: File) => {
-    // Handle file upload
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const content = e.target?.result as string;
-      // For now, we'll send the file as a base64 string
-      // In a real implementation, we'd upload the file to a server and send the URL
-      if (messageState.activeConversation?.user_id) {
-        sendMessage(messageState.activeConversation.user_id, content, file.type.startsWith('image/') ? 'image' : 'file');
-      }
-    };
-    reader.readAsDataURL(file);
-  }, [sendMessage, messageState.activeConversation?.user_id]);
+  const handleFileSelect = useCallback(
+    (file: File) => {
+      // Handle file upload
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const content = e.target?.result as string;
+        // For now, we'll send the file as a base64 string
+        // In a real implementation, we'd upload the file to a server and send the URL
+        if (messageState.activeConversation?.user_id) {
+          sendMessage(
+            messageState.activeConversation.user_id,
+            content,
+            file.type.startsWith("image/") ? "image" : "file"
+          );
+        }
+      };
+      reader.readAsDataURL(file);
+    },
+    [sendMessage, messageState.activeConversation?.user_id]
+  );
 
-  const selectConversation = useCallback((conversation: Conversation) => {
-    setActiveConversation(conversation);
-    setMessageInput("");
-  }, [setActiveConversation]);
+  const selectConversation = useCallback(
+    (conversation: Conversation) => {
+      setActiveConversation(conversation);
+      setMessageInput("");
+    },
+    [setActiveConversation]
+  );
 
   const getUnreadCount = () =>
-    messageState.conversations.reduce((sum, conv) => sum + conv.unread_count, 0);
+    messageState.conversations.reduce(
+      (sum, conv) => sum + conv.unread_count,
+      0
+    );
 
-  const currentMessages = messageState.activeConversation?.user_id 
-    ? messageState.messages[messageState.activeConversation.user_id] || [] 
+  const currentMessages = messageState.activeConversation?.user_id
+    ? messageState.messages[messageState.activeConversation.user_id] || []
     : [];
 
   return (
@@ -201,7 +239,9 @@ const AdminInbox: React.FC = () => {
                   id="user-avatar"
                   className="w-10 h-10 rounded-full bg-gradient-to-br from-bbcRed to-orange-600 text-white flex items-center justify-center font-bold text-sm shadow-md flex-shrink-0"
                 >
-                  {messageState.activeConversation.email.charAt(0).toUpperCase()}
+                  {messageState.activeConversation.email
+                    .charAt(0)
+                    .toUpperCase()}
                 </div>
                 <div className="flex-1 min-w-0">
                   <div
@@ -225,7 +265,9 @@ const AdminInbox: React.FC = () => {
               id="messages-container"
               className="flex-1 overflow-y-auto p-4 md:p-6 space-y-4 flex flex-col justify-start"
             >
-              {messageState.loading.messages[messageState.activeConversation.user_id] ? (
+              {messageState.loading.messages[
+                messageState.activeConversation.user_id
+              ] ? (
                 <div className="text-center text-muted-text py-12">
                   <Loader className="w-8 h-8 inline animate-spin" />{" "}
                   {t("loading_messages", language)}
@@ -260,7 +302,12 @@ const AdminInbox: React.FC = () => {
                 onSendMessage={handleSendMessage}
                 onFileSelect={handleFileSelect}
                 placeholder={t("type_a_message", language)}
-                disabled={!messageState.activeConversation || messageState.loading.messages[messageState.activeConversation.user_id]}
+                disabled={
+                  !messageState.activeConversation ||
+                  messageState.loading.messages[
+                    messageState.activeConversation.user_id
+                  ]
+                }
                 maxChars={5000}
               />
             </div>
@@ -268,7 +315,9 @@ const AdminInbox: React.FC = () => {
         ) : (
           <div className="flex-1 flex flex-col items-center justify-center bg-page text-center p-8">
             <MessageCircle className="w-16 h-16 text-muted-text mb-4" />
-            <h3 className="text-xl font-bold mb-2">{t("select_conversation", language)}</h3>
+            <h3 className="text-xl font-bold mb-2">
+              {t("select_conversation", language)}
+            </h3>
             <p className="text-muted-text">
               {t("choose_conversation_to_start_messaging", language)}
             </p>
