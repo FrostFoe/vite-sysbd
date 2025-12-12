@@ -19,16 +19,14 @@ const CategoryModal: React.FC<{
     }
   });
 
-  // Memoize initial form data to reset when the category changes
   const initialFormData = useMemo(() => {
     if (category) {
       return { ...category };
     } else {
       return { id: "", title_bn: "", title_en: "", color: "#b80000" };
     }
-  }, [category]); // Only depend on category directly
+  }, [category]);
 
-  // Reset form data when modal opens with different category
   useEffect(() => {
     setFormData(initialFormData);
   }, [initialFormData]);
@@ -181,20 +179,16 @@ const Categories: React.FC = () => {
     try {
       await adminApi.saveCategory(formData);
       handleCloseModal();
-      fetchCategories(); // Refetch to show changes
-    } catch (_err) {
-      // Error silently handled, user can retry
-    }
+      fetchCategories();
+    } catch (_err) {}
   };
 
   const handleDelete = async (id: string) => {
     if (window.confirm("Are you sure you want to delete this category?")) {
       try {
         await adminApi.deleteCategory(id);
-        fetchCategories(); // Refetch to show changes
-      } catch (_err) {
-        // Error silently handled, user can retry
-      }
+        fetchCategories();
+      } catch (_err) {}
     }
   };
 

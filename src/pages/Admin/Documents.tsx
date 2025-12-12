@@ -15,9 +15,6 @@ import { useSearchParams } from "react-router-dom";
 import { adminApi } from "../../lib/api";
 import type { ArticleWithDocCount, Document as DocType } from "../../types";
 
-// NOTE: This is a large component. It could be broken down into smaller ones
-// (e.g., ArticleSidebar, DocumentCard, DocumentModal) for better maintainability.
-
 const Documents: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const selectedArticleId = searchParams.get("article_id");
@@ -40,7 +37,6 @@ const Documents: React.FC = () => {
         setArticles(res.data || []);
       }
     } catch (_error) {
-      // Error silently handled
     } finally {
       setIsLoadingArticles(false);
     }
@@ -55,16 +51,15 @@ const Documents: React.FC = () => {
           setDocuments(res.documents || []);
           const selected = articles.find((a) => a.id === articleId);
           setSelectedArticleTitle(
-            selected?.title_en || selected?.title_bn || "",
+            selected?.title_en || selected?.title_bn || ""
           );
         }
       } catch (_error) {
-        // Error silently handled
       } finally {
         setIsLoadingDocuments(false);
       }
     },
-    [articles],
+    [articles]
   );
 
   useEffect(() => {
@@ -87,14 +82,12 @@ const Documents: React.FC = () => {
   };
 
   const handleOpenModal = async (doc: DocType | null) => {
-    if (!selectedArticleId) return; // Should not happen if button is correctly disabled
+    if (!selectedArticleId) return;
     if (doc) {
-      // Fetch full document details for editing
       const res = await adminApi.getDocument(doc.id);
       if (res.success && res.document) {
         setEditingDoc(res.document);
       } else {
-        // Handle error silently
         return;
       }
     } else {
@@ -110,10 +103,8 @@ const Documents: React.FC = () => {
 
   const handleSave = async () => {
     if (selectedArticleId) {
-      // Re-fetch documents for the current article
       await fetchDocuments(selectedArticleId);
     }
-    // Also re-fetch articles to update doc counts
     await fetchArticles();
     handleCloseModal();
   };
@@ -126,9 +117,7 @@ const Documents: React.FC = () => {
           fetchDocuments(selectedArticleId);
         }
         fetchArticles();
-      } catch (_error) {
-        // Error silently handled
-      }
+      } catch (_error) {}
     }
   };
 
@@ -286,7 +275,6 @@ const Documents: React.FC = () => {
   );
 };
 
-// Modal Component
 const DocumentModal: React.FC<{
   isOpen: boolean;
   onClose: () => void;
@@ -332,7 +320,6 @@ const DocumentModal: React.FC<{
     if (doc?.id) formPayload.append("id", doc.id);
     if (file) formPayload.append("file", file);
 
-    // Append other fields from state
     for (const key in formData) {
       if (
         key !== "id" &&

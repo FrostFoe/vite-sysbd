@@ -33,18 +33,15 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
     try {
       setUploadError("");
 
-      // Validate file type
       if (!file.type.startsWith("image/")) {
         throw new Error("Please upload a valid image file");
       }
 
-      // Validate file size (5MB max)
       const maxSize = 5 * 1024 * 1024;
       if (file.size > maxSize) {
         throw new Error("Image size must be less than 5MB");
       }
 
-      // Create FormData and upload
       const formData = new FormData();
       formData.append("file", file);
       formData.append("type", "image");
@@ -73,18 +70,15 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
     try {
       setUploadError("");
 
-      // Validate file type
       if (!file.type.startsWith("video/")) {
         throw new Error("Please upload a valid video file");
       }
 
-      // Validate file size (100MB max for videos)
       const maxSize = 100 * 1024 * 1024;
       if (file.size > maxSize) {
         throw new Error("Video size must be less than 100MB");
       }
 
-      // Create FormData and upload
       const formData = new FormData();
       formData.append("file", file);
       formData.append("type", "video");
@@ -111,9 +105,7 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
 
   const editor = useEditor({
     extensions: [
-      StarterKit.configure({
-        // Configure starterkit as needed
-      }),
+      StarterKit.configure({}),
       Image.configure({
         inline: false,
         allowBase64: true,
@@ -137,7 +129,6 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
     },
   });
 
-  // Handle drag and drop
   const handleDrop = useCallback(
     (e: React.DragEvent<HTMLDivElement>) => {
       e.preventDefault();
@@ -161,7 +152,7 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
         }
       }
     },
-    [editor, handleImageUpload, handleVideoUpload],
+    [editor, handleImageUpload, handleVideoUpload]
   );
 
   const handleImageButtonClick = useCallback(() => {

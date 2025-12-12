@@ -1,4 +1,4 @@
-import { Bookmark, ChevronRight, Newspaper } from "lucide-react"; // Import icons needed
+import { Bookmark, ChevronRight, Newspaper } from "lucide-react";
 import React, { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import ArticleCard from "../components/common/ArticleCard";
@@ -16,7 +16,6 @@ const HomePage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [bookmarks, setBookmarks] = useState<string[]>([]);
 
-  // Load bookmarks from localStorage
   useEffect(() => {
     try {
       const saved = localStorage.getItem("breachtimes-bookmarks");
@@ -28,7 +27,6 @@ const HomePage: React.FC = () => {
     }
   }, []);
 
-  // Toggle bookmark function
   const toggleBookmark = useCallback((id: string) => {
     setBookmarks((prevBookmarks) => {
       const index = prevBookmarks.indexOf(id);
@@ -40,20 +38,19 @@ const HomePage: React.FC = () => {
       }
       localStorage.setItem(
         "breachtimes-bookmarks",
-        JSON.stringify(newBookmarks),
+        JSON.stringify(newBookmarks)
       );
       return newBookmarks;
     });
   }, []);
 
-  // Fetch home data
   useEffect(() => {
     const fetchHomeData = async () => {
       setIsLoading(true);
       try {
         const data = await publicApi.getHomeData(
           language,
-          currentCategory === "saved" ? undefined : currentCategory,
+          currentCategory === "saved" ? undefined : currentCategory
         );
         setHomeData(data);
       } catch (error) {
@@ -106,7 +103,6 @@ const HomePage: React.FC = () => {
         <div className="bg-card p-6 rounded-2xl shadow-soft border border-border-color h-full" />
       );
     } else {
-      // Default to grid layout
       content = (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {section.articles.map((article) => (
@@ -139,7 +135,7 @@ const HomePage: React.FC = () => {
           </h2>
           {section.type !== "hero-grid" && (
             <Link
-              to={`/?category=${section.associatedCategory}`} // Fix: use section.associatedCategory
+              to={`/?category=${section.associatedCategory}`}
               className={`text-sm font-bold hover:text-bbcRed transition-colors flex items-center gap-1 opacity-80 hover:opacity-100 ${titleColor}`}
             >
               {t("all", language)} <ChevronRight className="w-4 h-4" />
@@ -222,10 +218,9 @@ const HomePage: React.FC = () => {
       ];
     }
 
-    // Show only প্রধান খবর (hero-stories) section with all articles in hero-grid layout
     if (currentCategory === "home" || currentCategory === null) {
       const heroStoriesSection = homeData.sections.find(
-        (s) => s.id === "hero-stories",
+        (s) => s.id === "hero-stories"
       );
 
       if (heroStoriesSection) {

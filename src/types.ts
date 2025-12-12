@@ -26,13 +26,13 @@ export interface Article {
   content_en?: string;
   readTime: string;
   image: string;
-  published_at: string; // ISO date string
+  published_at: string;
   status: "published" | "draft" | "archived";
-  leaked_documents?: Document[]; // Array of Document type, if not empty
-  documents?: Document[]; // Array of Document type
+  leaked_documents?: Document[];
+  documents?: Document[];
   allow_submissions: boolean;
-  category: string; // Category name (translated)
-  comments?: Comment[]; // Only for single article fetch
+  category: string;
+  comments?: Comment[];
   fallback_lang?: boolean;
 }
 
@@ -51,7 +51,7 @@ export interface AdminArticle {
   published_at?: string;
   category_id?: string;
   section_id?: string;
-  category?: string; // The translated category name
+  category?: string;
   allow_submissions?: boolean;
 }
 
@@ -64,7 +64,7 @@ export interface ArticleWithDocCount {
 
 export interface Section {
   id: string;
-  title: string; // Translated title
+  title: string;
   type: "hero" | "hero-grid" | "grid" | "list" | "carousel" | "highlight";
   highlightColor: string | null;
   associatedCategory: string | null;
@@ -76,8 +76,8 @@ export interface Comment {
   id: number;
   user: string;
   text: string;
-  time: string; // Time ago string
-  created_at: string; // ISO date string
+  time: string;
+  created_at: string;
   upvotes: number;
   downvotes: number;
   isPinned: boolean;
@@ -89,8 +89,8 @@ export interface Reply {
   id: number;
   user: string;
   text: string;
-  time: string; // Time ago string
-  created_at: string; // ISO date string
+  time: string;
+  created_at: string;
   isAdmin: boolean;
 }
 
@@ -115,7 +115,6 @@ export interface ApiResponse<T> {
   message?: string;
 }
 
-// For get_data.php response
 export interface HomeData {
   categories: Category[];
   sections: Section[];
@@ -127,12 +126,11 @@ export interface HomeData {
   };
 }
 
-// For get_user_profile.php response
 export interface UserProfile {
   displayName: string;
   email: string;
   commentCount: number;
-  upvotes: number; // This might be overall upvotes for user's comments
+  upvotes: number;
   recentComments: Array<{
     text: string;
     upvotes: number;

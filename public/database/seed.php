@@ -5,7 +5,7 @@ require_once __DIR__ . "/../config/db.php";
 try {
     $pdo->exec("SET FOREIGN_KEY_CHECKS = 0");
     $pdo->exec(
-        "DROP TABLE IF EXISTS messages, messaging_preferences, muted_users, comment_votes, comments, documents, article_submissions, articles, sections, categories, users",
+        "DROP TABLE IF EXISTS muted_users, comment_votes, comments, documents, article_submissions, articles, sections, categories, users",
     );
     $pdo->exec("SET FOREIGN_KEY_CHECKS = 1");
 } catch (PDOException $e) {
@@ -395,21 +395,12 @@ foreach ($submissions as $sub) {
     echo "✓ Submission created\n";
 }
 
-// Seed Messaging Preferences
-echo "\n--- Seeding Messaging Preferences ---\n";
-$prefs = [[$johnId, 1, 0], [$sarahId, 1, 1], [$mikeId, 0, 0]];
+echo "\n" . str_repeat("=", 50) . "\n";
 
-$stmt = $pdo->prepare(
-    "INSERT INTO messaging_preferences (user_id, notifications_enabled, email_notifications) VALUES (?, ?, ?)",
-);
-foreach ($prefs as $pref) {
-    $stmt->execute($pref);
-    echo "✓ Messaging preference set\n";
-}
-
-// Seed Messages
+// Seed Messages - User to Admin and Admin to User
 echo "\n--- Seeding Messages ---\n";
 $messages = [
+    // John's conversation with admin
     [
         $johnId,
         "user",
@@ -417,16 +408,7 @@ $messages = [
         "admin",
         "সাইবার নিরাপত্তা সম্পর্কে আরও তথ্য পেতে পারি কিনা?",
         "text",
-        "sent",
-    ],
-    [
-        $sarahId,
-        "user",
-        $adminId,
-        "admin",
-        "আমার অ্যাকাউন্ট হ্যাক হয়েছে, কী করব?",
-        "text",
-        "delivered",
+        "read",
     ],
     [
         $adminId,
@@ -437,7 +419,25 @@ $messages = [
         "text",
         "read",
     ],
-    [$mikeId, "user", $adminId, "admin", "তথ্য আপডেট পেতে চাই", "text", "sent"],
+    [
+        $johnId,
+        "user",
+        $adminId,
+        "admin",
+        "আমার ডেটা সুরক্ষিত রাখতে আমি কী করতে পারি?",
+        "text",
+        "read",
+    ],
+    // Sarah's conversation with admin
+    [
+        $sarahId,
+        "user",
+        $adminId,
+        "admin",
+        "আমার অ্যাকাউন্ট হ্যাক হয়েছে, কী করব?",
+        "text",
+        "read",
+    ],
     [
         $adminId,
         "admin",
@@ -446,6 +446,44 @@ $messages = [
         "আপনার সমস্যা সমাধান হয়েছে। নিরাপত্তা বাড়ানোর জন্য আপডেট করুন।",
         "text",
         "delivered",
+    ],
+    [
+        $sarahId,
+        "user",
+        $adminId,
+        "admin",
+        "ধন্যবাদ আপনার সহায়তার জন্য।",
+        "text",
+        "read",
+    ],
+    // Mike's conversation with admin
+    [
+        $mikeId,
+        "user",
+        $adminId,
+        "admin",
+        "তথ্য আপডেট পেতে চাই",
+        "text",
+        "delivered",
+    ],
+    [
+        $adminId,
+        "admin",
+        $mikeId,
+        "user",
+        "আপনি আমাদের নিউজলেটার সাবস্ক্রাইব করতে পারেন।",
+        "text",
+        "sent",
+    ],
+    // Emma's initial message
+    [
+        $emmaId,
+        "user",
+        $adminId,
+        "admin",
+        "এই প্ল্যাটফর্ম সম্পর্কে আরও জানতে চাই।",
+        "text",
+        "sent",
     ],
 ];
 
@@ -466,5 +504,6 @@ echo "- Admin: admin@breachtimes.com / admin123\n";
 echo "- User 1: john@example.com / user123\n";
 echo "- User 2: sarah@example.com / user123\n";
 echo "- User 3: mike@example.com / user123\n";
+echo "- User 4: emma@example.com / user123\n";
 echo "\nAll tables have been populated with sample data.\n";
 ?>

@@ -29,7 +29,11 @@
         "noBannedTypes": "warn"
       },
       "a11y": {
-        "useButtonType": "warn"
+        "useButtonType": "warn",
+        "noLabelWithoutControl": "warn"
+      },
+      "security": {
+        "noDangerouslySetInnerHtml": "warn"
       }
     }
   },

@@ -3,10 +3,8 @@ import type {
   Article,
   ArticleWithDocCount,
   Category,
-  Conversation,
   Document as DocType,
   HomeData,
-  Message,
   Section,
   User,
   UserProfile,
@@ -28,18 +26,17 @@ export interface AdminArticle {
   published_at?: string;
   category_id?: string | undefined;
   section_id?: string;
-  category?: string; // The translated category name
+  category?: string;
   allow_submissions?: boolean;
 }
 
-const API_BASE_URL = "/api"; // Vite proxy will handle this
+const API_BASE_URL = "/api";
 
 const api = axios.create({
   baseURL: API_BASE_URL,
-  withCredentials: true, // Important for session cookies
+  withCredentials: true,
 });
 
-// Setup interceptors for logging and error handling
 setupApiInterceptors(api);
 
 export const authApi = {
@@ -50,7 +47,7 @@ export const authApi = {
 
   login: async (
     email: string,
-    password: string,
+    password: string
   ): Promise<{ success: boolean; user?: User; message?: string }> => {
     const response = await api.post("/login.php", { email, password });
     return response.data;
@@ -58,7 +55,7 @@ export const authApi = {
 
   register: async (
     email: string,
-    password: string,
+    password: string
   ): Promise<{ success: boolean; user?: User; message?: string }> => {
     const response = await api.post("/register.php", { email, password });
     return response.data;
@@ -82,7 +79,7 @@ export const publicApi = {
 
   getArticle: async (
     id: string,
-    lang: string,
+    lang: string
   ): Promise<{ success: boolean; article?: Article; error?: string }> => {
     const response = await api.get(`/get_article.php`, {
       params: { id, lang },
@@ -95,7 +92,7 @@ export const publicApi = {
     page: number,
     perPage: number,
     sort: string,
-    lang: string,
+    lang: string
   ): Promise<{
     success: boolean;
     comments?: Array<{
@@ -130,7 +127,7 @@ export const publicApi = {
     articleId: string,
     text: string,
     lang: string,
-    userName?: string,
+    userName?: string
   ): Promise<{ success: boolean; message?: string; error?: string }> => {
     const response = await api.post("/post_comment.php", {
       articleId,
@@ -143,7 +140,7 @@ export const publicApi = {
 
   voteComment: async (
     commentId: number,
-    voteType: "upvote" | "downvote",
+    voteType: "upvote" | "downvote"
   ): Promise<{
     success: boolean;
     action?: string;
@@ -167,7 +164,7 @@ export const publicApi = {
   },
 
   submitDocument: async (
-    formData: FormData,
+    formData: FormData
   ): Promise<{ success: boolean; message?: string; error?: string }> => {
     const response = await api.post("/submit_document.php", formData, {
       headers: {
@@ -185,40 +182,10 @@ export const publicApi = {
     return response.data;
   },
 
-  getMessagesWithAdmin: async (
-    adminId: number,
-  ): Promise<{
-    success: boolean;
-    messages?: Message[];
-    count?: number;
-    error?: string;
-  }> => {
-    const response = await api.get("/get_messages.php", {
-      params: { user_id: adminId },
-    });
-    return response.data;
-  },
-
-  sendMessageToAdmin: async (
-    content: string,
-  ): Promise<{
-    success: boolean;
-    message_id?: number;
-    timestamp?: string;
-    error?: string;
-  }> => {
-    // Assuming adminId is always 1 for user-to-admin messages
-    const response = await api.post("/send_message.php", {
-      recipient_id: 1,
-      content,
-    });
-    return response.data;
-  },
-
   postReply: async (
     parentCommentId: number,
     text: string,
-    lang?: string,
+    lang?: string
   ): Promise<{
     success: boolean;
     replyId?: number;
@@ -264,7 +231,7 @@ export const adminApi = {
   },
 
   uploadImage: async (
-    formData: FormData,
+    formData: FormData
   ): Promise<{
     success: boolean;
     url?: string;
@@ -291,7 +258,7 @@ export const adminApi = {
 
   muteUser: async (
     userId: number,
-    reason?: string,
+    reason?: string
   ): Promise<{ success: boolean; message?: string; error?: string }> => {
     const response = await api.post("/mute_user.php", {
       userId,
@@ -302,7 +269,7 @@ export const adminApi = {
   },
 
   unmuteUser: async (
-    userId: number,
+    userId: number
   ): Promise<{ success: boolean; message?: string; error?: string }> => {
     const response = await api.post("/mute_user.php", {
       userId,
@@ -329,7 +296,7 @@ export const adminApi = {
   },
 
   deleteComment: async (
-    id: number,
+    id: number
   ): Promise<{ success: boolean; error?: string }> => {
     const response = await api.post("/delete_comment.php", { id });
     return response.data;
@@ -354,10 +321,10 @@ export const adminApi = {
   },
 
   getAdminConversations: async (
-    sort: string,
+    sort: string
   ): Promise<{
     success: boolean;
-    conversations?: Conversation[];
+    conversations?: any[];
     count?: number;
     error?: string;
   }> => {
@@ -368,10 +335,10 @@ export const adminApi = {
   },
 
   getAdminMessages: async (
-    userId: number,
+    userId: number
   ): Promise<{
     success: boolean;
-    messages?: Message[];
+    messages?: any[];
     count?: number;
     error?: string;
   }> => {
@@ -383,7 +350,7 @@ export const adminApi = {
 
   sendAdminMessage: async (
     recipientId: number,
-    content: string,
+    content: string
   ): Promise<{
     success: boolean;
     message_id?: number;
@@ -407,14 +374,14 @@ export const adminApi = {
   },
 
   saveCategory: async (
-    category: Partial<Category>,
+    category: Partial<Category>
   ): Promise<{ success: boolean; message?: string }> => {
     const response = await api.post("/save_category.php", category);
     return response.data;
   },
 
   deleteCategory: async (
-    id: string,
+    id: string
   ): Promise<{ success: boolean; message?: string }> => {
     const response = await api.post("/delete_category.php", { id });
     return response.data;
@@ -430,21 +397,21 @@ export const adminApi = {
   },
 
   saveSection: async (
-    section: Partial<Section>,
+    section: Partial<Section>
   ): Promise<{ success: boolean; message?: string }> => {
     const response = await api.post("/save_section.php", section);
     return response.data;
   },
 
   deleteSection: async (
-    id: string,
+    id: string
   ): Promise<{ success: boolean; message?: string }> => {
     const response = await api.post("/delete_section.php", { id });
     return response.data;
   },
 
   saveArticle: async (
-    formData: FormData,
+    formData: FormData
   ): Promise<{ success: boolean; id?: string; error?: string }> => {
     const response = await api.post("/save_article.php", formData, {
       headers: {
@@ -455,14 +422,14 @@ export const adminApi = {
   },
 
   deleteArticle: async (
-    id: string,
+    id: string
   ): Promise<{ success: boolean; error?: string }> => {
     const response = await api.post("/delete_article.php", { id });
     return response.data;
   },
 
   getArticleDocuments: async (
-    articleId: string,
+    articleId: string
   ): Promise<{ success: boolean; documents?: DocType[]; error?: string }> => {
     const response = await api.get(`/get_article_documents.php`, {
       params: { id: articleId },
@@ -471,7 +438,7 @@ export const adminApi = {
   },
 
   getDocument: async (
-    docId: string,
+    docId: string
   ): Promise<{ success: boolean; document?: DocType; error?: string }> => {
     const response = await api.get(`/get_document.php`, {
       params: { id: docId },
@@ -480,7 +447,7 @@ export const adminApi = {
   },
 
   saveDocument: async (
-    formData: FormData,
+    formData: FormData
   ): Promise<{ success: boolean; message?: string; error?: string }> => {
     const response = await api.post("/save_document.php", formData, {
       headers: {
@@ -491,7 +458,7 @@ export const adminApi = {
   },
 
   deleteDocument: async (
-    id: string,
+    id: string
   ): Promise<{ success: boolean; message?: string; error?: string }> => {
     const response = await api.post("/delete_document.php", { id });
     return response.data;

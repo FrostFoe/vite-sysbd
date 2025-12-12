@@ -27,7 +27,7 @@ interface NotificationContextType {
 }
 
 const NotificationContext = createContext<NotificationContextType | undefined>(
-  undefined,
+  undefined
 );
 
 /**
@@ -49,13 +49,12 @@ export const ToastProvider: FC<{ children: ReactNode }> = ({ children }) => {
           setToasts((prev) => prev.filter((t) => t.id !== id));
         }, duration);
 
-        // Store timer for cleanup
         toast.timer = timer;
       }
 
       return id;
     },
-    [],
+    []
   );
 
   const removeToast = useCallback((id: string) => {
@@ -66,28 +65,28 @@ export const ToastProvider: FC<{ children: ReactNode }> = ({ children }) => {
     (message: string, duration?: number) => {
       addToast(message, "success", duration);
     },
-    [addToast],
+    [addToast]
   );
 
   const error = useCallback(
     (message: string, duration?: number) => {
       addToast(message, "error", duration);
     },
-    [addToast],
+    [addToast]
   );
 
   const warning = useCallback(
     (message: string, duration?: number) => {
       addToast(message, "warning", duration);
     },
-    [addToast],
+    [addToast]
   );
 
   const info = useCallback(
     (message: string, duration?: number) => {
       addToast(message, "info", duration);
     },
-    [addToast],
+    [addToast]
   );
 
   return (
@@ -111,7 +110,6 @@ export const ToastProvider: FC<{ children: ReactNode }> = ({ children }) => {
 /**
  * Hook to use toast notifications
  */
-// eslint-disable-next-line react-refresh/only-export-components
 export const useToast = () => {
   const context = useContext(NotificationContext);
   if (!context) {

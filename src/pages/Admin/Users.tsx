@@ -1,10 +1,11 @@
 import { AlertCircle, Ban, CheckCircle, Loader } from "lucide-react";
 import type React from "react";
 import { useCallback, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useLayout } from "../../context/LayoutContext";
 import { adminApi } from "../../lib/api";
 import { t } from "../../lib/translations";
-import { escapeHtml, showToastMsg } from "../../lib/utils";
+import { escapeHtml, handleItemSelect, showToastMsg } from "../../lib/utils";
 
 interface AdminUser {
   id: number;
@@ -18,6 +19,7 @@ interface AdminUser {
 
 const Users: React.FC = () => {
   const { language } = useLayout();
+  const navigate = useNavigate();
   const [users, setUsers] = useState<AdminUser[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [muteModalOpen, setMuteModalOpen] = useState(false);
@@ -108,9 +110,17 @@ const Users: React.FC = () => {
             {users.map((user) => {
               const isMuted = !!user.is_muted;
               return (
-                <div
+                <button
                   key={user.id}
-                  className="bg-card p-4 rounded-lg border border-border-color group hover:bg-muted-bg transition-colors"
+                  onClick={() =>
+                    handleItemSelect(
+                      window.innerWidth < 768,
+                      navigate,
+                      `/admin/users/${user.id}`
+                    )
+                  }
+                  type="button"
+                  className="bg-card p-4 rounded-lg border border-border-color group hover:bg-muted-bg transition-colors cursor-pointer w-full text-left"
                 >
                   <div className="flex items-start justify-between">
                     <div className="flex items-center gap-3 min-w-0">
@@ -147,7 +157,7 @@ const Users: React.FC = () => {
                         {new Date(user.created_at).toLocaleDateString()}
                       </div>
                       <div className="flex items-center gap-1">
-                        {user.role !== "admin" && // Assuming current user is admin, can't mute admins generally, but logic depends on reqs
+                        {user.role !== "admin" &&
                           (isMuted ? (
                             <button
                               type="button"
@@ -177,7 +187,7 @@ const Users: React.FC = () => {
                       Reason: {escapeHtml(user.reason)}
                     </div>
                   )}
-                </div>
+                </button>
               );
             })}
           </div>

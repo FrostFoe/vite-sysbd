@@ -6,13 +6,11 @@ import { CustomDropdown } from "../../components/common/CustomDropdown";
 import { adminApi } from "../../lib/api";
 import type { Section } from "../../types";
 
-// The 'Section' type from types.ts is for the public API.
-// This page needs a type that matches the database table.
 interface AdminSection {
   id: string;
   title_bn: string;
   title_en: string;
-  type: Section["type"]; // Reuse the type from the global Section type
+  type: Section["type"];
   sort_order: number;
 }
 
@@ -36,7 +34,6 @@ const SectionModal: React.FC<{
     }
   });
 
-  // Memoize initial form data to reset when the section changes
   const initialFormData = useMemo(() => {
     if (section) {
       return { ...section };
@@ -49,11 +46,9 @@ const SectionModal: React.FC<{
         sort_order: 0,
       };
     }
-  }, [section]); // Only depend on section directly
+  }, [section]);
 
-  // Reset form data when modal opens with different section
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     setFormData(initialFormData as Partial<AdminSection>);
   }, [initialFormData]);
 
@@ -204,10 +199,9 @@ const Sections: React.FC = () => {
     try {
       const res = await adminApi.getSections();
       if (res.success && res.data) {
-        // The data from the API matches our AdminSection type
         const typedData = res.data as unknown as AdminSection[];
         setSections(
-          typedData.sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0)),
+          typedData.sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0))
         );
       } else {
         throw new Error(res.message || "Failed to fetch sections");
@@ -235,13 +229,10 @@ const Sections: React.FC = () => {
 
   const handleSave = async (formData: Partial<AdminSection>) => {
     try {
-      // The saveSection API endpoint is flexible enough to handle this object
       await adminApi.saveSection(formData as Partial<Section>);
       handleCloseModal();
       fetchSections();
-    } catch (_err) {
-      // Error silently handled, user can retry
-    }
+    } catch (_err) {}
   };
 
   const handleDelete = async (id: string) => {
@@ -249,9 +240,7 @@ const Sections: React.FC = () => {
       try {
         await adminApi.deleteSection(id);
         fetchSections();
-      } catch (_err) {
-        // Error silently handled, user can retry
-      }
+      } catch (_err) {}
     }
   };
 

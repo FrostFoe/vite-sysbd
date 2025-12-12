@@ -1,7 +1,7 @@
 import { Edit2, FileText, Loader, Plus, Search, Trash2 } from "lucide-react";
 import type React from "react";
 import { useCallback, useEffect, useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { CustomDropdown } from "../../components/common/CustomDropdown";
 import { useLayout } from "../../context/LayoutContext";
 import { adminApi } from "../../lib/api";
@@ -9,6 +9,7 @@ import { t } from "../../lib/translations";
 import {
   escapeHtml,
   formatTimestamp,
+  handleItemSelect,
   PLACEHOLDER_IMAGE,
   showToastMsg,
 } from "../../lib/utils";
@@ -16,6 +17,7 @@ import type { AdminArticle, Category } from "../../types";
 
 const ArticleList: React.FC = () => {
   const { language } = useLayout();
+  const navigate = useNavigate();
   const [articles, setArticles] = useState<AdminArticle[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -73,7 +75,7 @@ const ArticleList: React.FC = () => {
         } else {
           showToastMsg(
             response.error || t("failed_to_delete_article", language),
-            "error",
+            "error"
           );
         }
       } catch (error) {
@@ -81,12 +83,12 @@ const ArticleList: React.FC = () => {
         showToastMsg(t("server_error", language), "error");
       }
     },
-    [language],
+    [language]
   );
 
   const handleFilterChange = (
     type: "search" | "cat" | "status",
-    value: string,
+    value: string
   ) => {
     const newParams = new URLSearchParams(searchParams.toString());
     if (value) {
@@ -115,7 +117,6 @@ const ArticleList: React.FC = () => {
           <form
             onSubmit={(e) => {
               e.preventDefault();
-              // Filters are already applied via handleFilterChange
             }}
             className="flex gap-2 w-full md:w-auto"
           >
@@ -177,115 +178,98 @@ const ArticleList: React.FC = () => {
             </Link>
           </div>
         ) : (
-          <table className="w-full text-left border-collapse responsive-table">
-            <thead className="bg-muted-bg text-muted-text text-xs uppercase">
-              <tr>
-                <th className="p-3 sm:p-4">{t("article", language)}</th>
-                <th className="hidden md:table-cell p-3 sm:p-4">
-                  {t("status", language)}
-                </th>
-                <th className="hidden md:table-cell p-3 sm:p-4">
-                  {t("category", language)}
-                </th>
-                <th className="hidden md:table-cell p-3 sm:p-4">
-                  {t("date", language)}
-                </th>
-                <th className="p-3 sm:p-4 text-right">
-                  {t("actions", language)}
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-border-color">
-              {articles.map((a) => {
-                const statusColors: { [key: string]: string } = {
-                  published: "bg-green-100 text-green-700 border-green-200",
-                  draft: "bg-yellow-100 text-yellow-700 border-yellow-200",
-                  archived: "bg-gray-100 text-gray-700 border-gray-200",
-                };
-                const colorClass = statusColors[a.status] || statusColors.draft;
-                const pubDate = formatTimestamp(a.published_at, language);
-                const createdDate = formatTimestamp(a.created_at, language);
+          <div className="grid grid-cols-1 gap-4 p-4">
+            {articles.map((a) => {
+              const statusColors: { [key: string]: string } = {
+                published:
+                  "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 border-green-200 dark:border-green-800",
+                draft:
+                  "bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400 border-yellow-200 dark:border-yellow-800",
+                archived:
+                  "bg-gray-100 dark:bg-gray-900/30 text-gray-700 dark:text-gray-400 border-gray-200 dark:border-gray-800",
+              };
+              const colorClass = statusColors[a.status] || statusColors.draft;
+              const pubDate = formatTimestamp(a.published_at, language);
+              const createdDate = formatTimestamp(a.created_at, language);
 
-                return (
-                  <tr
-                    key={a.id}
-                    className="hover:bg-muted-bg transition-colors"
-                  >
-                    <td className="p-3 sm:p-4">
-                      <div className="flex items-center gap-4">
-                        <img
-                          src={a.image || PLACEHOLDER_IMAGE}
-                          alt=""
-                          className="w-12 h-12 rounded object-cover bg-gray-200"
-                        />
-                        <div className="max-w-[120px] sm:max-w-md">
-                          {a.title_bn && (
-                            <Link
-                              to={`/admin/articles/${a.id}/edit`}
-                              className="font-bold text-sm block hover:text-bbcRed line-clamp-1 font-hind mb-0.5 truncate"
-                            >
-                              {escapeHtml(a.title_bn)}
-                            </Link>
+              return (
+                <button
+                  key={a.id}
+                  onClick={() =>
+                    handleItemSelect(
+                      window.innerWidth < 768,
+                      navigate,
+                      `/admin/articles/${a.id}/edit`
+                    )
+                  }
+                  type="button"
+                  className="bg-card p-4 rounded-lg border border-border-color group hover:bg-muted-bg transition-colors cursor-pointer w-full text-left"
+                >
+                  <div className="flex items-start justify-between mb-3 gap-3">
+                    <div className="flex items-start gap-3 min-w-0 flex-1">
+                      <img
+                        src={a.image || PLACEHOLDER_IMAGE}
+                        alt=""
+                        className="w-12 h-12 rounded object-cover bg-gray-200 shrink-0"
+                      />
+                      <div className="truncate flex-1">
+                        <Link
+                          to={`/admin/articles/${a.id}/edit`}
+                          className="font-bold text-sm block hover:text-bbcRed truncate font-hind"
+                        >
+                          {escapeHtml(
+                            a.title_bn || a.title_en || t("no_title", language)
                           )}
-                          {a.title_en && (
-                            <span className="text-xs text-muted-text block line-clamp-1 truncate">
-                              {escapeHtml(a.title_en)}
-                            </span>
-                          )}
-                          {!a.title_bn && !a.title_en && (
-                            <span className="text-xs italic text-muted-text">
-                              ({t("no_title", language)})
+                        </Link>
+                        {a.title_bn && a.title_en && (
+                          <p className="text-xs text-muted-text truncate">
+                            {escapeHtml(a.title_en)}
+                          </p>
+                        )}
+                        <div className="flex gap-2 items-center mt-2 flex-wrap">
+                          <span
+                            className={`px-2 py-1 rounded-full text-xs font-bold border ${colorClass}`}
+                          >
+                            {escapeHtml(a.status)}
+                          </span>
+                          {a.category && (
+                            <span className="text-xs bg-muted-bg text-card-text px-2 py-1 rounded-full border border-border-color">
+                              {escapeHtml(a.category)}
                             </span>
                           )}
                         </div>
                       </div>
-                    </td>
-                    <td className="hidden md:table-cell p-3 sm:p-4">
-                      <span
-                        className={`px-2 py-1 rounded-full text-xs font-bold border ${colorClass}`}
+                    </div>
+                    <div className="flex items-center gap-1 shrink-0 ml-2">
+                      <Link
+                        to={`/admin/articles/${a.id}/edit`}
+                        className="p-2 text-card-text hover:bg-muted-bg hover:text-bbcRed rounded transition-colors"
                       >
-                        {escapeHtml(a.status)}
-                      </span>
-                    </td>
-                    <td className="hidden md:table-cell p-3 sm:p-4 text-sm">
-                      <div className="flex flex-col max-w-[120px] truncate">
-                        <span className="font-hind truncate">
-                          {a.category || "-"}
-                        </span>
-                      </div>
-                    </td>
-                    <td className="hidden md:table-cell p-3 sm:p-4 text-xs text-muted-text">
-                      <div className="flex flex-col">
-                        <span>
-                          {t("pub", language)}: {pubDate}
-                        </span>
-                        <span className="opacity-70">
-                          {t("cr", language)}: {createdDate}
-                        </span>
-                      </div>
-                    </td>
-                    <td className="p-3 sm:p-4 text-right">
-                      <div className="flex justify-end gap-2">
-                        <Link
-                          to={`/admin/articles/${a.id}/edit`}
-                          className="p-2 text-card-text hover:bg-muted-bg rounded"
-                        >
-                          <Edit2 className="w-4 h-4" />
-                        </Link>
-                        <button
-                          type="button"
-                          onClick={() => handleDeleteArticle(a.id)}
-                          className="p-2 text-danger hover:bg-danger/10 rounded"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+                        <Edit2 className="w-4 h-4" />
+                      </Link>
+                      <button
+                        type="button"
+                        onClick={() => handleDeleteArticle(a.id)}
+                        className="p-2 text-danger hover:bg-danger/10 dark:hover:bg-danger/20 rounded transition-colors"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
+                  <div className="text-xs text-muted-text space-y-1">
+                    <div>
+                      <span className="font-bold">{t("pub", language)}:</span>{" "}
+                      {pubDate}
+                    </div>
+                    <div>
+                      <span className="font-bold">{t("cr", language)}:</span>{" "}
+                      {createdDate}
+                    </div>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
         )}
       </div>
     </>

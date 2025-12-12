@@ -13,7 +13,7 @@ const Register: React.FC = () => {
     e.preventDefault();
     const success = await register(email, password);
     if (success) {
-      navigate("/"); // Redirect to home or dashboard after registration
+      navigate("/");
     }
   };
 

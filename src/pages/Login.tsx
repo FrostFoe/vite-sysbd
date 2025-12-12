@@ -13,7 +13,7 @@ const Login: React.FC = () => {
     e.preventDefault();
     const success = await login(email, password);
     if (success) {
-      navigate("/"); // Redirect to home or dashboard after login
+      navigate("/");
     }
   };
 

@@ -22,7 +22,6 @@ export const Breadcrumb: React.FC<BreadcrumbProps> = ({
   separator = <ChevronRight className="w-4 h-4 text-muted-text" />,
   maxItems = 4,
 }) => {
-  // Handle collapsing if too many items
   let displayItems = items;
   if (items.length > maxItems) {
     displayItems = [
@@ -91,7 +90,6 @@ export const RouteBreadcrumb: React.FC = () => {
     });
   });
 
-  // Remove href from last item (current page)
   if (items.length > 0) {
     const lastItem = items[items.length - 1];
     items[items.length - 1] = { label: lastItem.label };

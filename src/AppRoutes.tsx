@@ -16,16 +16,17 @@ const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
 const ArticleDetail = lazy(() => import("./pages/ArticleDetail"));
 const ArticleList = lazy(() => import("./pages/Admin/ArticleList"));
 const ArticleEdit = lazy(() => import("./pages/Admin/ArticleEdit"));
-const AdminInbox = lazy(() => import("./pages/Admin/Inbox"));
 const AdminUsers = lazy(() => import("./pages/Admin/Users"));
+const AdminUserDetail = lazy(() => import("./pages/Admin/UserDetail"));
 const AdminComments = lazy(() => import("./pages/Admin/Comments"));
+const AdminCommentDetail = lazy(() => import("./pages/Admin/CommentDetail"));
 const AdminSubmissions = lazy(() => import("./pages/Admin/Submissions"));
+const AdminSubmissionDetail = lazy(
+  () => import("./pages/Admin/SubmissionDetail")
+);
 const AdminCategories = lazy(() => import("./pages/Admin/Categories"));
 const AdminSections = lazy(() => import("./pages/Admin/Sections"));
 const AdminDocuments = lazy(() => import("./pages/Admin/Documents"));
-const UserInbox = lazy(() => import("./pages/Dashboard/Inbox"));
-
-// A simple Protected Route wrapper
 const ProtectedRoute: React.FC<{
   children: React.ReactNode;
   adminOnly?: boolean;
@@ -104,18 +105,6 @@ const AppRoutes: React.FC = () => {
             </ProtectedRoute>
           }
         />
-        <Route
-          path="/dashboard/inbox"
-          element={
-            <ProtectedRoute>
-              <DashLayout>
-                <Suspense fallback={<LoadingSpinner />}>
-                  <UserInbox />
-                </Suspense>
-              </DashLayout>
-            </ProtectedRoute>
-          }
-        />
 
         {/* Admin Only Protected Routes with DashLayout */}
         <Route
@@ -167,24 +156,24 @@ const AppRoutes: React.FC = () => {
           }
         />
         <Route
-          path="/admin/inbox"
-          element={
-            <ProtectedRoute adminOnly>
-              <DashLayout>
-                <Suspense fallback={<LoadingSpinner />}>
-                  <AdminInbox />
-                </Suspense>
-              </DashLayout>
-            </ProtectedRoute>
-          }
-        />
-        <Route
           path="/admin/users"
           element={
             <ProtectedRoute adminOnly>
               <DashLayout>
                 <Suspense fallback={<LoadingSpinner />}>
                   <AdminUsers />
+                </Suspense>
+              </DashLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/users/:userId"
+          element={
+            <ProtectedRoute adminOnly>
+              <DashLayout>
+                <Suspense fallback={<LoadingSpinner />}>
+                  <AdminUserDetail />
                 </Suspense>
               </DashLayout>
             </ProtectedRoute>
@@ -203,12 +192,36 @@ const AppRoutes: React.FC = () => {
           }
         />
         <Route
+          path="/admin/comments/:commentId"
+          element={
+            <ProtectedRoute adminOnly>
+              <DashLayout>
+                <Suspense fallback={<LoadingSpinner />}>
+                  <AdminCommentDetail />
+                </Suspense>
+              </DashLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
           path="/admin/submissions"
           element={
             <ProtectedRoute adminOnly>
               <DashLayout>
                 <Suspense fallback={<LoadingSpinner />}>
                   <AdminSubmissions />
+                </Suspense>
+              </DashLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/submissions/:submissionId"
+          element={
+            <ProtectedRoute adminOnly>
+              <DashLayout>
+                <Suspense fallback={<LoadingSpinner />}>
+                  <AdminSubmissionDetail />
                 </Suspense>
               </DashLayout>
             </ProtectedRoute>

@@ -56,7 +56,6 @@ const ArticleDetail: React.FC = () => {
 
   const isAdmin = user?.role === "admin";
 
-  // Load bookmarks and votes from localStorage
   useEffect(() => {
     try {
       const savedBookmarks = localStorage.getItem("breachtimes-bookmarks");
@@ -73,7 +72,6 @@ const ArticleDetail: React.FC = () => {
     }
   }, [id]);
 
-  // Fetch article data
   useEffect(() => {
     const fetchArticle = async () => {
       if (!id) return;
@@ -96,7 +94,6 @@ const ArticleDetail: React.FC = () => {
     fetchArticle();
   }, [id, language]);
 
-  // Handle font size change
   const handleFontSizeChange = useCallback((size: typeof fontSize) => {
     setFontSize(size);
     const proseEl = document.querySelector(".prose");
@@ -107,16 +104,14 @@ const ArticleDetail: React.FC = () => {
         lg: ["text-[1.35rem]", "leading-loose"],
       };
 
-      // Remove all possible font size classes
       Object.values(sizes)
         .flat()
         .forEach((cls) => {
           proseEl.classList.remove(
-            `[&_p]:${cls.replace("text-lg", "text-base")}`,
-          ); // Tailwind uses text-base for p
+            `[&_p]:${cls.replace("text-lg", "text-base")}`
+          );
           proseEl.classList.remove(`[&_p]:${cls}`);
         });
-      // Add the selected size classes
       sizes[size].forEach((cls) => {
         proseEl.classList.add(`[&_p]:${cls}`);
       });
@@ -124,10 +119,9 @@ const ArticleDetail: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    handleFontSizeChange(fontSize); // Apply initial font size
+    handleFontSizeChange(fontSize);
   }, [fontSize, handleFontSizeChange]);
 
-  // Bookmark toggle
   const handleBookmarkToggle = useCallback(() => {
     if (!id) return;
     setBookmarks((prevBookmarks) => {
@@ -138,16 +132,15 @@ const ArticleDetail: React.FC = () => {
           : [...prevBookmarks, id];
       localStorage.setItem(
         "breachtimes-bookmarks",
-        JSON.stringify(newBookmarks),
+        JSON.stringify(newBookmarks)
       );
       showToastMsg(
-        index > -1 ? t("removed", language) : t("saved_successfully", language),
+        index > -1 ? t("removed", language) : t("saved_successfully", language)
       );
       return newBookmarks;
     });
   }, [id, language]);
 
-  // Share article
   const handleShare = useCallback(() => {
     if (navigator.share) {
       navigator
@@ -163,13 +156,12 @@ const ArticleDetail: React.FC = () => {
     }
   }, [article, language]);
 
-  // Comment submission
   const postComment = useCallback(async () => {
     if (!id) return;
     setCommentError("");
     const trimmedText = commentInput.trim();
     if (trimmedText.length < 3) {
-      setCommentError(t("comment_too_short", language)); // assuming these keys exist
+      setCommentError(t("comment_too_short", language));
       return;
     }
     if (trimmedText.length > 5000) {
@@ -182,15 +174,13 @@ const ArticleDetail: React.FC = () => {
       if (response.success) {
         setCommentInput("");
         showToastMsg(t("comment_posted", language));
-        // Reload comments or refetch article
-        // For simplicity, refetching the whole article here, but could be optimized
         const updatedArticleResponse = await publicApi.getArticle(id, language);
         if (updatedArticleResponse.success && updatedArticleResponse.article) {
           setArticle(updatedArticleResponse.article);
         }
       } else {
         setCommentError(
-          response.error || t("failed_to_post_comment", language),
+          response.error || t("failed_to_post_comment", language)
         );
       }
     } catch (error) {
@@ -199,7 +189,6 @@ const ArticleDetail: React.FC = () => {
     }
   }, [id, commentInput, language]);
 
-  // Comment voting
   const voteComment = useCallback(
     async (commentId: number, voteType: "upvote" | "downvote") => {
       try {
@@ -208,7 +197,7 @@ const ArticleDetail: React.FC = () => {
           setUserVotes((prev) => {
             const newVotes = { ...prev };
             if (newVotes[commentId] === voteType) {
-              delete newVotes[commentId]; // Remove vote if already voted the same way
+              delete newVotes[commentId];
             } else {
               newVotes[commentId] = voteType;
             }
@@ -216,7 +205,6 @@ const ArticleDetail: React.FC = () => {
             return newVotes;
           });
 
-          // Update article comments state with new vote counts
           setArticle((prevArticle) => {
             if (!prevArticle) return null;
             const updatedComments = prevArticle.comments?.map((comment) =>
@@ -226,7 +214,7 @@ const ArticleDetail: React.FC = () => {
                     upvotes: response.upvotes,
                     downvotes: response.downvotes,
                   }
-                : comment,
+                : comment
             );
             return { ...prevArticle, comments: updatedComments };
           });
@@ -234,7 +222,7 @@ const ArticleDetail: React.FC = () => {
         } else {
           showToastMsg(
             response.error || t("failed_to_vote", language),
-            "error",
+            "error"
           );
         }
       } catch (error) {
@@ -242,27 +230,22 @@ const ArticleDetail: React.FC = () => {
         showToastMsg(t("server_error", language), "error");
       }
     },
-    [id, language],
+    [id, language]
   );
 
-  // Comment sorting
   const handleCommentSortChange = useCallback(
     (newSort: string) => {
       setCommentSort(newSort as typeof commentSort);
       localStorage.setItem(`sort-${id}`, newSort);
-      // Optionally re-fetch comments with new sort order or re-sort locally
-      // For now, re-sorting logic might be complex if replies are involved, will assume simple re-render.
     },
-    [id],
+    [id]
   );
 
-  // Reply form toggle for admin
   const toggleReplyForm = useCallback((commentId: number) => {
     setActiveReplyForm((prev) => (prev === commentId ? null : commentId));
-    setReplyInput((prev) => ({ ...prev, [commentId]: "" })); // Clear previous reply input
+    setReplyInput((prev) => ({ ...prev, [commentId]: "" }));
   }, []);
 
-  // Post reply for admin
   const postReply = useCallback(
     async (parentCommentId: number) => {
       if (!id) return;
@@ -277,16 +260,15 @@ const ArticleDetail: React.FC = () => {
         const response = await publicApi.postReply(
           parentCommentId,
           text,
-          language,
+          language
         );
         if (response.success) {
           setReplyInput((prev) => ({ ...prev, [parentCommentId]: "" }));
           setActiveReplyForm(null);
           showToastMsg(t("reply_posted", language));
-          // Refetch article to update comments
           const updatedArticleResponse = await publicApi.getArticle(
             id,
-            language,
+            language
           );
           if (
             updatedArticleResponse.success &&
@@ -297,7 +279,7 @@ const ArticleDetail: React.FC = () => {
         } else {
           showToastMsg(
             response.error || t("failed_to_post_reply", language),
-            "error",
+            "error"
           );
         }
       } catch (error) {
@@ -305,10 +287,9 @@ const ArticleDetail: React.FC = () => {
         showToastMsg(t("server_error", language), "error");
       }
     },
-    [id, replyInput, language],
+    [id, replyInput, language]
   );
 
-  // Delete comment for admin
   const deleteComment = useCallback(
     async (commentId: number) => {
       if (!isAdmin || !window.confirm(t("confirm_delete_comment", language)))
@@ -318,11 +299,10 @@ const ArticleDetail: React.FC = () => {
         const response = await adminApi.deleteComment(commentId);
         if (response.success) {
           showToastMsg(t("comment_deleted", language));
-          // Refetch article to update comments
           if (!id) return;
           const updatedArticleResponse = await publicApi.getArticle(
             id,
-            language,
+            language
           );
           if (
             updatedArticleResponse.success &&
@@ -333,7 +313,7 @@ const ArticleDetail: React.FC = () => {
         } else {
           showToastMsg(
             response.error || t("failed_to_delete_comment", language),
-            "error",
+            "error"
           );
         }
       } catch (error) {
@@ -341,10 +321,9 @@ const ArticleDetail: React.FC = () => {
         showToastMsg(t("server_error", language), "error");
       }
     },
-    [id, isAdmin, language],
+    [id, isAdmin, language]
   );
 
-  // User Profile Modal
   const openProfileModal = useCallback(
     async (userName: string) => {
       setProfileModalOpen(true);
@@ -357,7 +336,7 @@ const ArticleDetail: React.FC = () => {
         } else {
           showToastMsg(
             response.error || t("failed_to_fetch_profile", language),
-            "error",
+            "error"
           );
         }
       } catch (error) {
@@ -367,7 +346,7 @@ const ArticleDetail: React.FC = () => {
         setProfileModalLoading(false);
       }
     },
-    [language],
+    [language]
   );
 
   const closeProfileModal = useCallback(() => {
@@ -375,7 +354,6 @@ const ArticleDetail: React.FC = () => {
     setUserProfile(null);
   }, []);
 
-  // Document submission
   const submissionFormRef = useRef<HTMLFormElement>(null);
   const handleDocumentSubmission = useCallback(
     async (e: React.FormEvent<HTMLFormElement>) => {
@@ -391,7 +369,7 @@ const ArticleDetail: React.FC = () => {
         } else {
           showToastMsg(
             response.error || t("submission_failed", language),
-            "error",
+            "error"
           );
         }
       } catch (error) {
@@ -399,7 +377,7 @@ const ArticleDetail: React.FC = () => {
         showToastMsg(t("server_error", language), "error");
       }
     },
-    [id, language],
+    [id, language]
   );
 
   if (isLoading) {
@@ -751,7 +729,6 @@ const ArticleDetail: React.FC = () => {
               <div className="divide-y divide-border-color">
                 {[...article.comments]
                   .sort((a, b) => {
-                    // Sort by newest first
                     if (commentSort === "newest") {
                       return (
                         new Date(b.created_at).getTime() -
@@ -795,7 +772,6 @@ const ArticleDetail: React.FC = () => {
 
                       <p
                         className="text-sm text-card-text ml-12 leading-relaxed mb-3"
-                        // biome-ignore lint/security/noDangerouslySetInnerHtml: Content is properly sanitized with sanitizeHtml to prevent XSS
                         dangerouslySetInnerHTML={{
                           __html: sanitizeHtml(comment.text),
                         }}
@@ -860,7 +836,6 @@ const ArticleDetail: React.FC = () => {
                               </div>
                               <p
                                 className="text-xs text-card-text ml-9 leading-relaxed"
-                                // biome-ignore lint/security/noDangerouslySetInnerHtml: Content is properly sanitized with sanitizeHtml to prevent XSS
                                 dangerouslySetInnerHTML={{
                                   __html: sanitizeHtml(reply.text),
                                 }}

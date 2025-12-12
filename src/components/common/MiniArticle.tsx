@@ -1,12 +1,12 @@
 import type React from "react";
 import { Link } from "react-router-dom";
 import { useLayout } from "../../context/LayoutContext";
-import { escapeHtml, PLACEHOLDER_IMAGE } from "../../lib/utils"; // Assuming PLACEHOLDER_IMAGE is in utils
+import { escapeHtml, PLACEHOLDER_IMAGE } from "../../lib/utils";
 import type { Article } from "../../types";
 
 interface MiniArticleProps {
   article: Article;
-  colorClass?: string; // e.g., 'text-blue-600', 'text-success'
+  colorClass?: string;
 }
 
 const MiniArticle: React.FC<MiniArticleProps> = ({
@@ -14,7 +14,7 @@ const MiniArticle: React.FC<MiniArticleProps> = ({
   colorClass = "text-bbcRed",
 }) => {
   useLayout();
-  const titleColor = "text-card-text"; // Always from main theme
+  const titleColor = "text-card-text";
 
   return (
     <li className="group cursor-pointer p-2 rounded-xl hover:bg-muted-bg transition-colors">

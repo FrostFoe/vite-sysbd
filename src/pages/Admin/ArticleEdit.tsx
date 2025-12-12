@@ -11,7 +11,7 @@ import { showToastMsg } from "../../lib/utils";
 import type { AdminArticle, Category, Section } from "../../types";
 
 const ArticleEdit: React.FC = () => {
-  const { id } = useParams<{ id: string }>(); // Article ID for editing, undefined for new
+  const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { language } = useLayout();
 
@@ -22,18 +22,15 @@ const ArticleEdit: React.FC = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [restoreAlert, setRestoreAlert] = useState(false);
 
-  // For tracking content changes
   const contentBnRef = useRef<string>("");
   const contentEnRef = useRef<string>("");
 
   const storageKey = `article-draft-${id || "new"}`;
 
-  // Fetch initial data (article, categories, sections)
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        // Fetch categories and sections
         const [categoriesRes, sectionsRes] = await Promise.all([
           adminApi.getCategories(),
           adminApi.getSections(),
@@ -43,21 +40,19 @@ const ArticleEdit: React.FC = () => {
           setCategories(categoriesRes.data);
         }
         if (sectionsRes.success && sectionsRes.data) {
-          // Sections type in API returns Section[], but here we only need id and title
           setSections(
             sectionsRes.data.map(
               (s) =>
                 ({
                   ...s,
                   title: s.title || "Untitled Section",
-                }) as unknown as Section,
-            ),
+                }) as unknown as Section
+            )
           );
         }
 
-        // Fetch article if editing
         if (id) {
-          const articleRes = await publicApi.getArticle(id, language); // Use publicApi.getArticle for full article data
+          const articleRes = await publicApi.getArticle(id, language);
           if (articleRes.success && articleRes.article) {
             setArticle({
               id: articleRes.article.id,
@@ -76,12 +71,10 @@ const ArticleEdit: React.FC = () => {
           } else {
             showToastMsg(
               articleRes.error || t("failed_to_load_article", language),
-              "error",
+              "error"
             );
-            // navigate('/admin/articles'); // Redirect if article not found
           }
         } else {
-          // Default values for new article
           setArticle({
             id: `art_${Date.now()}`,
             status: "draft",
@@ -101,14 +94,11 @@ const ArticleEdit: React.FC = () => {
     fetchData();
   }, [id, language]);
 
-  // Autosave Logic
   useEffect(() => {
     const saved = localStorage.getItem(storageKey);
     if (saved && !id) {
-      // Only show restore for new articles without an ID yet
       const draft = JSON.parse(saved);
       if (draft.content_bn || draft.content_en) {
-        // Check if there's actual content
         setRestoreAlert(true);
       }
     }
@@ -123,11 +113,10 @@ const ArticleEdit: React.FC = () => {
     localStorage.setItem(storageKey, JSON.stringify(currentArticleData));
   }, [article, storageKey]);
 
-  // Debounced autosave
   useEffect(() => {
     const handler = setTimeout(() => {
       autosaveArticle();
-    }, 2000); // Autosave every 2 seconds after last change
+    }, 2000);
 
     return () => {
       clearTimeout(handler);
@@ -144,14 +133,12 @@ const ArticleEdit: React.FC = () => {
     }
   }, [storageKey, language]);
 
-  // Handle Image Upload for featured image
   const handleImageUpload = useCallback(
     async (e: React.ChangeEvent<HTMLInputElement>) => {
       const file = e.target.files?.[0];
       if (!file) return;
 
       if (file.size > 2 * 1024 * 1024) {
-        // Max 2MB
         showToastMsg(t("file_too_large", language), "error");
         return;
       }
@@ -160,25 +147,23 @@ const ArticleEdit: React.FC = () => {
       formData.append("image", file);
 
       try {
-        // Assuming an uploadImage API exists that returns {success: true, url: string}
-        const response = await adminApi.uploadImage(formData); // This API needs to be implemented on PHP side
+        const response = await adminApi.uploadImage(formData);
         if (response.success && response.url) {
           setArticle((prev) => ({ ...prev, image: response.url }));
           showToastMsg(t("image_uploaded_successfully", language));
         } else {
           showToastMsg(
             response.error || t("image_upload_failed", language),
-            "error",
+            "error"
           );
         }
       } catch (_error) {
         showToastMsg(t("server_error", language), "error");
       }
     },
-    [language],
+    [language]
   );
 
-  // Handle form submission
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
       e.preventDefault();
@@ -199,21 +184,21 @@ const ArticleEdit: React.FC = () => {
       formData.append("status", article.status || "draft");
       formData.append(
         "allow_submissions",
-        article.allow_submissions ? "1" : "0",
+        article.allow_submissions ? "1" : "0"
       );
 
       try {
         const response = await adminApi.saveArticle(formData);
         if (response.success) {
           showToastMsg(t("article_saved_successfully", language));
-          localStorage.removeItem(storageKey); // Clear autosave
+          localStorage.removeItem(storageKey);
           if (!id) {
-            navigate(`/admin/articles/${response.id}/edit`); // Redirect to edit page for new article
+            navigate(`/admin/articles/${response.id}/edit`);
           }
         } else {
           showToastMsg(
             response.error || t("failed_to_save_article", language),
-            "error",
+            "error"
           );
         }
       } catch (_error) {
@@ -222,7 +207,7 @@ const ArticleEdit: React.FC = () => {
         setIsSaving(false);
       }
     },
-    [article, id, language, navigate, storageKey],
+    [article, id, language, navigate, storageKey]
   );
 
   if (isLoading) {

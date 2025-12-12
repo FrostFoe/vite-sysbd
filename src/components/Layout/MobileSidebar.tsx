@@ -32,7 +32,7 @@ const MobileSidebar: React.FC = () => {
     localStorage.removeItem("breachtimes-bookmarks");
     localStorage.removeItem("breachtimes-theme");
     localStorage.removeItem("breachtimes-lang");
-    toggleSidebar(false); // Close sidebar after logout
+    toggleSidebar(false);
   };
 
   const isAdmin = user?.role === "admin";

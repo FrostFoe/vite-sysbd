@@ -96,7 +96,6 @@ const NavItem: React.FC<{
     );
   }
 
-  // Handle external link for saved articles
   if (to.startsWith("/?")) {
     return (
       <a href={to} className={`${baseClasses} ${inactiveClasses}`}>
@@ -108,7 +107,7 @@ const NavItem: React.FC<{
   return (
     <NavLink
       to={to}
-      end // Use 'end' to prevent parent routes from staying active
+      end
       className={({ isActive }) =>
         `${baseClasses} ${isActive ? activeClasses : inactiveClasses}`
       }

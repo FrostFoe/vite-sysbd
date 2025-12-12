@@ -1,14 +1,20 @@
 import { FileText, Inbox, Loader, Trash2 } from "lucide-react";
 import type React from "react";
 import { useCallback, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useLayout } from "../../context/LayoutContext";
 import { adminApi } from "../../lib/api";
 import { t } from "../../lib/translations";
-import { escapeHtml, formatTimestamp, showToastMsg } from "../../lib/utils";
+import {
+  escapeHtml,
+  formatTimestamp,
+  handleItemSelect,
+  showToastMsg,
+} from "../../lib/utils";
 
 const Submissions: React.FC = () => {
   const { language } = useLayout();
+  const navigate = useNavigate();
   interface Submission {
     id: number;
     article_id: string;
@@ -45,15 +51,10 @@ const Submissions: React.FC = () => {
 
   const handleDeleteSubmission = async (_id: number) => {
     try {
-      // Note: The API might not have a delete submission endpoint
-      // This is a placeholder - you may need to implement the backend API
       showToastMsg(
         "Delete functionality for submissions is not implemented",
-        "error",
+        "error"
       );
-      // If API endpoint exists, it would be something like:
-      // await adminApi.deleteSubmission(id);
-      // fetchSubmissions(); // Refresh the list
     } catch (_error) {
       showToastMsg("Failed to delete submission", "error");
     }
@@ -82,9 +83,17 @@ const Submissions: React.FC = () => {
         ) : (
           <div className="grid grid-cols-1 gap-4 p-4">
             {submissions.map((s) => (
-              <div
+              <button
                 key={s.id}
-                className="bg-card p-4 rounded-lg border border-border-color group"
+                onClick={() =>
+                  handleItemSelect(
+                    window.innerWidth < 768,
+                    navigate,
+                    `/admin/submissions/${s.id}`
+                  )
+                }
+                type="button"
+                className="bg-card p-4 rounded-lg border border-border-color group cursor-pointer hover:bg-muted-bg transition-colors w-full text-left"
               >
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex items-center gap-3 min-w-0">
@@ -97,7 +106,7 @@ const Submissions: React.FC = () => {
                         className="font-bold text-sm truncate block hover:text-bbcRed"
                       >
                         {escapeHtml(
-                          s.title_en || s.title_bn || "Unknown Article",
+                          s.title_en || s.title_bn || "Unknown Article"
                         )}
                       </Link>
                       <p className="text-xs text-muted-text truncate">
@@ -108,7 +117,7 @@ const Submissions: React.FC = () => {
                   <div className="flex items-center gap-1 shrink-0 ml-2">
                     {s.file_path && (
                       <a
-                        href={s.file_path} // Assuming this is accessible or proxied
+                        href={s.file_path}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="p-2 hover:bg-muted-bg rounded-lg"
@@ -121,7 +130,7 @@ const Submissions: React.FC = () => {
                       onClick={() => {
                         if (
                           window.confirm(
-                            "Are you sure you want to delete this submission?",
+                            "Are you sure you want to delete this submission?"
                           )
                         ) {
                           handleDeleteSubmission(s.id);
@@ -139,7 +148,7 @@ const Submissions: React.FC = () => {
                 <div className="text-xs text-muted-text mt-2">
                   {formatTimestamp(s.created_at, language)}
                 </div>
-              </div>
+              </button>
             ))}
           </div>
         )}

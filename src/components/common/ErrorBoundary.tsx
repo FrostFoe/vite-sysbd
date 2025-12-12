@@ -34,9 +34,6 @@ export class ErrorBoundary extends React.Component<Props, State> {
       error,
       errorInfo,
     });
-
-    // Log error to external service (Sentry, etc.)
-    // logErrorToService(error, errorInfo);
   }
 
   public render() {

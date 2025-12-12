@@ -7,25 +7,21 @@
  * Generate ARIA labels for common patterns
  */
 export const ARIA_LABELS = {
-  // Navigation
   MAIN_MENU: "Main navigation menu",
   MOBILE_MENU: "Mobile navigation menu",
   BREADCRUMB: "Breadcrumb navigation",
   PAGINATION: "Pagination controls",
 
-  // Forms
   SEARCH_FORM: "Search for articles",
   LOGIN_FORM: "Login form",
   COMMENT_FORM: "Post a comment",
   FILTER_OPTIONS: "Filter options",
 
-  // Alerts
   SUCCESS: "Success message",
   ERROR: "Error message",
   WARNING: "Warning message",
   INFO: "Information message",
 
-  // Interactive
   LIKE_BUTTON: "Like this article",
   SHARE_BUTTON: "Share this article",
   CLOSE_BUTTON: "Close dialog",
@@ -38,7 +34,7 @@ export const ARIA_LABELS = {
  */
 export function getContrastRatio(
   foreground: string,
-  background: string,
+  background: string
 ): number {
   const rgb1 = hexToRgb(foreground);
   const rgb2 = hexToRgb(background);
@@ -97,7 +93,7 @@ export function useKeyboardShortcut(
   key: string,
   callback: () => void,
   ctrlKey?: boolean,
-  shiftKey?: boolean,
+  shiftKey?: boolean
 ) {
   React.useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {
@@ -125,7 +121,7 @@ export function useFocusTrap(ref: React.RefObject<HTMLDivElement>) {
     if (!element) return;
 
     const focusableElements = element.querySelectorAll(
-      'a, button, input, select, textarea, [tabindex]:not([tabindex="-1"])',
+      'a, button, input, select, textarea, [tabindex]:not([tabindex="-1"])'
     ) as NodeListOf<HTMLElement>;
     const firstElement = focusableElements[0] as HTMLElement;
     const lastElement = focusableElements[
@@ -173,5 +169,4 @@ export function announceToScreenReaders(message: string, assertive = false) {
   }, 1000);
 }
 
-// Import React for hooks
 import React from "react";

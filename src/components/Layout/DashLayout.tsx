@@ -14,7 +14,6 @@ const DashLayout: React.FC<DashLayoutProps> = ({ children }) => {
   const location = useLocation();
   const [isSidebarOpen, setSidebarOpen] = useState(false);
 
-  // Determine the layout type based on the URL path
   const layoutType = location.pathname.startsWith("/admin")
     ? "admin"
     : "dashboard";
@@ -25,10 +24,8 @@ const DashLayout: React.FC<DashLayoutProps> = ({ children }) => {
 
   const prevPathnameRef = useRef(location.pathname);
 
-  // Close sidebar on route change on mobile
   useEffect(() => {
     setSidebarOpen((prev) => {
-      // Only close if the route changed and sidebar was open
       if (location.pathname !== prevPathnameRef.current && prev) {
         prevPathnameRef.current = location.pathname;
         return false;

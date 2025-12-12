@@ -75,7 +75,6 @@ const CustomVideo: React.FC<CustomVideoProps> = ({
 
   const handleTimeUpdate = () => {
     if (videoRef.current) {
-      // If video is at the end, pause it if not looping
       if (
         videoRef.current.currentTime >= videoRef.current.duration - 0.1 &&
         !loop

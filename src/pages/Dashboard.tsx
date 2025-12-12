@@ -10,7 +10,7 @@ const Dashboard: React.FC = () => {
   const { language } = useLayout();
 
   if (!user) {
-    return <div>{t("not_logged_in", language)}</div>; // Should be handled by ProtectedRoute
+    return <div>{t("not_logged_in", language)}</div>;
   }
 
   return (

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { useLayout } from "../../context/LayoutContext";
-import { publicApi } from "../../lib/api"; // Import publicApi for categories
+import { publicApi } from "../../lib/api";
 import { t } from "../../lib/translations";
 import type { Category } from "../../types";
 
@@ -35,10 +35,9 @@ const Header: React.FC = () => {
       }
     };
     fetchCategories();
-  }, [language]); // Refetch categories if language changes
+  }, [language]);
 
   useEffect(() => {
-    // Update current category from URL search params
     const categoryParam = searchParams.get("category");
     if (categoryParam) {
       setCurrentCategory(categoryParam);
@@ -49,11 +48,9 @@ const Header: React.FC = () => {
 
   const handleLogout = async () => {
     await logout();
-    // Clear local storage items as in PHP version
     localStorage.removeItem("breachtimes-bookmarks");
     localStorage.removeItem("breachtimes-theme");
     localStorage.removeItem("breachtimes-lang");
-    // Optionally redirect
   };
 
   const isAdmin = user?.role === "admin";

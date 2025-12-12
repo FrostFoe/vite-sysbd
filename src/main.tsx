@@ -14,7 +14,7 @@ if (rootElement) {
           <App />
         </ToastProvider>
       </ErrorBoundary>
-    </StrictMode>,
+    </StrictMode>
   );
 } else {
   console.error("Failed to find the root element");

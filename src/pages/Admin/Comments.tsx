@@ -1,14 +1,21 @@
 import { ExternalLink, Loader, MessageCircle, Trash2 } from "lucide-react";
 import type React from "react";
 import { useCallback, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useLayout } from "../../context/LayoutContext";
 import { adminApi } from "../../lib/api";
 import { t } from "../../lib/translations";
-import { escapeHtml, formatTimestamp, showToastMsg } from "../../lib/utils";
+import {
+  escapeHtml,
+  formatTimestamp,
+  handleItemSelect,
+  sanitizeHtml,
+  showToastMsg,
+} from "../../lib/utils";
 
 const Comments: React.FC = () => {
   const { language } = useLayout();
+  const navigate = useNavigate();
   interface AdminComment {
     id: number;
     text: string;
@@ -52,7 +59,7 @@ const Comments: React.FC = () => {
       } else {
         showToastMsg(
           response.error || t("failed_to_delete_comment", language),
-          "error",
+          "error"
         );
       }
     } catch (_error) {
@@ -84,57 +91,70 @@ const Comments: React.FC = () => {
             </p>
           </div>
         ) : (
-          <table className="w-full text-left border-collapse responsive-table">
-            <thead className="bg-muted-bg text-muted-text text-xs uppercase">
-              <tr>
-                <th className="p-3 sm:p-4">User</th>
-                <th className="p-3 sm:p-4">Comment</th>
-                <th className="hidden md:table-cell p-3 sm:p-4">Article</th>
-                <th className="p-3 sm:p-4">Time</th>
-                <th className="p-3 sm:p-4 text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-border-color">
-              {comments.map((c) => (
-                <tr key={c.id} className="hover:bg-muted-bg transition-colors">
-                  <td className="p-3 sm:p-4 font-bold text-sm">
-                    {escapeHtml(c.user_name)}
-                  </td>
-                  <td
-                    className="p-3 sm:p-4 text-sm max-w-md truncate"
-                    title={c.text}
-                  >
-                    {escapeHtml(c.text)}
-                  </td>
-                  <td className="hidden md:table-cell p-3 sm:p-4 text-xs text-muted-text">
-                    <Link
-                      to={`/article/${c.article_id}`}
-                      target="_blank"
-                      className="hover:text-bbcRed flex items-center gap-1"
-                    >
-                      {escapeHtml(language === "bn" ? c.title_bn : c.title_en)}{" "}
-                      <ExternalLink className="w-3 h-3" />
-                    </Link>
-                  </td>
-                  <td className="p-3 sm:p-4 text-xs text-muted-text">
-                    {formatTimestamp(c.created_at, language)}
-                  </td>
-                  <td className="p-3 sm:p-4 text-right">
-                    <div className="flex items-center justify-end gap-2">
+          <div className="grid grid-cols-1 gap-4 p-4">
+            {comments.map((c) => (
+              <button
+                key={c.id}
+                onClick={() =>
+                  handleItemSelect(
+                    window.innerWidth < 768,
+                    navigate,
+                    `/admin/comments/${c.id}`
+                  )
+                }
+                type="button"
+                className="bg-card p-4 rounded-lg border border-border-color group hover:bg-muted-bg transition-colors cursor-pointer w-full text-left"
+              >
+                <div className="flex items-start justify-between mb-3">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-bbcRed to-orange-600 flex items-center justify-center text-white text-sm font-bold">
+                      {c.user_name.charAt(0).toUpperCase()}
+                    </div>
+                    <div className="truncate">
+                      <div className="font-bold text-sm truncate">
+                        {escapeHtml(c.user_name)}
+                      </div>
+                      <div className="text-xs text-muted-text truncate">
+                        {escapeHtml(
+                          language === "bn" ? c.title_bn : c.title_en
+                        ) || "Unknown Article"}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-1 shrink-0 ml-2">
+                    <div className="text-xs text-muted-text hidden sm:block whitespace-nowrap">
+                      {formatTimestamp(c.created_at, language)}
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <Link
+                        to={`/article/${c.article_id}`}
+                        target="_blank"
+                        title="View Article"
+                        className="text-muted-text hover:text-bbcRed hover:bg-bbcRed/10 p-2 rounded transition-colors"
+                      >
+                        <ExternalLink className="w-4 h-4" />
+                      </Link>
                       <button
                         type="button"
                         onClick={() => handleDeleteComment(c.id)}
-                        className="text-danger hover:text-danger/80 p-2 rounded hover:bg-danger/10 dark:hover:bg-danger/20 transition-colors"
+                        className="text-danger hover:text-danger/80 hover:bg-danger/10 dark:hover:bg-danger/20 p-2 rounded transition-colors"
                         title="Delete"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                  </div>
+                </div>
+                <div
+                  className="text-sm text-card-text max-h-16 overflow-hidden prose prose-sm dark:prose-invert"
+                  dangerouslySetInnerHTML={{ __html: sanitizeHtml(c.text) }}
+                />
+                <div className="text-xs text-muted-text mt-2 sm:hidden">
+                  {formatTimestamp(c.created_at, language)}
+                </div>
+              </button>
+            ))}
+          </div>
         )}
       </div>
     </div>

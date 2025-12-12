@@ -127,38 +127,6 @@ CREATE TABLE IF NOT EXISTS `muted_users` (
   CONSTRAINT `fk_muted_by_admin` FOREIGN KEY (`muted_by_admin_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Messaging System Table
-CREATE TABLE IF NOT EXISTS `messages` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `sender_id` int(11) NOT NULL,
-  `sender_type` enum('user','admin') NOT NULL DEFAULT 'user',
-  `recipient_id` int(11) NOT NULL,
-  `recipient_type` enum('user','admin') NOT NULL DEFAULT 'admin',
-  `content` longtext NOT NULL,
-  `type` enum('text','image','file') NOT NULL DEFAULT 'text',
-  `status` enum('sent','delivered','read') NOT NULL DEFAULT 'sent',
-  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  KEY `idx_sender` (`sender_id`, `sender_type`),
-  KEY `idx_recipient` (`recipient_id`, `recipient_type`),
-  KEY `idx_conversation` (`sender_id`, `recipient_id`),
-  KEY `idx_created_at` (`created_at` DESC),
-  KEY `idx_status` (`status`),
-  CONSTRAINT `fk_sender` FOREIGN KEY (`sender_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- Messaging Preferences Table
-CREATE TABLE IF NOT EXISTS `messaging_preferences` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_id` int(11) NOT NULL UNIQUE,
-  `notifications_enabled` tinyint(1) DEFAULT 1,
-  `email_notifications` tinyint(1) DEFAULT 0,
-  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  CONSTRAINT `fk_messaging_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
 -- Documents Table (For downloadable files associated with articles)
 CREATE TABLE IF NOT EXISTS `documents` (
   `id` varchar(50) NOT NULL,

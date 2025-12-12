@@ -27,7 +27,6 @@ const SearchOverlay: React.FC = () => {
     }
     debounceTimeout.current = setTimeout(async () => {
       if (query.length > 1) {
-        // Minimum 2 characters for search
         try {
           const results = await publicApi.searchArticles(query, language);
           setSearchResults(results);
@@ -38,7 +37,7 @@ const SearchOverlay: React.FC = () => {
       } else {
         setSearchResults([]);
       }
-    }, 300); // Debounce search by 300ms
+    }, 300);
   };
 
   return (
@@ -77,7 +76,7 @@ const SearchOverlay: React.FC = () => {
                 <Link
                   key={article.id}
                   to={`/article/${article.id}`}
-                  onClick={() => toggleSearch(false)} // Close search when clicking on an article
+                  onClick={() => toggleSearch(false)}
                   className="group cursor-pointer flex flex-col h-full bg-card-elevated rounded-2xl overflow-hidden shadow-soft hover:shadow-soft-hover transition-all duration-300 hover:-translate-y-1 border border-border-color"
                 >
                   <div className="overflow-hidden aspect-video relative">

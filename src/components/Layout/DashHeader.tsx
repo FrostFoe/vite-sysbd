@@ -11,7 +11,7 @@ interface DashHeaderProps {
 
 const DashHeader: React.FC<DashHeaderProps> = ({ type, toggleSidebar }) => {
   const { user } = useAuth();
-  const { theme, toggleTheme } = useLayout(); // Get the theme and toggle function
+  const { theme, toggleTheme } = useLayout();
   const isAdmin = type === "admin";
 
   const userName = user?.email.split("@")[0] || "User";
