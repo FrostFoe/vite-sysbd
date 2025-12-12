@@ -1,7 +1,7 @@
-import type { Conversation, Message } from "../types";
-import { API_BASE_URL } from "../lib/constants";
-import { setupApiInterceptors } from "../lib/apiInterceptors";
 import axios, { type AxiosInstance } from "axios";
+import { setupApiInterceptors } from "../lib/apiInterceptors";
+import { API_BASE_URL } from "../lib/constants";
+import type { Conversation, Message } from "../types";
 
 export interface ApiResponse<T> {
   success: boolean;

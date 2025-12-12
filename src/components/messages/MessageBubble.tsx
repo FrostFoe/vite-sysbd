@@ -1,7 +1,7 @@
+import { Check, CheckCheck } from "lucide-react";
 import React from "react";
 import { formatTimestamp } from "../../lib/utils";
 import type { Message } from "../../types";
-import { Check, CheckCheck } from "lucide-react";
 
 interface MessageBubbleProps {
   message: Message;

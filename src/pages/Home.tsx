@@ -226,75 +226,23 @@ const HomePage: React.FC = () => {
       ];
     }
 
-    // Adjust logic to match PHP's specific home page section display if currentCategory is 'home'
-    if (currentCategory === "home") {
-      // Find specific sections by ID as done in PHP code
-      const worldNewsSection = sectionsToRender.find(
-        (s) => s.id === "virginia"
-      );
-      const businessNewsSection = sectionsToRender.find(
-        (s) => s.id === "vermont"
-      );
-      const collectionSection = sectionsToRender.find(
-        (s) => s.id === "wyoming"
+    // Show only প্রধান খবর (hero-stories) section with all articles in hero-grid layout
+    if (currentCategory === "home" || currentCategory === null) {
+      const heroStoriesSection = homeData.sections.find(
+        (s) => s.id === "hero-stories"
       );
 
-      return (
-        <>
-          {sectionsToRender.map((section) => (
-            <div key={section.id}>{renderSection(section)}</div>
-          ))}
-          <section className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12 animate-fade-in">
-            {collectionSection && (
-              <div className="lg:col-span-1 h-full">
-                {renderSection({ ...collectionSection, type: "list" })}
-              </div>
-            )}
-            {worldNewsSection && (
-              <div className="lg:col-span-1 h-full">
-                <div className="bg-card p-6 rounded-2xl shadow-soft border border-border-color h-full">
-                  <div className="flex items-center gap-3 mb-6 pb-4 border-b border-border-color">
-                    <div className="w-1.5 h-6 rounded-full bg-bbcRed" />
-                    <h3 className="text-xl font-bold text-card-text">
-                      {t("more_world_news", language)}
-                    </h3>
-                  </div>
-                  <ul className="space-y-4">
-                    {worldNewsSection.articles.slice(0, 3).map((article) => (
-                      <MiniArticle
-                        key={article.id}
-                        article={article}
-                        colorClass="text-bbcRed"
-                      />
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            )}
-            {businessNewsSection && (
-              <div className="lg:col-span-1 h-full">
-                <div className="bg-card p-6 rounded-2xl shadow-soft border border-border-color h-full">
-                  <div className="flex items-center gap-3 mb-6 pb-4 border-b border-border-color">
-                    <div className="w-1.5 h-6 rounded-full bg-success" />
-                    <h3 className="text-xl font-bold text-card-text">
-                      {t("business_news", language)}
-                    </h3>
-                  </div>
-                  <ul className="space-y-4">
-                    {businessNewsSection.articles.slice(2, 5).map((article) => (
-                      <MiniArticle
-                        key={article.id}
-                        article={article}
-                        colorClass="text-success"
-                      />
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            )}
-          </section>
-        </>
-      );
+      if (heroStoriesSection) {
+        return (
+          <>
+            {renderSection({
+              ...heroStoriesSection,
+              type: "hero-grid",
+              articles: heroStoriesSection.articles,
+            })}
+          </>
+        );
+      }
     }
 
     return (

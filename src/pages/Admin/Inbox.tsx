@@ -3,14 +3,14 @@ import type React from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { CustomDropdown } from "../../components/common/CustomDropdown";
+import MessageBubble from "../../components/messages/MessageBubble";
+import MessageInput from "../../components/messages/MessageInput";
 import { useAuth } from "../../context/AuthContext";
 import { useLayout } from "../../context/LayoutContext";
 import { useMessage } from "../../context/messages/MessageContext";
 import { t } from "../../lib/translations";
 import { escapeHtml, showToastMsg } from "../../lib/utils";
 import type { Conversation } from "../../types";
-import MessageBubble from "../../components/messages/MessageBubble";
-import MessageInput from "../../components/messages/MessageInput";
 
 const AdminInbox: React.FC = () => {
   const { user } = useAuth();

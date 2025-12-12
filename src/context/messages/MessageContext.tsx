@@ -1,12 +1,12 @@
 import React, {
   createContext,
-  useContext,
-  useReducer,
-  useEffect,
   useCallback,
+  useContext,
+  useEffect,
+  useReducer,
 } from "react";
-import type { Message, Conversation } from "../../types";
 import { MessageService } from "../../services/MessageService";
+import type { Conversation, Message } from "../../types";
 
 interface MessageState {
   conversations: Conversation[];
@@ -328,11 +328,7 @@ export const MessageProvider: React.FC<{ children: React.ReactNode }> = ({
 
     const messagesInterval = setInterval(pollMessages, 5000);
     return () => clearInterval(messagesInterval);
-  }, [
-    state.activeConversation,
-    state.lastPoll.messages,
-    loadMessages,
-  ]);
+  }, [state.activeConversation, state.lastPoll.messages, loadMessages]);
 
   const value = {
     state,

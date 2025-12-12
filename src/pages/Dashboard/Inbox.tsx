@@ -2,13 +2,13 @@ import { ArrowLeft, Inbox as InboxIcon, Info, Menu } from "lucide-react";
 import type React from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import MessageBubble from "../../components/messages/MessageBubble";
+import MessageInput from "../../components/messages/MessageInput";
 import { useAuth } from "../../context/AuthContext";
 import { useLayout } from "../../context/LayoutContext";
 import { useMessage } from "../../context/messages/MessageContext";
 import { t } from "../../lib/translations";
 import { showToastMsg } from "../../lib/utils";
-import MessageBubble from "../../components/messages/MessageBubble";
-import MessageInput from "../../components/messages/MessageInput";
 
 const UserInbox: React.FC = () => {
   const { user } = useAuth();
