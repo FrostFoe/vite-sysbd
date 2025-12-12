@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "tw-animate-css";
 
 @theme {
   --font-sans: "Hind Siliguri", sans-serif;
@@ -391,7 +392,24 @@
 
 /* Form Elements */
 textarea {
-  @apply appearance-none rounded-xl focus:outline-none;
+  @apply appearance-none rounded-xl focus:outline-none transition-all duration-300;
+}
+
+input,
+select {
+  @apply transition-all duration-300;
+}
+
+button {
+  @apply transition-all duration-300 ease-out;
+}
+
+button:hover:not(:disabled) {
+  @apply transform-gpu;
+}
+
+button:active:not(:disabled) {
+  @apply scale-95;
 }
 
 #char-count {
@@ -480,11 +498,11 @@ textarea:focus-visible {
 }
 
 .custom-dropdown-button {
-  @apply w-full flex items-center justify-between px-3 py-3 text-sm bg-card text-card-text border border-border-color rounded-lg cursor-pointer transition-colors hover:border-bbcRed focus:outline-none focus:border-bbcRed;
+  @apply w-full flex items-center justify-between px-3 py-3 text-sm bg-card text-card-text border border-border-color rounded-lg cursor-pointer transition-all duration-300 hover:border-bbcRed focus:outline-none focus:border-bbcRed hover:shadow-soft;
 }
 
 .custom-dropdown-button.open {
-  @apply border-bbcRed ring-1 ring-bbcRed;
+  @apply border-bbcRed ring-1 ring-bbcRed shadow-soft;
 }
 
 .custom-dropdown-menu {
@@ -492,11 +510,11 @@ textarea:focus-visible {
 }
 
 .custom-dropdown-menu.open {
-  @apply block animate-zoom-in;
+  @apply block animate-in zoom-in duration-200;
 }
 
 .custom-dropdown-item {
-  @apply px-3 py-2 text-sm cursor-pointer transition-colors text-card-text hover:bg-muted-bg;
+  @apply px-3 py-2 text-sm cursor-pointer transition-all duration-200 text-card-text hover:bg-muted-bg;
 }
 
 .custom-dropdown-item.selected {
@@ -508,9 +526,35 @@ textarea:focus-visible {
 }
 
 .custom-dropdown-icon {
-  @apply w-4 h-4 text-muted-text transition-transform duration-200;
+  @apply w-4 h-4 text-muted-text transition-transform duration-300;
 }
 
 .custom-dropdown-button.open .custom-dropdown-icon {
   @apply rotate-180;
+}
+
+/* Smooth Transition for Links */
+a {
+  @apply transition-colors duration-300;
+}
+
+/* Smooth Input Focus */
+input:focus,
+textarea:focus,
+select:focus {
+  @apply ring-1 ring-bbcRed ring-offset-0;
+}
+
+/* Smooth Image Transitions */
+img {
+  @apply transition-transform duration-500;
+}
+
+/* Smooth Shadow Transitions */
+.shadow-soft {
+  @apply transition-shadow duration-300;
+}
+
+.shadow-soft-hover {
+  @apply transition-shadow duration-300;
 }

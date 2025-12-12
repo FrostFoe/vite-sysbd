@@ -22,8 +22,8 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
   fullScreen = false,
 }) => {
   const content = (
-    <div className="flex flex-col items-center justify-center gap-4">
-      <div className={`${sizeClasses[size]} animate-spin`}>
+    <div className="flex flex-col items-center justify-center gap-4 animate-in fade-in duration-300">
+      <div className={`${sizeClasses[size]} animate-spin text-bbcRed`}>
         <svg
           className="w-full h-full text-primary"
           xmlns="http://www.w3.org/2000/svg"

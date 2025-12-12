@@ -174,7 +174,7 @@ const ToastItem: FC<{
       className={`
         ${bgColors[toast.type]} ${borderColors[toast.type]}
         border rounded-lg shadow-lg p-4 flex items-start gap-3
-        animate-in fade-in slide-in-from-bottom-4 pointer-events-auto
+        animate-in slide-in-from-bottom-4 duration-300 pointer-events-auto
         max-w-md
       `}
     >

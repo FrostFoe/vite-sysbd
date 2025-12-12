@@ -52,8 +52,8 @@ export const Modal: React.FC<ModalProps> = ({
       role="dialog"
       aria-modal="true"
       aria-labelledby={title ? "modal-title" : undefined}
-      className={`fixed inset-0 z-50 flex items-center justify-center ${
-        backdrop ? "bg-black/50" : ""
+      className={`fixed inset-0 z-50 flex items-center justify-center animate-in fade-in duration-300 ${
+        backdrop ? "bg-black/50 backdrop-blur-sm" : ""
       }`}
       onClick={backdrop ? onClose : undefined}
       onKeyDown={(e) => {
@@ -65,7 +65,7 @@ export const Modal: React.FC<ModalProps> = ({
     >
       <div
         role="document"
-        className={`${sizeClasses[size]} bg-card rounded-lg shadow-lg overflow-hidden transform transition-all`}
+        className={`${sizeClasses[size]} bg-card rounded-lg shadow-lg overflow-hidden transform transition-all animate-in zoom-in duration-300`}
         onClick={(e) => e.stopPropagation()}
         onKeyDown={(e) => e.stopPropagation()}
       >

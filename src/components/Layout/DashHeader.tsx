@@ -18,7 +18,7 @@ const DashHeader: React.FC<DashHeaderProps> = ({ type, toggleSidebar }) => {
   const userInitial = userName ? userName[0].toUpperCase() : "U";
 
   return (
-    <header className="h-[70px] border-b border-border-color bg-white/90 dark:bg-card/90 backdrop-blur-md z-50 transition-colors duration-300 shadow-sm shrink-0 flex items-center px-4 lg:px-8 justify-between relative min-w-0">
+    <header className="h-[70px] border-b border-border-color bg-white/90 dark:bg-card/90 backdrop-blur-md z-50 transition-colors duration-300 shadow-sm shrink-0 flex items-center px-4 lg:px-8 justify-between relative min-w-0 animate-in slide-in-from-top duration-300">
       <div className="flex items-center gap-3 md:gap-4 min-w-0">
         <button
           type="button"

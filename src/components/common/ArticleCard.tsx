@@ -38,7 +38,7 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
 
   return (
     <article
-      className={`group cursor-pointer flex flex-col h-full relative ${bgClass} rounded-2xl overflow-hidden shadow-soft hover:shadow-soft-hover transition-all duration-300 hover:-translate-y-1 border ${borderClass}`}
+      className={`group cursor-pointer flex flex-col h-full relative ${bgClass} rounded-2xl overflow-hidden shadow-soft hover:shadow-soft-hover transition-all duration-300 hover:-translate-y-1 border ${borderClass} animate-in fade-in slide-in-from-bottom-4 duration-500`}
     >
       <Link
         to={`/article/${article.id}`}
