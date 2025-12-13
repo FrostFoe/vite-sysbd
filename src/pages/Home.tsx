@@ -232,7 +232,7 @@ const HomePage: React.FC = () => {
       );
     }
 
-    if (!homeData || !homeData.sections.length) {
+    if (!homeData || !homeData.sections || homeData.sections.length === 0) {
       return (
         <div className="flex flex-col items-center justify-center py-32 text-center animate-fade-in">
           <div className="bg-muted-bg p-6 rounded-full mb-4">
@@ -248,7 +248,7 @@ const HomePage: React.FC = () => {
     let sectionsToRender = homeData.sections;
 
     if (currentCategory === "saved") {
-      const allArticles = homeData.sections.flatMap((s) => s.articles);
+      const allArticles = homeData.sections?.flatMap((s) => s.articles) || [];
       const savedArticles = allArticles.filter((a) => bookmarks.includes(a.id));
 
       if (savedArticles.length === 0) {
@@ -280,7 +280,7 @@ const HomePage: React.FC = () => {
     }
 
     if (currentCategory === "home" || currentCategory === null) {
-      const heroStoriesSection = homeData.sections.find(
+      const heroStoriesSection = homeData?.sections?.find(
         (s) => s.id === "hero-stories"
       );
 
@@ -293,9 +293,9 @@ const HomePage: React.FC = () => {
             Boolean
           )
         );
-        const allArticles = homeData.sections.flatMap(
+        const allArticles = homeData?.sections?.flatMap(
           (section) => section.articles
-        );
+        ) || [];
         const remainingArticles = allArticles.filter(
           (article) => !excludedIds.has(article.id)
         );
