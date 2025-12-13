@@ -36,7 +36,7 @@ export const LayoutProvider = ({ children }: { children: ReactNode }) => {
       ? langParam
       : savedLang === "en" || savedLang === "bn"
         ? savedLang
-        : "bn";
+        : "en";
   });
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
