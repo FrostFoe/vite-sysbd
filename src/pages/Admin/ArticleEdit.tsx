@@ -1,14 +1,28 @@
-import { ExternalLink, Loader, Save } from "lucide-react";
+import {
+  Edit2,
+  ExternalLink,
+  FileText,
+  Loader,
+  Plus,
+  Save,
+  Trash2,
+} from "lucide-react";
 import type React from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import { DocumentModal } from "../../components/admin/DocumentModal";
 import { CustomEditor } from "../../components/common";
 import { CustomDropdown } from "../../components/common/CustomDropdown";
 import { useLayout } from "../../context/LayoutContext";
 import { adminApi, publicApi } from "../../lib/api";
 import { t } from "../../lib/translations";
 import { showToastMsg } from "../../lib/utils";
-import type { AdminArticle, Category, Section } from "../../types";
+import type {
+  AdminArticle,
+  Category,
+  Document as DocType,
+  Section,
+} from "../../types";
 
 const ArticleEdit: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -16,16 +30,31 @@ const ArticleEdit: React.FC = () => {
   const { language } = useLayout();
 
   const [article, setArticle] = useState<Partial<AdminArticle>>({});
+  const [documents, setDocuments] = useState<DocType[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [sections, setSections] = useState<Section[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [restoreAlert, setRestoreAlert] = useState(false);
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [editingDoc, setEditingDoc] = useState<DocType | null>(null);
 
   const contentBnRef = useRef<string>("");
   const contentEnRef = useRef<string>("");
 
   const storageKey = `article-draft-${id || "new"}`;
+
+  const fetchDocuments = useCallback(async () => {
+    if (!id) return;
+    try {
+      const res = await adminApi.getArticleDocuments(id);
+      if (res.success) {
+        setDocuments(res.documents || []);
+      }
+    } catch (_error) {
+      showToastMsg("Failed to load documents", "error");
+    }
+  }, [id]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -52,6 +81,7 @@ const ArticleEdit: React.FC = () => {
         }
 
         if (id) {
+          await fetchDocuments();
           const articleRes = await publicApi.getArticle(id, language);
           if (articleRes.success && articleRes.article) {
             setArticle({
@@ -92,7 +122,7 @@ const ArticleEdit: React.FC = () => {
     };
 
     fetchData();
-  }, [id, language]);
+  }, [id, language, fetchDocuments]);
 
   useEffect(() => {
     const saved = localStorage.getItem(storageKey);
@@ -209,6 +239,40 @@ const ArticleEdit: React.FC = () => {
     },
     [article, id, language, navigate, storageKey]
   );
+
+  const handleOpenModal = async (doc: DocType | null) => {
+    if (!id) return;
+    if (doc) {
+      const res = await adminApi.getDocument(doc.id);
+      if (res.success && res.document) {
+        setEditingDoc(res.document);
+      } else {
+        return;
+      }
+    } else {
+      setEditingDoc(null);
+    }
+    setModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setModalOpen(false);
+    setEditingDoc(null);
+  };
+
+  const handleSave = async () => {
+    await fetchDocuments();
+    handleCloseModal();
+  };
+
+  const handleDelete = async (docId: string) => {
+    if (window.confirm("Are you sure you want to delete this document?")) {
+      try {
+        await adminApi.deleteDocument(docId);
+        await fetchDocuments();
+      } catch (_error) {}
+    }
+  };
 
   if (isLoading) {
     return (
@@ -583,9 +647,71 @@ const ArticleEdit: React.FC = () => {
                 />
               </div>
             </div>
+            {id && (
+              <div className="bg-card p-4 rounded-xl border border-border-color shadow-sm">
+                <div className="flex justify-between items-center mb-3">
+                  <h3 className="font-bold text-sm uppercase text-muted-text">
+                    {t("documents", language)}
+                  </h3>
+                  <button
+                    type="button"
+                    onClick={() => handleOpenModal(null)}
+                    className="text-bbcRed hover:underline text-sm font-bold flex items-center gap-1"
+                  >
+                    <Plus className="w-4 h-4" />
+                    {t("add_document", language)}
+                  </button>
+                </div>
+                <div className="space-y-2">
+                  {documents.map((doc) => (
+                    <div
+                      key={doc.id}
+                      className="flex items-center justify-between bg-muted-bg p-2 rounded-lg"
+                    >
+                      <div className="flex items-center gap-2">
+                        <FileText className="w-5 h-5 text-muted-text" />
+                        <span className="text-sm font-medium">
+                          {doc.display_name_en || doc.display_name_bn}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <button
+                          type="button"
+                          onClick={() => handleOpenModal(doc)}
+                          className="p-1.5 hover:bg-black/10 rounded-md"
+                        >
+                          <Edit2 className="w-4 h-4" />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleDelete(doc.id)}
+                          className="p-1.5 hover:bg-danger/10 text-danger rounded-md"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                  {documents.length === 0 && (
+                    <p className="text-sm text-muted-text text-center py-4">
+                      No documents attached.
+                    </p>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </form>
+      {isModalOpen && id && (
+        <DocumentModal
+          isOpen={isModalOpen}
+          onClose={handleCloseModal}
+          onSave={handleSave}
+          articleId={id}
+          doc={editingDoc}
+        />
+      )}
     </div>
   );
 };

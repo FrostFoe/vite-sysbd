@@ -99,9 +99,7 @@ const CustomVideo: React.FC<CustomVideoProps> = ({
           <div className="bg-muted-bg border-2 border-dashed border-border-color rounded-xl w-16 h-16 mx-auto flex items-center justify-center">
             <Play className="w-6 h-6 text-muted-text" />
           </div>
-          <p className="mt-2 text-sm text-muted-text">
-            Video failed to load
-          </p>
+          <p className="mt-2 text-sm text-muted-text">Video failed to load</p>
           <p className="text-xs text-muted-text">{src}</p>
         </div>
       </div>

@@ -25,10 +25,7 @@ const LayoutContext = createContext<LayoutContextType | undefined>(undefined);
 export const LayoutProvider = ({ children }: { children: ReactNode }) => {
   const [theme, setTheme] = useState<"light" | "dark">(() => {
     const savedTheme = localStorage.getItem("breachtimes-theme");
-    return savedTheme === "dark" ||
-      (!savedTheme && window.matchMedia("(prefers-color-scheme: dark)").matches)
-      ? "dark"
-      : "light";
+    return savedTheme === "dark" ? "dark" : "light";
   });
 
   const [language, setLanguage] = useState<"en" | "bn">(() => {

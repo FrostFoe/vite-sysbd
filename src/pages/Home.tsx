@@ -293,9 +293,8 @@ const HomePage: React.FC = () => {
             Boolean
           )
         );
-        const allArticles = homeData?.sections?.flatMap(
-          (section) => section.articles
-        ) || [];
+        const allArticles =
+          homeData?.sections?.flatMap((section) => section.articles) || [];
         const remainingArticles = allArticles.filter(
           (article) => !excludedIds.has(article.id)
         );

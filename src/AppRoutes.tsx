@@ -25,7 +25,6 @@ const AdminSubmissionDetail = lazy(
 );
 const AdminCategories = lazy(() => import("./pages/Admin/Categories"));
 const AdminSections = lazy(() => import("./pages/Admin/Sections"));
-const AdminDocuments = lazy(() => import("./pages/Admin/Documents"));
 const ProtectedRoute: React.FC<{
   children: React.ReactNode;
   adminOnly?: boolean;
@@ -241,18 +240,6 @@ const AppRoutes: React.FC = () => {
               <DashLayout>
                 <RouteWrapper>
                   <AdminSections />
-                </RouteWrapper>
-              </DashLayout>
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/admin/documents"
-          element={
-            <ProtectedRoute adminOnly>
-              <DashLayout>
-                <RouteWrapper>
-                  <AdminDocuments />
                 </RouteWrapper>
               </DashLayout>
             </ProtectedRoute>

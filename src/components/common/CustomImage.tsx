@@ -60,12 +60,8 @@ const CustomImage: React.FC<CustomImageProps> = ({
       >
         <div className="text-center p-4">
           <EyeOff className="w-8 h-8 mx-auto text-muted-text" />
-          <p className="mt-2 text-sm text-muted-text">
-            Image hidden
-          </p>
-          <p className="text-xs text-muted-text">
-            Click to show
-          </p>
+          <p className="mt-2 text-sm text-muted-text">Image hidden</p>
+          <p className="text-xs text-muted-text">Click to show</p>
         </div>
       </button>
     );
@@ -78,9 +74,7 @@ const CustomImage: React.FC<CustomImageProps> = ({
       >
         <div className="text-center p-4">
           <div className="bg-muted-bg border-2 border-dashed border-border-color rounded-xl w-16 h-16 mx-auto" />
-          <p className="mt-2 text-sm text-muted-text">
-            Image failed to load
-          </p>
+          <p className="mt-2 text-sm text-muted-text">Image failed to load</p>
           <p className="text-xs text-muted-text">{src}</p>
         </div>
       </div>

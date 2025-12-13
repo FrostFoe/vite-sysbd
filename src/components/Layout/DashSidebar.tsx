@@ -29,7 +29,6 @@ const adminNavItems = [
     icon: MessageCircle,
     disabled: false,
   },
-  { name: "Messages", to: "/admin/inbox", icon: Mail, disabled: false },
   {
     name: "Categories",
     to: "/admin/categories",
@@ -37,12 +36,6 @@ const adminNavItems = [
     disabled: false,
   },
   { name: "Sections", to: "/admin/sections", icon: Layers, disabled: false },
-  {
-    name: "Documents",
-    to: "/admin/documents",
-    icon: Download,
-    disabled: false,
-  },
   { name: "Users", to: "/admin/users", icon: Shield, disabled: false },
   {
     name: "Submissions",

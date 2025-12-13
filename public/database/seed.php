@@ -401,7 +401,6 @@ foreach ($submissions as $sub) {
 
 echo "\n" . str_repeat("=", 50) . "\n";
 
-
 echo "\n" . str_repeat("=", 50) . "\n";
 echo "✓ Database seeding completed successfully!\n";
 echo str_repeat("=", 50) . "\n";
