@@ -1,11 +1,12 @@
-import { Bookmark, ChevronRight, Newspaper } from "lucide-react";
+import { Bookmark, ChevronRight, Clock, Newspaper } from "lucide-react";
 import React, { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import ArticleCard from "../components/common/ArticleCard";
 import { useLayout } from "../context/LayoutContext";
 import { publicApi } from "../lib/api";
 import { t } from "../lib/translations";
-import type { Category, Section } from "../types";
+import { formatTimestamp, PLACEHOLDER_IMAGE } from "../lib/utils";
+import type { Article, Category, Section } from "../types";
 
 const HomePage: React.FC = () => {
   const { language, currentCategory } = useLayout();
@@ -62,6 +63,44 @@ const HomePage: React.FC = () => {
     fetchHomeData();
   }, [language, currentCategory]);
 
+  const renderArticleListItem = (article: Article, isSectionDark?: boolean) => {
+    const { language } = useLayout();
+    const textColor = isSectionDark ? "text-white" : "text-card-text";
+    const metaColor = isSectionDark ? "text-gray-400" : "text-muted-text";
+    const timeAgo = formatTimestamp(article.published_at, language);
+
+    return (
+      <Link
+        key={article.id}
+        to={`/article/${article.id}`}
+        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+        className="group flex gap-4 p-4 rounded-xl hover:bg-muted-bg transition-colors duration-200 border border-transparent hover:border-border-color"
+      >
+        <div className="flex-shrink-0 w-24 h-24 rounded-lg overflow-hidden">
+          <img
+            src={article.image || PLACEHOLDER_IMAGE}
+            alt={article.title}
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+          />
+        </div>
+        <div className="flex-1 flex flex-col justify-between min-w-0">
+          <div>
+            <h3 className={`font-semibold text-sm leading-tight group-hover:text-bbcRed transition-colors line-clamp-2 ${textColor}`}>
+              {article.title}
+            </h3>
+            <p className={`text-xs mt-1 line-clamp-2 ${metaColor}`}>
+              {article.summary}
+            </p>
+          </div>
+          <div className={`flex items-center gap-2 text-xs ${metaColor}`}>
+            <Clock className="w-3 h-3" />
+            <span>{timeAgo}</span>
+          </div>
+        </div>
+      </Link>
+    );
+  };
+
   const renderSection = (section: Section) => {
     const isSectionDark = section.style === "dark";
     const titleColor = isSectionDark ? "text-white" : "text-card-text";
@@ -74,9 +113,10 @@ const HomePage: React.FC = () => {
       const heroArticle = section.articles[0];
       const subArticles = section.articles.slice(1);
       content = (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 auto-rows-max">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Main featured news */}
           {heroArticle && (
-            <div className="col-span-1 md:col-span-2 lg:col-span-2 row-span-2">
+            <div className="lg:col-span-2">
               <ArticleCard
                 article={heroArticle}
                 type="hero-grid"
@@ -86,21 +126,34 @@ const HomePage: React.FC = () => {
               />
             </div>
           )}
-          {subArticles.map((article) => (
-            <ArticleCard
-              key={article.id}
-              article={article}
-              type="grid"
-              isSectionDark={isSectionDark}
-              onBookmarkToggle={toggleBookmark}
-              isBookmarked={bookmarks.includes(article.id)}
-            />
-          ))}
+          {/* Other news as list */}
+          {subArticles.length > 0 && (
+            <div className="lg:col-span-1">
+              <div className={`${isSectionDark ? "bg-card-elevated" : "bg-card"} p-6 rounded-2xl shadow-soft border border-border-color h-full`}>
+                <h3 className={`font-bold text-lg mb-4 flex items-center gap-2 ${titleColor}`}>
+                  <span
+                    className="w-1 h-6 rounded-full"
+                    style={{ backgroundColor: borderColor }}
+                  />
+                  আরও খবর
+                </h3>
+                <div className="space-y-2">
+                  {subArticles.slice(0, 5).map((article) => (
+                    renderArticleListItem(article, isSectionDark)
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       );
     } else if (section.type === "list") {
       content = (
-        <div className="bg-card p-6 rounded-2xl shadow-soft border border-border-color h-full" />
+        <div className="space-y-2">
+          {section.articles.map((article) => (
+            renderArticleListItem(article, isSectionDark)
+          ))}
+        </div>
       );
     } else {
       content = (
@@ -224,6 +277,13 @@ const HomePage: React.FC = () => {
       );
 
       if (heroStoriesSection) {
+        // Render hero section first, then remaining articles in a single grid
+        const heroArticle = heroStoriesSection.articles[0];
+        const moreNewsArticles = heroStoriesSection.articles.slice(1, 6); // First 5 after hero
+        const excludedIds = new Set([heroArticle?.id, ...moreNewsArticles.map(a => a.id)].filter(Boolean));
+        const allArticles = homeData.sections.flatMap(section => section.articles);
+        const remainingArticles = allArticles.filter(article => !excludedIds.has(article.id));
+
         return (
           <>
             {renderSection({
@@ -231,6 +291,22 @@ const HomePage: React.FC = () => {
               type: "hero-grid",
               articles: heroStoriesSection.articles,
             })}
+            {/* Render remaining articles in a single grid without section headers */}
+            {remainingArticles.length > 0 && (
+              <section className="animate-fade-in-up relative z-10 mb-12">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                  {remainingArticles.map((article) => (
+                    <ArticleCard
+                      key={article.id}
+                      article={article}
+                      type="grid"
+                      onBookmarkToggle={toggleBookmark}
+                      isBookmarked={bookmarks.includes(article.id)}
+                    />
+                  ))}
+                </div>
+              </section>
+            )}
           </>
         );
       }
@@ -238,11 +314,20 @@ const HomePage: React.FC = () => {
 
     return (
       <>
-        {sectionsToRender.map((section) => (
-          <React.Fragment key={section.id}>
-            {renderSection(section)}
-          </React.Fragment>
-        ))}
+        {/* Render all articles from all sections in a single grid without section headers */}
+        <section className="animate-fade-in-up relative z-10 mb-12">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {sectionsToRender.flatMap(section => section.articles).map((article) => (
+              <ArticleCard
+                key={article.id}
+                article={article}
+                type="grid"
+                onBookmarkToggle={toggleBookmark}
+                isBookmarked={bookmarks.includes(article.id)}
+              />
+            ))}
+          </div>
+        </section>
       </>
     );
   };
