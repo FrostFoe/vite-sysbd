@@ -28,8 +28,8 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
   const { language, theme } = useLayout();
   const isDark = theme === "dark" || isSectionDark;
   const textColor = isSectionDark ? "text-white" : "text-card-text";
-  const subTextColor = isSectionDark ? "text-gray-300" : "text-gray-600";
-  const metaColor = isSectionDark ? "text-gray-400" : "text-muted-text";
+  const subTextColor = isSectionDark ? "text-white/70" : "text-muted-text";
+  const metaColor = isSectionDark ? "text-white/60" : "text-muted-text";
   const borderClass = isSectionDark ? "border-gray-800" : "border-border-color";
   const bgClass = "bg-card-elevated";
 

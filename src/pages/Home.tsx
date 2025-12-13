@@ -236,9 +236,9 @@ const HomePage: React.FC = () => {
       return (
         <div className="flex flex-col items-center justify-center py-32 text-center animate-fade-in">
           <div className="bg-muted-bg p-6 rounded-full mb-4">
-            <Newspaper className="w-12 h-12 text-gray-400" />
+            <Newspaper className="w-12 h-12 text-muted-text" />
           </div>
-          <h3 className="text-2xl font-bold mb-2 dark:text-white text-bbcDark">
+          <h3 className="text-2xl font-bold mb-2 text-card-text">
             {t("no_news_in_this_category", language)}
           </h3>
         </div>
@@ -255,9 +255,9 @@ const HomePage: React.FC = () => {
         return (
           <div className="flex flex-col items-center justify-center py-32 text-center animate-fade-in">
             <div className="bg-muted-bg p-6 rounded-full mb-4">
-              <Bookmark className="w-12 h-12 text-gray-400" />
+              <Bookmark className="w-12 h-12 text-muted-text" />
             </div>
-            <h3 className="text-2xl font-bold mb-2 dark:text-white text-bbcDark">
+            <h3 className="text-2xl font-bold mb-2 text-card-text">
               {t("no_saved_articles", language)}
             </h3>
             <p className="text-muted-text">

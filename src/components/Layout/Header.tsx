@@ -152,7 +152,7 @@ const Header: React.FC = () => {
           </div>
         </div>
         <div className="relative group">
-          <nav className="flex overflow-x-auto no-scrollbar gap-8 mt-2 text-gray-700 dark:text-gray-300 pb-2 mask-linear-gradient scroll-smooth">
+          <nav className="flex overflow-x-auto no-scrollbar gap-8 mt-2 text-muted-text pb-2 mask-linear-gradient scroll-smooth">
             <Link
               to="/?category=home"
               onClick={() => setCurrentCategory("home")}

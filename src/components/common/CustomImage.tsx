@@ -59,11 +59,11 @@ const CustomImage: React.FC<CustomImageProps> = ({
         aria-label={showImage ? "Hide image" : "Show image"}
       >
         <div className="text-center p-4">
-          <EyeOff className="w-8 h-8 mx-auto text-gray-500" />
-          <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+          <EyeOff className="w-8 h-8 mx-auto text-muted-text" />
+          <p className="mt-2 text-sm text-muted-text">
             Image hidden
           </p>
-          <p className="text-xs text-gray-400 dark:text-gray-500">
+          <p className="text-xs text-muted-text">
             Click to show
           </p>
         </div>
@@ -78,10 +78,10 @@ const CustomImage: React.FC<CustomImageProps> = ({
       >
         <div className="text-center p-4">
           <div className="bg-gray-200 border-2 border-dashed rounded-xl w-16 h-16 mx-auto" />
-          <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+          <p className="mt-2 text-sm text-muted-text">
             Image failed to load
           </p>
-          <p className="text-xs text-gray-400 dark:text-gray-500">{src}</p>
+          <p className="text-xs text-muted-text">{src}</p>
         </div>
       </div>
     );
@@ -91,7 +91,7 @@ const CustomImage: React.FC<CustomImageProps> = ({
     <figure className={`relative ${className}`}>
       {isLoading && (
         <div className="absolute inset-0 bg-gray-200 dark:bg-gray-700 animate-pulse rounded-lg flex items-center justify-center">
-          <span className="text-sm text-gray-500">Loading...</span>
+          <span className="text-sm text-muted-text">Loading...</span>
         </div>
       )}
       <img
@@ -105,7 +105,7 @@ const CustomImage: React.FC<CustomImageProps> = ({
         className={`w-full h-auto rounded-lg ${isLoading ? "opacity-0" : "opacity-100"} transition-opacity duration-300`}
       />
       {showCaption && caption && (
-        <figcaption className="mt-2 text-sm text-center text-gray-600 dark:text-gray-400 italic">
+        <figcaption className="mt-2 text-sm text-center text-muted-text italic">
           {caption}
         </figcaption>
       )}

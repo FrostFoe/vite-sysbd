@@ -128,7 +128,7 @@ const MobileSidebar: React.FC = () => {
               </div>
             )}
           </div>
-          <ul className="space-y-2 font-bold text-xl text-bbcDark dark:text-gray-200">
+          <ul className="space-y-2 font-bold text-xl text-card-text">
             <li className="border-b border-gray-100 dark:border-gray-800/50 pb-2 last:border-0">
               <Link
                 to="/?category=home"
@@ -139,7 +139,7 @@ const MobileSidebar: React.FC = () => {
                 className="w-full text-left py-4 flex justify-between items-center hover:text-bbcRed hover:pl-3 transition-all duration-300 group"
               >
                 <span>{t("home", language)}</span>
-                <ChevronRight className="w-5 h-5 text-black dark:text-gray-400 group-hover:text-bbcRed transition-colors" />
+                <ChevronRight className="w-5 h-5 text-muted-text group-hover:text-bbcRed transition-colors" />
               </Link>
             </li>
             {categories.map((cat) => (
@@ -156,7 +156,7 @@ const MobileSidebar: React.FC = () => {
                   className="w-full text-left py-4 flex justify-between items-center hover:text-bbcRed hover:pl-3 transition-all duration-300 group"
                 >
                   <span>{language === "bn" ? cat.title_bn : cat.title_en}</span>
-                  <ChevronRight className="w-5 h-5 text-gray-300 group-hover:text-bbcRed transition-colors" />
+                  <ChevronRight className="w-5 h-5 text-muted-text group-hover:text-bbcRed transition-colors" />
                 </Link>
               </li>
             ))}
@@ -170,7 +170,7 @@ const MobileSidebar: React.FC = () => {
                 className="w-full text-left py-4 flex justify-between items-center hover:text-bbcRed hover:pl-3 transition-all duration-300 group"
               >
                 <span>{t("saved", language)}</span>
-                <ChevronRight className="w-5 h-5 text-black dark:text-gray-400 group-hover:text-bbcRed transition-colors" />
+                <ChevronRight className="w-5 h-5 text-muted-text group-hover:text-bbcRed transition-colors" />
               </Link>
             </li>
           </ul>
