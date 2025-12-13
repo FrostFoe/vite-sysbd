@@ -93,10 +93,10 @@ const CustomVideo: React.FC<CustomVideoProps> = ({
   if (hasError) {
     return (
       <div
-        className={`relative w-full bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg flex flex-col items-center justify-center ${className}`}
+        className={`relative w-full bg-muted-bg border border-border-color rounded-lg flex flex-col items-center justify-center ${className}`}
       >
         <div className="p-4 text-center">
-          <div className="bg-gray-200 border-2 border-dashed rounded-xl w-16 h-16 mx-auto flex items-center justify-center">
+          <div className="bg-muted-bg border-2 border-dashed border-border-color rounded-xl w-16 h-16 mx-auto flex items-center justify-center">
             <Play className="w-6 h-6 text-muted-text" />
           </div>
           <p className="mt-2 text-sm text-muted-text">
@@ -112,7 +112,7 @@ const CustomVideo: React.FC<CustomVideoProps> = ({
     <figure className={`relative ${className}`}>
       <div className="relative bg-black rounded-lg overflow-hidden">
         {isLoading && (
-          <div className="absolute inset-0 bg-gray-900 flex items-center justify-center">
+          <div className="absolute inset-0 bg-card flex items-center justify-center">
             <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-white" />
           </div>
         )}

@@ -51,7 +51,7 @@ const SearchOverlay: React.FC = () => {
           <button
             type="button"
             onClick={() => toggleSearch(false)}
-            className="p-3 bg-muted-bg rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 text-black dark:text-white transition-all hover:rotate-90"
+            className="p-3 bg-muted-bg rounded-full hover:bg-muted-bg/80 text-card-text transition-all hover:rotate-90"
           >
             <X className="w-8 h-8" />
           </button>
@@ -64,7 +64,7 @@ const SearchOverlay: React.FC = () => {
             value={searchQuery}
             onChange={(e) => handleSearch(e.target.value)}
             ref={searchInputRef}
-            className="w-full py-4 pl-10 md:pl-14 text-2xl md:text-4xl font-bold border-b-2 border-border-color focus:border-bbcRed dark:focus:border-bbcRed outline-none bg-transparent text-bbcDark dark:text-white placeholder-gray-300 dark:placeholder-gray-700 transition-colors"
+            className="w-full py-4 pl-10 md:pl-14 text-2xl md:text-4xl font-bold border-b-2 border-border-color focus:border-bbcRed dark:focus:border-bbcRed outline-none bg-transparent text-card-text placeholder-muted-text transition-colors"
           />
         </div>
         <div

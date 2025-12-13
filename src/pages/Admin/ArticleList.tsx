@@ -182,11 +182,11 @@ const ArticleList: React.FC = () => {
             {articles.map((a) => {
               const statusColors: { [key: string]: string } = {
                 published:
-                  "bg-black/10 dark:bg-white/10 text-black dark:text-white border-black/20 dark:border-white/20",
+                  "bg-success/10 dark:bg-success/20 text-success border-success/30 dark:border-success/50",
                 draft:
-                  "bg-black/5 dark:bg-white/5 text-black dark:text-white border-black/10 dark:border-white/10",
+                  "bg-warning/10 dark:bg-warning/20 text-warning border-warning/30 dark:border-warning/50",
                 archived:
-                  "bg-black/20 dark:bg-white/20 text-black dark:text-white border-black/30 dark:border-white/30",
+                  "bg-danger/10 dark:bg-danger/20 text-danger border-danger/30 dark:border-danger/50",
               };
               const colorClass = statusColors[a.status] || statusColors.draft;
               const pubDate = formatTimestamp(a.published_at, language);
@@ -210,7 +210,7 @@ const ArticleList: React.FC = () => {
                       <img
                         src={a.image || PLACEHOLDER_IMAGE}
                         alt=""
-                        className="w-12 h-12 rounded object-cover bg-gray-200 shrink-0"
+                        className="w-12 h-12 rounded object-cover bg-muted-bg shrink-0"
                       />
                       <div className="truncate flex-1">
                         <Link

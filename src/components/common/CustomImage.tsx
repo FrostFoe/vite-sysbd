@@ -49,7 +49,7 @@ const CustomImage: React.FC<CustomImageProps> = ({
     return (
       <button
         type="button"
-        className={`relative w-full bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg flex items-center justify-center cursor-pointer ${className}`}
+        className={`relative w-full bg-muted-bg border border-border-color rounded-lg flex items-center justify-center cursor-pointer ${className}`}
         onClick={toggleVisibility}
         onKeyDown={(e) => {
           if (e.key === "Enter" || e.key === " ") {
@@ -74,10 +74,10 @@ const CustomImage: React.FC<CustomImageProps> = ({
   if (hasError) {
     return (
       <div
-        className={`relative w-full bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg flex items-center justify-center ${className}`}
+        className={`relative w-full bg-muted-bg border border-border-color rounded-lg flex items-center justify-center ${className}`}
       >
         <div className="text-center p-4">
-          <div className="bg-gray-200 border-2 border-dashed rounded-xl w-16 h-16 mx-auto" />
+          <div className="bg-muted-bg border-2 border-dashed border-border-color rounded-xl w-16 h-16 mx-auto" />
           <p className="mt-2 text-sm text-muted-text">
             Image failed to load
           </p>
@@ -90,7 +90,7 @@ const CustomImage: React.FC<CustomImageProps> = ({
   return (
     <figure className={`relative ${className}`}>
       {isLoading && (
-        <div className="absolute inset-0 bg-gray-200 dark:bg-gray-700 animate-pulse rounded-lg flex items-center justify-center">
+        <div className="absolute inset-0 bg-muted-bg animate-pulse rounded-lg flex items-center justify-center">
           <span className="text-sm text-muted-text">Loading...</span>
         </div>
       )}

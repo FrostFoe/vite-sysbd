@@ -1004,7 +1004,7 @@ const ArticleDetail: React.FC = () => {
               <button
                 type="button"
                 onClick={postComment}
-                className="bg-bbcDark dark:bg-white text-white dark:text-black px-6 py-2.5 rounded-full font-bold hover:bg-opacity-90 dark:hover:bg-opacity-90 hover:shadow-lg hover:-translate-y-0.5 transition-all text-sm"
+                className="bg-bbcRed text-white px-6 py-2.5 rounded-full font-bold hover:bg-opacity-90 hover:shadow-lg hover:-translate-y-0.5 transition-all text-sm"
               >
                 {t("post_comment", language)}
               </button>

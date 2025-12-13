@@ -30,7 +30,7 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
   const textColor = isSectionDark ? "text-white" : "text-card-text";
   const subTextColor = isSectionDark ? "text-white/70" : "text-muted-text";
   const metaColor = isSectionDark ? "text-white/60" : "text-muted-text";
-  const borderClass = isSectionDark ? "border-gray-800" : "border-border-color";
+  const borderClass = "border-border-color";
   const bgClass = "bg-card-elevated";
 
   const bookmarkFill = isBookmarked ? (isDark ? "white" : "black") : "none";
@@ -61,7 +61,7 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
                 e.stopPropagation();
                 onBookmarkToggle(article.id);
               }}
-              className="bg-white/90 dark:bg-black/50 backdrop-blur p-2.5 rounded-full hover:bg-white dark:hover:bg-gray-800 text-black dark:text-white shadow-md z-10 hover:scale-110 active:scale-95 transition-all"
+              className="bg-white/90 dark:bg-black/50 backdrop-blur p-2.5 rounded-full hover:bg-white dark:hover:bg-black/70 text-card-text shadow-md z-10 hover:scale-110 active:scale-95 transition-all"
             >
               <Bookmark className="w-4 h-4" fill={bookmarkFill} />
             </button>

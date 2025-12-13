@@ -105,7 +105,7 @@ const Header: React.FC = () => {
             <button
               type="button"
               onClick={() => toggleSearch(true)}
-              className="p-2 md:p-2.5 hover:bg-muted-bg rounded-full text-muted-text dark:text-white transition-all active:scale-95"
+              className="p-2 md:p-2.5 hover:bg-muted-bg rounded-full text-muted-text transition-all active:scale-95"
             >
               <Search className="w-5 h-5" />
             </button>

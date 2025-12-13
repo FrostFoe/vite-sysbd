@@ -117,7 +117,7 @@ const NavItem: React.FC<{
           <Icon
             className={`w-5 h-5 transition-colors ${
               isActive
-                ? "text-white dark:text-white"
+                ? "text-white"
                 : "text-muted-text group-hover:text-bbcRed"
             }`}
           />

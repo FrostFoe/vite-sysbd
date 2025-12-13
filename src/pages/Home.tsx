@@ -66,7 +66,7 @@ const HomePage: React.FC = () => {
 
   const renderArticleListItem = (article: Article, isSectionDark?: boolean) => {
     const textColor = isSectionDark ? "text-white" : "text-card-text";
-    const metaColor = isSectionDark ? "text-gray-400" : "text-muted-text";
+    const metaColor = isSectionDark ? "text-white/60" : "text-muted-text";
     const timeAgo = formatTimestamp(article.published_at, language);
 
     return (

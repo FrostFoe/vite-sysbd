@@ -107,7 +107,7 @@ const Footer: React.FC = () => {
                     t("subscribed_successfully", language)
                   )
                 }
-                className="bg-bbcDark text-white dark:bg-white dark:text-black font-bold px-6 py-3 rounded-lg hover:bg-opacity-90 dark:hover:bg-opacity-90 hover:shadow-md transition-all"
+                className="bg-bbcRed text-white font-bold px-6 py-3 rounded-lg hover:bg-opacity-90 hover:shadow-md transition-all"
               >
                 {t("subscribe", language)}
               </button>
@@ -186,7 +186,7 @@ const Footer: React.FC = () => {
         type="button"
         id="back-to-top"
         onClick={scrollToTop}
-        className={`fixed bottom-8 right-8 p-3 rounded-full shadow-xl z-50 transition-all duration-300 bg-black/80 backdrop-blur text-white hover:bg-black dark:bg-white/90 dark:text-black dark:hover:bg-white hover:scale-110 ${
+        className={`fixed bottom-8 right-8 p-3 rounded-full shadow-xl z-50 transition-all duration-300 bg-bbcRed text-white hover:bg-bbcRed/90 hover:scale-110 ${
           showScrollButton
             ? "opacity-100 translate-y-0"
             : "opacity-0 translate-y-10 pointer-events-none"
