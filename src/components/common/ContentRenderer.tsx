@@ -1,5 +1,6 @@
 import DOMPurify from "dompurify";
 import type React from "react";
+import { createElement } from "react";
 import { sanitizeHtml } from "../../lib/utils";
 import CustomImage from "./CustomImage";
 import CustomVideo from "./CustomVideo";
@@ -103,11 +104,45 @@ const ContentRenderer: React.FC<ContentRendererProps> = ({
           }
         } else if (part.trim()) {
           const sanitizedPart = DOMPurify.sanitize(part);
-          return (
-            <span
-              key={`html-${Date.now()}-${keyCounter}`}
-              dangerouslySetInnerHTML={{ __html: sanitizedPart }}
-            />
+          // Create a temporary element to parse the HTML
+          const tempDiv = document.createElement("div");
+          tempDiv.innerHTML = sanitizedPart;
+
+          // Convert the HTML elements to React elements recursively
+          const convertNodeToReactElement = (node: Node): React.ReactNode => {
+            if (node.nodeType === Node.TEXT_NODE) {
+              return node.textContent;
+            } else if (node.nodeType === Node.ELEMENT_NODE) {
+              const element = node as HTMLElement;
+              const props: Record<string, unknown> = {
+                key: `html-${Date.now()}-${keyCounter}-${node.textContent?.slice(0, 10) || "node"}`,
+              };
+
+              // Copy attributes
+              for (let i = 0; i < element.attributes.length; i++) {
+                const attr = element.attributes[i];
+                // Convert HTML attributes to React equivalents (e.g. class to className)
+                const propName =
+                  attr.name === "class" ? "className" : attr.name;
+                props[propName] = attr.value;
+              }
+
+              // Process child nodes recursively
+              const children = Array.from(element.childNodes).map(
+                convertNodeToReactElement
+              );
+
+              return createElement(
+                element.tagName.toLowerCase(),
+                props,
+                ...children
+              );
+            }
+            return null;
+          };
+
+          return Array.from(tempDiv.childNodes).map((node, _index) =>
+            convertNodeToReactElement(node)
           );
         }
         return null;

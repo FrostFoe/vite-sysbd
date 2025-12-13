@@ -116,7 +116,7 @@ const Users: React.FC = () => {
                     handleItemSelect(
                       window.innerWidth < 768,
                       navigate,
-                      `/admin/users/${user.id}`
+                      `/admin/users/${user.id}`,
                     )
                   }
                   type="button"

@@ -86,9 +86,9 @@ const SubmissionDetail: React.FC = () => {
 
       <div className="bg-card rounded-xl border border-border-color p-6 shadow-sm space-y-4">
         <div>
-          <label className="text-xs font-bold text-muted-text uppercase">
+          <div className="text-xs font-bold text-muted-text uppercase">
             {t("article", language)}
-          </label>
+          </div>
           <Link
             to={`/admin/articles/${submission.article_id}/edit`}
             className="text-bbcRed hover:opacity-80 text-sm mt-1 block font-bold"
@@ -101,9 +101,9 @@ const SubmissionDetail: React.FC = () => {
 
         {submission.message && (
           <div>
-            <label className="text-xs font-bold text-muted-text uppercase">
+            <div className="text-xs font-bold text-muted-text uppercase">
               {t("message", language)}
-            </label>
+            </div>
             <p className="text-sm text-card-text mt-1">
               {escapeHtml(submission.message)}
             </p>
@@ -112,9 +112,9 @@ const SubmissionDetail: React.FC = () => {
 
         {submission.file_path && (
           <div>
-            <label className="text-xs font-bold text-muted-text uppercase">
+            <div className="text-xs font-bold text-muted-text uppercase">
               {t("file", language)}
-            </label>
+            </div>
             <a
               href={submission.file_path}
               target="_blank"
@@ -127,9 +127,9 @@ const SubmissionDetail: React.FC = () => {
         )}
 
         <div>
-          <label className="text-xs font-bold text-muted-text uppercase">
+          <div className="text-xs font-bold text-muted-text uppercase">
             {t("submitted", language)}
-          </label>
+          </div>
           <p className="text-sm text-card-text mt-1">
             {formatTimestamp(submission.created_at, language)}
           </p>

@@ -15,7 +15,7 @@ import {
   X,
 } from "lucide-react";
 import type React from "react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { createElement, useCallback, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import ContentRenderer from "../components/common/ContentRenderer";
 import { CustomDropdown } from "../components/common/CustomDropdown";
@@ -770,12 +770,54 @@ const ArticleDetail: React.FC = () => {
                         </div>
                       </div>
 
-                      <p
-                        className="text-sm text-card-text ml-12 leading-relaxed mb-3"
-                        dangerouslySetInnerHTML={{
-                          __html: sanitizeHtml(comment.text),
-                        }}
-                      />
+                      <p className="text-sm text-card-text ml-12 leading-relaxed mb-3">
+                        {(() => {
+                          const sanitizedText = sanitizeHtml(comment.text);
+                          const tempDiv = document.createElement("div");
+                          tempDiv.innerHTML = sanitizedText;
+
+                          const convertNodeToReactElement = (
+                            node: Node
+                          ): React.ReactNode => {
+                            if (node.nodeType === Node.TEXT_NODE) {
+                              return node.textContent;
+                            } else if (node.nodeType === Node.ELEMENT_NODE) {
+                              const element = node as HTMLElement;
+                              const props: Record<string, unknown> = {};
+
+                              // Copy attributes (converting class to className)
+                              for (
+                                let i = 0;
+                                i < element.attributes.length;
+                                i++
+                              ) {
+                                const attr = element.attributes[i];
+                                const propName =
+                                  attr.name === "class"
+                                    ? "className"
+                                    : attr.name;
+                                props[propName] = attr.value;
+                              }
+
+                              // Process child nodes
+                              const children = Array.from(
+                                element.childNodes
+                              ).map(convertNodeToReactElement);
+
+                              return createElement(
+                                element.tagName.toLowerCase(),
+                                props,
+                                ...children
+                              );
+                            }
+                            return null;
+                          };
+
+                          return Array.from(tempDiv.childNodes).map(
+                            (node, _index) => convertNodeToReactElement(node)
+                          );
+                        })()}
+                      </p>
 
                       <div className="ml-12 flex items-center gap-3 text-xs">
                         <div className="flex items-center gap-1">
@@ -834,12 +876,59 @@ const ArticleDetail: React.FC = () => {
                                   </span>
                                 </div>
                               </div>
-                              <p
-                                className="text-xs text-card-text ml-9 leading-relaxed"
-                                dangerouslySetInnerHTML={{
-                                  __html: sanitizeHtml(reply.text),
-                                }}
-                              />
+                              <p className="text-xs text-card-text ml-9 leading-relaxed">
+                                {(() => {
+                                  const sanitizedText = sanitizeHtml(
+                                    reply.text
+                                  );
+                                  const tempDiv = document.createElement("div");
+                                  tempDiv.innerHTML = sanitizedText;
+
+                                  const convertNodeToReactElement = (
+                                    node: Node
+                                  ): React.ReactNode => {
+                                    if (node.nodeType === Node.TEXT_NODE) {
+                                      return node.textContent;
+                                    } else if (
+                                      node.nodeType === Node.ELEMENT_NODE
+                                    ) {
+                                      const element = node as HTMLElement;
+                                      const props: Record<string, unknown> = {};
+
+                                      // Copy attributes (converting class to className)
+                                      for (
+                                        let i = 0;
+                                        i < element.attributes.length;
+                                        i++
+                                      ) {
+                                        const attr = element.attributes[i];
+                                        const propName =
+                                          attr.name === "class"
+                                            ? "className"
+                                            : attr.name;
+                                        props[propName] = attr.value;
+                                      }
+
+                                      // Process child nodes
+                                      const children = Array.from(
+                                        element.childNodes
+                                      ).map(convertNodeToReactElement);
+
+                                      return createElement(
+                                        element.tagName.toLowerCase(),
+                                        props,
+                                        ...children
+                                      );
+                                    }
+                                    return null;
+                                  };
+
+                                  return Array.from(tempDiv.childNodes).map(
+                                    (node, _index) =>
+                                      convertNodeToReactElement(node)
+                                  );
+                                })()}
+                              </p>
                             </div>
                           ))}
                         </div>

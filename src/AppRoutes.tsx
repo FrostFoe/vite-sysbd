@@ -1,8 +1,7 @@
 import type React from "react";
-import { lazy, Suspense } from "react";
+import { lazy } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
-import { PageTransition } from "./components/common/PageTransition";
-import { LoadingSpinner } from "./components/common/LoadingSpinner";
+import { LoadingSpinner, RouteWrapper } from "./components/common";
 import DashLayout from "./components/Layout/DashLayout";
 import MainLayout from "./components/Layout/MainLayout";
 import { useAuth } from "./context/AuthContext";
@@ -53,38 +52,32 @@ const AppRoutes: React.FC = () => {
   return (
     <LayoutProvider>
       <Routes>
-        {/* Auth pages with animations */}
+        {/* Auth pages */}
         <Route
           path="/login"
           element={
-            <Suspense fallback={<LoadingSpinner fullScreen />}>
-              <PageTransition>
-                <Login />
-              </PageTransition>
-            </Suspense>
+            <RouteWrapper>
+              <Login />
+            </RouteWrapper>
           }
         />
         <Route
           path="/register"
           element={
-            <Suspense fallback={<LoadingSpinner fullScreen />}>
-              <PageTransition>
-                <Register />
-              </PageTransition>
-            </Suspense>
+            <RouteWrapper>
+              <Register />
+            </RouteWrapper>
           }
         />
 
-        {/* Routes with MainLayout */}
+        {/* Public routes with MainLayout */}
         <Route
           path="/"
           element={
             <MainLayout>
-              <Suspense fallback={<LoadingSpinner />}>
-                <PageTransition>
-                  <HomePage />
-                </PageTransition>
-              </Suspense>
+              <RouteWrapper fallback={<LoadingSpinner />}>
+                <HomePage />
+              </RouteWrapper>
             </MainLayout>
           }
         />
@@ -92,42 +85,36 @@ const AppRoutes: React.FC = () => {
           path="/article/:id"
           element={
             <MainLayout>
-              <Suspense fallback={<LoadingSpinner />}>
-                <PageTransition>
-                  <ArticleDetail />
-                </PageTransition>
-              </Suspense>
+              <RouteWrapper fallback={<LoadingSpinner />}>
+                <ArticleDetail />
+              </RouteWrapper>
             </MainLayout>
           }
         />
 
-        {/* User Protected Routes with DashLayout */}
+        {/* User Protected Routes */}
         <Route
           path="/dashboard"
           element={
             <ProtectedRoute>
               <DashLayout>
-                <Suspense fallback={<LoadingSpinner fullScreen />}>
-                  <PageTransition>
-                    <Dashboard />
-                  </PageTransition>
-                </Suspense>
+                <RouteWrapper>
+                  <Dashboard />
+                </RouteWrapper>
               </DashLayout>
             </ProtectedRoute>
           }
         />
 
-        {/* Admin Only Protected Routes with DashLayout */}
+        {/* Admin Only Protected Routes */}
         <Route
           path="/admin"
           element={
             <ProtectedRoute adminOnly>
               <DashLayout>
-                <Suspense fallback={<LoadingSpinner fullScreen />}>
-                  <PageTransition>
-                    <AdminDashboard />
-                  </PageTransition>
-                </Suspense>
+                <RouteWrapper>
+                  <AdminDashboard />
+                </RouteWrapper>
               </DashLayout>
             </ProtectedRoute>
           }
@@ -137,11 +124,9 @@ const AppRoutes: React.FC = () => {
           element={
             <ProtectedRoute adminOnly>
               <DashLayout>
-                <Suspense fallback={<LoadingSpinner fullScreen />}>
-                  <PageTransition>
-                    <ArticleList />
-                  </PageTransition>
-                </Suspense>
+                <RouteWrapper>
+                  <ArticleList />
+                </RouteWrapper>
               </DashLayout>
             </ProtectedRoute>
           }
@@ -151,11 +136,9 @@ const AppRoutes: React.FC = () => {
           element={
             <ProtectedRoute adminOnly>
               <DashLayout>
-                <Suspense fallback={<LoadingSpinner fullScreen />}>
-                  <PageTransition>
-                    <ArticleEdit />
-                  </PageTransition>
-                </Suspense>
+                <RouteWrapper>
+                  <ArticleEdit />
+                </RouteWrapper>
               </DashLayout>
             </ProtectedRoute>
           }
@@ -165,11 +148,9 @@ const AppRoutes: React.FC = () => {
           element={
             <ProtectedRoute adminOnly>
               <DashLayout>
-                <Suspense fallback={<LoadingSpinner fullScreen />}>
-                  <PageTransition>
-                    <ArticleEdit />
-                  </PageTransition>
-                </Suspense>
+                <RouteWrapper>
+                  <ArticleEdit />
+                </RouteWrapper>
               </DashLayout>
             </ProtectedRoute>
           }
@@ -179,11 +160,9 @@ const AppRoutes: React.FC = () => {
           element={
             <ProtectedRoute adminOnly>
               <DashLayout>
-                <Suspense fallback={<LoadingSpinner fullScreen />}>
-                  <PageTransition>
-                    <AdminUsers />
-                  </PageTransition>
-                </Suspense>
+                <RouteWrapper>
+                  <AdminUsers />
+                </RouteWrapper>
               </DashLayout>
             </ProtectedRoute>
           }
@@ -193,11 +172,9 @@ const AppRoutes: React.FC = () => {
           element={
             <ProtectedRoute adminOnly>
               <DashLayout>
-                <Suspense fallback={<LoadingSpinner fullScreen />}>
-                  <PageTransition>
-                    <AdminUserDetail />
-                  </PageTransition>
-                </Suspense>
+                <RouteWrapper>
+                  <AdminUserDetail />
+                </RouteWrapper>
               </DashLayout>
             </ProtectedRoute>
           }
@@ -207,11 +184,9 @@ const AppRoutes: React.FC = () => {
           element={
             <ProtectedRoute adminOnly>
               <DashLayout>
-                <Suspense fallback={<LoadingSpinner fullScreen />}>
-                  <PageTransition>
-                    <AdminComments />
-                  </PageTransition>
-                </Suspense>
+                <RouteWrapper>
+                  <AdminComments />
+                </RouteWrapper>
               </DashLayout>
             </ProtectedRoute>
           }
@@ -221,11 +196,9 @@ const AppRoutes: React.FC = () => {
           element={
             <ProtectedRoute adminOnly>
               <DashLayout>
-                <Suspense fallback={<LoadingSpinner fullScreen />}>
-                  <PageTransition>
-                    <AdminCommentDetail />
-                  </PageTransition>
-                </Suspense>
+                <RouteWrapper>
+                  <AdminCommentDetail />
+                </RouteWrapper>
               </DashLayout>
             </ProtectedRoute>
           }
@@ -235,11 +208,9 @@ const AppRoutes: React.FC = () => {
           element={
             <ProtectedRoute adminOnly>
               <DashLayout>
-                <Suspense fallback={<LoadingSpinner fullScreen />}>
-                  <PageTransition>
-                    <AdminSubmissions />
-                  </PageTransition>
-                </Suspense>
+                <RouteWrapper>
+                  <AdminSubmissions />
+                </RouteWrapper>
               </DashLayout>
             </ProtectedRoute>
           }
@@ -249,11 +220,9 @@ const AppRoutes: React.FC = () => {
           element={
             <ProtectedRoute adminOnly>
               <DashLayout>
-                <Suspense fallback={<LoadingSpinner fullScreen />}>
-                  <PageTransition>
-                    <AdminSubmissionDetail />
-                  </PageTransition>
-                </Suspense>
+                <RouteWrapper>
+                  <AdminSubmissionDetail />
+                </RouteWrapper>
               </DashLayout>
             </ProtectedRoute>
           }
@@ -263,11 +232,9 @@ const AppRoutes: React.FC = () => {
           element={
             <ProtectedRoute adminOnly>
               <DashLayout>
-                <Suspense fallback={<LoadingSpinner fullScreen />}>
-                  <PageTransition>
-                    <AdminCategories />
-                  </PageTransition>
-                </Suspense>
+                <RouteWrapper>
+                  <AdminCategories />
+                </RouteWrapper>
               </DashLayout>
             </ProtectedRoute>
           }
@@ -277,11 +244,9 @@ const AppRoutes: React.FC = () => {
           element={
             <ProtectedRoute adminOnly>
               <DashLayout>
-                <Suspense fallback={<LoadingSpinner fullScreen />}>
-                  <PageTransition>
-                    <AdminSections />
-                  </PageTransition>
-                </Suspense>
+                <RouteWrapper>
+                  <AdminSections />
+                </RouteWrapper>
               </DashLayout>
             </ProtectedRoute>
           }
@@ -291,11 +256,9 @@ const AppRoutes: React.FC = () => {
           element={
             <ProtectedRoute adminOnly>
               <DashLayout>
-                <Suspense fallback={<LoadingSpinner fullScreen />}>
-                  <PageTransition>
-                    <AdminDocuments />
-                  </PageTransition>
-                </Suspense>
+                <RouteWrapper>
+                  <AdminDocuments />
+                </RouteWrapper>
               </DashLayout>
             </ProtectedRoute>
           }
@@ -305,14 +268,14 @@ const AppRoutes: React.FC = () => {
         <Route
           path="*"
           element={
-            <Suspense fallback={<LoadingSpinner fullScreen />}>
+            <RouteWrapper>
               <div className="flex items-center justify-center min-h-screen">
                 <div className="text-center">
                   <h1 className="text-4xl font-bold mb-2">404</h1>
                   <p className="text-muted-text">Page not found</p>
                 </div>
               </div>
-            </Suspense>
+            </RouteWrapper>
           }
         />
       </Routes>

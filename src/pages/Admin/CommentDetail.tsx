@@ -1,6 +1,6 @@
 import { ArrowLeft, Loader } from "lucide-react";
 import type React from "react";
-import { useEffect, useState } from "react";
+import { createElement, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useLayout } from "../../context/LayoutContext";
 import { adminApi } from "../../lib/api";
@@ -101,9 +101,9 @@ const CommentDetail: React.FC = () => {
 
         <div className="space-y-4">
           <div>
-            <label className="text-xs font-bold text-muted-text uppercase">
+            <div className="text-xs font-bold text-muted-text uppercase">
               {t("article", language)}
-            </label>
+            </div>
             <Link
               to={`/admin/articles/${comment.article_id}/edit`}
               className="text-bbcRed hover:opacity-80 text-sm mt-1 block"
@@ -117,13 +117,51 @@ const CommentDetail: React.FC = () => {
           </div>
 
           <div>
-            <label className="text-xs font-bold text-muted-text uppercase">
+            <div className="text-xs font-bold text-muted-text uppercase">
               {t("comment_text", language)}
-            </label>
-            <div
-              className="prose prose-sm dark:prose-invert mt-2 text-card-text"
-              dangerouslySetInnerHTML={{ __html: sanitizeHtml(comment.text) }}
-            />
+            </div>
+            <div className="prose prose-sm dark:prose-invert mt-2 text-card-text">
+              {(() => {
+                const sanitizedText = sanitizeHtml(comment.text);
+                const tempDiv = document.createElement("div");
+                tempDiv.innerHTML = sanitizedText;
+
+                const convertNodeToReactElement = (
+                  node: Node
+                ): React.ReactNode => {
+                  if (node.nodeType === Node.TEXT_NODE) {
+                    return node.textContent;
+                  } else if (node.nodeType === Node.ELEMENT_NODE) {
+                    const element = node as HTMLElement;
+                    const props: Record<string, unknown> = {};
+
+                    // Copy attributes (converting class to className)
+                    for (let i = 0; i < element.attributes.length; i++) {
+                      const attr = element.attributes[i];
+                      const propName =
+                        attr.name === "class" ? "className" : attr.name;
+                      props[propName] = attr.value;
+                    }
+
+                    // Process child nodes
+                    const children = Array.from(element.childNodes).map(
+                      convertNodeToReactElement
+                    );
+
+                    return createElement(
+                      element.tagName.toLowerCase(),
+                      props,
+                      ...children
+                    );
+                  }
+                  return null;
+                };
+
+                return Array.from(tempDiv.childNodes).map((node, _index) =>
+                  convertNodeToReactElement(node)
+                );
+              })()}
+            </div>
           </div>
 
           <div className="text-xs text-muted-text pt-4 border-t border-border-color">
