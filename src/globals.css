@@ -100,12 +100,12 @@
   /* Lucide Icons - Pure Black in Light Mode, Pure White in Dark Mode */
   svg[class*="lucide"],
   .lucide {
-    color: #000000 !important;
+    color: #000000;
   }
 
   :root.dark svg[class*="lucide"],
   :root.dark .lucide {
-    color: #ffffff !important;
+    color: #ffffff;
   }
 
   body {

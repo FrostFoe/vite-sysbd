@@ -35,7 +35,7 @@ const UserDetail: React.FC = () => {
         const response = await adminApi.getUsers();
         if (response.success && response.users) {
           const foundUser = (response.users as unknown as AdminUser[]).find(
-            (u) => u.id === userId,
+            (u) => u.id === userId
           );
           if (foundUser) {
             setUser(foundUser);
@@ -94,9 +94,9 @@ const UserDetail: React.FC = () => {
 
         <div className="space-y-4">
           <div>
-            <label className="text-xs font-bold text-muted-text uppercase">
+            <div className="text-xs font-bold text-muted-text uppercase">
               {t("role", language)}
-            </label>
+            </div>
             <div
               className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-bold mt-1 ${user.role === "admin" ? "bg-danger/10 dark:bg-danger/20 text-danger" : "bg-muted-bg text-card-text"}`}
             >
@@ -105,9 +105,9 @@ const UserDetail: React.FC = () => {
           </div>
 
           <div>
-            <label className="text-xs font-bold text-muted-text uppercase">
+            <div className="text-xs font-bold text-muted-text uppercase">
               {t("status", language)}
-            </label>
+            </div>
             <div
               className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-bold mt-1 ${isMuted ? "bg-danger/10 dark:bg-danger/20 text-danger" : "bg-success/10 dark:bg-success/20 text-success"}`}
             >
@@ -117,9 +117,9 @@ const UserDetail: React.FC = () => {
 
           {isMuted && user.reason && (
             <div className="bg-danger/5 dark:bg-danger/10 p-3 rounded-lg">
-              <label className="text-xs font-bold text-danger block mb-1">
+              <div className="text-xs font-bold text-danger block mb-1">
                 {t("mute_reason", language)}
-              </label>
+              </div>
               <p className="text-sm text-card-text">
                 {escapeHtml(user.reason)}
               </p>
@@ -127,9 +127,9 @@ const UserDetail: React.FC = () => {
           )}
 
           <div>
-            <label className="text-xs font-bold text-muted-text uppercase">
+            <div className="text-xs font-bold text-muted-text uppercase">
               {t("created", language)}
-            </label>
+            </div>
             <p className="text-sm text-card-text mt-1">
               {new Date(user.created_at).toLocaleString()}
             </p>

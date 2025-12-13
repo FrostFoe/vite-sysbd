@@ -67,7 +67,7 @@ const ArticleDetail: React.FC = () => {
         const savedSort = localStorage.getItem(`sort-${id}`);
         if (savedSort) setCommentSort(savedSort as typeof commentSort);
       }
-    } catch (e) {
+    } catch (_e) {
       // Silently fail if local storage is corrupted
     }
   }, [id]);
@@ -84,7 +84,7 @@ const ArticleDetail: React.FC = () => {
           // Failed to fetch article
           setArticle(null);
         }
-      } catch (error) {
+      } catch (_error) {
         // API error occurred
         setArticle(null);
       } finally {
@@ -185,7 +185,7 @@ const ArticleDetail: React.FC = () => {
           response.error || t("failed_to_post_comment", language)
         );
       }
-    } catch (error) {
+    } catch (_error) {
       // Post comment error occurred
       setCommentError(t("server_error", language));
     }
@@ -227,7 +227,7 @@ const ArticleDetail: React.FC = () => {
             "error"
           );
         }
-      } catch (error) {
+      } catch (_error) {
         // Vote comment error occurred
         showToastMsg(t("server_error", language), "error");
       }
@@ -284,7 +284,7 @@ const ArticleDetail: React.FC = () => {
             "error"
           );
         }
-      } catch (error) {
+      } catch (_error) {
         // Post reply error occurred
         showToastMsg(t("server_error", language), "error");
       }
@@ -318,7 +318,7 @@ const ArticleDetail: React.FC = () => {
             "error"
           );
         }
-      } catch (error) {
+      } catch (_error) {
         // Delete comment error occurred
         showToastMsg(t("server_error", language), "error");
       }
@@ -341,7 +341,7 @@ const ArticleDetail: React.FC = () => {
             "error"
           );
         }
-      } catch (error) {
+      } catch (_error) {
         // Fetch profile error occurred
         showToastMsg(t("server_error", language), "error");
       } finally {
@@ -374,7 +374,7 @@ const ArticleDetail: React.FC = () => {
             "error"
           );
         }
-      } catch (error) {
+      } catch (_error) {
         // Document submission error occurred
         showToastMsg(t("server_error", language), "error");
       }

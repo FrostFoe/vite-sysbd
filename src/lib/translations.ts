@@ -188,6 +188,34 @@ const translations: Translations = {
     select_conversation: "Select a conversation",
     choose_conversation_to_start_messaging:
       "Choose a conversation to start messaging",
+
+    // Login Specific
+    login_welcome: "Welcome!",
+    login_to_account: "Login to your account",
+    email: "Email",
+    password: "Password",
+    sign_in_btn: "Sign In",
+    logging_in: "Logging in...",
+    dont_have_account: "Don't have an account?",
+    create_account: "Register",
+
+    // Register Specific
+    register_title: "Register",
+    create_new_account: "Create a new account",
+    register_btn: "Register",
+    registering: "Registering...",
+    already_have_account: "Already have an account?",
+
+    // Home Page Specific
+    no_saved_articles: "No Saved Articles",
+    bookmark_your_favorites:
+      "Bookmark your favorite articles to save them here",
+    no_news_in_this_category: "No News in This Category",
+    read_more: "Read More",
+
+    // Article Bookmark Specific
+    saved_successfully: "Saved to bookmarks!",
+    removed: "Removed from bookmarks!",
   },
   bn: {
     home: "হোম",
@@ -363,6 +391,33 @@ const translations: Translations = {
     published_status: "প্রকাশিত",
     archived_status: "আর্কাইভ করা হয়েছে",
     allow_submissions: "ব্যবহারকারী জমা দেওয়ার অনুমতি দিন",
+
+    // Login Specific
+    login_welcome: "স্বাগতম!",
+    login_to_account: "আপনার অ্যাকাউন্টে লগইন করুন",
+    email: "ইমেইল",
+    password: "পাসওয়ার্ড",
+    sign_in_btn: "সাইন ইন",
+    logging_in: "লগইন হচ্ছে...",
+    dont_have_account: "অ্যাকাউন্ট নেই?",
+    create_account: "নিবন্ধন",
+
+    // Register Specific
+    register_title: "নিবন্ধন",
+    create_new_account: "নতুন অ্যাকাউন্ট তৈরি করুন",
+    register_btn: "নিবন্ধন",
+    registering: "নিবন্ধন হচ্ছে...",
+    already_have_account: "ইতিমধ্যে অ্যাকাউন্ট আছে?",
+
+    // Home Page Specific
+    no_saved_articles: "কোনো সংরক্ষিত নিবন্ধ নেই",
+    bookmark_your_favorites: "আপনার প্রিয় নিবন্ধগুলি এখানে সংরক্ষণ করতে বুকমার্ক করুন",
+    no_news_in_this_category: "এই বিভাগে কোনো সংবাদ নেই",
+    read_more: "আরও পড়ুন",
+
+    // Article Bookmark Specific
+    saved_successfully: "বুকমার্কে সংরক্ষিত হয়েছে!",
+    removed: "বুকমার্ক থেকে সরিয়ে ফেলা হয়েছে!",
   },
 };
 

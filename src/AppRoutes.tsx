@@ -68,7 +68,6 @@ const AppRoutes: React.FC = () => {
           }
         />
 
-
         <Route
           path="/"
           element={
@@ -90,7 +89,6 @@ const AppRoutes: React.FC = () => {
           }
         />
 
-
         <Route
           path="/dashboard"
           element={
@@ -103,7 +101,6 @@ const AppRoutes: React.FC = () => {
             </ProtectedRoute>
           }
         />
-
 
         <Route
           path="/admin"
@@ -261,7 +258,6 @@ const AppRoutes: React.FC = () => {
             </ProtectedRoute>
           }
         />
-
 
         <Route
           path="*"

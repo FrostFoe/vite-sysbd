@@ -44,7 +44,9 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
         to={`/article/${article.id}`}
         onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
       >
-        <div className={`overflow-hidden ${type === "hero-grid" ? "aspect-[16/10]" : "aspect-video"} relative`}>
+        <div
+          className={`overflow-hidden ${type === "hero-grid" ? "aspect-[16/10]" : "aspect-video"} relative`}
+        >
           <img
             src={article.image || PLACEHOLDER_IMAGE}
             alt={article.title}

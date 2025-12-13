@@ -39,7 +39,7 @@ const ArticleList: React.FC = () => {
       if (response.success && response.articles) {
         setArticles(response.articles);
       }
-    } catch (error) {
+    } catch (_error) {
       // Failed to fetch articles
       showToastMsg(t("server_error", language), "error");
     } finally {
@@ -53,7 +53,7 @@ const ArticleList: React.FC = () => {
       if (response.success && response.data) {
         setCategories(response.data);
       }
-    } catch (error) {
+    } catch (_error) {
       // Failed to fetch categories
       showToastMsg(t("server_error", language), "error");
     }
@@ -78,7 +78,7 @@ const ArticleList: React.FC = () => {
             "error"
           );
         }
-      } catch (error) {
+      } catch (_error) {
         // Delete article error occurred
         showToastMsg(t("server_error", language), "error");
       }
@@ -154,7 +154,7 @@ const ArticleList: React.FC = () => {
             to="/admin/articles/new"
             className="bg-bbcRed text-white px-4 py-2 rounded-lg font-bold hover:opacity-90 transition-opacity flex items-center gap-2 whitespace-nowrap justify-center"
           >
-            <Plus className="w-4 h-4" /> {" "}
+            <Plus className="w-4 h-4" />{" "}
             <span className="hidden sm:inline">{t("new", language)}</span>
           </Link>
         </div>

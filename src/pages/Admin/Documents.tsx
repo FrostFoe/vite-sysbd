@@ -51,7 +51,7 @@ const Documents: React.FC = () => {
           setDocuments(res.documents || []);
           const selected = articles.find((a) => a.id === articleId);
           setSelectedArticleTitle(
-            selected?.title_en || selected?.title_bn || "",
+            selected?.title_en || selected?.title_bn || ""
           );
         }
       } catch (_error) {
@@ -59,7 +59,7 @@ const Documents: React.FC = () => {
         setIsLoadingDocuments(false);
       }
     },
-    [articles],
+    [articles]
   );
 
   useEffect(() => {

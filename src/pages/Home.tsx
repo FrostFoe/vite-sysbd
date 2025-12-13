@@ -1,5 +1,6 @@
 import { Bookmark, ChevronRight, Clock, Newspaper } from "lucide-react";
-import React, { useCallback, useEffect, useState } from "react";
+import type React from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import ArticleCard from "../components/common/ArticleCard";
 import { useLayout } from "../context/LayoutContext";
@@ -23,7 +24,7 @@ const HomePage: React.FC = () => {
       if (saved) {
         setBookmarks(JSON.parse(saved));
       }
-    } catch (e) {
+    } catch (_e) {
       // Silently fail if bookmarks are corrupted
     }
   }, []);
@@ -54,7 +55,7 @@ const HomePage: React.FC = () => {
           currentCategory === "saved" ? undefined : currentCategory
         );
         setHomeData(data);
-      } catch (error) {
+      } catch (_error) {
         // Failed to fetch home data
       } finally {
         setIsLoading(false);
@@ -64,7 +65,6 @@ const HomePage: React.FC = () => {
   }, [language, currentCategory]);
 
   const renderArticleListItem = (article: Article, isSectionDark?: boolean) => {
-    const { language } = useLayout();
     const textColor = isSectionDark ? "text-white" : "text-card-text";
     const metaColor = isSectionDark ? "text-gray-400" : "text-muted-text";
     const timeAgo = formatTimestamp(article.published_at, language);
@@ -85,7 +85,9 @@ const HomePage: React.FC = () => {
         </div>
         <div className="flex-1 flex flex-col justify-between min-w-0">
           <div>
-            <h3 className={`font-semibold text-sm leading-tight group-hover:text-bbcRed transition-colors line-clamp-2 ${textColor}`}>
+            <h3
+              className={`font-semibold text-sm leading-tight group-hover:text-bbcRed transition-colors line-clamp-2 ${textColor}`}
+            >
               {article.title}
             </h3>
             <p className={`text-xs mt-1 line-clamp-2 ${metaColor}`}>
@@ -129,8 +131,12 @@ const HomePage: React.FC = () => {
           {/* Other news as list */}
           {subArticles.length > 0 && (
             <div className="lg:col-span-1">
-              <div className={`${isSectionDark ? "bg-card-elevated" : "bg-card"} p-6 rounded-2xl shadow-soft border border-border-color h-full`}>
-                <h3 className={`font-bold text-lg mb-4 flex items-center gap-2 ${titleColor}`}>
+              <div
+                className={`${isSectionDark ? "bg-card-elevated" : "bg-card"} p-6 rounded-2xl shadow-soft border border-border-color h-full`}
+              >
+                <h3
+                  className={`font-bold text-lg mb-4 flex items-center gap-2 ${titleColor}`}
+                >
                   <span
                     className="w-1 h-6 rounded-full"
                     style={{ backgroundColor: borderColor }}
@@ -138,9 +144,11 @@ const HomePage: React.FC = () => {
                   আরও খবর
                 </h3>
                 <div className="space-y-2">
-                  {subArticles.slice(0, 5).map((article) => (
-                    renderArticleListItem(article, isSectionDark)
-                  ))}
+                  {subArticles
+                    .slice(0, 5)
+                    .map((article) =>
+                      renderArticleListItem(article, isSectionDark)
+                    )}
                 </div>
               </div>
             </div>
@@ -150,9 +158,9 @@ const HomePage: React.FC = () => {
     } else if (section.type === "list") {
       content = (
         <div className="space-y-2">
-          {section.articles.map((article) => (
+          {section.articles.map((article) =>
             renderArticleListItem(article, isSectionDark)
-          ))}
+          )}
         </div>
       );
     } else {
@@ -280,9 +288,17 @@ const HomePage: React.FC = () => {
         // Render hero section first, then remaining articles in a single grid
         const heroArticle = heroStoriesSection.articles[0];
         const moreNewsArticles = heroStoriesSection.articles.slice(1, 6); // First 5 after hero
-        const excludedIds = new Set([heroArticle?.id, ...moreNewsArticles.map(a => a.id)].filter(Boolean));
-        const allArticles = homeData.sections.flatMap(section => section.articles);
-        const remainingArticles = allArticles.filter(article => !excludedIds.has(article.id));
+        const excludedIds = new Set(
+          [heroArticle?.id, ...moreNewsArticles.map((a) => a.id)].filter(
+            Boolean
+          )
+        );
+        const allArticles = homeData.sections.flatMap(
+          (section) => section.articles
+        );
+        const remainingArticles = allArticles.filter(
+          (article) => !excludedIds.has(article.id)
+        );
 
         return (
           <>
@@ -317,15 +333,17 @@ const HomePage: React.FC = () => {
         {/* Render all articles from all sections in a single grid without section headers */}
         <section className="animate-fade-in-up relative z-10 mb-12">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {sectionsToRender.flatMap(section => section.articles).map((article) => (
-              <ArticleCard
-                key={article.id}
-                article={article}
-                type="grid"
-                onBookmarkToggle={toggleBookmark}
-                isBookmarked={bookmarks.includes(article.id)}
-              />
-            ))}
+            {sectionsToRender
+              .flatMap((section) => section.articles)
+              .map((article) => (
+                <ArticleCard
+                  key={article.id}
+                  article={article}
+                  type="grid"
+                  onBookmarkToggle={toggleBookmark}
+                  isBookmarked={bookmarks.includes(article.id)}
+                />
+              ))}
           </div>
         </section>
       </>

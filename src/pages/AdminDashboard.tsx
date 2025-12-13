@@ -30,7 +30,7 @@ const AdminDashboard: React.FC = () => {
         } else {
           // Failed to fetch admin stats
         }
-      } catch (error) {
+      } catch (_error) {
         // API error occurred
       } finally {
         setIsLoading(false);

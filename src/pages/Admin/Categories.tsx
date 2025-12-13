@@ -15,7 +15,12 @@ const CategoryModal: React.FC<{
     if (category) {
       return { ...category };
     } else {
-      return { id: "", title_bn: "", title_en: "", color: "var(--color-bbcRed)" };
+      return {
+        id: "",
+        title_bn: "",
+        title_en: "",
+        color: "var(--color-bbcRed)",
+      };
     }
   });
 
@@ -23,7 +28,12 @@ const CategoryModal: React.FC<{
     if (category) {
       return { ...category };
     } else {
-      return { id: "", title_bn: "", title_en: "", color: "var(--color-bbcRed)" };
+      return {
+        id: "",
+        title_bn: "",
+        title_en: "",
+        color: "var(--color-bbcRed)",
+      };
     }
   }, [category]);
 
