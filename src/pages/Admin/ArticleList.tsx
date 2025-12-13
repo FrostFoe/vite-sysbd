@@ -40,7 +40,7 @@ const ArticleList: React.FC = () => {
         setArticles(response.articles);
       }
     } catch (error) {
-      console.error("Failed to fetch articles:", error);
+      // Failed to fetch articles
       showToastMsg(t("server_error", language), "error");
     } finally {
       setIsLoading(false);
@@ -54,7 +54,7 @@ const ArticleList: React.FC = () => {
         setCategories(response.data);
       }
     } catch (error) {
-      console.error("Failed to fetch categories:", error);
+      // Failed to fetch categories
       showToastMsg(t("server_error", language), "error");
     }
   }, [language]);
@@ -79,7 +79,7 @@ const ArticleList: React.FC = () => {
           );
         }
       } catch (error) {
-        console.error("Delete article error:", error);
+        // Delete article error occurred
         showToastMsg(t("server_error", language), "error");
       }
     },
@@ -154,7 +154,7 @@ const ArticleList: React.FC = () => {
             to="/admin/articles/new"
             className="bg-bbcRed text-white px-4 py-2 rounded-lg font-bold hover:opacity-90 transition-opacity flex items-center gap-2 whitespace-nowrap justify-center"
           >
-            <Plus className="w-4 h-4" />{" "}
+            <Plus className="w-4 h-4" /> {" "}
             <span className="hidden sm:inline">{t("new", language)}</span>
           </Link>
         </div>
@@ -182,11 +182,11 @@ const ArticleList: React.FC = () => {
             {articles.map((a) => {
               const statusColors: { [key: string]: string } = {
                 published:
-                  "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 border-green-200 dark:border-green-800",
+                  "bg-black/10 dark:bg-white/10 text-black dark:text-white border-black/20 dark:border-white/20",
                 draft:
-                  "bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400 border-yellow-200 dark:border-yellow-800",
+                  "bg-black/5 dark:bg-white/5 text-black dark:text-white border-black/10 dark:border-white/10",
                 archived:
-                  "bg-gray-100 dark:bg-gray-900/30 text-gray-700 dark:text-gray-400 border-gray-200 dark:border-gray-800",
+                  "bg-black/20 dark:bg-white/20 text-black dark:text-white border-black/30 dark:border-white/30",
               };
               const colorClass = statusColors[a.status] || statusColors.draft;
               const pubDate = formatTimestamp(a.published_at, language);

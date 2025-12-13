@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . "/../config/db.php";
+require_once __DIR__ . "/../config/colors.php";
 
 // Drop tables to reset
 try {
@@ -62,14 +63,17 @@ $sarahId = $pdo
 $mikeId = $pdo
     ->query("SELECT id FROM users WHERE email = 'mike@example.com'")
     ->fetch(PDO::FETCH_ASSOC)["id"];
+$emmaId = $pdo
+    ->query("SELECT id FROM users WHERE email = 'emma@example.com'")
+    ->fetch(PDO::FETCH_ASSOC)["id"];
 
 // Seed Categories
 echo "\n--- Seeding Categories ---\n";
 $cats = [
-    ["news", "খবর", "News", "#b80000"],
-    ["security", "নিরাপত্তা", "Security", "#ff6600"],
-    ["tech", "প্রযুক্তি", "Technology", "#0066cc"],
-    ["analysis", "বিশ্লেষণ", "Analysis", "#00cc66"],
+    ["news", "খবর", "News", COLOR_BBC_RED],
+    ["security", "নিরাপত্তা", "Security", COLOR_SECURITY],
+    ["tech", "প্রযুক্তি", "Technology", COLOR_TECH],
+    ["analysis", "বিশ্লেষণ", "Analysis", COLOR_ANALYSIS],
 ];
 $stmt = $pdo->prepare(
     "INSERT INTO categories (id, title_bn, title_en, color) VALUES (?, ?, ?, ?)",
@@ -87,7 +91,7 @@ $sections = [
         "প্রধান খবর",
         "Top Stories",
         "hero",
-        "#b80000",
+        COLOR_BBC_RED,
         "news",
         null,
         1,

@@ -1,6 +1,7 @@
 <?php
 header("Content-Type: application/json");
 require_once __DIR__ . "/../config/db.php";
+require_once __DIR__ . "/../config/colors.php";
 require_once __DIR__ . "/check_auth.php";
 
 // Check admin role
@@ -27,7 +28,7 @@ try {
     $id = $data["id"];
     $title_bn = $data["title_bn"];
     $title_en = $data["title_en"];
-    $color = $data["color"] ?? "#b80000";
+    $color = $data["color"] ?? COLOR_BBC_RED;
 
     // Check if category exists
     $stmt = $pdo->prepare("SELECT id FROM categories WHERE id = ?");

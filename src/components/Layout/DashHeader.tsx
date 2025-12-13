@@ -48,7 +48,7 @@ const DashHeader: React.FC<DashHeaderProps> = ({ type, toggleSidebar }) => {
         <button
           type="button"
           onClick={toggleTheme}
-          className="p-2 md:p-2.5 rounded-full hover:bg-muted-bg text-muted-text dark:text-yellow-400 transition-all active:scale-90 theme-toggle-btn"
+          className="p-2 md:p-2.5 rounded-full hover:bg-muted-bg text-muted-text dark:text-card-text transition-all active:scale-90 theme-toggle-btn"
         >
           {theme === "dark" ? (
             <Moon className="w-5 h-5" />
@@ -60,7 +60,7 @@ const DashHeader: React.FC<DashHeaderProps> = ({ type, toggleSidebar }) => {
         {isAdmin ? (
           <Link
             to="/admin/articles/new"
-            className="hidden sm:flex items-center gap-2 bg-bbcRed text-white px-2 md:px-4 py-2 rounded-lg text-xs md:text-sm font-bold hover:bg-red-700 transition-colors shadow-sm hover:shadow-md flex-shrink-0"
+            className="hidden sm:flex items-center gap-2 bg-bbcRed text-white px-2 md:px-4 py-2 rounded-lg text-xs md:text-sm font-bold transition-colors shadow-sm hover:shadow-md flex-shrink-0"
           >
             <Plus className="w-4 h-4 flex-shrink-0" />
             <span className="hidden md:inline">New</span>

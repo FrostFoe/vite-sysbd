@@ -85,7 +85,7 @@ const Header: React.FC = () => {
             <button
               type="button"
               onClick={toggleLanguage}
-              className="p-2 md:p-2.5 rounded-full hover:bg-muted-bg text-muted-text dark:text-green-400 transition-all active:scale-90"
+              className="p-2 md:p-2.5 rounded-full hover:bg-muted-bg text-muted-text transition-all active:scale-90"
             >
               <span className="text-sm font-bold">
                 {language === "bn" ? "EN" : "BN"}
@@ -94,7 +94,7 @@ const Header: React.FC = () => {
             <button
               type="button"
               onClick={toggleTheme}
-              className="p-2 md:p-2.5 rounded-full hover:bg-muted-bg text-muted-text dark:text-yellow-400 transition-all active:scale-90 theme-toggle-btn"
+              className="p-2 md:p-2.5 rounded-full hover:bg-muted-bg text-muted-text dark:text-card-text transition-all active:scale-90 theme-toggle-btn"
             >
               {theme === "dark" ? (
                 <Moon className="w-5 h-5" />
@@ -115,7 +115,7 @@ const Header: React.FC = () => {
                   {isAdmin ? (
                     <Link
                       to="/admin"
-                      className="flex items-center gap-2 px-4 py-2 bg-bbcRed text-white rounded-full text-sm font-bold shadow-lg shadow-bbcRed/30 hover:bg-red-700 hover:scale-105 transition-all mr-2 active:scale-95"
+                      className="flex items-center gap-2 px-4 py-2 bg-bbcRed text-white rounded-full text-sm font-bold shadow-lg shadow-bbcRed/30 hover:scale-105 transition-all mr-2 active:scale-95"
                     >
                       <Shield className="w-4 h-4" />{" "}
                       {t("admin_panel", language)}
@@ -123,7 +123,7 @@ const Header: React.FC = () => {
                   ) : (
                     <Link
                       to="/dashboard"
-                      className="flex items-center gap-2 px-4 py-2 bg-bbcRed text-white rounded-full text-sm font-bold shadow-lg shadow-bbcRed/30 hover:bg-red-700 hover:scale-105 transition-all mr-2 active:scale-95"
+                      className="flex items-center gap-2 px-4 py-2 bg-bbcRed text-white rounded-full text-sm font-bold shadow-lg shadow-bbcRed/30 hover:scale-105 transition-all mr-2 active:scale-95"
                     >
                       <LayoutDashboard className="w-4 h-4" />{" "}
                       {t("dashboard", language)}

@@ -1,8 +1,3 @@
-/**
- * Common Components Export Index
- * Centralized export for all reusable components
- */
-
 export { default as ArticleCard } from "./ArticleCard";
 export type { BreadcrumbItem } from "./Breadcrumb";
 export { Breadcrumb, RouteBreadcrumb } from "./Breadcrumb";
@@ -25,7 +20,6 @@ export {
   Skeleton,
   TextSkeleton,
 } from "./LoadingSpinner";
-export { default as MiniArticle } from "./MiniArticle";
 export { AlertDialog, Dialog, Modal } from "./Modal";
 export { default as PageTransition } from "./PageTransition";
 export { LayoutRouteWrapper, RouteWrapper } from "./RouteWrapper";

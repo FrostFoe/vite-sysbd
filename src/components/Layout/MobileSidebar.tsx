@@ -139,7 +139,7 @@ const MobileSidebar: React.FC = () => {
                 className="w-full text-left py-4 flex justify-between items-center hover:text-bbcRed hover:pl-3 transition-all duration-300 group"
               >
                 <span>{t("home", language)}</span>
-                <ChevronRight className="w-5 h-5 text-gray-300 group-hover:text-bbcRed transition-colors" />
+                <ChevronRight className="w-5 h-5 text-black dark:text-gray-400 group-hover:text-bbcRed transition-colors" />
               </Link>
             </li>
             {categories.map((cat) => (
@@ -170,7 +170,7 @@ const MobileSidebar: React.FC = () => {
                 className="w-full text-left py-4 flex justify-between items-center hover:text-bbcRed hover:pl-3 transition-all duration-300 group"
               >
                 <span>{t("saved", language)}</span>
-                <ChevronRight className="w-5 h-5 text-gray-300 group-hover:text-bbcRed transition-colors" />
+                <ChevronRight className="w-5 h-5 text-black dark:text-gray-400 group-hover:text-bbcRed transition-colors" />
               </Link>
             </li>
           </ul>

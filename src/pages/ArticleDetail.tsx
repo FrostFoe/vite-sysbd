@@ -68,7 +68,7 @@ const ArticleDetail: React.FC = () => {
         if (savedSort) setCommentSort(savedSort as typeof commentSort);
       }
     } catch (e) {
-      console.error(e);
+      // Silently fail if local storage is corrupted
     }
   }, [id]);
 
@@ -81,11 +81,11 @@ const ArticleDetail: React.FC = () => {
         if (response.success && response.article) {
           setArticle(response.article);
         } else {
-          console.error(response.error || "Failed to fetch article");
+          // Failed to fetch article
           setArticle(null);
         }
       } catch (error) {
-        console.error("API Error:", error);
+        // API error occurred
         setArticle(null);
       } finally {
         setIsLoading(false);
@@ -148,7 +148,9 @@ const ArticleDetail: React.FC = () => {
           title: article?.title || document.title,
           url: window.location.href,
         })
-        .catch(console.error);
+        .catch(() => {
+          // Share failed silently
+        });
     } else {
       navigator.clipboard.writeText(window.location.href).then(() => {
         showToastMsg(t("link_copied", language));
@@ -184,7 +186,7 @@ const ArticleDetail: React.FC = () => {
         );
       }
     } catch (error) {
-      console.error("Post comment error:", error);
+      // Post comment error occurred
       setCommentError(t("server_error", language));
     }
   }, [id, commentInput, language]);
@@ -226,7 +228,7 @@ const ArticleDetail: React.FC = () => {
           );
         }
       } catch (error) {
-        console.error("Vote comment error:", error);
+        // Vote comment error occurred
         showToastMsg(t("server_error", language), "error");
       }
     },
@@ -283,7 +285,7 @@ const ArticleDetail: React.FC = () => {
           );
         }
       } catch (error) {
-        console.error("Post reply error:", error);
+        // Post reply error occurred
         showToastMsg(t("server_error", language), "error");
       }
     },
@@ -317,7 +319,7 @@ const ArticleDetail: React.FC = () => {
           );
         }
       } catch (error) {
-        console.error("Delete comment error:", error);
+        // Delete comment error occurred
         showToastMsg(t("server_error", language), "error");
       }
     },
@@ -340,7 +342,7 @@ const ArticleDetail: React.FC = () => {
           );
         }
       } catch (error) {
-        console.error("Fetch profile error:", error);
+        // Fetch profile error occurred
         showToastMsg(t("server_error", language), "error");
       } finally {
         setProfileModalLoading(false);
@@ -373,7 +375,7 @@ const ArticleDetail: React.FC = () => {
           );
         }
       } catch (error) {
-        console.error("Document submission error:", error);
+        // Document submission error occurred
         showToastMsg(t("server_error", language), "error");
       }
     },

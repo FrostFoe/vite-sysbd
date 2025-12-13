@@ -24,7 +24,7 @@ const HomePage: React.FC = () => {
         setBookmarks(JSON.parse(saved));
       }
     } catch (e) {
-      console.error(e);
+      // Silently fail if bookmarks are corrupted
     }
   }, []);
 
@@ -55,7 +55,7 @@ const HomePage: React.FC = () => {
         );
         setHomeData(data);
       } catch (error) {
-        console.error("Failed to fetch home data:", error);
+        // Failed to fetch home data
       } finally {
         setIsLoading(false);
       }
@@ -106,7 +106,7 @@ const HomePage: React.FC = () => {
     const titleColor = isSectionDark ? "text-white" : "text-card-text";
     const borderColor = isSectionDark
       ? "white"
-      : section.highlightColor || "var(--color-bbcRed)";
+      : section.highlightColor || "var(--text-page)";
 
     let content = null;
     if (section.type === "hero-grid") {

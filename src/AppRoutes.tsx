@@ -7,7 +7,6 @@ import MainLayout from "./components/Layout/MainLayout";
 import { useAuth } from "./context/AuthContext";
 import { LayoutProvider } from "./context/LayoutContext";
 
-// Lazy load pages for code splitting
 const Login = lazy(() => import("./pages/Login"));
 const Register = lazy(() => import("./pages/Register"));
 const HomePage = lazy(() => import("./pages/Home"));
@@ -34,7 +33,7 @@ const ProtectedRoute: React.FC<{
   const { isAuthenticated, isLoading, user } = useAuth();
 
   if (isLoading) {
-    return <div>Loading authentication...</div>; // Or a spinner component
+    return <div>Loading authentication...</div>;
   }
 
   if (!isAuthenticated) {
@@ -42,7 +41,7 @@ const ProtectedRoute: React.FC<{
   }
 
   if (adminOnly && user?.role !== "admin") {
-    return <Navigate to="/" replace />; // Redirect non-admins from admin routes
+    return <Navigate to="/" replace />;
   }
 
   return <>{children}</>;
@@ -52,7 +51,6 @@ const AppRoutes: React.FC = () => {
   return (
     <LayoutProvider>
       <Routes>
-        {/* Auth pages */}
         <Route
           path="/login"
           element={
@@ -70,7 +68,7 @@ const AppRoutes: React.FC = () => {
           }
         />
 
-        {/* Public routes with MainLayout */}
+
         <Route
           path="/"
           element={
@@ -92,7 +90,7 @@ const AppRoutes: React.FC = () => {
           }
         />
 
-        {/* User Protected Routes */}
+
         <Route
           path="/dashboard"
           element={
@@ -106,7 +104,7 @@ const AppRoutes: React.FC = () => {
           }
         />
 
-        {/* Admin Only Protected Routes */}
+
         <Route
           path="/admin"
           element={
@@ -264,7 +262,7 @@ const AppRoutes: React.FC = () => {
           }
         />
 
-        {/* Catch-all for unknown routes */}
+
         <Route
           path="*"
           element={

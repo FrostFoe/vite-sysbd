@@ -17,5 +17,5 @@ if (rootElement) {
     </StrictMode>
   );
 } else {
-  console.error("Failed to find the root element");
+  // Root element not found, cannot mount app
 }

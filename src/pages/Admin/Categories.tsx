@@ -15,7 +15,7 @@ const CategoryModal: React.FC<{
     if (category) {
       return { ...category };
     } else {
-      return { id: "", title_bn: "", title_en: "", color: "#b80000" };
+      return { id: "", title_bn: "", title_en: "", color: "var(--color-bbcRed)" };
     }
   });
 
@@ -23,7 +23,7 @@ const CategoryModal: React.FC<{
     if (category) {
       return { ...category };
     } else {
-      return { id: "", title_bn: "", title_en: "", color: "#b80000" };
+      return { id: "", title_bn: "", title_en: "", color: "var(--color-bbcRed)" };
     }
   }, [category]);
 
@@ -109,11 +109,12 @@ const CategoryModal: React.FC<{
               type="color"
               id="category-color"
               name="color"
-              value={formData.color || "#b80000"}
+              value={formData.color || "var(--color-bbcRed)"}
               onChange={(e) =>
                 setFormData({ ...formData, color: e.target.value })
               }
               className="w-full h-10 rounded cursor-pointer"
+              style={{ color: formData.color || "var(--color-bbcRed)" }}
             />
           </div>
           <div className="flex justify-end gap-2 mt-6">

@@ -142,7 +142,7 @@ const Footer: React.FC = () => {
                         t("link_copied", language)
                       )
                     }
-                    className="text-bbcRed hover:text-red-700 p-1"
+                    className="text-bbcRed hover:opacity-70 p-1 transition-opacity"
                   >
                     <Copy className="w-3 h-3" />
                   </button>
@@ -168,7 +168,7 @@ const Footer: React.FC = () => {
                         t("link_copied", language)
                       )
                     }
-                    className="text-bbcRed hover:text-red-700 p-1"
+                    className="text-bbcRed hover:opacity-70 p-1 transition-opacity"
                   >
                     <Copy className="w-3 h-3" />
                   </button>

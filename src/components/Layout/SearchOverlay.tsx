@@ -57,7 +57,7 @@ const SearchOverlay: React.FC = () => {
           </button>
         </div>
         <div className="relative mb-16 group">
-          <SearchIcon className="absolute left-0 top-1/2 transform -translate-y-1/2 text-gray-400 w-6 h-6 md:w-10 md:h-10 group-focus-within:text-bbcRed transition-colors" />
+          <SearchIcon className="absolute left-0 top-1/2 transform -translate-y-1/2 text-muted-text w-6 h-6 md:w-10 md:h-10 group-focus-within:text-bbcRed transition-colors" />
           <input
             type="text"
             placeholder={t("search_placeholder", language)}

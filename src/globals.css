@@ -10,6 +10,9 @@
   --color-danger: #ef4444;
   --color-success: #22c55e;
   --color-warning: #f59e0b;
+  --color-security: #ff6600;
+  --color-tech: #0066cc;
+  --color-analysis: #00cc66;
 
   /* Semantic Colors mapped to CSS variables defined in base */
   --color-page: var(--bg-page);
@@ -92,6 +95,17 @@
     --border-color: #333333;
     --bg-muted: #262626;
     --text-muted: #a3a3a3;
+  }
+
+  /* Lucide Icons - Pure Black in Light Mode, Pure White in Dark Mode */
+  svg[class*="lucide"],
+  .lucide {
+    color: #000000 !important;
+  }
+
+  :root.dark svg[class*="lucide"],
+  :root.dark .lucide {
+    color: #ffffff !important;
   }
 
   body {

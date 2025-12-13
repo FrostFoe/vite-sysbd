@@ -28,10 +28,10 @@ const AdminDashboard: React.FC = () => {
         if (response.success && response.stats) {
           setStats(response.stats);
         } else {
-          console.error(response.error || "Failed to fetch admin stats");
+          // Failed to fetch admin stats
         }
       } catch (error) {
-        console.error("API Error:", error);
+        // API error occurred
       } finally {
         setIsLoading(false);
       }
