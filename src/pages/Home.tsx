@@ -115,7 +115,7 @@ const HomePage: React.FC = () => {
       const heroArticle = section.articles[0];
       const subArticles = section.articles.slice(1);
       content = (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
           {/* Main featured news */}
           {heroArticle && (
             <div className="lg:col-span-2">
@@ -132,10 +132,10 @@ const HomePage: React.FC = () => {
           {subArticles.length > 0 && (
             <div className="lg:col-span-1">
               <div
-                className={`${isSectionDark ? "bg-card-elevated" : "bg-card"} p-6 rounded-2xl shadow-soft border border-border-color h-full`}
+                className={`${isSectionDark ? "bg-card-elevated" : "bg-card"} p-4 sm:p-6 rounded-2xl shadow-soft border border-border-color h-full`}
               >
                 <h3
-                  className={`font-bold text-lg mb-4 flex items-center gap-2 ${titleColor}`}
+                  className={`font-bold text-base sm:text-lg mb-3 sm:mb-4 flex items-center gap-2 ${titleColor}`}
                 >
                   <span
                     className="w-1 h-6 rounded-full"
@@ -165,7 +165,7 @@ const HomePage: React.FC = () => {
       );
     } else {
       content = (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
           {section.articles.map((article) => (
             <ArticleCard
               key={article.id}
@@ -182,11 +182,11 @@ const HomePage: React.FC = () => {
 
     return (
       <section
-        className={`animate-fade-in-up relative z-10 ${section.style === "dark" ? "bg-card-elevated text-white p-8 md:p-10 rounded-3xl mb-12 shadow-2xl relative overflow-hidden" : "mb-12"}`}
+        className={`animate-fade-in-up relative z-10 ${section.style === "dark" ? "bg-card-elevated text-white p-4 sm:p-6 md:p-8 lg:p-10 rounded-3xl mb-8 sm:mb-10 lg:mb-12 shadow-2xl relative overflow-hidden" : "mb-8 sm:mb-10 lg:mb-12"}`}
       >
-        <div className="flex justify-between items-center mb-8">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 sm:mb-8 gap-2">
           <h2
-            className={`text-2xl font-bold flex items-center gap-3 ${titleColor}`}
+            className={`text-xl sm:text-2xl font-bold flex items-center gap-3 ${titleColor}`}
           >
             <span
               className="w-2 h-8 rounded-full"
@@ -197,7 +197,7 @@ const HomePage: React.FC = () => {
           {section.type !== "hero-grid" && (
             <Link
               to={`/?category=${section.associatedCategory}`}
-              className={`text-sm font-bold hover:text-bbcRed transition-colors flex items-center gap-1 opacity-80 hover:opacity-100 ${titleColor}`}
+              className={`text-xs sm:text-sm font-bold hover:text-bbcRed transition-colors flex items-center gap-1 opacity-80 hover:opacity-100 ${titleColor}`}
             >
               {t("all", language)} <ChevronRight className="w-4 h-4" />
             </Link>
@@ -213,9 +213,9 @@ const HomePage: React.FC = () => {
   const renderHomeContent = () => {
     if (isLoading) {
       return (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8 animate-pulse">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6 lg:gap-8 mb-6 sm:mb-8 animate-pulse">
           <div className="col-span-1 md:col-span-2 lg:col-span-2">
-            <div className="bg-muted-bg w-full aspect-video mb-5 rounded-xl" />
+            <div className="bg-muted-bg w-full aspect-video mb-4 sm:mb-5 rounded-xl" />
             <div className="bg-muted-bg w-3/4 h-8 mb-3 rounded" />
             <div className="bg-muted-bg w-full h-4 mb-2 rounded" />
             <div className="bg-muted-bg w-2/3 h-4 rounded" />

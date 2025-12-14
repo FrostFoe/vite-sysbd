@@ -46,18 +46,18 @@ const Footer: React.FC = () => {
   }, []);
 
   return (
-    <footer className="pt-16 pb-8 bg-card text-card-text transition-colors border-t border-border-color mt-auto">
+    <footer className="pt-12 sm:pt-16 pb-6 sm:pb-8 bg-card text-card-text transition-colors border-t border-border-color mt-auto">
       <div className="container mx-auto px-4 lg:px-8 max-w-[1380px]">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 border-b border-border-color pb-12 gap-8">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 sm:mb-12 border-b border-border-color pb-8 sm:pb-12 gap-4 sm:gap-8">
           <div className="flex items-center select-none gap-2">
-            <span className="bg-bbcRed text-white px-3 py-1 font-bold text-2xl rounded shadow">
+            <span className="bg-bbcRed text-white px-2.5 py-0.5 font-bold text-lg sm:text-2xl rounded shadow">
               B
             </span>
-            <span className="font-bold text-3xl tracking-tighter leading-none">
+            <span className="font-bold text-2xl sm:text-3xl tracking-tighter leading-none">
               BT
             </span>
           </div>
-          <div className="flex gap-6">
+          <div className="flex gap-4 sm:gap-6">
             <a
               href="https://www.facebook.com/"
               target="_blank"
@@ -84,20 +84,20 @@ const Footer: React.FC = () => {
             </a>
           </div>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 sm:gap-8 md:gap-12 mb-8 sm:mb-12">
           <div className="col-span-1 md:col-span-2">
-            <h3 className="font-bold text-lg mb-6 flex items-center gap-2">
+            <h3 className="font-bold text-base sm:text-lg mb-4 sm:mb-6 flex items-center gap-2">
               <Coins className="w-5 h-5 text-bbcRed" />{" "}
               {t("newsletter", language)}
             </h3>
-            <p className="text-muted-text text-sm mb-4 max-w-sm">
+            <p className="text-muted-text text-xs sm:text-sm mb-4 max-w-sm">
               {t("subscribe_newsletter", language)}
             </p>
             <div className="flex flex-col sm:flex-row gap-2 max-w-md">
               <input
                 type="email"
                 placeholder={t("your_email", language)}
-                className="p-3 bg-muted-bg text-card-text rounded-lg border border-border-color focus:outline-none focus:border-bbcRed flex-grow"
+                className="p-2.5 sm:p-3 text-sm bg-muted-bg text-card-text rounded-lg border border-border-color focus:outline-none focus:border-bbcRed flex-grow"
               />
               <button
                 type="button"
@@ -107,23 +107,23 @@ const Footer: React.FC = () => {
                     t("subscribed_successfully", language)
                   )
                 }
-                className="bg-bbcRed text-white font-bold px-6 py-3 rounded-lg hover:bg-opacity-90 hover:shadow-md transition-all"
+                className="bg-bbcRed text-white font-bold px-4 sm:px-6 py-2.5 sm:py-3 text-sm rounded-lg hover:bg-opacity-90 hover:shadow-md transition-all"
               >
                 {t("subscribe", language)}
               </button>
             </div>
           </div>
           <div className="col-span-1 md:col-span-2 space-y-4">
-            <h3 className="font-bold text-lg flex items-center gap-2">
+            <h3 className="font-bold text-base sm:text-lg flex items-center gap-2">
               <Coins className="w-5 h-5 text-bbcRed" />{" "}
               {t("support_work", language)}
             </h3>
-            <p className="text-muted-text text-sm max-w-sm">
+            <p className="text-muted-text text-xs sm:text-sm max-w-sm">
               {t("support_text", language)}
             </p>
 
             <div className="space-y-3 mt-4">
-              <div className="bg-muted-bg p-3 rounded-lg border border-border-color">
+              <div className="bg-muted-bg p-2.5 sm:p-3 rounded-lg border border-border-color">
                 <div className="flex items-center gap-2 mb-1">
                   <Coins className="w-4 h-4 text-success" />
                   <span className="font-bold text-xs text-card-text">
@@ -131,7 +131,7 @@ const Footer: React.FC = () => {
                   </span>
                 </div>
                 <div className="flex items-center justify-between gap-2 bg-card p-2 rounded border border-border-color">
-                  <code className="text-[10px] text-muted-text break-all">
+                  <code className="text-[9px] sm:text-[10px] text-muted-text break-all">
                     TNztLXjP7zYWotPRpzdtPCNVu8JB3DG5jV
                   </code>
                   <button
@@ -142,7 +142,7 @@ const Footer: React.FC = () => {
                         t("link_copied", language)
                       )
                     }
-                    className="text-bbcRed hover:opacity-70 p-1 transition-opacity"
+                    className="text-bbcRed hover:opacity-70 p-1 transition-opacity flex-shrink-0"
                   >
                     <Copy className="w-3 h-3" />
                   </button>

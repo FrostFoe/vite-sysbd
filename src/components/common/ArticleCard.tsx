@@ -68,27 +68,27 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
           </div>
           <div className="absolute bottom-0 left-0 right-0 h-1/3 bg-gradient-to-t from-black/50 to-transparent opacity-60" />
         </div>
-        <div className="flex flex-col flex-grow p-5">
+        <div className="flex flex-col flex-grow p-3 sm:p-4 md:p-5">
           <div className="mb-2 flex items-center gap-2">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-bbcRed bg-danger/10 dark:bg-danger/20 px-2 py-0.5 rounded">
+            <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-bbcRed bg-danger/10 dark:bg-danger/20 px-2 py-0.5 rounded">
               {escapeHtml(article.category)}
             </span>
-            <span className="text-[10px] text-muted-text">• {timeAgo}</span>
+            <span className="text-[9px] sm:text-[10px] text-muted-text">• {timeAgo}</span>
           </div>
           <h3
-            className={`text-lg md:text-xl font-bold mb-3 leading-tight group-hover:text-bbcRed transition-colors ${textColor}`}
+            className={`text-base sm:text-lg md:text-xl font-bold mb-2 sm:mb-3 leading-tight group-hover:text-bbcRed transition-colors ${textColor}`}
           >
             {escapeHtml(article.title)}
           </h3>
           {(type === "hero-grid" || type === "grid") && article.summary && (
             <p
-              className={`${subTextColor} text-sm leading-relaxed mb-4 line-clamp-3`}
+              className={`${subTextColor} text-xs sm:text-sm leading-relaxed mb-3 sm:mb-4 line-clamp-3`}
             >
               {escapeHtml(article.summary)}
             </p>
           )}
           <div
-            className={`mt-auto pt-3 border-t ${borderClass} flex items-center justify-between text-xs ${metaColor}`}
+            className={`mt-auto pt-2 sm:pt-3 border-t ${borderClass} flex items-center justify-between text-[10px] sm:text-xs ${metaColor}`}
           >
             <span className="flex items-center gap-1 group-hover:translate-x-1 transition-transform">
               {t("read_more", language)} <ChevronRight className="w-3 h-3" />

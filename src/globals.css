@@ -297,6 +297,79 @@
   }
 }
 
+/* Tablet & Medium Mobile Responsiveness (640px to 767px) */
+@media (max-width: 767px) {
+  h1 {
+    @apply text-xl;
+  }
+
+  h2 {
+    @apply text-lg;
+  }
+
+  h3.text-2xl {
+    @apply text-xl;
+  }
+
+  h4 {
+    @apply text-base;
+  }
+
+  /* Reduce gaps in grid layouts */
+  .gap-12 {
+    @apply gap-4;
+  }
+
+  .gap-8 {
+    @apply gap-4;
+  }
+
+  /* Improve padding on containers */
+  .px-8 {
+    @apply px-4;
+  }
+
+  .py-8 {
+    @apply py-4;
+  }
+
+  /* Make buttons more mobile-friendly */
+  button {
+    @apply min-h-[44px];
+  }
+
+  /* Improve form input sizes */
+  input,
+  select,
+  textarea {
+    @apply min-h-[44px] text-base;
+  }
+
+  /* Better spacing for flex layouts */
+  .space-y-6 {
+    @apply space-y-3;
+  }
+
+  .space-y-8 {
+    @apply space-y-4;
+  }
+
+  /* Responsive text sizing */
+  .prose {
+    @apply text-base;
+  }
+
+  /* Sidebar adjustments */
+  .lg\:sticky {
+    @apply static;
+  }
+
+  .lg\:top-28 {
+    @apply top-0;
+  }
+}
+
+
 @media (max-width: 480px) {
   h3.text-2xl {
     @apply text-xl;

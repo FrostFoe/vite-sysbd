@@ -21,19 +21,19 @@ const Register: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-4">
+    <div className="min-h-screen flex flex-col items-center justify-center p-3 sm:p-4">
       <Link
         to="/"
-        className="absolute top-6 right-6 text-muted-text hover:text-card-text p-2 rounded-full hover:bg-muted-bg transition-all"
+        className="absolute top-4 sm:top-6 right-4 sm:right-6 text-muted-text hover:text-card-text p-2 rounded-full hover:bg-muted-bg transition-all"
       >
-        <i data-lucide="x" className="w-8 h-8" />
+        <i data-lucide="x" className="w-6 sm:w-8 h-6 sm:h-8" />
       </Link>
-      <div className="bg-card p-8 md:p-12 w-full max-w-[480px] shadow-2xl rounded-2xl border border-border-color text-center relative overflow-hidden animate-fade-in-up">
+      <div className="bg-card p-6 sm:p-8 md:p-12 w-full max-w-[480px] shadow-2xl rounded-2xl border border-border-color text-center relative overflow-hidden animate-fade-in-up">
         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-bbcRed to-orange-600" />
-        <h1 className="text-2xl font-bold mb-2 text-card-text">
+        <h1 className="text-xl sm:text-2xl font-bold mb-2 text-card-text">
           {t("register_title", language)}
         </h1>
-        <p className="text-sm text-muted-text mb-8">
+        <p className="text-xs sm:text-sm text-muted-text mb-6 sm:mb-8">
           {t("create_new_account", language)}
         </p>
 
@@ -52,7 +52,7 @@ const Register: React.FC = () => {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full p-3 rounded-lg border border-border-color bg-muted-bg text-card-text focus:border-bbcRed outline-none"
+              className="w-full p-3 text-sm sm:text-base rounded-lg border border-border-color bg-muted-bg text-card-text focus:border-bbcRed outline-none"
             />
           </div>
           <div>
@@ -69,13 +69,13 @@ const Register: React.FC = () => {
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full p-3 rounded-lg border border-border-color bg-muted-bg text-card-text focus:border-bbcRed outline-none"
+              className="w-full p-3 text-sm sm:text-base rounded-lg border border-border-color bg-muted-bg text-card-text focus:border-bbcRed outline-none"
             />
           </div>
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full bg-bbcRed text-white font-bold py-3.5 rounded-lg hover:shadow-lg hover:bg-opacity-90 hover:-translate-y-0.5 transition-all disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:shadow-none disabled:hover:translate-y-0"
+            className="w-full bg-bbcRed text-white font-bold py-3 sm:py-3.5 text-sm sm:text-base rounded-lg hover:shadow-lg hover:bg-opacity-90 hover:-translate-y-0.5 transition-all disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:shadow-none disabled:hover:translate-y-0"
           >
             {isLoading
               ? t("registering", language)
@@ -83,7 +83,7 @@ const Register: React.FC = () => {
           </button>
         </form>
 
-        <div className="mt-6 text-sm text-card-text">
+        <div className="mt-6 text-xs sm:text-sm text-card-text">
           {t("already_have_account", language)}{" "}
           <Link to="/login" className="text-bbcRed font-bold hover:underline">
             {t("sign_in", language)}

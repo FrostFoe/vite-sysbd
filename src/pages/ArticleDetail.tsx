@@ -401,20 +401,20 @@ const ArticleDetail: React.FC = () => {
   const isArticleBookmarked = bookmarks.includes(article.id);
 
   return (
-    <div className="max-w-[1280px] mx-auto">
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+    <div className="max-w-[1280px] mx-auto px-2 sm:px-3">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 lg:gap-12">
         <div className="lg:col-span-8">
-          <article className="bg-card p-3 md:p-5 rounded-2xl shadow-soft border border-border-color">
+          <article className="bg-card p-3 sm:p-4 md:p-5 rounded-2xl shadow-soft border border-border-color">
             {/* Article Header */}
-            <div className="mb-6">
+            <div className="mb-4 sm:mb-6">
               <span className="bg-bbcRed text-white text-xs font-bold px-3 py-1 rounded-full mb-3 inline-block">
                 {escapeHtml(article.category)}
               </span>
-              <h1 className="text-3xl md:text-5xl font-bold leading-tight mb-4 text-card-text">
+              <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold leading-tight mb-3 sm:mb-4 text-card-text">
                 {escapeHtml(article.title)}
               </h1>
 
-              <div className="flex flex-wrap items-center gap-4 text-sm text-muted-text font-medium">
+              <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-xs sm:text-sm text-muted-text font-medium">
                 <span className="flex items-center gap-1.5">
                   <Clock className="w-4 h-4" />{" "}
                   {formatTimestamp(article.published_at, language)}
@@ -438,36 +438,36 @@ const ArticleDetail: React.FC = () => {
             </div>
 
             {/* Article Controls */}
-            <div className="flex items-center justify-between border-y border-border-color py-4 mb-8">
+            <div className="flex flex-col sm:flex-row items-center justify-between border-y border-border-color py-3 sm:py-4 mb-6 sm:mb-8 gap-3 sm:gap-0">
               <div className="flex items-center gap-1 bg-muted-bg rounded-lg p-1">
                 <button
                   type="button"
                   onClick={() => handleFontSizeChange("sm")}
-                  className={`w-8 h-8 flex items-center justify-center hover:bg-card rounded transition-colors text-xs font-bold text-card-text ${fontSize === "sm" ? "bg-card" : ""}`}
+                  className={`w-7 sm:w-8 h-7 sm:h-8 flex items-center justify-center hover:bg-card rounded transition-colors text-xs font-bold text-card-text ${fontSize === "sm" ? "bg-card" : ""}`}
                 >
                   A
                 </button>
                 <button
                   type="button"
                   onClick={() => handleFontSizeChange("md")}
-                  className={`w-8 h-8 flex items-center justify-center hover:bg-card rounded transition-colors text-sm font-bold text-card-text ${fontSize === "md" ? "bg-card" : ""}`}
+                  className={`w-7 sm:w-8 h-7 sm:h-8 flex items-center justify-center hover:bg-card rounded transition-colors text-xs sm:text-sm font-bold text-card-text ${fontSize === "md" ? "bg-card" : ""}`}
                 >
                   A
                 </button>
                 <button
                   type="button"
                   onClick={() => handleFontSizeChange("lg")}
-                  className={`w-8 h-8 flex items-center justify-center hover:bg-card rounded transition-colors text-lg font-bold text-card-text ${fontSize === "lg" ? "bg-card" : ""}`}
+                  className={`w-7 sm:w-8 h-7 sm:h-8 flex items-center justify-center hover:bg-card rounded transition-colors text-sm sm:text-base font-bold text-card-text ${fontSize === "lg" ? "bg-card" : ""}`}
                 >
                   A
                 </button>
               </div>
-              <div className="flex gap-3">
+              <div className="flex gap-2 sm:gap-3 w-full sm:w-auto">
                 <button
                   type="button"
                   aria-label="Share article"
                   onClick={handleShare}
-                  className="flex items-center gap-2 px-4 py-2 rounded-full bg-muted-bg hover:bg-bbcRed hover:text-white transition-all text-sm font-bold text-card-text"
+                  className="flex items-center justify-center gap-2 px-3 sm:px-4 py-2 rounded-full bg-muted-bg hover:bg-bbcRed hover:text-white transition-all text-xs sm:text-sm font-bold text-card-text flex-1 sm:flex-none"
                 >
                   <Share2 className="w-4 h-4" /> {t("share", language)}
                 </button>
@@ -488,19 +488,19 @@ const ArticleDetail: React.FC = () => {
             {/* Article Content */}
             <ContentRenderer
               content={article.content}
-              className="prose max-w-none [&_p]:text-lg [&_p]:leading-[1.8] [&_p]:mb-[1em] space-y-8 text-card-text transition-all duration-300"
+              className="prose max-w-none [&_p]:text-base sm:[&_p]:text-lg [&_p]:leading-[1.8] [&_p]:mb-[1em] space-y-6 sm:space-y-8 text-card-text transition-all duration-300"
             />
           </article>
         </div>
 
         {/* Sidebar */}
         <div className="lg:col-span-4 w-full">
-          <div className="w-full space-y-6 lg:sticky lg:top-28">
+          <div className="w-full space-y-4 sm:space-y-6 lg:sticky lg:top-28">
             {/* Leaked Documents */}
             {article.leaked_documents &&
               article.leaked_documents.length > 0 && (
-                <div className="bg-card p-6 rounded-2xl shadow-soft border border-border-color">
-                  <h4 className="text-lg font-bold mb-4 text-card-text border-b border-border-color pb-2 flex items-center gap-2">
+                <div className="bg-card p-4 sm:p-6 rounded-2xl shadow-soft border border-border-color">
+                  <h4 className="text-base sm:text-lg font-bold mb-3 sm:mb-4 text-card-text border-b border-border-color pb-2 flex items-center gap-2">
                     <FileWarning className="w-5 h-5 text-bbcRed" />
                     {t("leaked_documents", language)}
                   </h4>
@@ -541,8 +541,8 @@ const ArticleDetail: React.FC = () => {
 
             {/* Downloadable Documents */}
             {article.documents && article.documents.length > 0 && (
-              <div className="bg-card p-6 rounded-2xl shadow-soft border border-border-color">
-                <h4 className="text-lg font-bold mb-4 text-card-text border-b border-border-color pb-2 flex items-center gap-2">
+              <div className="bg-card p-4 sm:p-6 rounded-2xl shadow-soft border border-border-color">
+                <h4 className="text-base sm:text-lg font-bold mb-3 sm:mb-4 text-card-text border-b border-border-color pb-2 flex items-center gap-2">
                   <Download className="w-5 h-5 text-bbcRed" />
                   {t("downloadable_documents", language)}
                 </h4>
@@ -589,10 +589,10 @@ const ArticleDetail: React.FC = () => {
             )}
 
             {/* Submit Documents / Status */}
-            <div className="bg-card p-6 rounded-2xl shadow-soft border border-border-color">
+            <div className="bg-card p-4 sm:p-6 rounded-2xl shadow-soft border border-border-color">
               {article.allow_submissions ? (
                 <>
-                  <h4 className="text-lg font-bold mb-4 text-card-text border-b border-border-color pb-2 flex items-center gap-2">
+                  <h4 className="text-base sm:text-lg font-bold mb-3 sm:mb-4 text-card-text border-b border-border-color pb-2 flex items-center gap-2">
                     <Upload className="w-5 h-5 text-bbcRed" />
                     {t("submit_documents", language)}
                   </h4>
@@ -654,12 +654,12 @@ const ArticleDetail: React.FC = () => {
             </div>
 
             {/* Quick Info Card */}
-            <div className="bg-card p-6 rounded-2xl shadow-soft border border-border-color">
-              <h4 className="text-lg font-bold mb-4 text-card-text">
+            <div className="bg-card p-4 sm:p-6 rounded-2xl shadow-soft border border-border-color">
+              <h4 className="text-base sm:text-lg font-bold mb-3 sm:mb-4 text-card-text">
                 {t("article_info", language)}
               </h4>
-              <div className="space-y-3 text-sm">
-                <div className="flex justify-between items-center pb-3 border-b border-border-color">
+              <div className="space-y-2 sm:space-y-3 text-xs sm:text-sm">
+                <div className="flex justify-between items-center pb-2 sm:pb-3 border-b border-border-color">
                   <span className="text-muted-text">
                     {t("category", language)}
                   </span>
@@ -667,7 +667,7 @@ const ArticleDetail: React.FC = () => {
                     {escapeHtml(article.category)}
                   </span>
                 </div>
-                <div className="flex justify-between items-center pb-3 border-b border-border-color">
+                <div className="flex justify-between items-center pb-2 sm:pb-3 border-b border-border-color">
                   <span className="text-muted-text">
                     {t("published", language)}
                   </span>
@@ -691,10 +691,10 @@ const ArticleDetail: React.FC = () => {
         </div>
 
         {/* Comments Section */}
-        <div className="lg:col-span-8 bg-card p-6 md:p-10 rounded-2xl shadow-soft border border-border-color">
-          <div className="flex items-center justify-between mb-6">
-            <h3 className="text-2xl font-bold text-card-text flex items-center gap-2">
-              <MessageCircle className="w-6 h-6 text-bbcRed" />{" "}
+        <div className="lg:col-span-8 bg-card p-4 sm:p-6 md:p-8 rounded-2xl shadow-soft border border-border-color">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 sm:mb-6 gap-3">
+            <h3 className="text-xl sm:text-2xl font-bold text-card-text flex items-center gap-2">
+              <MessageCircle className="w-5 sm:w-6 h-5 sm:h-6 text-bbcRed" />{" "}
               {t("comments", language)}
             </h3>
             <div className="flex items-center gap-2">
