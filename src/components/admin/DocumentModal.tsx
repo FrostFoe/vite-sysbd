@@ -1,14 +1,10 @@
-import {
-  AlertCircle,
-  UploadCloud,
-  X,
-} from "lucide-react";
+import { AlertCircle, UploadCloud, X } from "lucide-react";
 import type React from "react";
 import { useEffect, useState } from "react";
 import { useLayout } from "../../context/LayoutContext";
 import { adminApi } from "../../lib/api";
-import type { Document as DocType } from "../../types";
 import { t } from "../../lib/translations";
+import type { Document as DocType } from "../../types";
 
 export const DocumentModal: React.FC<{
   isOpen: boolean;
@@ -93,7 +89,9 @@ export const DocumentModal: React.FC<{
     <div
       role="dialog"
       aria-modal="true"
-      aria-label={doc ? t("edit_document", language) : t("add_document", language)}
+      aria-label={
+        doc ? t("edit_document", language) : t("add_document", language)
+      }
       className="fixed inset-0 bg-black/50 z-[200] flex items-center justify-center p-4 backdrop-blur-sm"
       onClick={onClose}
       onKeyDown={(e) => {
@@ -105,7 +103,11 @@ export const DocumentModal: React.FC<{
     >
       <div
         role="document"
-        aria-label={doc ? `${t("edit_document", language)} ${t("form", language)}` : `${t("add_document", language)} ${t("form", language)}`}
+        aria-label={
+          doc
+            ? `${t("edit_document", language)} ${t("form", language)}`
+            : `${t("add_document", language)} ${t("form", language)}`
+        }
         className="bg-card rounded-xl shadow-2xl border max-w-2xl w-full max-h-[90vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
         onKeyDown={(e) => e.stopPropagation()}

@@ -438,7 +438,8 @@ const translations: Translations = {
     select_an_option: "একটি বিকল্প নির্বাচন করুন",
     loading_spinner: "লোড হচ্ছে",
     authentication_loading: "অনুমতি যাচাই হচ্ছে...",
-    delete_functionality_not_implemented: "জমা মুছে ফেলার বৈশিষ্ট্য এখনও বাস্তবায়িত হয়নি",
+    delete_functionality_not_implemented:
+      "জমা মুছে ফেলার বৈশিষ্ট্য এখনও বাস্তবায়িত হয়নি",
     failed_to_delete_submission: "জমা মুছে ফেলতে ব্যর্থ হয়েছে",
     confirm_delete_submission: "আপনি কি নিশ্চিত যে আপনি এই জমা মুছে ফেলতে চান?",
     edit_category: "বিভাগ সম্পাদনা করুন",

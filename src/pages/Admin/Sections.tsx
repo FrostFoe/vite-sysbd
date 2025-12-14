@@ -2,11 +2,11 @@ import { Edit2, Layers as LayersIcon, Plus, Trash2 } from "lucide-react";
 import type React from "react";
 import type { FormEvent } from "react";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useLayout } from "../../context/LayoutContext";
 import { CustomDropdown } from "../../components/common/CustomDropdown";
+import { useLayout } from "../../context/LayoutContext";
 import { adminApi } from "../../lib/api";
-import type { Section } from "../../types";
 import { t } from "../../lib/translations";
+import type { Section } from "../../types";
 
 interface AdminSection {
   id: string;
@@ -66,7 +66,9 @@ const SectionModal: React.FC<{
     <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-[100]">
       <div className="bg-card w-full max-w-md p-6 rounded-xl shadow-2xl">
         <h2 className="text-xl font-bold mb-4">
-          {section?.id ? t("edit_section", language) : t("new_section", language)}
+          {section?.id
+            ? t("edit_section", language)
+            : t("new_section", language)}
         </h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
@@ -215,7 +217,7 @@ const Sections: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [language]);
 
   useEffect(() => {
     fetchSections();
@@ -270,13 +272,17 @@ const Sections: React.FC = () => {
 
       <div className="bg-card rounded-xl border border-border-color shadow-sm overflow-hidden">
         {isLoading ? (
-          <div className="p-8 text-center text-muted-text">{t("loading", language)}</div>
+          <div className="p-8 text-center text-muted-text">
+            {t("loading", language)}
+          </div>
         ) : error ? (
           <div className="p-8 text-center text-danger">{error}</div>
         ) : sections.length === 0 ? (
           <div className="p-8 text-center text-muted-text">
             <LayersIcon className="w-16 h-16 mx-auto mb-4 text-border-color" />
-            <p className="text-lg font-bold mb-2">{t("no_sections_found", language)}</p>
+            <p className="text-lg font-bold mb-2">
+              {t("no_sections_found", language)}
+            </p>
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-4 p-4">

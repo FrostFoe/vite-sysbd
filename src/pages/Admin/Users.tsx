@@ -68,7 +68,10 @@ const Users: React.FC = () => {
         fetchUsers();
         closeMuteDialog();
       } else {
-        showToastMsg(response.error || t("failed_to_mute_user", language), "error");
+        showToastMsg(
+          response.error || t("failed_to_mute_user", language),
+          "error"
+        );
       }
     } catch (_error) {
       showToastMsg(t("server_error", language), "error");
@@ -83,7 +86,10 @@ const Users: React.FC = () => {
         showToastMsg(t("user_unmuted_successfully", language));
         fetchUsers();
       } else {
-        showToastMsg(response.error || t("failed_to_unmute_user", language), "error");
+        showToastMsg(
+          response.error || t("failed_to_unmute_user", language),
+          "error"
+        );
       }
     } catch (_error) {
       showToastMsg(t("server_error", language), "error");
@@ -104,7 +110,9 @@ const Users: React.FC = () => {
 
       <div className="bg-card rounded-xl border border-border-color shadow-sm overflow-hidden">
         {users.length === 0 ? (
-          <div className="p-8 text-center text-muted-text">{t("no_users_found", language)}</div>
+          <div className="p-8 text-center text-muted-text">
+            {t("no_users_found", language)}
+          </div>
         ) : (
           <div className="grid grid-cols-1 gap-4 p-4">
             {users.map((user) => {
@@ -141,7 +149,8 @@ const Users: React.FC = () => {
                             </span>
                           ) : (
                             <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-success/10 dark:bg-success/20 text-success">
-                              <CheckCircle className="w-3 h-3" /> {t("active", language)}
+                              <CheckCircle className="w-3 h-3" />{" "}
+                              {t("active", language)}
                             </span>
                           )}
                         </div>
@@ -218,7 +227,9 @@ const Users: React.FC = () => {
               <div className="w-10 h-10 rounded-full bg-warning/10 dark:bg-warning/20 flex items-center justify-center text-warning dark:text-warning">
                 <AlertCircle className="w-5 h-5" />
               </div>
-              <h2 className="text-lg font-bold text-card-text">{t("mute_user", language)}</h2>
+              <h2 className="text-lg font-bold text-card-text">
+                {t("mute_user", language)}
+              </h2>
             </div>
             <p className="text-sm text-muted-text mb-4">
               You are about to mute{" "}
