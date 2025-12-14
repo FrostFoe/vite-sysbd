@@ -401,10 +401,10 @@ const ArticleDetail: React.FC = () => {
   const isArticleBookmarked = bookmarks.includes(article.id);
 
   return (
-    <div className="max-w-[1280px] mx-auto px-4 py-8">
+    <div className="max-w-[1280px] mx-auto">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
         <div className="lg:col-span-8">
-          <article className="bg-card p-6 md:p-10 rounded-2xl shadow-soft border border-border-color">
+          <article className="bg-card p-3 md:p-5 rounded-2xl shadow-soft border border-border-color">
             {/* Article Header */}
             <div className="mb-6">
               <span className="bg-bbcRed text-white text-xs font-bold px-3 py-1 rounded-full mb-3 inline-block">
