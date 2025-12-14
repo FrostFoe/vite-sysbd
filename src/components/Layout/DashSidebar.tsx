@@ -8,8 +8,8 @@ import {
   LogOut,
   Mail,
   MessageCircle,
-  Shield,
 } from "lucide-react";
+import icon from "../../assets/icon.png";
 import type React from "react";
 import { NavLink } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
@@ -36,7 +36,7 @@ const adminNavItems = [
     disabled: false,
   },
   { name: "Sections", to: "/admin/sections", icon: Layers, disabled: false },
-  { name: "Users", to: "/admin/users", icon: Shield, disabled: false },
+  { name: "Users", to: "/admin/users", icon: () => <img src={icon} alt="shield icon" className="w-5 h-5" />, disabled: false },
   {
     name: "Submissions",
     to: "/admin/submissions",

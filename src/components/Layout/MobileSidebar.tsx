@@ -1,4 +1,5 @@
-import { ChevronRight, LayoutDashboard, LogOut, Shield, X } from "lucide-react";
+import { ChevronRight, LayoutDashboard, LogOut, X } from "lucide-react";
+import icon from "../../assets/icon.png";
 import React from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
@@ -89,7 +90,7 @@ const MobileSidebar: React.FC = () => {
                     onClick={() => toggleSidebar(false)}
                     className="w-full py-3 bg-bbcRed text-white rounded-xl font-bold flex items-center justify-center gap-2 shadow-lg shadow-bbcRed/20 hover:shadow-lg hover:shadow-bbcRed/40 hover:bg-opacity-90 hover:-translate-y-0.5 transition-all active:scale-95"
                   >
-                    <Shield className="w-5 h-5" /> {t("admin_panel", language)}
+                    <img src={icon} alt="shield icon" className="w-5 h-5" /> {t("admin_panel", language)}
                   </Link>
                 ) : (
                   <Link

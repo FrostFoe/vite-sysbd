@@ -35,9 +35,7 @@ export default defineConfig(({ command }) => {
           },
         },
       },
-      // Enable compression
       cssCodeSplit: true,
-      // Optimize for smaller bundle size
       target: "es2020",
     },
   };

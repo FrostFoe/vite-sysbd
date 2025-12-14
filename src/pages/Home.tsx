@@ -76,7 +76,7 @@ const HomePage: React.FC = () => {
         onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
         className="group flex gap-4 p-4 rounded-xl hover:bg-muted-bg transition-colors duration-200 border border-transparent hover:border-border-color"
       >
-        <div className="flex-shrink-0 w-24 h-24 rounded-lg overflow-hidden">
+        <div className="flex-shrink-0 w-12 h-12 rounded-lg overflow-hidden">
           <img
             src={article.image || PLACEHOLDER_IMAGE}
             alt={article.title}

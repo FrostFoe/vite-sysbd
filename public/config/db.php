@@ -6,10 +6,10 @@
 //  MySQL database credentials.
 // ----------------------------------------------------------------
 
-$host = "127.0.0.1"; // e.g., "localhost"
+$host = "localhost"; // e.g., "localhost"
 $db = "breachtimes";
-$user = "root";
-$pass = "rootpass";
+$user = "sysbdadm";
+$pass = "lzx26NGPR58";
 $charset = "utf8mb4";
 
 // ----------------------------------------------------------------
