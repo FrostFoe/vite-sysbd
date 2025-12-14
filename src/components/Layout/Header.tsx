@@ -1,5 +1,4 @@
-import { LayoutDashboard, Menu, Moon, Search, Sun } from "lucide-react";
-import icon from "../../assets/icon.png";
+import { LayoutDashboard, Menu, Moon, Search, Shield, Sun } from "lucide-react";
 import type React from "react";
 import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
@@ -118,7 +117,7 @@ const Header: React.FC = () => {
                       to="/admin"
                       className="flex items-center gap-2 px-4 py-2 bg-bbcRed text-white rounded-full text-sm font-bold shadow-lg shadow-bbcRed/30 hover:scale-105 transition-all mr-2 active:scale-95"
                     >
-                      <img src={icon} alt="shield icon" className="w-4 h-4" />{" "}
+                      <Shield className="w-4 h-4" />{" "}
                       {t("admin_panel", language)}
                     </Link>
                   ) : (
