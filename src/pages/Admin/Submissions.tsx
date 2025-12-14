@@ -69,23 +69,23 @@ const Submissions: React.FC = () => {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold">
+    <div className="space-y-4 sm:space-y-6">
+      <div className="mb-4 sm:mb-6">
+        <h1 className="text-xl sm:text-2xl font-bold">
           {t("user_submissions", language)}
         </h1>
       </div>
 
       <div className="bg-card rounded-xl border border-border-color shadow-sm overflow-hidden">
         {submissions.length === 0 ? (
-          <div className="p-8 text-center text-muted-text">
+          <div className="p-6 sm:p-8 text-center text-muted-text">
             <Inbox className="w-16 h-16 mx-auto mb-4 text-border-color" />
-            <p className="text-lg font-bold mb-2">
+            <p className="text-base sm:text-lg font-bold mb-2">
               {t("no_submissions_found", language)}
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 gap-4 p-4">
+          <div className="grid grid-cols-1 gap-3 sm:gap-4 p-3 sm:p-4">
             {submissions.map((s) => (
               <button
                 key={s.id}
@@ -97,7 +97,7 @@ const Submissions: React.FC = () => {
                   )
                 }
                 type="button"
-                className="bg-card p-4 rounded-lg border border-border-color group cursor-pointer hover:bg-muted-bg transition-colors w-full text-left"
+                className="bg-card p-3 sm:p-4 rounded-lg border border-border-color group cursor-pointer hover:bg-muted-bg transition-colors w-full text-left"
               >
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex items-center gap-3 min-w-0">

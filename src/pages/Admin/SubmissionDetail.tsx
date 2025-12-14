@@ -75,23 +75,23 @@ const SubmissionDetail: React.FC = () => {
   }
 
   return (
-    <div className="max-w-2xl mx-auto p-6">
+    <div className="max-w-2xl mx-auto p-3 sm:p-4 md:p-6">
       <Link
         to="/admin/submissions"
-        className="flex items-center gap-2 text-bbcRed hover:opacity-80 mb-6"
+        className="flex items-center gap-2 text-bbcRed hover:opacity-80 mb-4 sm:mb-6 text-sm"
       >
-        <ArrowLeft className="w-5 h-5" />
+        <ArrowLeft className="w-4 sm:w-5 h-4 sm:h-5" />
         {t("back", language)}
       </Link>
 
-      <div className="bg-card rounded-xl border border-border-color p-6 shadow-sm space-y-4">
+      <div className="bg-card rounded-xl border border-border-color p-4 sm:p-6 shadow-sm space-y-3 sm:space-y-4">
         <div>
-          <div className="text-xs font-bold text-muted-text uppercase">
+          <div className="text-[10px] sm:text-xs font-bold text-muted-text uppercase">
             {t("article", language)}
           </div>
           <Link
             to={`/admin/articles/${submission.article_id}/edit`}
-            className="text-bbcRed hover:opacity-80 text-sm mt-1 block font-bold"
+            className="text-bbcRed hover:opacity-80 text-xs sm:text-sm mt-1 block font-bold truncate"
           >
             {escapeHtml(
               submission.title_en || submission.title_bn || "Unknown Article"

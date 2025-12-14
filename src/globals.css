@@ -311,7 +311,7 @@
     @apply text-xl;
   }
 
-  h4 {
+  .bg-card.p-6.rounded-2xl.shadow-soft.border.border-border-color h4 {
     @apply text-base;
   }
 
@@ -368,7 +368,6 @@
     @apply top-0;
   }
 }
-
 
 @media (max-width: 480px) {
   h3.text-2xl {

@@ -72,29 +72,31 @@ const UserDetail: React.FC = () => {
   const isMuted = !!user.is_muted;
 
   return (
-    <div className="max-w-2xl mx-auto p-6">
+    <div className="max-w-2xl mx-auto p-3 sm:p-4 md:p-6">
       <Link
         to="/admin/users"
-        className="flex items-center gap-2 text-bbcRed hover:opacity-80 mb-6"
+        className="flex items-center gap-2 text-bbcRed hover:opacity-80 mb-4 sm:mb-6 text-sm"
       >
-        <ArrowLeft className="w-5 h-5" />
+        <ArrowLeft className="w-4 sm:w-5 h-4 sm:h-5" />
         {t("back", language)}
       </Link>
 
-      <div className="bg-card rounded-xl border border-border-color p-6 shadow-sm">
-        <div className="flex items-start gap-4 mb-6">
-          <div className="w-16 h-16 rounded-full bg-gradient-to-br from-bbcRed to-orange-600 flex items-center justify-center text-white text-2xl font-bold">
+      <div className="bg-card rounded-xl border border-border-color p-4 sm:p-6 shadow-sm">
+        <div className="flex items-start gap-3 sm:gap-4 mb-4 sm:mb-6">
+          <div className="w-12 sm:w-16 h-12 sm:h-16 rounded-full bg-gradient-to-br from-bbcRed to-orange-600 flex items-center justify-center text-white text-base sm:text-2xl font-bold flex-shrink-0">
             {user.email.charAt(0).toUpperCase()}
           </div>
-          <div>
-            <h1 className="text-2xl font-bold">{escapeHtml(user.email)}</h1>
-            <p className="text-muted-text text-sm">ID: {user.id}</p>
+          <div className="min-w-0">
+            <h1 className="text-lg sm:text-2xl font-bold truncate">
+              {escapeHtml(user.email)}
+            </h1>
+            <p className="text-muted-text text-xs sm:text-sm">ID: {user.id}</p>
           </div>
         </div>
 
-        <div className="space-y-4">
+        <div className="space-y-3 sm:space-y-4">
           <div>
-            <div className="text-xs font-bold text-muted-text uppercase">
+            <div className="text-[10px] sm:text-xs font-bold text-muted-text uppercase">
               {t("role", language)}
             </div>
             <div

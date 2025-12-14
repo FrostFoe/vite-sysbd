@@ -283,26 +283,26 @@ const ArticleEdit: React.FC = () => {
   }
 
   return (
-    <div className="max-w-6xl mx-auto">
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold">
+    <div className="max-w-6xl mx-auto px-2 sm:px-3">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 mb-4 sm:mb-6">
+        <h1 className="text-lg sm:text-2xl font-bold">
           {id
             ? t("edit_article", language)
             : t("create_new_article_unified", language)}
         </h1>
         {id && (
-          <div className="flex gap-2">
+          <div className="flex gap-2 text-xs sm:text-sm">
             <Link
               to={`/article/${id}?lang=bn`}
               target="_blank"
-              className="text-card-text hover:underline text-sm flex items-center gap-1"
+              className="text-card-text hover:underline flex items-center gap-1 whitespace-nowrap"
             >
               {t("view_bn", language)} <ExternalLink className="w-3 h-3" />
             </Link>
             <Link
               to={`/article/${id}?lang=en`}
               target="_blank"
-              className="text-card-text hover:underline text-sm flex items-center gap-1"
+              className="text-card-text hover:underline flex items-center gap-1 whitespace-nowrap"
             >
               {t("view_en", language)} <ExternalLink className="w-3 h-3" />
             </Link>
@@ -310,11 +310,11 @@ const ArticleEdit: React.FC = () => {
         )}
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
           {/* Main Content */}
-          <div className="lg:col-span-2 space-y-6 bg-card p-4 sm:p-6 rounded-xl border border-border-color shadow-sm">
-            <h3 className="font-bold text-lg mb-4 border-b border-border-color pb-2">
+          <div className="lg:col-span-2 space-y-4 sm:space-y-6 bg-card p-3 sm:p-4 md:p-6 rounded-xl border border-border-color shadow-sm">
+            <h3 className="font-bold text-base sm:text-lg mb-3 sm:mb-4 border-b border-border-color pb-2">
               {t("content_unified", language)}
             </h3>
 

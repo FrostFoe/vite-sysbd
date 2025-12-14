@@ -14,34 +14,34 @@ const Dashboard: React.FC = () => {
   }
 
   return (
-    <div className="bg-card p-8 rounded-2xl shadow-soft border border-border-color">
-      <div className="flex items-center gap-3 mb-8">
+    <div className="bg-card p-4 sm:p-6 md:p-8 rounded-2xl shadow-soft border border-border-color">
+      <div className="flex items-center gap-3 mb-6 sm:mb-8">
         <span className="w-2 h-8 rounded-full bg-bbcRed" />
-        <h2 className="text-2xl font-bold">
+        <h2 className="text-xl sm:text-2xl font-bold">
           {t("dashboard_overview", language)}
         </h2>
       </div>
-      <div className="text-lg text-muted-text">
+      <div className="text-sm sm:text-base text-muted-text">
         <p>
           {t("welcome", language)},{" "}
           <span className="font-bold">{user.email}</span>!{" "}
           {t("this_is_your_personal_dashboard", language)}
         </p>
-        <p className="mt-4">
+        <p className="mt-3 sm:mt-4">
           {t("your_role", language)}:{" "}
           <span className="font-bold uppercase">{user.role}</span>
         </p>
 
-        <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="bg-muted-bg p-6 rounded-xl shadow-sm border border-border-color">
-            <h3 className="font-bold text-xl mb-3 text-card-text">
+        <div className="mt-6 sm:mt-8 grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+          <div className="bg-muted-bg p-4 sm:p-6 rounded-xl shadow-sm border border-border-color">
+            <h3 className="font-bold text-base sm:text-xl mb-2 sm:mb-3 text-card-text">
               {t("quick_links", language)}
             </h3>
             <ul className="space-y-2">
               <li>
                 <Link
                   to={`/?category=saved`}
-                  className="text-bbcRed hover:underline flex items-center gap-2"
+                  className="text-bbcRed hover:underline flex items-center gap-2 text-xs sm:text-sm"
                 >
                   <Bookmark className="w-4 h-4" />{" "}
                   {t("saved_articles", language)}
@@ -50,18 +50,18 @@ const Dashboard: React.FC = () => {
               <li>
                 <Link
                   to="/dashboard/inbox"
-                  className="text-bbcRed hover:underline flex items-center gap-2"
+                  className="text-bbcRed hover:underline flex items-center gap-2 text-xs sm:text-sm"
                 >
                   <Mail className="w-4 h-4" /> {t("messages", language)}
                 </Link>
               </li>
             </ul>
           </div>
-          <div className="bg-muted-bg p-6 rounded-xl shadow-sm border border-border-color">
-            <h3 className="font-bold text-xl mb-3 text-card-text">
+          <div className="bg-muted-bg p-4 sm:p-6 rounded-xl shadow-sm border border-border-color">
+            <h3 className="font-bold text-base sm:text-xl mb-2 sm:mb-3 text-card-text">
               {t("your_activity", language)}
             </h3>
-            <p className="text-muted-text">
+            <p className="text-muted-text text-xs sm:text-sm">
               {t("activity_placeholder", language)}
             </p>
           </div>

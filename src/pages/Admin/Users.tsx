@@ -99,14 +99,16 @@ const Users: React.FC = () => {
   }
 
   return (
-    <div className="space-y-6">
-      <h1 className="text-2xl font-bold">{t("users", language)}</h1>
+    <div className="space-y-4 sm:space-y-6">
+      <h1 className="text-xl sm:text-2xl font-bold">{t("users", language)}</h1>
 
       <div className="bg-card rounded-xl border border-border-color shadow-sm overflow-hidden">
         {users.length === 0 ? (
-          <div className="p-8 text-center text-muted-text">No users found.</div>
+          <div className="p-6 sm:p-8 text-center text-muted-text text-sm">
+            No users found.
+          </div>
         ) : (
-          <div className="grid grid-cols-1 gap-4 p-4">
+          <div className="grid grid-cols-1 gap-3 sm:gap-4 p-3 sm:p-4">
             {users.map((user) => {
               const isMuted = !!user.is_muted;
               return (
@@ -120,34 +122,34 @@ const Users: React.FC = () => {
                     )
                   }
                   type="button"
-                  className="bg-card p-4 rounded-lg border border-border-color group hover:bg-muted-bg transition-colors cursor-pointer w-full text-left"
+                  className="bg-card p-3 sm:p-4 rounded-lg border border-border-color group hover:bg-muted-bg transition-colors cursor-pointer w-full text-left"
                 >
-                  <div className="flex items-start justify-between">
-                    <div className="flex items-center gap-3 min-w-0">
-                      <div className="w-12 h-12 rounded-full bg-gradient-to-br from-bbcRed to-orange-600 flex items-center justify-center text-white text-sm font-bold">
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+                      <div className="w-10 sm:w-12 h-10 sm:h-12 rounded-full bg-gradient-to-br from-bbcRed to-orange-600 flex items-center justify-center text-white text-xs sm:text-sm font-bold flex-shrink-0">
                         {user.email.charAt(0).toUpperCase()}
                       </div>
                       <div className="truncate">
-                        <div className="font-bold text-sm truncate">
+                        <div className="font-bold text-xs sm:text-sm truncate">
                           {user.email}
                         </div>
-                        <div className="text-xs text-muted-text truncate">
+                        <div className="text-[10px] sm:text-xs text-muted-text truncate">
                           ID: {user.id}
                         </div>
-                        <div className="mt-1 text-xs font-bold">
+                        <div className="mt-1 text-[10px] sm:text-xs font-bold">
                           {isMuted ? (
-                            <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-danger/10 dark:bg-danger/20 text-danger">
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-danger/10 dark:bg-danger/20 text-danger whitespace-nowrap">
                               <Ban className="w-3 h-3" /> Muted
                             </span>
                           ) : (
-                            <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-success/10 dark:bg-success/20 text-success">
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-success/10 dark:bg-success/20 text-success whitespace-nowrap">
                               <CheckCircle className="w-3 h-3" /> Active
                             </span>
                           )}
                         </div>
                       </div>
                     </div>
-                    <div className="flex items-center gap-1 shrink-0 ml-2">
+                    <div className="flex items-center gap-1 flex-shrink-0">
                       <div
                         className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-bold ${user.role === "admin" ? "bg-danger/10 dark:bg-danger/20 text-danger" : "bg-muted-bg text-card-text"}`}
                       >

@@ -259,12 +259,14 @@ const Sections: React.FC = () => {
         section={editingSection}
         language={language}
       />
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">{t("manage_sections", language)}</h1>
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
+        <h1 className="text-xl sm:text-2xl font-bold">
+          {t("manage_sections", language)}
+        </h1>
         <button
           type="button"
           onClick={() => handleOpenModal()}
-          className="bg-bbcRed text-white px-4 py-2 rounded-lg font-bold flex items-center gap-2"
+          className="bg-bbcRed text-white px-3 sm:px-4 py-2 rounded-lg font-bold text-sm sm:text-base flex items-center gap-2 whitespace-nowrap"
         >
           <Plus className="w-4 h-4" /> {t("new_section", language)}
         </button>

@@ -92,13 +92,13 @@ const CategoryModal: React.FC<{
                 setFormData({ ...formData, title_bn: e.target.value })
               }
               required
-              className="w-full p-3 rounded-lg border border-border-color bg-card focus:border-bbcRed outline-none font-hind"
+              className="w-full p-2.5 sm:p-3 text-sm sm:text-base rounded-lg border border-border-color bg-card focus:border-bbcRed outline-none font-hind"
             />
           </div>
           <div>
             <label
               htmlFor="category-title-en"
-              className="block text-sm font-bold mb-1"
+              className="block text-xs sm:text-sm font-bold mb-1"
             >
               {t("title_english", language)}
             </label>
@@ -110,7 +110,7 @@ const CategoryModal: React.FC<{
                 setFormData({ ...formData, title_en: e.target.value })
               }
               required
-              className="w-full p-3 rounded-lg border border-border-color bg-card focus:border-bbcRed outline-none font-hind"
+              className="w-full p-2.5 sm:p-3 text-sm sm:text-base rounded-lg border border-border-color bg-card focus:border-bbcRed outline-none font-hind"
             />
           </div>
           <div>
@@ -218,14 +218,14 @@ const Categories: React.FC = () => {
         category={editingCategory}
         language={language}
       />
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
+        <h1 className="text-xl sm:text-2xl font-bold">
           {t("manage_categories", language)}
         </h1>
         <button
           type="button"
           onClick={() => handleOpenModal()}
-          className="bg-bbcRed text-white px-4 py-2 rounded-lg font-bold flex items-center gap-2"
+          className="bg-bbcRed text-white px-3 sm:px-4 py-2 rounded-lg font-bold text-sm sm:text-base flex items-center gap-2 whitespace-nowrap"
         >
           <Plus className="w-4 h-4" /> {t("new_category", language)}
         </button>
@@ -250,30 +250,30 @@ const Categories: React.FC = () => {
             {categories.map((cat) => (
               <div
                 key={cat.id}
-                className="bg-card p-4 rounded-lg border border-border-color group hover:bg-muted-bg transition-colors"
+                className="bg-card p-3 sm:p-4 rounded-lg border border-border-color group hover:bg-muted-bg transition-colors"
               >
-                <div className="flex items-start justify-between">
-                  <div className="flex items-center gap-3 min-w-0">
-                    <div className="font-mono text-sm font-bold text-card-text">
+                <div className="flex items-start justify-between gap-2">
+                  <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+                    <div className="font-mono text-xs sm:text-sm font-bold text-card-text flex-shrink-0">
                       {cat.id}
                     </div>
                     <div className="truncate">
-                      <div className="font-bold text-sm truncate">
+                      <div className="font-bold text-xs sm:text-sm truncate">
                         {cat.title_bn}
                       </div>
-                      <div className="text-sm truncate">{cat.title_en}</div>
+                      <div className="text-xs truncate">{cat.title_en}</div>
                     </div>
                   </div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 flex-shrink-0">
                     <div
-                      className="w-8 h-8 rounded-lg border border-border-color"
+                      className="w-6 sm:w-8 h-6 sm:h-8 rounded-lg border border-border-color"
                       style={{ backgroundColor: cat.color }}
                     />
                     <div className="text-xs text-muted-text hidden md:block">
                       {cat.color}
                     </div>
                   </div>
-                  <div className="flex items-center gap-1">
+                  <div className="flex items-center gap-1 flex-shrink-0">
                     <button
                       type="button"
                       onClick={() => handleOpenModal(cat)}

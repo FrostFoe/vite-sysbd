@@ -109,8 +109,10 @@ const ArticleList: React.FC = () => {
 
   return (
     <>
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
-        <h1 className="text-2xl font-bold">{t("manage_articles", language)}</h1>
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
+        <h1 className="text-xl sm:text-2xl font-bold">
+          {t("manage_articles", language)}
+        </h1>
 
         <div className="flex flex-col sm:flex-row gap-2 w-full md:w-auto">
           {/* Filter Form */}
@@ -118,7 +120,7 @@ const ArticleList: React.FC = () => {
             onSubmit={(e) => {
               e.preventDefault();
             }}
-            className="flex gap-2 w-full md:w-auto"
+            className="flex gap-2 w-full md:w-auto flex-wrap sm:flex-nowrap"
           >
             <input
               type="text"
@@ -126,7 +128,7 @@ const ArticleList: React.FC = () => {
               placeholder={t("search_articles", language)}
               value={currentSearch}
               onChange={(e) => handleFilterChange("search", e.target.value)}
-              className="p-2.5 sm:p-2 rounded border border-border-color bg-card text-sm w-full md:w-48 focus:border-bbcRed outline-none"
+              className="p-2 sm:p-2.5 rounded border border-border-color bg-card text-xs sm:text-sm w-full sm:w-auto md:w-48 focus:border-bbcRed outline-none"
             />
 
             <CustomDropdown
@@ -139,12 +141,12 @@ const ArticleList: React.FC = () => {
                   label: language === "bn" ? c.title_bn : c.title_en,
                 })),
               ]}
-              className="w-32 md:w-40"
+              className="w-full sm:w-32 md:w-40"
             />
 
             <button
               type="submit"
-              className="bg-muted-bg p-2 rounded hover:bg-bbcRed hover:text-white transition-colors"
+              className="bg-muted-bg p-2 rounded hover:bg-bbcRed hover:text-white transition-colors flex-shrink-0"
             >
               <Search className="w-4 h-4" />
             </button>

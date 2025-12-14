@@ -73,7 +73,9 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
             <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-bbcRed bg-danger/10 dark:bg-danger/20 px-2 py-0.5 rounded">
               {escapeHtml(article.category)}
             </span>
-            <span className="text-[9px] sm:text-[10px] text-muted-text">• {timeAgo}</span>
+            <span className="text-[9px] sm:text-[10px] text-muted-text">
+              • {timeAgo}
+            </span>
           </div>
           <h3
             className={`text-base sm:text-lg md:text-xl font-bold mb-2 sm:mb-3 leading-tight group-hover:text-bbcRed transition-colors ${textColor}`}

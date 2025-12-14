@@ -39,13 +39,8 @@ const Comments: React.FC = () => {
   }
 
   const { data, isLoading, refetch } = useDataFetch<AdminCommentsResponse>(
-    () => adminApi.getAllComments(),
+    useCallback(() => adminApi.getAllComments(), []),
     {
-      onSuccess: (response) => {
-        if (response.comments) {
-          // Handle success
-        }
-      },
       showErrorToast: true,
     }
   );
@@ -75,9 +70,11 @@ const Comments: React.FC = () => {
 
   return (
     <LoadingState isLoading={isLoading}>
-      <div className="space-y-6">
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold">{t("moderation", language)}</h1>
+      <div className="space-y-4 sm:space-y-6">
+        <div className="flex justify-between items-center mb-4 sm:mb-6">
+          <h1 className="text-xl sm:text-2xl font-bold">
+            {t("moderation", language)}
+          </h1>
         </div>
 
         <div className="bg-card rounded-xl border border-border-color shadow-sm overflow-hidden">
@@ -87,7 +84,7 @@ const Comments: React.FC = () => {
             description="There are currently no comments to moderate."
             icon={<MessageCircle className="w-16 h-16 mx-auto" />}
           >
-            <div className="grid grid-cols-1 gap-4 p-4">
+            <div className="grid grid-cols-1 gap-3 sm:gap-4 p-3 sm:p-4">
               {comments.map((c: AdminComment) => (
                 <button
                   key={c.id}
