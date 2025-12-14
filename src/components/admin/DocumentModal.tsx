@@ -5,8 +5,10 @@ import {
 } from "lucide-react";
 import type React from "react";
 import { useEffect, useState } from "react";
+import { useLayout } from "../../context/LayoutContext";
 import { adminApi } from "../../lib/api";
 import type { Document as DocType } from "../../types";
+import { t } from "../../lib/translations";
 
 export const DocumentModal: React.FC<{
   isOpen: boolean;
@@ -14,7 +16,10 @@ export const DocumentModal: React.FC<{
   onSave: () => void;
   articleId: string;
   doc: DocType | null;
-}> = ({ isOpen, onClose, onSave, articleId, doc }) => {
+  language?: "en" | "bn"; // Added to allow passing language prop if needed directly
+}> = ({ isOpen, onClose, onSave, articleId, doc, language: propLanguage }) => {
+  const { language: contextLanguage } = useLayout();
+  const language = propLanguage || contextLanguage;
   const [formData, setFormData] = useState<Partial<DocType>>({ sort_order: 0 });
   const [file, setFile] = useState<File | null>(null);
   const [error, setError] = useState("");
@@ -73,10 +78,10 @@ export const DocumentModal: React.FC<{
       if (res.success) {
         onSave();
       } else {
-        setError(res.error || "Failed to save document.");
+        setError(res.error || t("failed_to_save_document", language));
       }
     } catch (_error) {
-      setError("An unexpected error occurred.");
+      setError(t("unexpected_error", language));
     } finally {
       setIsSaving(false);
     }
@@ -88,7 +93,7 @@ export const DocumentModal: React.FC<{
     <div
       role="dialog"
       aria-modal="true"
-      aria-label={doc ? "Edit Document" : "Add Document"}
+      aria-label={doc ? t("edit_document", language) : t("add_document", language)}
       className="fixed inset-0 bg-black/50 z-[200] flex items-center justify-center p-4 backdrop-blur-sm"
       onClick={onClose}
       onKeyDown={(e) => {
@@ -100,14 +105,14 @@ export const DocumentModal: React.FC<{
     >
       <div
         role="document"
-        aria-label={doc ? "Edit Document Form" : "Add Document Form"}
+        aria-label={doc ? `${t("edit_document", language)} ${t("form", language)}` : `${t("add_document", language)} ${t("form", language)}`}
         className="bg-card rounded-xl shadow-2xl border max-w-2xl w-full max-h-[90vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
         onKeyDown={(e) => e.stopPropagation()}
       >
         <div className="sticky top-0 bg-card/80 backdrop-blur-md border-b p-4 flex items-center justify-between z-10">
           <h3 className="text-xl font-bold">
-            {doc ? "Edit Document" : "Add Document"}
+            {doc ? t("edit_document", language) : t("add_document", language)}
           </h3>
           <button type="button" onClick={onClose}>
             <X />
@@ -125,7 +130,7 @@ export const DocumentModal: React.FC<{
             className="border-2 border-dashed rounded-xl p-8 text-center cursor-pointer w-full text-left"
           >
             <UploadCloud className="w-12 h-12 mx-auto text-muted-text" />
-            <p className="mt-2 text-sm">Click to upload or drag & drop</p>
+            <p className="mt-2 text-sm">{t("click_to_upload", language)}</p>
             <input
               type="file"
               id="file-input"
@@ -144,7 +149,7 @@ export const DocumentModal: React.FC<{
               onChange={(e) =>
                 setFormData({ ...formData, display_name_bn: e.target.value })
               }
-              placeholder="Name (BN)"
+              placeholder={t("name_bn", language)}
               required
               className="w-full p-2.5 sm:p-3 rounded border bg-muted-bg text-sm sm:text-base"
             />
@@ -154,7 +159,7 @@ export const DocumentModal: React.FC<{
               onChange={(e) =>
                 setFormData({ ...formData, display_name_en: e.target.value })
               }
-              placeholder="Name (EN)"
+              placeholder={t("name_en", language)}
               required
               className="w-full p-2.5 sm:p-3 rounded border bg-muted-bg text-sm sm:text-base"
             />
@@ -166,7 +171,7 @@ export const DocumentModal: React.FC<{
               onChange={(e) =>
                 setFormData({ ...formData, description_bn: e.target.value })
               }
-              placeholder="Description (BN)"
+              placeholder={t("description_bn", language)}
               rows={3}
               className="w-full p-2.5 sm:p-3 rounded border bg-muted-bg text-sm sm:text-base"
             />
@@ -176,7 +181,7 @@ export const DocumentModal: React.FC<{
               onChange={(e) =>
                 setFormData({ ...formData, description_en: e.target.value })
               }
-              placeholder="Description (EN)"
+              placeholder={t("description_en", language)}
               rows={3}
               className="w-full p-2.5 sm:p-3 rounded border bg-muted-bg text-sm sm:text-base"
             />
@@ -188,7 +193,7 @@ export const DocumentModal: React.FC<{
             onChange={(e) =>
               setFormData({ ...formData, download_url: e.target.value })
             }
-            placeholder="External URL (optional)"
+            placeholder={t("external_url_optional", language)}
             className="w-full p-2.5 sm:p-3 rounded border bg-muted-bg text-sm sm:text-base"
           />
           <input
@@ -201,7 +206,7 @@ export const DocumentModal: React.FC<{
                 sort_order: parseInt(e.target.value, 10),
               })
             }
-            placeholder="Sort Order"
+            placeholder={t("sort_order", language)}
             className="w-full p-2.5 sm:p-3 rounded border bg-muted-bg text-sm sm:text-base"
           />
 
@@ -218,14 +223,14 @@ export const DocumentModal: React.FC<{
               onClick={onClose}
               className="px-4 py-2 text-sm font-bold"
             >
-              Cancel
+              {t("cancel", language)}
             </button>
             <button
               type="submit"
               disabled={isSaving}
               className="px-4 py-2 bg-bbcRed text-white rounded-lg font-bold text-sm disabled:opacity-50"
             >
-              {isSaving ? "Saving..." : "Save"}
+              {isSaving ? t("saving", language) : t("save", language)}
             </button>
           </div>
         </form>

@@ -1,11 +1,13 @@
 import type React from "react";
 import { lazy } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
+import { useLayout } from "./context/LayoutContext";
 import { LoadingSpinner, RouteWrapper } from "./components/common";
 import DashLayout from "./components/Layout/DashLayout";
 import MainLayout from "./components/Layout/MainLayout";
 import { useAuth } from "./context/AuthContext";
 import { LayoutProvider } from "./context/LayoutContext";
+import { t } from "./lib/translations";
 
 const Login = lazy(() => import("./pages/Login"));
 const Register = lazy(() => import("./pages/Register"));
@@ -44,6 +46,18 @@ const ProtectedRoute: React.FC<{
   }
 
   return <>{children}</>;
+};
+
+const NotFoundPage: React.FC = () => {
+  const { language } = useLayout();
+  return (
+    <div className="flex items-center justify-center min-h-screen">
+      <div className="text-center">
+        <h1 className="text-4xl font-bold mb-2">{t("not_found_404", language)}</h1>
+        <p className="text-muted-text">{t("page_not_found", language)}</p>
+      </div>
+    </div>
+  );
 };
 
 const AppRoutes: React.FC = () => {
@@ -250,12 +264,7 @@ const AppRoutes: React.FC = () => {
           path="*"
           element={
             <RouteWrapper>
-              <div className="flex items-center justify-center min-h-screen">
-                <div className="text-center">
-                  <h1 className="text-4xl font-bold mb-2">404</h1>
-                  <p className="text-muted-text">Page not found</p>
-                </div>
-              </div>
+              <NotFoundPage />
             </RouteWrapper>
           }
         />

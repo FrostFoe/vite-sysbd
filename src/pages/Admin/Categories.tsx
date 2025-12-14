@@ -2,15 +2,18 @@ import { Edit2, Folder as FolderIcon, Plus, Trash2 } from "lucide-react";
 import type React from "react";
 import type { FormEvent } from "react";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { useLayout } from "../../context/LayoutContext";
 import { adminApi } from "../../lib/api";
 import type { Category } from "../../types";
+import { t } from "../../lib/translations";
 
 const CategoryModal: React.FC<{
   isOpen: boolean;
   onClose: () => void;
   onSave: (formData: Partial<Category>) => void;
   category: Partial<Category> | null;
-}> = ({ isOpen, onClose, onSave, category }) => {
+  language: "en" | "bn";
+}> = ({ isOpen, onClose, onSave, category, language }) => {
   const [formData, setFormData] = useState<Partial<Category>>(() => {
     if (category) {
       return { ...category };
@@ -52,7 +55,7 @@ const CategoryModal: React.FC<{
     <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-[100]">
       <div className="bg-card w-full max-w-md p-6 rounded-xl shadow-2xl">
         <h2 className="text-xl font-bold mb-4">
-          {category?.id ? "Edit Category" : "New Category"}
+          {category?.id ? t("edit_category", language) : t("new_category", language)}
         </h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
@@ -60,7 +63,7 @@ const CategoryModal: React.FC<{
               htmlFor="category-id"
               className="block text-sm font-bold mb-1"
             >
-              ID (Slug)
+              {t("id_slug", language)}
             </label>
             <input
               id="category-id"
@@ -77,7 +80,7 @@ const CategoryModal: React.FC<{
               htmlFor="category-title-bn"
               className="block text-sm font-bold mb-1"
             >
-              Title (Bangla)
+              {t("title_bangla", language)}
             </label>
             <input
               id="category-title-bn"
@@ -95,7 +98,7 @@ const CategoryModal: React.FC<{
               htmlFor="category-title-en"
               className="block text-sm font-bold mb-1"
             >
-              Title (English)
+              {t("title_english", language)}
             </label>
             <input
               id="category-title-en"
@@ -113,7 +116,7 @@ const CategoryModal: React.FC<{
               htmlFor="category-color"
               className="block text-sm font-bold mb-1"
             >
-              Color
+              {t("color", language)}
             </label>
             <input
               type="color"
@@ -133,13 +136,13 @@ const CategoryModal: React.FC<{
               onClick={onClose}
               className="px-4 py-2 text-sm font-bold text-muted-text hover:text-card-text hover:bg-muted-bg rounded-lg"
             >
-              Cancel
+              {t("cancel", language)}
             </button>
             <button
               type="submit"
               className="px-4 py-2 bg-bbcRed text-white rounded-lg font-bold text-sm hover:opacity-90 transition-opacity"
             >
-              Save
+              {t("save", language)}
             </button>
           </div>
         </form>
@@ -149,6 +152,7 @@ const CategoryModal: React.FC<{
 };
 
 const Categories: React.FC = () => {
+  const { language } = useLayout();
   const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -166,7 +170,7 @@ const Categories: React.FC = () => {
         throw new Error(res.message || "Failed to fetch categories");
       }
     } catch (_err) {
-      setError("Failed to fetch categories.");
+      setError(t("failed_to_fetch_categories", language));
     } finally {
       setIsLoading(false);
     }
@@ -195,7 +199,7 @@ const Categories: React.FC = () => {
   };
 
   const handleDelete = async (id: string) => {
-    if (window.confirm("Are you sure you want to delete this category?")) {
+    if (window.confirm(t("confirm_delete_category", language))) {
       try {
         await adminApi.deleteCategory(id);
         fetchCategories();
@@ -210,27 +214,28 @@ const Categories: React.FC = () => {
         onClose={handleCloseModal}
         onSave={handleSave}
         category={editingCategory}
+        language={language}
       />
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Manage Categories</h1>
+        <h1 className="text-2xl font-bold">{t("manage_categories", language)}</h1>
         <button
           type="button"
           onClick={() => handleOpenModal()}
           className="bg-bbcRed text-white px-4 py-2 rounded-lg font-bold flex items-center gap-2"
         >
-          <Plus className="w-4 h-4" /> New Category
+          <Plus className="w-4 h-4" /> {t("new_category", language)}
         </button>
       </div>
 
       <div className="bg-card rounded-xl border border-border-color shadow-sm overflow-hidden">
         {isLoading ? (
-          <div className="p-8 text-center text-muted-text">Loading...</div>
+          <div className="p-8 text-center text-muted-text">{t("loading", language)}</div>
         ) : error ? (
           <div className="p-8 text-center text-danger">{error}</div>
         ) : categories.length === 0 ? (
           <div className="p-8 text-center text-muted-text">
             <FolderIcon className="w-16 h-16 mx-auto mb-4 text-border-color" />
-            <p className="text-lg font-bold mb-2">No Categories Found</p>
+            <p className="text-lg font-bold mb-2">{t("no_categories_found", language)}</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-4 p-4">

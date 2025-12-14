@@ -40,7 +40,7 @@ const UserDetail: React.FC = () => {
           if (foundUser) {
             setUser(foundUser);
           } else {
-            showToastMsg("User not found", "error");
+            showToastMsg(t("user_not_found", language), "error");
           }
         }
       } catch (_error) {
@@ -111,7 +111,7 @@ const UserDetail: React.FC = () => {
             <div
               className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-bold mt-1 ${isMuted ? "bg-danger/10 dark:bg-danger/20 text-danger" : "bg-success/10 dark:bg-success/20 text-success"}`}
             >
-              {isMuted ? "Muted" : "Active"}
+              {isMuted ? t("muted", language) : t("active", language)}
             </div>
           </div>
 

@@ -64,11 +64,11 @@ const Users: React.FC = () => {
     try {
       const response = await adminApi.muteUser(selectedUserId, muteReason);
       if (response.success) {
-        showToastMsg("User muted successfully");
+        showToastMsg(t("user_muted_successfully", language));
         fetchUsers();
         closeMuteDialog();
       } else {
-        showToastMsg(response.error || "Failed to mute user", "error");
+        showToastMsg(response.error || t("failed_to_mute_user", language), "error");
       }
     } catch (_error) {
       showToastMsg(t("server_error", language), "error");
@@ -76,14 +76,14 @@ const Users: React.FC = () => {
   };
 
   const handleUnmuteUser = async (userId: number) => {
-    if (!window.confirm("Are you sure you want to unmute this user?")) return;
+    if (!window.confirm(t("confirm_unmute_user", language))) return;
     try {
       const response = await adminApi.unmuteUser(userId);
       if (response.success) {
-        showToastMsg("User unmuted successfully");
+        showToastMsg(t("user_unmuted_successfully", language));
         fetchUsers();
       } else {
-        showToastMsg(response.error || "Failed to unmute user", "error");
+        showToastMsg(response.error || t("failed_to_unmute_user", language), "error");
       }
     } catch (_error) {
       showToastMsg(t("server_error", language), "error");
@@ -104,7 +104,7 @@ const Users: React.FC = () => {
 
       <div className="bg-card rounded-xl border border-border-color shadow-sm overflow-hidden">
         {users.length === 0 ? (
-          <div className="p-8 text-center text-muted-text">No users found.</div>
+          <div className="p-8 text-center text-muted-text">{t("no_users_found", language)}</div>
         ) : (
           <div className="grid grid-cols-1 gap-4 p-4">
             {users.map((user) => {
@@ -137,11 +137,11 @@ const Users: React.FC = () => {
                         <div className="mt-1 text-xs font-bold">
                           {isMuted ? (
                             <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-danger/10 dark:bg-danger/20 text-danger">
-                              <Ban className="w-3 h-3" /> Muted
+                              <Ban className="w-3 h-3" /> {t("muted", language)}
                             </span>
                           ) : (
                             <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-success/10 dark:bg-success/20 text-success">
-                              <CheckCircle className="w-3 h-3" /> Active
+                              <CheckCircle className="w-3 h-3" /> {t("active", language)}
                             </span>
                           )}
                         </div>
@@ -163,7 +163,7 @@ const Users: React.FC = () => {
                               type="button"
                               onClick={() => handleUnmuteUser(user.id)}
                               className="text-success hover:text-success/80 hover:bg-success/10 dark:hover:bg-success/20 p-2 rounded transition-colors"
-                              title="Unmute"
+                              title={t("unmute", language)}
                             >
                               <CheckCircle className="w-4 h-4" />
                             </button>
@@ -218,7 +218,7 @@ const Users: React.FC = () => {
               <div className="w-10 h-10 rounded-full bg-warning/10 dark:bg-warning/20 flex items-center justify-center text-warning dark:text-warning">
                 <AlertCircle className="w-5 h-5" />
               </div>
-              <h2 className="text-lg font-bold text-card-text">Mute User</h2>
+              <h2 className="text-lg font-bold text-card-text">{t("mute_user", language)}</h2>
             </div>
             <p className="text-sm text-muted-text mb-4">
               You are about to mute{" "}
@@ -232,13 +232,13 @@ const Users: React.FC = () => {
                 htmlFor="mute-reason"
                 className="block text-xs font-bold text-muted-text mb-2 uppercase tracking-wide"
               >
-                Reason (Optional)
+                {t("reason_optional", language)}
               </label>
               <textarea
                 id="mute-reason"
                 value={muteReason}
                 onChange={(e) => setMuteReason(e.target.value)}
-                placeholder="Enter reason for muting this user..."
+                placeholder={t("enter_reason_for_muting", language)}
                 className="w-full p-3 rounded-lg border border-border-color bg-muted-bg text-card-text focus:ring-2 focus:ring-warning/20 focus:border-warning outline-none transition-all resize-none text-sm"
                 rows={3}
               />
@@ -249,14 +249,14 @@ const Users: React.FC = () => {
                 onClick={closeMuteDialog}
                 className="px-4 py-2 rounded-lg bg-muted-bg hover:bg-border-color text-card-text font-bold transition-colors"
               >
-                Cancel
+                {t("cancel", language)}
               </button>
               <button
                 type="button"
                 onClick={handleMuteUser}
                 className="px-4 py-2 rounded-lg bg-warning hover:bg-warning/80 text-white font-bold transition-colors flex items-center gap-2"
               >
-                <Ban className="w-4 h-4" /> Mute User
+                <Ban className="w-4 h-4" /> {t("mute_user", language)}
               </button>
             </div>
           </div>

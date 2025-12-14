@@ -52,11 +52,11 @@ const Submissions: React.FC = () => {
   const handleDeleteSubmission = async (_id: number) => {
     try {
       showToastMsg(
-        "Delete functionality for submissions is not implemented",
+        t("delete_functionality_not_implemented", language),
         "error"
       );
     } catch (_error) {
-      showToastMsg("Failed to delete submission", "error");
+      showToastMsg(t("failed_to_delete_submission", language), "error");
     }
   };
 
@@ -71,14 +71,14 @@ const Submissions: React.FC = () => {
   return (
     <div className="space-y-6">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold">User Submissions</h1>
+        <h1 className="text-2xl font-bold">{t("user_submissions", language)}</h1>
       </div>
 
       <div className="bg-card rounded-xl border border-border-color shadow-sm overflow-hidden">
         {submissions.length === 0 ? (
           <div className="p-8 text-center text-muted-text">
             <Inbox className="w-16 h-16 mx-auto mb-4 text-border-color" />
-            <p className="text-lg font-bold mb-2">No Submissions Found</p>
+            <p className="text-lg font-bold mb-2">{t("no_submissions_found", language)}</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-4 p-4">
@@ -130,7 +130,7 @@ const Submissions: React.FC = () => {
                       onClick={() => {
                         if (
                           window.confirm(
-                            "Are you sure you want to delete this submission?"
+                            t("confirm_delete_submission", language)
                           )
                         ) {
                           handleDeleteSubmission(s.id);

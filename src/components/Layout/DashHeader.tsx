@@ -3,6 +3,7 @@ import type React from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { useLayout } from "../../context/LayoutContext";
+import { t } from "../../lib/translations";
 
 interface DashHeaderProps {
   type: "admin" | "dashboard";
@@ -11,7 +12,7 @@ interface DashHeaderProps {
 
 const DashHeader: React.FC<DashHeaderProps> = ({ type, toggleSidebar }) => {
   const { user } = useAuth();
-  const { theme, toggleTheme } = useLayout();
+  const { theme, toggleTheme, language } = useLayout();
   const isAdmin = type === "admin";
 
   const userName = user?.email.split("@")[0] || "User";
@@ -37,7 +38,7 @@ const DashHeader: React.FC<DashHeaderProps> = ({ type, toggleSidebar }) => {
           <span className="font-bold text-lg md:text-2xl tracking-tight leading-none text-card-text group-hover:text-muted-text transition-colors whitespace-nowrap">
             BT{" "}
             <span className="text-xs text-muted-text font-normal ml-2 uppercase tracking-widest hidden sm:inline-block">
-              {isAdmin ? "Admin" : "Dashboard"}
+              {isAdmin ? t("admin_panel", language) : t("dashboard", language)}
             </span>
           </span>
         </Link>
@@ -63,15 +64,15 @@ const DashHeader: React.FC<DashHeaderProps> = ({ type, toggleSidebar }) => {
             className="hidden sm:flex items-center gap-2 bg-bbcRed text-white px-2 md:px-4 py-2 rounded-lg text-xs md:text-sm font-bold transition-colors shadow-sm hover:shadow-md flex-shrink-0"
           >
             <Plus className="w-4 h-4 flex-shrink-0" />
-            <span className="hidden md:inline">New</span>
-            <span className="hidden lg:inline"> Article</span>
+            <span className="hidden md:inline">{t("new", language)}</span>
+            <span className="hidden lg:inline"> {t("article", language)}</span>
           </Link>
         ) : null}
 
         <div className="hidden md:flex items-center gap-2 md:gap-3 pl-2 md:pl-4 border-l border-border-color flex-shrink-0">
           <div className="text-right hidden lg:block leading-tight flex-shrink-0">
             <div className="font-bold text-sm truncate">
-              {isAdmin ? "Administrator" : userName}
+              {isAdmin ? t("administrator", language) : userName}
             </div>
             <div className="text-[10px] text-muted-text truncate">
               {user?.email}
