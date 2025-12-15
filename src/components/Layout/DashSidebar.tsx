@@ -1,5 +1,7 @@
 import {
   Bookmark,
+  ChevronLeft,
+  ChevronRight,
   Download,
   FileText,
   Folder,
@@ -18,6 +20,8 @@ interface DashSidebarProps {
   type: "admin" | "dashboard";
   isSidebarOpen: boolean;
   toggleSidebar: () => void;
+  isSidebarCollapsed?: boolean;
+  toggleSidebarCollapse?: () => void;
 }
 
 const adminNavItems = [
@@ -66,18 +70,17 @@ const NavItem: React.FC<{
   icon: React.ElementType;
   children: React.ReactNode;
   disabled?: boolean;
-}> = ({ to, icon: Icon, children, disabled }) => {
-  const baseClasses =
-    "flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-all duration-200 group";
+  isCollapsed?: boolean;
+}> = ({ to, icon: Icon, children, disabled, isCollapsed }) => {
+  const baseClasses = "flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-all duration-200 group";
   const activeClasses = "bg-bbcRed text-white shadow-md shadow-red-900/20";
-  const inactiveClasses =
-    "text-muted-text hover:bg-muted-bg hover:text-card-text";
+  const inactiveClasses = "text-muted-text hover:bg-muted-bg hover:text-card-text";
   const disabledClasses = "opacity-50 cursor-not-allowed";
 
   const content = (
     <>
-      <Icon className="w-5 h-5 text-muted-text group-hover:text-bbcRed transition-colors" />
-      {children}
+      <Icon className={`w-5 h-5 text-muted-text group-hover:text-bbcRed transition-colors ${isCollapsed ? 'mx-auto' : ''}`} />
+      {!isCollapsed && children}
     </>
   );
 
@@ -108,13 +111,13 @@ const NavItem: React.FC<{
       {({ isActive }) => (
         <>
           <Icon
-            className={`w-5 h-5 transition-colors ${
+            className={`w-5 h-5 transition-colors ${isCollapsed ? 'mx-auto' : ''} ${
               isActive
                 ? "text-white"
                 : "text-muted-text group-hover:text-bbcRed"
             }`}
           />
-          {children}
+          {!isCollapsed && children}
         </>
       )}
     </NavLink>
@@ -125,6 +128,8 @@ const DashSidebar: React.FC<DashSidebarProps> = ({
   type,
   isSidebarOpen,
   toggleSidebar,
+  isSidebarCollapsed,
+  toggleSidebarCollapse,
 }) => {
   const { user, logout } = useAuth();
   const navItems = type === "admin" ? adminNavItems : userNavItems;
@@ -146,17 +151,35 @@ const DashSidebar: React.FC<DashSidebarProps> = ({
       {/* Sidebar */}
       <aside
         id="sidebar"
-        className={`w-64 bg-card border-r border-border-color fixed inset-y-0 left-0 top-0 md:top-[70px] z-40 transform transition-transform duration-300 ${
+        className={`${
+          isSidebarCollapsed ? "w-20" : "w-64"
+        } bg-card border-r border-border-color fixed inset-y-0 left-0 top-0 md:top-[70px] z-40 transform transition-all duration-300 ease-in-out ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
         } md:translate-x-0 md:static md:inset-auto md:transform-none flex flex-col h-full md:h-[calc(100vh-70px)] shadow-xl md:shadow-none overflow-y-auto`}
       >
-        <nav className="p-4 space-y-1.5">
+        {/* Collapse Button - Visible only on desktop */}
+        <div className="hidden md:block p-4 border-b border-border-color flex justify-end">
+          <button
+            type="button"
+            onClick={toggleSidebarCollapse}
+            className="p-2 rounded-lg hover:bg-muted-bg text-muted-text transition-colors flex-shrink-0"
+          >
+            {isSidebarCollapsed ? (
+              <ChevronRight className="w-5 h-5" />
+            ) : (
+              <ChevronLeft className="w-5 h-5" />
+            )}
+          </button>
+        </div>
+
+        <nav className={`p-4 space-y-1.5 ${isSidebarCollapsed ? 'items-center' : ''}`}>
           {navItems.map((item) => (
             <NavItem
               key={item.name}
               to={item.to}
               icon={item.icon}
               disabled={item.disabled}
+              isCollapsed={isSidebarCollapsed}
             >
               {item.name}
             </NavItem>
@@ -181,10 +204,12 @@ const DashSidebar: React.FC<DashSidebarProps> = ({
           <button
             type="button"
             onClick={logout}
-            className="flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-danger hover:bg-danger/10 dark:hover:bg-danger/20 hover:text-danger transition-all duration-200 w-full"
+            className={`flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-danger hover:bg-danger/10 dark:hover:bg-danger/20 hover:text-danger transition-all duration-200 w-full ${
+              isSidebarCollapsed ? 'justify-center' : ''
+            }`}
           >
-            <LogOut className="w-5 h-5" />
-            Sign Out
+            <LogOut className={`w-5 h-5 ${isSidebarCollapsed ? 'mx-auto' : ''}`} />
+            {!isSidebarCollapsed && "Sign Out"}
           </button>
         </div>
       </aside>

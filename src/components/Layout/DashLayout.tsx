@@ -13,6 +13,7 @@ interface DashLayoutProps {
 const DashLayout: React.FC<DashLayoutProps> = ({ children }) => {
   const location = useLocation();
   const [isSidebarOpen, setSidebarOpen] = useState(false);
+  const [isSidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   const layoutType = location.pathname.startsWith("/admin")
     ? "admin"
@@ -20,6 +21,10 @@ const DashLayout: React.FC<DashLayoutProps> = ({ children }) => {
 
   const toggleSidebar = () => {
     setSidebarOpen(!isSidebarOpen);
+  };
+
+  const toggleSidebarCollapse = () => {
+    setSidebarCollapsed(!isSidebarCollapsed);
   };
 
   const prevPathnameRef = useRef(location.pathname);
@@ -53,6 +58,8 @@ const DashLayout: React.FC<DashLayoutProps> = ({ children }) => {
           type={layoutType}
           isSidebarOpen={isSidebarOpen}
           toggleSidebar={toggleSidebar}
+          isSidebarCollapsed={isSidebarCollapsed}
+          toggleSidebarCollapse={toggleSidebarCollapse}
         />
 
         {/* Content Wrapper */}

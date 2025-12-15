@@ -71,18 +71,18 @@ const Header: React.FC = () => {
               to="/"
               className="block text-card-text transition-transform hover:scale-[1.02] active:scale-95 duration-300"
             >
-              <div className="flex items-center select-none gap-2 group">
-                <span className={`font-bold text-lg md:text-xl rounded shadow-md transition-colors duration-300 ${
+              <div className="flex items-center select-none gap-1 group">
+                <span className={`font-bold text-lg md:text-xl transition-all duration-300 ${
                   theme === 'dark'
-                    ? 'bg-green-600 text-red-400 px-2.5 py-0.5'
-                    : 'bg-red-600 text-green-400 px-2.5 py-0.5'
+                    ? 'text-green-500'
+                    : 'text-red-500'
                 }`}>
                   Breach
                 </span>
-                <span className={`font-bold text-lg md:text-2xl tracking-tight leading-none transition-colors ${
+                <span className={`font-bold text-lg md:text-2xl tracking-tighter leading-none transition-all duration-300 ${
                   theme === 'dark'
-                    ? 'text-green-400'
-                    : 'text-red-600'
+                    ? 'text-red-400'
+                    : 'text-green-600'
                 }`}>
                   Times
                 </span>
