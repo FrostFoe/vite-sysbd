@@ -13,7 +13,7 @@ import { t } from "../../lib/translations";
 import { showToastMsg } from "../../lib/utils";
 
 const Footer: React.FC = () => {
-  const { language } = useLayout();
+  const { language, theme } = useLayout();
 
   const copyToClipboard = (text: string, successMsg: string) => {
     navigator.clipboard
@@ -50,11 +50,19 @@ const Footer: React.FC = () => {
       <div className="container mx-auto px-4 lg:px-8 max-w-[1380px]">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 sm:mb-12 border-b border-border-color pb-8 sm:pb-12 gap-4 sm:gap-8">
           <div className="flex items-center select-none gap-2">
-            <span className="bg-bbcRed text-white px-2.5 py-0.5 font-bold text-lg sm:text-2xl rounded shadow">
-              B
+            <span className={`font-bold text-lg sm:text-2xl rounded shadow transition-colors duration-300 ${
+              theme === 'dark'
+                ? 'bg-green-600 text-red-400 px-2.5 py-0.5'
+                : 'bg-red-600 text-green-400 px-2.5 py-0.5'
+            }`}>
+              Breach
             </span>
-            <span className="font-bold text-2xl sm:text-3xl tracking-tighter leading-none">
-              BT
+            <span className={`font-bold text-2xl sm:text-3xl tracking-tighter leading-none ${
+              theme === 'dark'
+                ? 'text-green-400'
+                : 'text-red-600'
+            }`}>
+              Times
             </span>
           </div>
           <div className="flex gap-4 sm:gap-6">

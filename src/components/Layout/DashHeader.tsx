@@ -1,9 +1,4 @@
-import {
-  Menu,
-  Moon,
-  Plus,
-  Sun,
-} from "lucide-react";
+import { Menu, Moon, Plus, Sun } from "lucide-react";
 import type React from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
@@ -37,11 +32,19 @@ const DashHeader: React.FC<DashHeaderProps> = ({ type, toggleSidebar }) => {
           to={isAdmin ? "/admin" : "/dashboard"}
           className="flex items-center select-none gap-2 group min-w-0"
         >
-          <span className="bg-bbcRed text-white px-2.5 py-0.5 font-bold text-lg md:text-xl rounded shadow-md group-hover:bg-[var(--color-bbcRed-hover)] transition-colors duration-300 flex-shrink-0">
-            B
+          <span className={`font-bold text-lg md:text-xl rounded shadow-md transition-colors duration-300 flex-shrink-0 ${
+            theme === 'dark'
+              ? 'bg-green-600 text-red-400 px-2.5 py-0.5'
+              : 'bg-red-600 text-green-400 px-2.5 py-0.5'
+          }`}>
+            Breach
           </span>
-          <span className="font-bold text-lg md:text-2xl tracking-tight leading-none text-card-text group-hover:text-muted-text transition-colors whitespace-nowrap">
-            BT{" "}
+          <span className={`font-bold text-lg md:text-2xl tracking-tight leading-none transition-colors whitespace-nowrap ${
+            theme === 'dark'
+              ? 'text-green-400'
+              : 'text-red-600'
+          }`}>
+            Times{" "}
             <span className="text-xs text-muted-text font-normal ml-2 uppercase tracking-widest hidden sm:inline-block">
               {isAdmin ? t("admin_panel", language) : t("dashboard", language)}
             </span>
