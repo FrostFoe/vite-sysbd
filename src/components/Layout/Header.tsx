@@ -71,7 +71,7 @@ const Header: React.FC = () => {
               to="/"
               className="block text-card-text transition-transform hover:scale-[1.02] active:scale-95 duration-300"
             >
-              <div className="flex items-center select-none gap-1 group">
+              <div className="flex items-center select-none gap-0 group">
                 <span className={`font-bold text-lg md:text-xl transition-all duration-300 ${
                   theme === 'dark'
                     ? 'text-green-500'
