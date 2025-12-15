@@ -3,9 +3,7 @@ import type React from "react";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { useLayout } from "../context/LayoutContext";
 import { adminApi } from "../lib/api";
-import { t } from "../lib/translations";
 
 interface AdminStats {
   articles: string;
@@ -16,7 +14,6 @@ interface AdminStats {
 
 const AdminDashboard: React.FC = () => {
   useAuth();
-  const { language } = useLayout();
   const [stats, setStats] = useState<AdminStats | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -50,7 +47,7 @@ const AdminDashboard: React.FC = () => {
   if (!stats) {
     return (
       <div className="text-center py-8 text-danger">
-        {t("failed_to_load_stats", language)}
+        পরিসংখ্যান লোড করতে ব্যর্থ হয়েছে।
       </div>
     );
   }
@@ -62,7 +59,7 @@ const AdminDashboard: React.FC = () => {
           <div className="flex justify-between items-start mb-4">
             <div>
               <p className="text-muted-text text-sm font-bold uppercase tracking-wider">
-                {t("total_articles", language)}
+                মোট নিবন্ধ
               </p>
               <h3 className="text-3xl font-bold text-card-text mt-1">
                 {stats.articles}
@@ -76,7 +73,7 @@ const AdminDashboard: React.FC = () => {
             to="/admin/articles"
             className="text-sm text-card-text font-bold hover:underline hover:text-card-text/80"
           >
-            {t("view_details", language)} &rarr;
+            বিস্তারিত দেখুন &rarr;
           </Link>
         </div>
 
@@ -84,7 +81,7 @@ const AdminDashboard: React.FC = () => {
           <div className="flex justify-between items-start mb-4">
             <div>
               <p className="text-muted-text text-sm font-bold uppercase tracking-wider">
-                {t("total_comments", language)}
+                মোট মন্তব্য
               </p>
               <h3 className="text-3xl font-bold text-card-text mt-1">
                 {stats.comments}
@@ -98,7 +95,7 @@ const AdminDashboard: React.FC = () => {
             to="/admin/comments"
             className="text-sm text-card-text font-bold hover:underline hover:text-card-text/80"
           >
-            {t("moderation", language)} &rarr;
+            পর্যবেক্ষণ &rarr;
           </Link>
         </div>
 
@@ -106,7 +103,7 @@ const AdminDashboard: React.FC = () => {
           <div className="flex justify-between items-start mb-4">
             <div>
               <p className="text-muted-text text-sm font-bold uppercase tracking-wider">
-                {t("drafts", language)}
+                খসড়া
               </p>
               <h3 className="text-3xl font-bold text-card-text mt-1">
                 {stats.drafts}
@@ -120,7 +117,7 @@ const AdminDashboard: React.FC = () => {
             to="/admin/articles?status=draft"
             className="text-sm text-card-text font-bold hover:underline hover:text-card-text/80"
           >
-            {t("manage_drafts", language)} &rarr;
+            খসড়া পরিচালনা করুন &rarr;
           </Link>
         </div>
 
@@ -128,7 +125,7 @@ const AdminDashboard: React.FC = () => {
           <div className="flex justify-between items-start mb-4">
             <div>
               <p className="text-muted-text text-sm font-bold uppercase tracking-wider">
-                {t("users", language)}
+                ব্যবহারকারী
               </p>
               <h3 className="text-3xl font-bold text-card-text mt-1">
                 {stats.users}
@@ -142,17 +139,17 @@ const AdminDashboard: React.FC = () => {
             to="/admin/users"
             className="text-sm text-card-text font-bold hover:underline hover:text-card-text/80"
           >
-            {t("system_users", language)}
+            সিস্টেম ব্যবহারকারী
           </Link>
         </div>
       </div>
 
       <div className="bg-card rounded-xl border border-border-color shadow-sm p-4 sm:p-6">
         <h3 className="text-lg font-bold mb-4">
-          {t("recent_activity", language)}
+          সাম্প্রতিক কার্যকলাপ
         </h3>
         <p className="text-muted-text text-sm">
-          {t("activity_logs_coming_soon", language)}
+          ক্রিয়াকলাপ লগ শীঘ্রই আসছে...
         </p>
       </div>
     </div>

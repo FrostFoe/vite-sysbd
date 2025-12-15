@@ -2,9 +2,7 @@ import { AlertCircle, Ban, CheckCircle, Loader } from "lucide-react";
 import type React from "react";
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useLayout } from "../../context/LayoutContext";
 import { adminApi } from "../../lib/api";
-import { t } from "../../lib/translations";
 import { escapeHtml, handleItemSelect, showToastMsg } from "../../lib/utils";
 
 interface AdminUser {
@@ -18,7 +16,6 @@ interface AdminUser {
 }
 
 const Users: React.FC = () => {
-  const { language } = useLayout();
   const navigate = useNavigate();
   const [users, setUsers] = useState<AdminUser[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -37,11 +34,11 @@ const Users: React.FC = () => {
         showToastMsg(response.error || "Failed to fetch users", "error");
       }
     } catch (_error) {
-      showToastMsg(t("server_error", language), "error");
+      showToastMsg("সার্ভার ত্রুটি!", "error");
     } finally {
       setIsLoading(false);
     }
-  }, [language]);
+  }, []);
 
   useEffect(() => {
     fetchUsers();
@@ -64,29 +61,29 @@ const Users: React.FC = () => {
     try {
       const response = await adminApi.muteUser(selectedUserId, muteReason);
       if (response.success) {
-        showToastMsg("User muted successfully");
+        showToastMsg("ব্যবহারকারীকে সফলভাবে মিউট করা হয়েছে");
         fetchUsers();
         closeMuteDialog();
       } else {
-        showToastMsg(response.error || "Failed to mute user", "error");
+        showToastMsg(response.error || "ব্যবহারকারীকে মিউট করতে ব্যর্থ", "error");
       }
     } catch (_error) {
-      showToastMsg(t("server_error", language), "error");
+      showToastMsg("সার্ভার ত্রুটি!", "error");
     }
   };
 
   const handleUnmuteUser = async (userId: number) => {
-    if (!window.confirm("Are you sure you want to unmute this user?")) return;
+    if (!window.confirm("আপনি কি নিশ্চিত যে আপনি এই ব্যবহারকারীকে আনমিউট করতে চান?")) return;
     try {
       const response = await adminApi.unmuteUser(userId);
       if (response.success) {
-        showToastMsg("User unmuted successfully");
+        showToastMsg("ব্যবহারকারীকে সফলভাবে আনমিউট করা হয়েছে");
         fetchUsers();
       } else {
-        showToastMsg(response.error || "Failed to unmute user", "error");
+        showToastMsg(response.error || "ব্যবহারকারীকে আনমিউট করতে ব্যর্থ", "error");
       }
     } catch (_error) {
-      showToastMsg(t("server_error", language), "error");
+      showToastMsg("সার্ভার ত্রুটি!", "error");
     }
   };
 
@@ -100,12 +97,12 @@ const Users: React.FC = () => {
 
   return (
     <div className="space-y-4 sm:space-y-6">
-      <h1 className="text-xl sm:text-2xl font-bold">{t("users", language)}</h1>
+      <h1 className="text-xl sm:text-2xl font-bold">ব্যবহারকারী</h1>
 
       <div className="bg-card rounded-xl border border-border-color shadow-sm overflow-hidden">
         {users.length === 0 ? (
           <div className="p-6 sm:p-8 text-center text-muted-text text-sm">
-            No users found.
+            কোনো ব্যবহারকারী পাওয়া যায়নি।
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-3 sm:gap-4 p-3 sm:p-4">
@@ -139,11 +136,11 @@ const Users: React.FC = () => {
                         <div className="mt-1 text-[10px] sm:text-xs font-bold">
                           {isMuted ? (
                             <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-danger/10 dark:bg-danger/20 text-danger whitespace-nowrap">
-                              <Ban className="w-3 h-3" /> Muted
+                              <Ban className="w-3 h-3" /> মিউট করা হয়েছে
                             </span>
                           ) : (
                             <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-success/10 dark:bg-success/20 text-success whitespace-nowrap">
-                              <CheckCircle className="w-3 h-3" /> Active
+                              <CheckCircle className="w-3 h-3" /> সক্রিয়
                             </span>
                           )}
                         </div>
@@ -165,7 +162,7 @@ const Users: React.FC = () => {
                               type="button"
                               onClick={() => handleUnmuteUser(user.id)}
                               className="text-success hover:text-success/80 hover:bg-success/10 dark:hover:bg-success/20 p-2 rounded transition-colors"
-                              title="Unmute"
+                              title="আনমিউট"
                             >
                               <CheckCircle className="w-4 h-4" />
                             </button>
@@ -176,7 +173,7 @@ const Users: React.FC = () => {
                                 openMuteDialog(user.id, user.email)
                               }
                               className="text-warning hover:text-warning/80 hover:bg-warning/10 dark:hover:bg-warning/20 p-2 rounded transition-colors"
-                              title="Mute"
+                              title="মিউট"
                             >
                               <Ban className="w-4 h-4" />
                             </button>
@@ -220,27 +217,27 @@ const Users: React.FC = () => {
               <div className="w-10 h-10 rounded-full bg-warning/10 dark:bg-warning/20 flex items-center justify-center text-warning dark:text-warning">
                 <AlertCircle className="w-5 h-5" />
               </div>
-              <h2 className="text-lg font-bold text-card-text">Mute User</h2>
+              <h2 className="text-lg font-bold text-card-text">ব্যবহারকারীকে মিউট করুন</h2>
             </div>
             <p className="text-sm text-muted-text mb-4">
-              You are about to mute{" "}
+              আপনি{" "}
               <span className="font-bold text-card-text">
                 {selectedUserEmail}
               </span>
-              . This user will no longer be able to post comments.
+              কে মিউট করতে চলেছেন। এই ব্যবহারকারী আর মন্তব্য পোস্ট করতে পারবেন না।
             </p>
             <div className="mb-4">
               <label
                 htmlFor="mute-reason"
                 className="block text-xs font-bold text-muted-text mb-2 uppercase tracking-wide"
               >
-                Reason (Optional)
+                কারণ (ঐচ্ছিক)
               </label>
               <textarea
                 id="mute-reason"
                 value={muteReason}
                 onChange={(e) => setMuteReason(e.target.value)}
-                placeholder="Enter reason for muting this user..."
+                placeholder="এই ব্যবহারকারীকে মিউট করার কারণ লিখুন..."
                 className="w-full p-3 rounded-lg border border-border-color bg-muted-bg text-card-text focus:ring-2 focus:ring-warning/20 focus:border-warning outline-none transition-all resize-none text-sm"
                 rows={3}
               />
@@ -251,14 +248,14 @@ const Users: React.FC = () => {
                 onClick={closeMuteDialog}
                 className="px-4 py-2 rounded-lg bg-muted-bg hover:bg-border-color text-card-text font-bold transition-colors"
               >
-                Cancel
+                বাতিল
               </button>
               <button
                 type="button"
                 onClick={handleMuteUser}
                 className="px-4 py-2 rounded-lg bg-warning hover:bg-warning/80 text-white font-bold transition-colors flex items-center gap-2"
               >
-                <Ban className="w-4 h-4" /> Mute User
+                <Ban className="w-4 h-4" /> ব্যবহারকারীকে মিউট করুন
               </button>
             </div>
           </div>

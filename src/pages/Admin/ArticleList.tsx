@@ -5,7 +5,6 @@ import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { CustomDropdown } from "../../components/common/CustomDropdown";
 import { useLayout } from "../../context/LayoutContext";
 import { adminApi } from "../../lib/api";
-import { t } from "../../lib/translations";
 import {
   escapeHtml,
   formatTimestamp,
@@ -34,18 +33,18 @@ const ArticleList: React.FC = () => {
         status: currentStatus,
         search: currentSearch,
         cat: currentCategoryFilter,
-        lang: language,
+        lang: "bn",
       });
       if (response.success && response.articles) {
         setArticles(response.articles);
       }
     } catch (_error) {
       // Failed to fetch articles
-      showToastMsg(t("server_error", language), "error");
+      showToastMsg("সার্ভার ত্রুটি!", "error");
     } finally {
       setIsLoading(false);
     }
-  }, [currentStatus, currentSearch, currentCategoryFilter, language]);
+  }, [currentStatus, currentSearch, currentCategoryFilter]);
 
   const fetchCategories = useCallback(async () => {
     try {
@@ -55,9 +54,9 @@ const ArticleList: React.FC = () => {
       }
     } catch (_error) {
       // Failed to fetch categories
-      showToastMsg(t("server_error", language), "error");
+      showToastMsg("সার্ভার ত্রুটি!", "error");
     }
-  }, [language]);
+  }, []);
 
   useEffect(() => {
     fetchArticles();
@@ -66,24 +65,24 @@ const ArticleList: React.FC = () => {
 
   const handleDeleteArticle = useCallback(
     async (id: string) => {
-      if (!window.confirm(t("confirm_delete_article", language))) return;
+      if (!window.confirm("আপনি কি নিশ্চিত এই নিবন্ধটি মুছে ফেলতে চান? এটি উভয় ভাষার সংস্করণ মুছে দেবে।")) return;
       try {
         const response = await adminApi.deleteArticle(id);
         if (response.success) {
-          showToastMsg(t("article_deleted_successfully", language));
+          showToastMsg("নিবন্ধ সফলভাবে মুছে ফেলা হয়েছে");
           setArticles((prev) => prev.filter((article) => article.id !== id));
         } else {
           showToastMsg(
-            response.error || t("failed_to_delete_article", language),
+            response.error || "নিবন্ধ মোছতে ব্যর্থ!",
             "error"
           );
         }
       } catch (_error) {
         // Delete article error occurred
-        showToastMsg(t("server_error", language), "error");
+        showToastMsg("সার্ভার ত্রুটি!", "error");
       }
     },
-    [language]
+    []
   );
 
   const handleFilterChange = (
@@ -111,7 +110,7 @@ const ArticleList: React.FC = () => {
     <>
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
         <h1 className="text-xl sm:text-2xl font-bold">
-          {t("manage_articles", language)}
+          নিবন্ধ পরিচালনা করুন
         </h1>
 
         <div className="flex flex-col sm:flex-row gap-2 w-full md:w-auto">
@@ -125,7 +124,7 @@ const ArticleList: React.FC = () => {
             <input
               type="text"
               name="search"
-              placeholder={t("search_articles", language)}
+              placeholder="নিবন্ধ খুঁজুন..."
               value={currentSearch}
               onChange={(e) => handleFilterChange("search", e.target.value)}
               className="p-2 sm:p-2.5 rounded border border-border-color bg-card text-xs sm:text-sm w-full sm:w-auto md:w-48 focus:border-bbcRed outline-none"
@@ -135,10 +134,10 @@ const ArticleList: React.FC = () => {
               value={currentCategoryFilter}
               onChange={(value) => handleFilterChange("cat", value)}
               options={[
-                { value: "", label: t("all_categories", language) },
+                { value: "", label: "সকল বিভাগ" },
                 ...categories.map((c) => ({
                   value: c.id,
-                  label: language === "bn" ? c.title_bn : c.title_en,
+                  label: c.title_bn,
                 })),
               ]}
               className="w-full sm:w-32 md:w-40"
@@ -157,7 +156,7 @@ const ArticleList: React.FC = () => {
             className="bg-bbcRed text-white px-4 py-2 rounded-lg font-bold hover:opacity-90 transition-opacity flex items-center gap-2 whitespace-nowrap justify-center"
           >
             <Plus className="w-4 h-4" />{" "}
-            <span className="hidden sm:inline">{t("new", language)}</span>
+            <span className="hidden sm:inline">নতুন</span>
           </Link>
         </div>
       </div>
@@ -167,16 +166,16 @@ const ArticleList: React.FC = () => {
           <div className="p-8 text-center text-muted-text">
             <FileText className="w-16 h-16 mx-auto mb-4 text-border-color" />
             <p className="text-lg font-bold mb-2">
-              {t("no_articles_found", language)}
+              কোনো নিবন্ধ পাওয়া যায়নি
             </p>
             <p className="text-sm mb-4">
-              {t("no_articles_matching_criteria", language)}
+              আপনার মানদণ্ডের সাথে মেলে এমন কোনো নিবন্ধ নেই।
             </p>
             <Link
               to="/admin/articles/new"
               className="bg-bbcRed text-white px-4 py-2 rounded-lg font-bold hover:opacity-90 transition-opacity flex items-center gap-2 w-fit mx-auto"
             >
-              <Plus className="w-4 h-4" /> {t("create_new_article", language)}
+              <Plus className="w-4 h-4" /> নতুন নিবন্ধ তৈরি করুন
             </Link>
           </div>
         ) : (
@@ -220,7 +219,7 @@ const ArticleList: React.FC = () => {
                           className="font-bold text-sm block hover:text-bbcRed truncate font-hind"
                         >
                           {escapeHtml(
-                            a.title_bn || a.title_en || t("no_title", language)
+                            a.title_bn || a.title_en || "(শিরোনাম নেই)"
                           )}
                         </Link>
                         {a.title_bn && a.title_en && (
@@ -260,11 +259,11 @@ const ArticleList: React.FC = () => {
                   </div>
                   <div className="text-xs text-muted-text space-y-1">
                     <div>
-                      <span className="font-bold">{t("pub", language)}:</span>{" "}
+                      <span className="font-bold">প্রকাশিত:</span>{" "}
                       {pubDate}
                     </div>
                     <div>
-                      <span className="font-bold">{t("cr", language)}:</span>{" "}
+                      <span className="font-bold">তৈরি:</span>{" "}
                       {createdDate}
                     </div>
                   </div>

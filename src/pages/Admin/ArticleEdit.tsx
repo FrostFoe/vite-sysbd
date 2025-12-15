@@ -15,7 +15,6 @@ import { CustomEditor } from "../../components/common";
 import { CustomDropdown } from "../../components/common/CustomDropdown";
 import { useLayout } from "../../context/LayoutContext";
 import { adminApi, publicApi } from "../../lib/api";
-import { t } from "../../lib/translations";
 import { showToastMsg } from "../../lib/utils";
 import type {
   AdminArticle,
@@ -100,7 +99,7 @@ const ArticleEdit: React.FC = () => {
             });
           } else {
             showToastMsg(
-              articleRes.error || t("failed_to_load_article", language),
+              articleRes.error || "নিবন্ধ লোড করতে ব্যর্থ হয়েছে।",
               "error"
             );
           }
@@ -115,14 +114,14 @@ const ArticleEdit: React.FC = () => {
           });
         }
       } catch (_error) {
-        showToastMsg(t("server_error", language), "error");
+        showToastMsg("সার্ভার ত্রুটি!", "error");
       } finally {
         setIsLoading(false);
       }
     };
 
     fetchData();
-  }, [id, language, fetchDocuments]);
+  }, [id, fetchDocuments]);
 
   useEffect(() => {
     const saved = localStorage.getItem(storageKey);
@@ -158,10 +157,10 @@ const ArticleEdit: React.FC = () => {
     if (saved) {
       const draft = JSON.parse(saved);
       setArticle((prev) => ({ ...prev, ...draft }));
-      showToastMsg(t("draft_restored", language));
+      showToastMsg("খসড়া সফলভাবে পুনরুদ্ধার করা হয়েছে!");
       setRestoreAlert(false);
     }
-  }, [storageKey, language]);
+  }, [storageKey]);
 
   const handleImageUpload = useCallback(
     async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -169,7 +168,7 @@ const ArticleEdit: React.FC = () => {
       if (!file) return;
 
       if (file.size > 2 * 1024 * 1024) {
-        showToastMsg(t("file_too_large", language), "error");
+        showToastMsg("ফাইল খুব বড়! সর্বোচ্চ ২এমবি।", "error");
         return;
       }
 
@@ -180,18 +179,18 @@ const ArticleEdit: React.FC = () => {
         const response = await adminApi.uploadImage(formData);
         if (response.success && response.url) {
           setArticle((prev) => ({ ...prev, image: response.url }));
-          showToastMsg(t("image_uploaded_successfully", language));
+          showToastMsg("ছবি সফলভাবে আপলোড করা হয়েছে!");
         } else {
           showToastMsg(
-            response.error || t("image_upload_failed", language),
+            response.error || "ছবি আপলোডে ব্যর্থ!",
             "error"
           );
         }
       } catch (_error) {
-        showToastMsg(t("server_error", language), "error");
+        showToastMsg("সার্ভার ত্রুটি!", "error");
       }
     },
-    [language]
+    []
   );
 
   const handleSubmit = useCallback(
@@ -220,24 +219,24 @@ const ArticleEdit: React.FC = () => {
       try {
         const response = await adminApi.saveArticle(formData);
         if (response.success) {
-          showToastMsg(t("article_saved_successfully", language));
+          showToastMsg("নিবন্ধ সফলভাবে সংরক্ষিত হয়েছে!");
           localStorage.removeItem(storageKey);
           if (!id) {
             navigate(`/admin/articles/${response.id}/edit`);
           }
         } else {
           showToastMsg(
-            response.error || t("failed_to_save_article", language),
+            response.error || "নিবন্ধ সংরক্ষণ করতে ব্যর্থ হয়েছে!",
             "error"
           );
         }
       } catch (_error) {
-        showToastMsg(t("server_error", language), "error");
+        showToastMsg("সার্ভার ত্রুটি!", "error");
       } finally {
         setIsSaving(false);
       }
     },
-    [article, id, language, navigate, storageKey]
+    [article, id, navigate, storageKey]
   );
 
   const handleOpenModal = async (doc: DocType | null) => {
@@ -266,7 +265,7 @@ const ArticleEdit: React.FC = () => {
   };
 
   const handleDelete = async (docId: string) => {
-    if (window.confirm("Are you sure you want to delete this document?")) {
+    if (window.confirm("আপনি কি নিশ্চিত যে আপনি এই নথিটি মুছে ফেলতে চান?")) {
       try {
         await adminApi.deleteDocument(docId);
         await fetchDocuments();
@@ -286,9 +285,7 @@ const ArticleEdit: React.FC = () => {
     <div className="max-w-6xl mx-auto px-2 sm:px-3">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 mb-4 sm:mb-6">
         <h1 className="text-lg sm:text-2xl font-bold">
-          {id
-            ? t("edit_article", language)
-            : t("create_new_article_unified", language)}
+          {id ? "নিবন্ধ সম্পাদনা করুন" : "নতুন নিবন্ধ তৈরি করুন (একত্রিত)"}
         </h1>
         {id && (
           <div className="flex gap-2 text-xs sm:text-sm">
@@ -297,14 +294,14 @@ const ArticleEdit: React.FC = () => {
               target="_blank"
               className="text-card-text hover:underline flex items-center gap-1 whitespace-nowrap"
             >
-              {t("view_bn", language)} <ExternalLink className="w-3 h-3" />
+              (BN) দেখুন <ExternalLink className="w-3 h-3" />
             </Link>
             <Link
               to={`/article/${id}?lang=en`}
               target="_blank"
               className="text-card-text hover:underline flex items-center gap-1 whitespace-nowrap"
             >
-              {t("view_en", language)} <ExternalLink className="w-3 h-3" />
+              (EN) দেখুন <ExternalLink className="w-3 h-3" />
             </Link>
           </div>
         )}
@@ -315,7 +312,7 @@ const ArticleEdit: React.FC = () => {
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-4 sm:space-y-6 bg-card p-3 sm:p-4 md:p-6 rounded-xl border border-border-color shadow-sm">
             <h3 className="font-bold text-base sm:text-lg mb-3 sm:mb-4 border-b border-border-color pb-2">
-              {t("content_unified", language)}
+              বিষয়বস্তু (একত্রিত)
             </h3>
 
             {/* Title fields */}
@@ -324,7 +321,7 @@ const ArticleEdit: React.FC = () => {
                 htmlFor="title-bn"
                 className="block text-sm font-bold mb-2"
               >
-                {t("title_bn", language)}
+                শিরোনাম (বাংলা)
               </label>
               <input
                 id="title-bn"
@@ -335,7 +332,7 @@ const ArticleEdit: React.FC = () => {
                 }
                 required
                 className="w-full p-3 sm:p-2.5 rounded-lg border border-border-color bg-card focus:border-bbcRed outline-none font-hind text-sm sm:text-base"
-                placeholder={t("enter_article_title_bn", language)}
+                placeholder="নিবন্ধের শিরোনাম লিখুন..."
               />
             </div>
 
@@ -344,7 +341,7 @@ const ArticleEdit: React.FC = () => {
                 htmlFor="title-en"
                 className="block text-sm font-bold mb-2"
               >
-                {t("title_en", language)}
+                শিরোনাম (ইংরেজি)
               </label>
               <input
                 id="title-en"
@@ -354,7 +351,7 @@ const ArticleEdit: React.FC = () => {
                   setArticle((prev) => ({ ...prev, title_en: e.target.value }))
                 }
                 className="w-full p-3 sm:p-2.5 rounded-lg border border-border-color bg-card focus:border-bbcRed outline-none font-hind text-sm sm:text-base"
-                placeholder={t("enter_article_title_en", language)}
+                placeholder="Enter article title..."
               />
             </div>
 
@@ -364,7 +361,7 @@ const ArticleEdit: React.FC = () => {
                 htmlFor="summary-bn"
                 className="block text-sm font-bold mb-2"
               >
-                {t("summary_bn", language)}
+                সংক্ষিপ্ত সারসংক্ষেপ (বাংলা)
               </label>
               <textarea
                 id="summary-bn"
@@ -378,7 +375,7 @@ const ArticleEdit: React.FC = () => {
                   }))
                 }
                 className="w-full p-3 sm:p-2.5 rounded-lg border border-border-color bg-card focus:border-bbcRed outline-none font-hind text-sm sm:text-base"
-                placeholder={t("brief_summary_bn", language)}
+                placeholder="সংক্ষিপ্ত সারসংক্ষেপ..."
               />
             </div>
 
@@ -387,7 +384,7 @@ const ArticleEdit: React.FC = () => {
                 htmlFor="summary-en"
                 className="block text-sm font-bold mb-2"
               >
-                {t("summary_en", language)}
+                সংক্ষিপ্ত সারসংক্ষেপ (ইংরেজি)
               </label>
               <textarea
                 id="summary-en"
@@ -401,7 +398,7 @@ const ArticleEdit: React.FC = () => {
                   }))
                 }
                 className="w-full p-3 sm:p-2.5 rounded-lg border border-border-color bg-card focus:border-bbcRed outline-none font-hind text-sm sm:text-base"
-                placeholder={t("brief_summary_en", language)}
+                placeholder="Brief summary..."
               />
             </div>
 
@@ -411,7 +408,7 @@ const ArticleEdit: React.FC = () => {
                 htmlFor="content-bn"
                 className="block text-sm font-bold mb-2"
               >
-                {t("content_bn", language)}
+                বিষয়বস্তু (বাংলা)
               </label>
               <CustomEditor
                 value={article.content_bn || ""}
@@ -419,7 +416,7 @@ const ArticleEdit: React.FC = () => {
                   contentBnRef.current = content;
                   setArticle((prev) => ({ ...prev, content_bn: content }));
                 }}
-                placeholder={t("write_in_bengali", language)}
+                placeholder="বাংলায় লিখুন..."
                 height="400px"
                 className="w-full rounded-lg border border-border-color bg-card focus:border-bbcRed"
               />
@@ -430,7 +427,7 @@ const ArticleEdit: React.FC = () => {
                 htmlFor="content-en"
                 className="block text-sm font-bold mb-2"
               >
-                {t("content_en", language)}
+                বিষয়বস্তু (ইংরেজি)
               </label>
               <CustomEditor
                 value={article.content_en || ""}
@@ -438,7 +435,7 @@ const ArticleEdit: React.FC = () => {
                   contentEnRef.current = content;
                   setArticle((prev) => ({ ...prev, content_en: content }));
                 }}
-                placeholder={t("write_in_english", language)}
+                placeholder="Write in English..."
                 height="400px"
                 className="w-full rounded-lg border border-border-color bg-card focus:border-bbcRed"
               />
@@ -456,17 +453,17 @@ const ArticleEdit: React.FC = () => {
                   <Save className="w-5 h-5 text-card-text mt-0.5" />
                   <div>
                     <h4 className="text-sm font-bold text-card-text">
-                      {t("unsaved_draft_found", language)}
+                      অসংরক্ষিত খসড়া পাওয়া গেছে
                     </h4>
                     <p className="text-xs text-card-text mt-1">
-                      {t("newer_version_found_in_browser", language)}
+                      আপনার ব্রাউজারে এই নিবন্ধটির একটি নতুন সংস্করণ পাওয়া গেছে।
                     </p>
                     <button
                       type="button"
                       onClick={restoreDraft}
                       className="mt-2 text-xs bg-card text-card-text px-3 py-1.5 rounded hover:bg-card/90 transition-colors font-bold"
                     >
-                      {t("restore_draft", language)}
+                      খসড়া পুনরুদ্ধার করুন
                     </button>
                   </div>
                 </div>
@@ -475,7 +472,7 @@ const ArticleEdit: React.FC = () => {
 
             <div className="bg-card p-4 rounded-xl border border-border-color shadow-sm">
               <h3 className="font-bold mb-3 text-sm uppercase text-muted-text">
-                {t("publishing", language)}
+                প্রকাশনা
               </h3>
 
               <div className="mb-4">
@@ -483,7 +480,7 @@ const ArticleEdit: React.FC = () => {
                   htmlFor="status-dropdown"
                   className="block text-xs font-bold mb-2"
                 >
-                  {t("status", language)}
+                  স্থিতি
                 </label>
                 <CustomDropdown
                   id="status-dropdown"
@@ -495,9 +492,9 @@ const ArticleEdit: React.FC = () => {
                     }))
                   }
                   options={[
-                    { value: "draft", label: t("draft", language) },
-                    { value: "published", label: t("published", language) },
-                    { value: "archived", label: t("archived", language) },
+                    { value: "draft", label: "খসড়া" },
+                    { value: "published", label: "প্রকাশিত" },
+                    { value: "archived", label: "আর্কাইভ করা হয়েছে" },
                   ]}
                 />
               </div>
@@ -517,7 +514,7 @@ const ArticleEdit: React.FC = () => {
                     className="form-checkbox h-5 w-5 text-bbcRed rounded"
                   />
                   <span className="text-sm font-bold text-card-text">
-                    {t("allow_user_submissions", language)}
+                    ব্যবহারকারী জমা দেওয়ার অনুমতি দিন
                   </span>
                 </label>
               </div>
@@ -530,16 +527,16 @@ const ArticleEdit: React.FC = () => {
                 {isSaving ? (
                   <Loader className="w-4 h-4 inline animate-spin" />
                 ) : id ? (
-                  t("update_all_versions", language)
+                  "সমস্ত সংস্করণ আপডেট করুন"
                 ) : (
-                  t("publish_article", language)
+                  "নিবন্ধ প্রকাশ করুন"
                 )}
               </button>
             </div>
 
             <div className="bg-card p-4 rounded-xl border border-border-color shadow-sm">
               <h3 className="font-bold mb-3 text-sm uppercase text-muted-text">
-                {t("organization", language)}
+                সংগঠন
               </h3>
 
               <div className="mb-4">
@@ -547,7 +544,7 @@ const ArticleEdit: React.FC = () => {
                   htmlFor="category-dropdown"
                   className="block text-xs font-bold mb-2"
                 >
-                  {t("category", language)}
+                  বিভাগ
                 </label>
                 <select
                   id="category-dropdown"
@@ -561,10 +558,10 @@ const ArticleEdit: React.FC = () => {
                   }
                   className="custom-select w-full p-2.5 rounded-lg border border-border-color bg-card text-card-text text-sm"
                 >
-                  <option value="">{t("select_category", language)}</option>
+                  <option value="">বিভাগ নির্বাচন করুন</option>
                   {categories.map((cat) => (
                     <option key={cat.id} value={cat.id}>
-                      {language === "bn" ? cat.title_bn : cat.title_en}
+                      {cat.title_bn}
                     </option>
                   ))}
                 </select>
@@ -575,7 +572,7 @@ const ArticleEdit: React.FC = () => {
                   htmlFor="section-dropdown"
                   className="block text-xs font-bold mb-2"
                 >
-                  {t("section_homepage", language)}
+                  অনুচ্ছেদ (হোমপেজ)
                 </label>
                 <CustomDropdown
                   id="section-dropdown"
@@ -587,13 +584,10 @@ const ArticleEdit: React.FC = () => {
                     }))
                   }
                   options={[
-                    { value: "", label: t("none", language) },
+                    { value: "", label: "কিছুই না" },
                     ...sections.map((sec) => ({
                       value: sec.id,
-                      label:
-                        language === "bn"
-                          ? sec.title || sec.title
-                          : sec.title || sec.title,
+                      label: sec.title || sec.title,
                     })),
                   ]}
                 />
@@ -602,7 +596,7 @@ const ArticleEdit: React.FC = () => {
 
             <div className="bg-card p-4 rounded-xl border border-border-color shadow-sm">
               <h3 className="font-bold mb-3 text-sm uppercase text-muted-text">
-                {t("media", language)}
+                মিডিয়া
               </h3>
 
               <div className="mb-4">
@@ -610,7 +604,7 @@ const ArticleEdit: React.FC = () => {
                   htmlFor="featured-image-url"
                   className="block text-xs font-bold mb-1"
                 >
-                  {t("featured_image_url", language)}
+                  বৈশিষ্ট্যযুক্ত ছবির URL
                 </label>
                 <input
                   id="featured-image-url"
@@ -628,7 +622,7 @@ const ArticleEdit: React.FC = () => {
                   htmlFor="image-upload"
                   className="block text-xs font-bold mb-1"
                 >
-                  {t("or_upload", language)}
+                  অথবা আপলোড করুন
                 </label>
                 <input
                   id="image-upload"
@@ -651,7 +645,7 @@ const ArticleEdit: React.FC = () => {
               <div className="bg-card p-4 rounded-xl border border-border-color shadow-sm">
                 <div className="flex justify-between items-center mb-3">
                   <h3 className="font-bold text-sm uppercase text-muted-text">
-                    {t("documents", language)}
+                    ডাউনলোডযোগ্য নথি
                   </h3>
                   <button
                     type="button"
@@ -659,7 +653,7 @@ const ArticleEdit: React.FC = () => {
                     className="text-bbcRed hover:underline text-sm font-bold flex items-center gap-1"
                   >
                     <Plus className="w-4 h-4" />
-                    {t("add_document", language)}
+                    নথি যোগ করুন
                   </button>
                 </div>
                 <div className="space-y-2">
@@ -694,7 +688,7 @@ const ArticleEdit: React.FC = () => {
                   ))}
                   {documents.length === 0 && (
                     <p className="text-sm text-muted-text text-center py-4">
-                      No documents attached.
+                      কোনো নথি সংযুক্ত করা হয়নি।
                     </p>
                   )}
                 </div>

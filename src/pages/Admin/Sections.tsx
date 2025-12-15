@@ -3,9 +3,7 @@ import type React from "react";
 import type { FormEvent } from "react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { CustomDropdown } from "../../components/common/CustomDropdown";
-import { useLayout } from "../../context/LayoutContext";
 import { adminApi } from "../../lib/api";
-import { t } from "../../lib/translations";
 import type { Section } from "../../types";
 
 interface AdminSection {
@@ -21,8 +19,7 @@ const SectionModal: React.FC<{
   onClose: () => void;
   onSave: (formData: Partial<AdminSection>) => void;
   section: Partial<AdminSection> | null;
-  language: "en" | "bn";
-}> = ({ isOpen, onClose, onSave, section, language }) => {
+}> = ({ isOpen, onClose, onSave, section }) => {
   const [formData, setFormData] = useState<Partial<AdminSection>>(() => {
     if (section) {
       return { ...section };
@@ -66,9 +63,7 @@ const SectionModal: React.FC<{
     <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-[100]">
       <div className="bg-card w-full max-w-md p-6 rounded-xl shadow-2xl">
         <h2 className="text-xl font-bold mb-4">
-          {section?.id
-            ? t("edit_section", language)
-            : t("new_section", language)}
+          {section?.id ? "বিভাগ সম্পাদনা করুন" : "নতুন বিভাগ"}
         </h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
@@ -76,7 +71,7 @@ const SectionModal: React.FC<{
               htmlFor="section-id"
               className="block text-sm font-bold mb-1"
             >
-              {t("id_slug", language)}
+              আইডি (স্লাগ)
             </label>
             <input
               id="section-id"
@@ -93,7 +88,7 @@ const SectionModal: React.FC<{
               htmlFor="section-title-bn"
               className="block text-sm font-bold mb-1"
             >
-              {t("title_bangla", language)}
+              শিরোনাম (বাংলা)
             </label>
             <input
               id="section-title-bn"
@@ -111,7 +106,7 @@ const SectionModal: React.FC<{
               htmlFor="section-title-en"
               className="block text-sm font-bold mb-1"
             >
-              {t("title_english", language)}
+              শিরোনাম (ইংরেজি)
             </label>
             <input
               id="section-title-en"
@@ -129,7 +124,7 @@ const SectionModal: React.FC<{
               htmlFor="section-type"
               className="block text-sm font-bold mb-1"
             >
-              {t("type", language)}
+              ধরন
             </label>
             <CustomDropdown
               id="section-type"
@@ -141,11 +136,11 @@ const SectionModal: React.FC<{
                 })
               }
               options={[
-                { value: "hero", label: t("hero", language) },
-                { value: "grid", label: t("grid", language) },
-                { value: "list", label: t("list", language) },
-                { value: "carousel", label: t("carousel", language) },
-                { value: "highlight", label: t("highlight", language) },
+                { value: "hero", label: "হিরো" },
+                { value: "grid", label: "গ্রিড" },
+                { value: "list", label: "তালিকা" },
+                { value: "carousel", label: "ক্যারোজেল" },
+                { value: "highlight", label: "হাইলাইট" },
               ]}
             />
           </div>
@@ -154,7 +149,7 @@ const SectionModal: React.FC<{
               htmlFor="section-sort-order"
               className="block text-sm font-bold mb-1"
             >
-              {t("sort_order", language)}
+              সাজানোর ক্রম
             </label>
             <input
               id="section-sort-order"
@@ -176,13 +171,13 @@ const SectionModal: React.FC<{
               onClick={onClose}
               className="px-4 py-2 text-sm font-bold text-muted-text hover:text-card-text hover:bg-muted-bg rounded-lg"
             >
-              {t("cancel", language)}
+              বাতিল
             </button>
             <button
               type="submit"
               className="px-4 py-2 bg-bbcRed text-white rounded-lg font-bold text-sm hover:opacity-90 transition-opacity"
             >
-              {t("save", language)}
+              সংরক্ষণ
             </button>
           </div>
         </form>
@@ -192,7 +187,6 @@ const SectionModal: React.FC<{
 };
 
 const Sections: React.FC = () => {
-  const { language } = useLayout();
   const [sections, setSections] = useState<AdminSection[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -213,11 +207,11 @@ const Sections: React.FC = () => {
         throw new Error(res.message || "Failed to fetch sections");
       }
     } catch (_err) {
-      setError(t("failed_to_fetch_sections", language));
+      setError("বিভাগগুলি আনতে ব্যর্থ হয়েছে");
     } finally {
       setIsLoading(false);
     }
-  }, [language]);
+  }, []);
 
   useEffect(() => {
     fetchSections();
@@ -242,7 +236,7 @@ const Sections: React.FC = () => {
   };
 
   const handleDelete = async (id: string) => {
-    if (window.confirm(t("confirm_delete_section", language))) {
+    if (window.confirm("আপনি কি নিশ্চিত যে আপনি এই বিভাগটি মুছে ফেলতে চান?")) {
       try {
         await adminApi.deleteSection(id);
         fetchSections();
@@ -257,25 +251,24 @@ const Sections: React.FC = () => {
         onClose={handleCloseModal}
         onSave={handleSave}
         section={editingSection}
-        language={language}
       />
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
         <h1 className="text-xl sm:text-2xl font-bold">
-          {t("manage_sections", language)}
+          বিভাগ পরিচালনা করুন
         </h1>
         <button
           type="button"
           onClick={() => handleOpenModal()}
           className="bg-bbcRed text-white px-3 sm:px-4 py-2 rounded-lg font-bold text-sm sm:text-base flex items-center gap-2 whitespace-nowrap"
         >
-          <Plus className="w-4 h-4" /> {t("new_section", language)}
+          <Plus className="w-4 h-4" /> নতুন বিভাগ
         </button>
       </div>
 
       <div className="bg-card rounded-xl border border-border-color shadow-sm overflow-hidden">
         {isLoading ? (
           <div className="p-8 text-center text-muted-text">
-            {t("loading", language)}
+            লোড হচ্ছে...
           </div>
         ) : error ? (
           <div className="p-8 text-center text-danger">{error}</div>
@@ -283,7 +276,7 @@ const Sections: React.FC = () => {
           <div className="p-8 text-center text-muted-text">
             <LayersIcon className="w-16 h-16 mx-auto mb-4 text-border-color" />
             <p className="text-lg font-bold mb-2">
-              {t("no_sections_found", language)}
+              কোনো বিভাগ পাওয়া যায়নি
             </p>
           </div>
         ) : (

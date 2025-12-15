@@ -8,7 +8,7 @@ interface DashFooterProps {
 const DashFooter: React.FC<DashFooterProps> = ({ type }) => {
   const { theme } = useLayout();
   const year = new Date().getFullYear();
-  const text = type === "admin" ? " Admin Panel. All rights reserved." : " Dashboard. All rights reserved.";
+  const text = type === "admin" ? " অ্যাডমিন প্যানেল। সর্বস্বত্ব সংরক্ষিত।" : " ড্যাশবোর্ড। সর্বস্বত্ব সংরক্ষিত।";
 
   return (
     <footer className="border-t border-border-color bg-card py-6 mt-auto shrink-0">
