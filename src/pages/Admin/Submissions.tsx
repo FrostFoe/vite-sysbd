@@ -2,9 +2,7 @@ import { FileText, Inbox, Loader, Trash2 } from "lucide-react";
 import type React from "react";
 import { useCallback, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useLayout } from "../../context/LayoutContext";
 import { adminApi } from "../../lib/api";
-import { t } from "../../lib/translations";
 import {
   escapeHtml,
   formatTimestamp,
@@ -13,7 +11,6 @@ import {
 } from "../../lib/utils";
 
 const Submissions: React.FC = () => {
-  const { language } = useLayout();
   const navigate = useNavigate();
   interface Submission {
     id: number;
@@ -39,11 +36,11 @@ const Submissions: React.FC = () => {
         showToastMsg(response.error || "Failed to fetch submissions", "error");
       }
     } catch (_error) {
-      showToastMsg(t("server_error", language), "error");
+      showToastMsg("সার্ভার ত্রুটি!", "error");
     } finally {
       setIsLoading(false);
     }
-  }, [language]);
+  }, []);
 
   useEffect(() => {
     fetchSubmissions();
@@ -52,11 +49,11 @@ const Submissions: React.FC = () => {
   const handleDeleteSubmission = async (_id: number) => {
     try {
       showToastMsg(
-        t("delete_functionality_not_implemented", language),
+        "জমা মুছে ফেলার বৈশিষ্ট্য এখনও বাস্তবায়িত হয়নি",
         "error"
       );
     } catch (_error) {
-      showToastMsg(t("failed_to_delete_submission", language), "error");
+      showToastMsg("জমা মুছে ফেলতে ব্যর্থ হয়েছে", "error");
     }
   };
 
@@ -72,7 +69,7 @@ const Submissions: React.FC = () => {
     <div className="space-y-4 sm:space-y-6">
       <div className="mb-4 sm:mb-6">
         <h1 className="text-xl sm:text-2xl font-bold">
-          {t("user_submissions", language)}
+          ব্যবহারকারী জমা দেওয়া তথ্য
         </h1>
       </div>
 
@@ -81,7 +78,7 @@ const Submissions: React.FC = () => {
           <div className="p-6 sm:p-8 text-center text-muted-text">
             <Inbox className="w-16 h-16 mx-auto mb-4 text-border-color" />
             <p className="text-base sm:text-lg font-bold mb-2">
-              {t("no_submissions_found", language)}
+              কোনো জমা পাওয়া যায়নি
             </p>
           </div>
         ) : (
@@ -134,7 +131,7 @@ const Submissions: React.FC = () => {
                       onClick={() => {
                         if (
                           window.confirm(
-                            t("confirm_delete_submission", language)
+                            "আপনি কি নিশ্চিত যে আপনি এই জমা মুছে ফেলতে চান?"
                           )
                         ) {
                           handleDeleteSubmission(s.id);
@@ -150,7 +147,7 @@ const Submissions: React.FC = () => {
                   {escapeHtml(s.message || "-")}
                 </div>
                 <div className="text-xs text-muted-text mt-2">
-                  {formatTimestamp(s.created_at, language)}
+                  {formatTimestamp(s.created_at, "bn")}
                 </div>
               </button>
             ))}

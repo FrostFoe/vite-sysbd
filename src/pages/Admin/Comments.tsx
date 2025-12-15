@@ -6,9 +6,7 @@ import {
   EmptyState,
   LoadingState,
 } from "../../components/common/StateWrappers";
-import { useLayout } from "../../context/LayoutContext";
 import { adminApi } from "../../lib/api";
-import { t } from "../../lib/translations";
 import { useDataFetch } from "../../lib/useDataFetch";
 import {
   escapeHtml,
@@ -19,7 +17,6 @@ import {
 } from "../../lib/utils";
 
 const Comments: React.FC = () => {
-  const { language } = useLayout();
   const navigate = useNavigate();
 
   interface AdminComment {
@@ -49,23 +46,23 @@ const Comments: React.FC = () => {
 
   const handleDeleteComment = useCallback(
     async (id: number) => {
-      if (!window.confirm(t("confirm_delete_comment", language))) return;
+      if (!window.confirm("এই মন্তব্য মুছে ফেলতে চান?")) return;
       try {
         const response = await adminApi.deleteComment(id);
         if (response.success) {
-          showToastMsg(t("comment_deleted", language));
+          showToastMsg("মন্তব্য মুছে ফেলা হয়েছে!");
           refetch();
         } else {
           showToastMsg(
-            response.error || t("failed_to_delete_comment", language),
+            response.error || "মন্তব্য মোছতে ব্যর্থ!",
             "error"
           );
         }
       } catch (_error) {
-        showToastMsg(t("server_error", language), "error");
+        showToastMsg("সার্ভার ত্রুটি!", "error");
       }
     },
-    [language, refetch]
+    [refetch]
   );
 
   return (
@@ -73,7 +70,7 @@ const Comments: React.FC = () => {
       <div className="space-y-4 sm:space-y-6">
         <div className="flex justify-between items-center mb-4 sm:mb-6">
           <h1 className="text-xl sm:text-2xl font-bold">
-            {t("moderation", language)}
+            পর্যবেক্ষণ
           </h1>
         </div>
 
@@ -109,14 +106,14 @@ const Comments: React.FC = () => {
                         </div>
                         <div className="text-xs text-muted-text truncate">
                           {escapeHtml(
-                            language === "bn" ? c.title_bn : c.title_en
-                          ) || "Unknown Article"}
+                            c.title_bn
+                          ) || "অজানা নিবন্ধ"}
                         </div>
                       </div>
                     </div>
                     <div className="flex items-center gap-1 shrink-0 ml-2">
                       <div className="text-xs text-muted-text hidden sm:block whitespace-nowrap">
-                        {formatTimestamp(c.created_at, language)}
+                        {formatTimestamp(c.created_at, "bn")}
                       </div>
                       <div className="flex items-center gap-1">
                         <Link
@@ -181,7 +178,7 @@ const Comments: React.FC = () => {
                     })()}
                   </div>
                   <div className="text-xs text-muted-text mt-2 sm:hidden">
-                    {formatTimestamp(c.created_at, language)}
+                    {formatTimestamp(c.created_at, "bn")}
                   </div>
                 </button>
               ))}
