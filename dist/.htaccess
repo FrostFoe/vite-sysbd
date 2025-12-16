@@ -2,13 +2,29 @@
   RewriteEngine On
   RewriteBase /
   
-  # Don't rewrite real files or directories
-  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  # Skip rewriting for real files
+  RewriteCond %{REQUEST_FILENAME} -f
+  RewriteRule ^ - [L]
+  
+  # Skip rewriting for real directories
   RewriteCond %{REQUEST_FILENAME} -d
   RewriteRule ^ - [L]
   
-  # Rewrite all other requests to index.html for React Router
-  RewriteRule ^(.*)$ index.html [L]
+  # Don't rewrite the api folder
+  RewriteCond %{REQUEST_URI} ^/api/ [OR]
+  RewriteCond %{REQUEST_URI} ^/assets/ [OR]
+  RewriteCond %{REQUEST_URI} ^/config/ [OR]
+  RewriteCond %{REQUEST_URI} ^/database/ [OR]
+  RewriteCond %{REQUEST_URI} ^/lib/
+  RewriteRule ^ - [L]
+  
+  # For all other requests, rewrite to index.html
+  RewriteRule ^(.*)$ index.html [QSA,L]
+</IfModule>
+
+# If mod_rewrite is not available, use DirectoryIndex
+<IfModule !mod_rewrite.c>
+  DirectoryIndex index.html
 </IfModule>
 
 # Compress output
