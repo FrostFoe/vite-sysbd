@@ -30,6 +30,7 @@ export interface AdminArticle {
   allow_submissions?: boolean;
 }
 
+// API is always at /api from domain root (where dist/ is the root)
 const API_BASE_URL = "/api";
 
 const api = axios.create({

@@ -196,10 +196,12 @@ export function normalizeMediaUrl(url: string | null | undefined): string {
     return url;
   }
   
-  // If URL doesn't start with /, add it
-  if (!url.startsWith("/")) {
-    return "/" + url;
+  // If URL is root-relative (starts with /), it already maps to domain root (dist/)
+  // so return as-is
+  if (url.startsWith("/")) {
+    return url;
   }
   
+  // Return other URLs as-is
   return url;
 }
