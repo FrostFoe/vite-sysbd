@@ -47,8 +47,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const checkAuth = useCallback(async () => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+      setUser(null);
+      setIsAuthenticated(false);
+      console.warn("Auth check timed out. Defaulting to unauthenticated.");
+    }, 5000); // 5 second timeout
+
     try {
       const response = await authApi.checkAuth();
+      clearTimeout(timer); // Clear timeout if API responds in time
       if (response.authenticated && response.user) {
         setUser(response.user);
         setIsAuthenticated(true);
@@ -57,13 +65,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setIsAuthenticated(false);
       }
     } catch (error) {
+      clearTimeout(timer);
       console.error("Failed to check authentication:", error);
       setUser(null);
       setIsAuthenticated(false);
     } finally {
-      setIsLoading(false);
+      if (isLoading) { // Only set if it hasn't been set by the timer
+        setIsLoading(false);
+      }
     }
-  }, []);
+  }, [isLoading]);
 
   useEffect(() => {
     checkAuth();
