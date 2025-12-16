@@ -29,7 +29,7 @@ try {
 
     $uploader = new FileUploader();
     $videoPath = $uploader->uploadVideo($_FILES["video"]);
-    
+
     // Return path accessible from browser - assets folder is served by the web server
     $videoUrl = "/" . $videoPath;
 

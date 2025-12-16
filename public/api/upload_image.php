@@ -29,7 +29,7 @@ try {
 
     $uploader = new FileUploader();
     $imagePath = $uploader->uploadImage($_FILES["image"]);
-    
+
     // Return path accessible from browser - assets folder is served by the web server
     $imageUrl = "/" . $imagePath;
 

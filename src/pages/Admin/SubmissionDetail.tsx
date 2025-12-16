@@ -40,7 +40,7 @@ const SubmissionDetail: React.FC = () => {
         const response = await adminApi.getSubmissions();
         if (response.success && response.submissions) {
           const foundSubmission = (response.submissions as Submission[]).find(
-            (s) => s.id === submissionId
+            (s) => s.id === submissionId,
           );
           if (foundSubmission) {
             setSubmission(foundSubmission);
@@ -94,7 +94,7 @@ const SubmissionDetail: React.FC = () => {
             className="text-bbcRed hover:opacity-80 text-xs sm:text-sm mt-1 block font-bold truncate"
           >
             {escapeHtml(
-              submission.title_en || submission.title_bn || "Unknown Article"
+              submission.title_en || submission.title_bn || "Unknown Article",
             )}
           </Link>
         </div>

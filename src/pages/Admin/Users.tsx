@@ -65,7 +65,10 @@ const Users: React.FC = () => {
         fetchUsers();
         closeMuteDialog();
       } else {
-        showToastMsg(response.error || "ব্যবহারকারীকে মিউট করতে ব্যর্থ", "error");
+        showToastMsg(
+          response.error || "ব্যবহারকারীকে মিউট করতে ব্যর্থ",
+          "error",
+        );
       }
     } catch (_error) {
       showToastMsg("সার্ভার ত্রুটি!", "error");
@@ -73,14 +76,22 @@ const Users: React.FC = () => {
   };
 
   const handleUnmuteUser = async (userId: number) => {
-    if (!window.confirm("আপনি কি নিশ্চিত যে আপনি এই ব্যবহারকারীকে আনমিউট করতে চান?")) return;
+    if (
+      !window.confirm(
+        "আপনি কি নিশ্চিত যে আপনি এই ব্যবহারকারীকে আনমিউট করতে চান?",
+      )
+    )
+      return;
     try {
       const response = await adminApi.unmuteUser(userId);
       if (response.success) {
         showToastMsg("ব্যবহারকারীকে সফলভাবে আনমিউট করা হয়েছে");
         fetchUsers();
       } else {
-        showToastMsg(response.error || "ব্যবহারকারীকে আনমিউট করতে ব্যর্থ", "error");
+        showToastMsg(
+          response.error || "ব্যবহারকারীকে আনমিউট করতে ব্যর্থ",
+          "error",
+        );
       }
     } catch (_error) {
       showToastMsg("সার্ভার ত্রুটি!", "error");
@@ -115,7 +126,7 @@ const Users: React.FC = () => {
                     handleItemSelect(
                       window.innerWidth < 768,
                       navigate,
-                      `/admin/users/${user.id}`
+                      `/admin/users/${user.id}`,
                     )
                   }
                   type="button"
@@ -217,14 +228,17 @@ const Users: React.FC = () => {
               <div className="w-10 h-10 rounded-full bg-warning/10 dark:bg-warning/20 flex items-center justify-center text-warning dark:text-warning">
                 <AlertCircle className="w-5 h-5" />
               </div>
-              <h2 className="text-lg font-bold text-card-text">ব্যবহারকারীকে মিউট করুন</h2>
+              <h2 className="text-lg font-bold text-card-text">
+                ব্যবহারকারীকে মিউট করুন
+              </h2>
             </div>
             <p className="text-sm text-muted-text mb-4">
               আপনি{" "}
               <span className="font-bold text-card-text">
                 {selectedUserEmail}
               </span>
-              কে মিউট করতে চলেছেন। এই ব্যবহারকারী আর মন্তব্য পোস্ট করতে পারবেন না।
+              কে মিউট করতে চলেছেন। এই ব্যবহারকারী আর মন্তব্য পোস্ট করতে পারবেন
+              না।
             </p>
             <div className="mb-4">
               <label

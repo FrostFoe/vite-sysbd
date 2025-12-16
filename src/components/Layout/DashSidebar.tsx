@@ -72,14 +72,18 @@ const NavItem: React.FC<{
   disabled?: boolean;
   isCollapsed?: boolean;
 }> = ({ to, icon: Icon, children, disabled, isCollapsed }) => {
-  const baseClasses = "flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-all duration-200 group";
+  const baseClasses =
+    "flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-all duration-200 group";
   const activeClasses = "bg-bbcRed text-white shadow-md shadow-red-900/20";
-  const inactiveClasses = "text-muted-text hover:bg-muted-bg hover:text-card-text";
+  const inactiveClasses =
+    "text-muted-text hover:bg-muted-bg hover:text-card-text";
   const disabledClasses = "opacity-50 cursor-not-allowed";
 
   const content = (
     <>
-      <Icon className={`w-5 h-5 text-muted-text group-hover:text-bbcRed transition-colors ${isCollapsed ? 'mx-auto' : ''}`} />
+      <Icon
+        className={`w-5 h-5 text-muted-text group-hover:text-bbcRed transition-colors ${isCollapsed ? "mx-auto" : ""}`}
+      />
       {!isCollapsed && children}
     </>
   );
@@ -111,7 +115,7 @@ const NavItem: React.FC<{
       {({ isActive }) => (
         <>
           <Icon
-            className={`w-5 h-5 transition-colors ${isCollapsed ? 'mx-auto' : ''} ${
+            className={`w-5 h-5 transition-colors ${isCollapsed ? "mx-auto" : ""} ${
               isActive
                 ? "text-white"
                 : "text-muted-text group-hover:text-bbcRed"
@@ -172,7 +176,9 @@ const DashSidebar: React.FC<DashSidebarProps> = ({
           </button>
         </div>
 
-        <nav className={`p-4 space-y-1.5 ${isSidebarCollapsed ? 'items-center' : ''}`}>
+        <nav
+          className={`p-4 space-y-1.5 ${isSidebarCollapsed ? "items-center" : ""}`}
+        >
           {navItems.map((item) => (
             <NavItem
               key={item.name}
@@ -205,10 +211,12 @@ const DashSidebar: React.FC<DashSidebarProps> = ({
             type="button"
             onClick={logout}
             className={`flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-danger hover:bg-danger/10 dark:hover:bg-danger/20 hover:text-danger transition-all duration-200 w-full ${
-              isSidebarCollapsed ? 'justify-center' : ''
+              isSidebarCollapsed ? "justify-center" : ""
             }`}
           >
-            <LogOut className={`w-5 h-5 ${isSidebarCollapsed ? 'mx-auto' : ''}`} />
+            <LogOut
+              className={`w-5 h-5 ${isSidebarCollapsed ? "mx-auto" : ""}`}
+            />
             {!isSidebarCollapsed && "Sign Out"}
           </button>
         </div>

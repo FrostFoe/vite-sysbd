@@ -50,18 +50,20 @@ const Footer: React.FC = () => {
       <div className="container mx-auto px-4 lg:px-8 max-w-[1380px]">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 sm:mb-12 border-b border-border-color pb-8 sm:pb-12 gap-4 sm:gap-8">
           <div className="flex items-center select-none gap-2">
-            <span className={`font-bold text-lg sm:text-2xl rounded shadow transition-colors duration-300 ${
-              theme === 'dark'
-                ? 'bg-green-600 text-red-400 px-2.5 py-0.5'
-                : 'bg-red-600 text-green-400 px-2.5 py-0.5'
-            }`}>
+            <span
+              className={`font-bold text-lg sm:text-2xl rounded shadow transition-colors duration-300 ${
+                theme === "dark"
+                  ? "bg-green-600 text-red-400 px-2.5 py-0.5"
+                  : "bg-red-600 text-green-400 px-2.5 py-0.5"
+              }`}
+            >
               Breach
             </span>
-            <span className={`font-bold text-2xl sm:text-3xl tracking-tighter leading-none ${
-              theme === 'dark'
-                ? 'text-green-400'
-                : 'text-red-600'
-            }`}>
+            <span
+              className={`font-bold text-2xl sm:text-3xl tracking-tighter leading-none ${
+                theme === "dark" ? "text-green-400" : "text-red-600"
+              }`}
+            >
               Times
             </span>
           </div>
@@ -112,7 +114,7 @@ const Footer: React.FC = () => {
                 onClick={() =>
                   copyToClipboard(
                     "subscribed",
-                    t("subscribed_successfully", language)
+                    t("subscribed_successfully", language),
                   )
                 }
                 className="bg-bbcRed text-white font-bold px-4 sm:px-6 py-2.5 sm:py-3 text-sm rounded-lg hover:bg-opacity-90 hover:shadow-md transition-all"
@@ -147,7 +149,7 @@ const Footer: React.FC = () => {
                     onClick={() =>
                       copyToClipboard(
                         "TNztLXjP7zYWotPRpzdtPCNVu8JB3DG5jV",
-                        t("link_copied", language)
+                        t("link_copied", language),
                       )
                     }
                     className="text-bbcRed hover:opacity-70 p-1 transition-opacity flex-shrink-0"
@@ -173,7 +175,7 @@ const Footer: React.FC = () => {
                     onClick={() =>
                       copyToClipboard(
                         "18kgAYsUMVF51MNUeMt6vr1WhfgHtzcWai",
-                        t("link_copied", language)
+                        t("link_copied", language),
                       )
                     }
                     className="text-bbcRed hover:opacity-70 p-1 transition-opacity"

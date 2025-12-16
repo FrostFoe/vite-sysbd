@@ -32,7 +32,7 @@ const CustomImage: React.FC<CustomImageProps> = ({
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
   const [showImage, setShowImage] = useState(true);
-  
+
   // Normalize the image URL to ensure it works from both editor and detail pages
   const normalizedSrc = normalizeMediaUrl(src);
 

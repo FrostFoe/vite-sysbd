@@ -41,7 +41,7 @@ const CustomVideo: React.FC<CustomVideoProps> = ({
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
-  
+
   // Normalize media URLs to ensure they work from both pages
   const normalizedSrc = normalizeMediaUrl(src);
   const normalizedPoster = normalizeMediaUrl(poster);

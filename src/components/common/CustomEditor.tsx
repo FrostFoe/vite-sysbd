@@ -109,11 +109,7 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
           throw new Error(data.error || "Upload failed");
         }
 
-        editor
-          .chain()
-          .focus()
-          .setVideo({ src: data.url })
-          .run();
+        editor.chain().focus().setVideo({ src: data.url }).run();
       } catch (error) {
         const message =
           error instanceof Error ? error.message : "Upload failed";
@@ -121,9 +117,8 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
         console.error("Video upload error:", error);
       }
     },
-    [editor]
+    [editor],
   );
-
 
   const handleDrop = useCallback(
     (e: React.DragEvent<HTMLDivElement>) => {
@@ -144,7 +139,7 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
         }
       }
     },
-    [editor, handleImageUpload, handleVideoUpload]
+    [editor, handleImageUpload, handleVideoUpload],
   );
 
   const handleImageButtonClick = useCallback(() => {

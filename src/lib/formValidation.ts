@@ -31,7 +31,7 @@ export interface FormValidationResult {
 function validateFieldInternal(
   value: unknown,
   rules: ValidationRule,
-  fieldName: string
+  fieldName: string,
 ): string[] {
   const errors: string[] = [];
 
@@ -47,7 +47,7 @@ function validateFieldInternal(
   // Min length validation
   if (rules.minLength && stringValue.length < rules.minLength) {
     errors.push(
-      `${fieldName} must be at least ${rules.minLength} characters long`
+      `${fieldName} must be at least ${rules.minLength} characters long`,
     );
   }
 
@@ -94,7 +94,7 @@ function validateFieldInternal(
     const result = rules.custom(value);
     if (result !== true) {
       errors.push(
-        typeof result === "string" ? result : `${fieldName} validation failed`
+        typeof result === "string" ? result : `${fieldName} validation failed`,
       );
     }
   }
@@ -105,7 +105,7 @@ function validateFieldInternal(
 export function validateField(
   value: unknown,
   rules: ValidationRule,
-  fieldName: string = "Field"
+  fieldName: string = "Field",
 ): string[] {
   return validateFieldInternal(value, rules, fieldName);
 }
@@ -116,7 +116,7 @@ export function validateField(
 export function validateForm(
   formData: Record<string, unknown>,
   schema: Record<string, ValidationRule>,
-  fieldLabels: Record<string, string> = {}
+  fieldLabels: Record<string, string> = {},
 ): FormValidationResult {
   const errors: ValidationErrors = {};
 
@@ -125,7 +125,7 @@ export function validateForm(
     const fieldErrors = validateFieldInternal(
       formData[fieldName],
       rules,
-      label
+      label,
     );
 
     if (fieldErrors.length > 0) {
@@ -145,7 +145,7 @@ export function validateForm(
 export function validateFieldsMatch(
   formData: Record<string, unknown>,
   field1: string,
-  field2: string
+  field2: string,
 ): boolean {
   return formData[field1] === formData[field2];
 }
@@ -219,7 +219,7 @@ export function useFormValidation(schema: Record<string, ValidationRule>) {
       setErrors(result.errors);
       return result.isValid;
     },
-    [schema]
+    [schema],
   );
 
   const validateFieldFn = useCallback(
@@ -230,19 +230,19 @@ export function useFormValidation(schema: Record<string, ValidationRule>) {
       const fieldErrors = validateFieldInternal(
         value,
         rule,
-        fieldName.charAt(0).toUpperCase() + fieldName.slice(1)
+        fieldName.charAt(0).toUpperCase() + fieldName.slice(1),
       );
 
       setErrors(
         (prev): ValidationErrors => ({
           ...prev,
           [fieldName]: fieldErrors,
-        })
+        }),
       );
 
       setTouched((prev) => new Set([...prev, fieldName]));
     },
-    [schema]
+    [schema],
   );
 
   const clearErrors = useCallback(() => {

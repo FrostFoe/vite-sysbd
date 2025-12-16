@@ -31,18 +31,18 @@ const DashHeader: React.FC<DashHeaderProps> = ({ type, toggleSidebar }) => {
           to={isAdmin ? "/admin" : "/dashboard"}
           className="flex items-center select-none gap-0 group min-w-0"
         >
-          <span className={`font-bold text-lg md:text-xl transition-all duration-300 flex-shrink-0 ${
-            theme === 'dark'
-              ? 'text-green-500'
-              : 'text-red-500'
-          }`}>
+          <span
+            className={`font-bold text-lg md:text-xl transition-all duration-300 flex-shrink-0 ${
+              theme === "dark" ? "text-green-500" : "text-red-500"
+            }`}
+          >
             Breach
           </span>
-          <span className={`font-bold text-lg md:text-2xl tracking-tighter leading-none transition-all duration-300 whitespace-nowrap ${
-            theme === 'dark'
-              ? 'text-red-400'
-              : 'text-green-600'
-          }`}>
+          <span
+            className={`font-bold text-lg md:text-2xl tracking-tighter leading-none transition-all duration-300 whitespace-nowrap ${
+              theme === "dark" ? "text-red-400" : "text-green-600"
+            }`}
+          >
             Times{" "}
             <span className="text-xs text-muted-text font-normal ml-2 uppercase tracking-widest hidden sm:inline-block">
               {isAdmin ? "অ্যাডমিন প্যানেল" : "ড্যাশবোর্ড"}

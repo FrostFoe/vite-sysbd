@@ -3,11 +3,13 @@
 ## 🔴 The Problem
 
 When you uploaded images/videos, they were going to:
+
 ```
 public/assets/uploads/images/articles/...  ❌
 ```
 
 But since you're hosting from `dist/`, they should go to:
+
 ```
 dist/assets/uploads/images/articles/...  ✅
 ```
@@ -19,27 +21,30 @@ The uploaded files were invisible on the live site because the browser couldn't 
 Updated `FileUploader.php` to automatically detect if it's running from `dist/` or `public/`:
 
 ### Before (Hardcoded):
+
 ```php
 $this->publicPath = __DIR__ . "/../../public/";
 // Always goes to public/ ❌
 ```
 
 ### After (Dynamic Detection):
+
 ```php
 $currentDir = __DIR__;
 
-if (strpos($currentDir, '/dist/') !== false) {
-    // Running from dist/lib - go to dist/
-    $this->publicPath = __DIR__ . "/../../";
+if (strpos($currentDir, "/dist/") !== false) {
+  // Running from dist/lib - go to dist/
+  $this->publicPath = __DIR__ . "/../../";
 } else {
-    // Running from public/lib - go to public/
-    $this->publicPath = __DIR__ . "/../../public/";
+  // Running from public/lib - go to public/
+  $this->publicPath = __DIR__ . "/../../public/";
 }
 ```
 
 ## 📊 How It Works
 
 ### On cPanel (dist/ is domain root):
+
 ```
 FileUploader running at: /dist/lib/FileUploader.php
 strpos check: finds '/dist/' in path ✅
@@ -49,6 +54,7 @@ Browser accesses: https://news.breachtimes.com/assets/uploads/images/... ✅
 ```
 
 ### In development (public/ used):
+
 ```
 FileUploader running at: /public/lib/FileUploader.php
 strpos check: does NOT find '/dist/' ✅
@@ -59,17 +65,20 @@ Uploads go to: /public/assets/uploads/images/... ✅
 ## 🚀 Deployment Instructions
 
 ### Step 1: Upload New dist/ Folder
+
 ```
 public_html/news.breachtimes.com/dist/
 ```
 
 Make sure to include:
+
 - ✅ dist/lib/FileUploader.php (UPDATED)
 - ✅ dist/config/uploads.php
 - ✅ dist/api/ (all PHP endpoints)
 - ✅ dist/assets/uploads/ (upload directory)
 
 ### Step 2: Create Upload Directory Structure
+
 ```bash
 # Via SSH (if available):
 mkdir -p ~/public_html/news.breachtimes.com/dist/assets/uploads/images/articles
@@ -159,6 +168,7 @@ ls -la dist/assets/uploads/images/articles/
 ### Why This Approach?
 
 The FileUploader.php file is copied to both:
+
 - `public/lib/FileUploader.php` (development)
 - `dist/lib/FileUploader.php` (production)
 
@@ -167,7 +177,7 @@ Instead of maintaining two separate files, we use a single file that **auto-dete
 ### The Detection Logic
 
 ```php
-strpos($currentDir, '/dist/') !== false
+strpos($currentDir, "/dist/") !== false;
 ```
 
 This checks if the current directory path contains `/dist/`. If it does, we're in production (running from dist/). Otherwise, we're in development (running from public/).
@@ -182,12 +192,12 @@ This checks if the current directory path contains `/dist/`. If it does, we're i
 
 ## 📦 Files Modified
 
-| File | Change | Status |
-|------|--------|--------|
-| public/lib/FileUploader.php | Added dist/ path detection | ✅ Updated |
-| dist/lib/FileUploader.php | Copied with updates | ✅ Included |
-| dist/config/uploads.php | Unchanged (copied) | ✅ Included |
-| dist/assets/uploads/ | Directory structure ready | ✅ Ready |
+| File                        | Change                     | Status      |
+| --------------------------- | -------------------------- | ----------- |
+| public/lib/FileUploader.php | Added dist/ path detection | ✅ Updated  |
+| dist/lib/FileUploader.php   | Copied with updates        | ✅ Included |
+| dist/config/uploads.php     | Unchanged (copied)         | ✅ Included |
+| dist/assets/uploads/        | Directory structure ready  | ✅ Ready    |
 
 ## 🎯 Summary
 

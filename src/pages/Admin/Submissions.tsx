@@ -48,10 +48,7 @@ const Submissions: React.FC = () => {
 
   const handleDeleteSubmission = async (_id: number) => {
     try {
-      showToastMsg(
-        "জমা মুছে ফেলার বৈশিষ্ট্য এখনও বাস্তবায়িত হয়নি",
-        "error"
-      );
+      showToastMsg("জমা মুছে ফেলার বৈশিষ্ট্য এখনও বাস্তবায়িত হয়নি", "error");
     } catch (_error) {
       showToastMsg("জমা মুছে ফেলতে ব্যর্থ হয়েছে", "error");
     }
@@ -90,7 +87,7 @@ const Submissions: React.FC = () => {
                   handleItemSelect(
                     window.innerWidth < 768,
                     navigate,
-                    `/admin/submissions/${s.id}`
+                    `/admin/submissions/${s.id}`,
                   )
                 }
                 type="button"
@@ -107,7 +104,7 @@ const Submissions: React.FC = () => {
                         className="font-bold text-sm truncate block hover:text-bbcRed"
                       >
                         {escapeHtml(
-                          s.title_en || s.title_bn || "Unknown Article"
+                          s.title_en || s.title_bn || "Unknown Article",
                         )}
                       </Link>
                       <p className="text-xs text-muted-text truncate">
@@ -131,7 +128,7 @@ const Submissions: React.FC = () => {
                       onClick={() => {
                         if (
                           window.confirm(
-                            "আপনি কি নিশ্চিত যে আপনি এই জমা মুছে ফেলতে চান?"
+                            "আপনি কি নিশ্চিত যে আপনি এই জমা মুছে ফেলতে চান?",
                           )
                         ) {
                           handleDeleteSubmission(s.id);

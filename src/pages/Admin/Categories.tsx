@@ -212,9 +212,7 @@ const Categories: React.FC = () => {
         category={editingCategory}
       />
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
-        <h1 className="text-xl sm:text-2xl font-bold">
-          বিভাগ পরিচালনা করুন
-        </h1>
+        <h1 className="text-xl sm:text-2xl font-bold">বিভাগ পরিচালনা করুন</h1>
         <button
           type="button"
           onClick={() => handleOpenModal()}
@@ -226,17 +224,13 @@ const Categories: React.FC = () => {
 
       <div className="bg-card rounded-xl border border-border-color shadow-sm overflow-hidden">
         {isLoading ? (
-          <div className="p-8 text-center text-muted-text">
-            লোড হচ্ছে...
-          </div>
+          <div className="p-8 text-center text-muted-text">লোড হচ্ছে...</div>
         ) : error ? (
           <div className="p-8 text-center text-danger">{error}</div>
         ) : categories.length === 0 ? (
           <div className="p-8 text-center text-muted-text">
             <FolderIcon className="w-16 h-16 mx-auto mb-4 text-border-color" />
-            <p className="text-lg font-bold mb-2">
-              কোনো বিভাগ পাওয়া যায়নি
-            </p>
+            <p className="text-lg font-bold mb-2">কোনো বিভাগ পাওয়া যায়নি</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-4 p-4">

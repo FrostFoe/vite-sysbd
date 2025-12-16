@@ -3,6 +3,7 @@
 ## 📁 New Structure
 
 You've changed from:
+
 ```
 ~/public_html/news.breachtimes.com/dist/
 ├── index.html
@@ -13,6 +14,7 @@ You've changed from:
 ```
 
 To:
+
 ```
 ~/public_html/news.breachtimes.com/
 ├── index.html
@@ -30,23 +32,24 @@ This is **cleaner and simpler**! ✅
 ### FileUploader.php - Now Handles 3 Scenarios
 
 ```php
-if (strpos($currentDir, '/dist/') !== false) {
-    // Scenario 1: Nested in dist/ (old structure)
-    $this->publicPath = __DIR__ . "/../../";  // → dist/
-} elseif (basename(dirname(dirname($currentDir))) === 'public') {
-    // Scenario 2: In public/lib (development)
-    $this->publicPath = __DIR__ . "/../../public/";  // → public/
+if (strpos($currentDir, "/dist/") !== false) {
+  // Scenario 1: Nested in dist/ (old structure)
+  $this->publicPath = __DIR__ . "/../../"; // → dist/
+} elseif (basename(dirname(dirname($currentDir))) === "public") {
+  // Scenario 2: In public/lib (development)
+  $this->publicPath = __DIR__ . "/../../public/"; // → public/
 } else {
-    // Scenario 3: In domain root/lib (NEW - your new setup!)
-    $this->publicPath = __DIR__ . "/../";  // → domain root/
+  // Scenario 3: In domain root/lib (NEW - your new setup!)
+  $this->publicPath = __DIR__ . "/../"; // → domain root/
 }
 ```
 
 ### Vite Config
 
 Already set correctly:
+
 ```typescript
-base: "/"  // Absolute paths for domain root
+base: "/"; // Absolute paths for domain root
 ```
 
 ### .htaccess
@@ -58,11 +61,13 @@ Already configured for SPA routing at domain root.
 ### Step 1: Upload All Files to Domain Root
 
 Copy entire contents of `/dist/` directly to:
+
 ```
 ~/public_html/news.breachtimes.com/
 ```
 
 Files to upload:
+
 - ✅ index.html
 - ✅ .htaccess (hidden file - enable "show hidden files" in FTP)
 - ✅ api/ (folder)
@@ -92,24 +97,26 @@ chmod 755 ~/public_html/news.breachtimes.com/assets/uploads/documents/
 ### Step 3: Verify .htaccess
 
 Check that `.htaccess` file exists in:
+
 ```
 ~/public_html/news.breachtimes.com/.htaccess
 ```
 
 Content should be:
+
 ```apache
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /
-  
+
   # Skip rewriting for real files
   RewriteCond %{REQUEST_FILENAME} -f
   RewriteRule ^ - [L]
-  
+
   # Skip rewriting for real directories
   RewriteCond %{REQUEST_FILENAME} -d
   RewriteRule ^ - [L]
-  
+
   # Don't rewrite the api folder
   RewriteCond %{REQUEST_URI} ^/api/ [OR]
   RewriteCond %{REQUEST_URI} ^/assets/ [OR]
@@ -117,7 +124,7 @@ Content should be:
   RewriteCond %{REQUEST_URI} ^/database/ [OR]
   RewriteCond %{REQUEST_URI} ^/lib/
   RewriteRule ^ - [L]
-  
+
   # For all other requests, rewrite to index.html
   RewriteRule ^(.*)$ index.html [QSA,L]
 </IfModule>
@@ -126,6 +133,7 @@ Content should be:
 ## 📊 Path Resolution
 
 ### Homepage
+
 ```
 Request: https://news.breachtimes.com/
 ↓
@@ -133,6 +141,7 @@ Maps to: ~/public_html/news.breachtimes.com/index.html ✅
 ```
 
 ### Direct Route Access
+
 ```
 Request: https://news.breachtimes.com/article/art_001
 ↓
@@ -148,6 +157,7 @@ Renders: ArticleDetail component ✅
 ```
 
 ### Assets
+
 ```
 Request: https://news.breachtimes.com/assets/index.js
 ↓
@@ -155,6 +165,7 @@ Maps to: ~/public_html/news.breachtimes.com/assets/index.js ✅
 ```
 
 ### API Calls
+
 ```
 Request: https://news.breachtimes.com/api/check_auth.php
 ↓
@@ -162,6 +173,7 @@ Maps to: ~/public_html/news.breachtimes.com/api/check_auth.php ✅
 ```
 
 ### Image Uploads
+
 ```
 User uploads image
 ↓
@@ -193,12 +205,14 @@ After deployment, test:
 When visiting `https://news.breachtimes.com/article/123`:
 
 **Network Tab:**
+
 - Request: `/article/123` → Status: 200 ✅ (rewritten to index.html)
 - Assets: `/assets/index-*.js` → Status: 200 ✅
 - Assets: `/assets/index-*.css` → Status: 200 ✅
 - API: `/api/*` → Status: varies (depends on endpoint)
 
 **Console Tab:**
+
 - **NO errors** ✅
 - React initializes normally
 - Router works correctly

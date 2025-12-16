@@ -72,18 +72,18 @@ const Header: React.FC = () => {
               className="block text-card-text transition-transform hover:scale-[1.02] active:scale-95 duration-300"
             >
               <div className="flex items-center select-none gap-0 group">
-                <span className={`font-bold text-lg md:text-xl transition-all duration-300 ${
-                  theme === 'dark'
-                    ? 'text-green-500'
-                    : 'text-red-500'
-                }`}>
+                <span
+                  className={`font-bold text-lg md:text-xl transition-all duration-300 ${
+                    theme === "dark" ? "text-green-500" : "text-red-500"
+                  }`}
+                >
                   Breach
                 </span>
-                <span className={`font-bold text-lg md:text-2xl tracking-tighter leading-none transition-all duration-300 ${
-                  theme === 'dark'
-                    ? 'text-red-400'
-                    : 'text-green-600'
-                }`}>
+                <span
+                  className={`font-bold text-lg md:text-2xl tracking-tighter leading-none transition-all duration-300 ${
+                    theme === "dark" ? "text-red-400" : "text-green-600"
+                  }`}
+                >
                   Times
                 </span>
               </div>

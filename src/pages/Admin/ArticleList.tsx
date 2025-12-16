@@ -63,31 +63,30 @@ const ArticleList: React.FC = () => {
     fetchCategories();
   }, [fetchArticles, fetchCategories]);
 
-  const handleDeleteArticle = useCallback(
-    async (id: string) => {
-      if (!window.confirm("আপনি কি নিশ্চিত এই নিবন্ধটি মুছে ফেলতে চান? এটি উভয় ভাষার সংস্করণ মুছে দেবে।")) return;
-      try {
-        const response = await adminApi.deleteArticle(id);
-        if (response.success) {
-          showToastMsg("নিবন্ধ সফলভাবে মুছে ফেলা হয়েছে");
-          setArticles((prev) => prev.filter((article) => article.id !== id));
-        } else {
-          showToastMsg(
-            response.error || "নিবন্ধ মোছতে ব্যর্থ!",
-            "error"
-          );
-        }
-      } catch (_error) {
-        // Delete article error occurred
-        showToastMsg("সার্ভার ত্রুটি!", "error");
+  const handleDeleteArticle = useCallback(async (id: string) => {
+    if (
+      !window.confirm(
+        "আপনি কি নিশ্চিত এই নিবন্ধটি মুছে ফেলতে চান? এটি উভয় ভাষার সংস্করণ মুছে দেবে।",
+      )
+    )
+      return;
+    try {
+      const response = await adminApi.deleteArticle(id);
+      if (response.success) {
+        showToastMsg("নিবন্ধ সফলভাবে মুছে ফেলা হয়েছে");
+        setArticles((prev) => prev.filter((article) => article.id !== id));
+      } else {
+        showToastMsg(response.error || "নিবন্ধ মোছতে ব্যর্থ!", "error");
       }
-    },
-    []
-  );
+    } catch (_error) {
+      // Delete article error occurred
+      showToastMsg("সার্ভার ত্রুটি!", "error");
+    }
+  }, []);
 
   const handleFilterChange = (
     type: "search" | "cat" | "status",
-    value: string
+    value: string,
   ) => {
     const newParams = new URLSearchParams(searchParams.toString());
     if (value) {
@@ -109,9 +108,7 @@ const ArticleList: React.FC = () => {
   return (
     <>
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
-        <h1 className="text-xl sm:text-2xl font-bold">
-          নিবন্ধ পরিচালনা করুন
-        </h1>
+        <h1 className="text-xl sm:text-2xl font-bold">নিবন্ধ পরিচালনা করুন</h1>
 
         <div className="flex flex-col sm:flex-row gap-2 w-full md:w-auto">
           {/* Filter Form */}
@@ -165,9 +162,7 @@ const ArticleList: React.FC = () => {
         {articles.length === 0 ? (
           <div className="p-8 text-center text-muted-text">
             <FileText className="w-16 h-16 mx-auto mb-4 text-border-color" />
-            <p className="text-lg font-bold mb-2">
-              কোনো নিবন্ধ পাওয়া যায়নি
-            </p>
+            <p className="text-lg font-bold mb-2">কোনো নিবন্ধ পাওয়া যায়নি</p>
             <p className="text-sm mb-4">
               আপনার মানদণ্ডের সাথে মেলে এমন কোনো নিবন্ধ নেই।
             </p>
@@ -200,7 +195,7 @@ const ArticleList: React.FC = () => {
                     handleItemSelect(
                       window.innerWidth < 768,
                       navigate,
-                      `/admin/articles/${a.id}/edit`
+                      `/admin/articles/${a.id}/edit`,
                     )
                   }
                   type="button"
@@ -219,7 +214,7 @@ const ArticleList: React.FC = () => {
                           className="font-bold text-sm block hover:text-bbcRed truncate font-hind"
                         >
                           {escapeHtml(
-                            a.title_bn || a.title_en || "(শিরোনাম নেই)"
+                            a.title_bn || a.title_en || "(শিরোনাম নেই)",
                           )}
                         </Link>
                         {a.title_bn && a.title_en && (
@@ -259,12 +254,10 @@ const ArticleList: React.FC = () => {
                   </div>
                   <div className="text-xs text-muted-text space-y-1">
                     <div>
-                      <span className="font-bold">প্রকাশিত:</span>{" "}
-                      {pubDate}
+                      <span className="font-bold">প্রকাশিত:</span> {pubDate}
                     </div>
                     <div>
-                      <span className="font-bold">তৈরি:</span>{" "}
-                      {createdDate}
+                      <span className="font-bold">তৈরি:</span> {createdDate}
                     </div>
                   </div>
                 </button>

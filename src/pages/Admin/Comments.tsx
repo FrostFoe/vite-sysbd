@@ -39,7 +39,7 @@ const Comments: React.FC = () => {
     useCallback(() => adminApi.getAllComments(), []),
     {
       showErrorToast: true,
-    }
+    },
   );
 
   const comments = data?.comments || [];
@@ -53,25 +53,20 @@ const Comments: React.FC = () => {
           showToastMsg("মন্তব্য মুছে ফেলা হয়েছে!");
           refetch();
         } else {
-          showToastMsg(
-            response.error || "মন্তব্য মোছতে ব্যর্থ!",
-            "error"
-          );
+          showToastMsg(response.error || "মন্তব্য মোছতে ব্যর্থ!", "error");
         }
       } catch (_error) {
         showToastMsg("সার্ভার ত্রুটি!", "error");
       }
     },
-    [refetch]
+    [refetch],
   );
 
   return (
     <LoadingState isLoading={isLoading}>
       <div className="space-y-4 sm:space-y-6">
         <div className="flex justify-between items-center mb-4 sm:mb-6">
-          <h1 className="text-xl sm:text-2xl font-bold">
-            পর্যবেক্ষণ
-          </h1>
+          <h1 className="text-xl sm:text-2xl font-bold">পর্যবেক্ষণ</h1>
         </div>
 
         <div className="bg-card rounded-xl border border-border-color shadow-sm overflow-hidden">
@@ -89,7 +84,7 @@ const Comments: React.FC = () => {
                     handleItemSelect(
                       window.innerWidth < 768,
                       navigate,
-                      `/admin/comments/${c.id}`
+                      `/admin/comments/${c.id}`,
                     )
                   }
                   type="button"
@@ -105,9 +100,7 @@ const Comments: React.FC = () => {
                           {escapeHtml(c.user_name)}
                         </div>
                         <div className="text-xs text-muted-text truncate">
-                          {escapeHtml(
-                            c.title_bn
-                          ) || "অজানা নিবন্ধ"}
+                          {escapeHtml(c.title_bn) || "অজানা নিবন্ধ"}
                         </div>
                       </div>
                     </div>
@@ -142,7 +135,7 @@ const Comments: React.FC = () => {
                       tempDiv.innerHTML = sanitizedText;
 
                       const convertNodeToReactElement = (
-                        node: Node
+                        node: Node,
                       ): React.ReactNode => {
                         if (node.nodeType === Node.TEXT_NODE) {
                           return node.textContent;
@@ -160,20 +153,20 @@ const Comments: React.FC = () => {
 
                           // Process child nodes
                           const children = Array.from(element.childNodes).map(
-                            convertNodeToReactElement
+                            convertNodeToReactElement,
                           );
 
                           return createElement(
                             element.tagName.toLowerCase(),
                             props,
-                            ...children
+                            ...children,
                           );
                         }
                         return null;
                       };
 
                       return Array.from(tempDiv.childNodes).map(
-                        (node, _index) => convertNodeToReactElement(node)
+                        (node, _index) => convertNodeToReactElement(node),
                       );
                     })()}
                   </div>

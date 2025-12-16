@@ -43,7 +43,7 @@ export default defineConfig(({ command }) => {
   if (command === "build") {
     return {
       ...config,
-      base: "/",  // Use absolute paths for domain root deployment
+      base: "/", // Use absolute paths for domain root deployment
     };
   } else {
     return {

@@ -145,12 +145,8 @@ const AdminDashboard: React.FC = () => {
       </div>
 
       <div className="bg-card rounded-xl border border-border-color shadow-sm p-4 sm:p-6">
-        <h3 className="text-lg font-bold mb-4">
-          সাম্প্রতিক কার্যকলাপ
-        </h3>
-        <p className="text-muted-text text-sm">
-          ক্রিয়াকলাপ লগ শীঘ্রই আসছে...
-        </p>
+        <h3 className="text-lg font-bold mb-4">সাম্প্রতিক কার্যকলাপ</h3>
+        <p className="text-muted-text text-sm">ক্রিয়াকলাপ লগ শীঘ্রই আসছে...</p>
       </div>
     </div>
   );

@@ -201,7 +201,7 @@ const Sections: React.FC = () => {
       if (res.success && res.data) {
         const typedData = res.data as unknown as AdminSection[];
         setSections(
-          typedData.sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0))
+          typedData.sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0)),
         );
       } else {
         throw new Error(res.message || "Failed to fetch sections");
@@ -253,9 +253,7 @@ const Sections: React.FC = () => {
         section={editingSection}
       />
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
-        <h1 className="text-xl sm:text-2xl font-bold">
-          বিভাগ পরিচালনা করুন
-        </h1>
+        <h1 className="text-xl sm:text-2xl font-bold">বিভাগ পরিচালনা করুন</h1>
         <button
           type="button"
           onClick={() => handleOpenModal()}
@@ -267,17 +265,13 @@ const Sections: React.FC = () => {
 
       <div className="bg-card rounded-xl border border-border-color shadow-sm overflow-hidden">
         {isLoading ? (
-          <div className="p-8 text-center text-muted-text">
-            লোড হচ্ছে...
-          </div>
+          <div className="p-8 text-center text-muted-text">লোড হচ্ছে...</div>
         ) : error ? (
           <div className="p-8 text-center text-danger">{error}</div>
         ) : sections.length === 0 ? (
           <div className="p-8 text-center text-muted-text">
             <LayersIcon className="w-16 h-16 mx-auto mb-4 text-border-color" />
-            <p className="text-lg font-bold mb-2">
-              কোনো বিভাগ পাওয়া যায়নি
-            </p>
+            <p className="text-lg font-bold mb-2">কোনো বিভাগ পাওয়া যায়নি</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-4 p-4">
