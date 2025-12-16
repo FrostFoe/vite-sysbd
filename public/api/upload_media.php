@@ -37,9 +37,15 @@ try {
         ? $uploader->uploadVideo($file)
         : $uploader->uploadAudio($file);
 
+    $thumbnailUrl = null;
+    if (isset($_FILES["thumbnail"]) && $_FILES["thumbnail"]["error"] === UPLOAD_ERR_OK) {
+        $thumbnailUrl = $uploader->uploadImage($_FILES["thumbnail"]);
+    }
+
     echo json_encode([
         "success" => true,
         "url" => $mediaPath,
+        "thumbnailUrl" => $thumbnailUrl,
         "type" => $isVideo ? "video" : "audio",
         "size" => $file["size"],
         "message" => "Media uploaded successfully",

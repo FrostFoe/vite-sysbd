@@ -10,6 +10,7 @@ declare module "@tiptap/core" {
         src: string;
         alt?: string;
         title?: string;
+        poster?: string;
       }) => ReturnType;
     };
   }
@@ -46,30 +47,15 @@ export const VideoNode = Node.create<VideoOptions>({
     return {
       src: {
         default: null,
-        parseHTML: (element) => ({
-          src: element.querySelector("video")?.src,
-        }),
-        renderHTML: (attributes) => ({
-          src: attributes.src,
-        }),
+      },
+      poster: {
+        default: null,
       },
       alt: {
         default: null,
-        parseHTML: (element) => ({
-          alt: element.querySelector("video")?.getAttribute("alt"),
-        }),
-        renderHTML: (attributes) => ({
-          alt: attributes.alt,
-        }),
       },
       title: {
         default: null,
-        parseHTML: (element) => ({
-          title: element.querySelector("video")?.getAttribute("title"),
-        }),
-        renderHTML: (attributes) => ({
-          title: attributes.title,
-        }),
       },
       width: {
         default: "100%",
@@ -87,28 +73,33 @@ export const VideoNode = Node.create<VideoOptions>({
     return [
       {
         tag: "video",
+        getAttrs: (dom) => {
+          const video = dom as HTMLVideoElement;
+          return {
+            src: video.getAttribute("src"),
+            poster: video.getAttribute("poster"),
+            alt: video.getAttribute("alt"),
+            title: video.getAttribute("title"),
+          };
+        },
       },
     ];
   },
 
   renderHTML({ HTMLAttributes }) {
     return [
-      "div",
-      { class: "video-wrapper" },
-      [
-        "video",
-        mergeAttributes(HTMLAttributes, {
-          controls: "controls",
-          style: `max-width: 100%; height: auto; width: ${HTMLAttributes.width}; height: ${HTMLAttributes.height};`,
-        }),
-      ],
+      "video",
+      mergeAttributes(this.options.HTMLAttributes, HTMLAttributes, {
+        controls: "controls",
+        style: "width: 100%; height: auto;",
+      }),
     ];
   },
 
   addCommands() {
     return {
       setVideo:
-        (options: { src: string; alt?: string; title?: string }) =>
+        (options) =>
         ({ commands }) => {
           return commands.insertContent({
             type: this.name,

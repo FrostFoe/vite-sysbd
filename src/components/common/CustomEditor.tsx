@@ -5,6 +5,7 @@ import StarterKit from "@tiptap/starter-kit";
 import { AlertCircle, Upload, Video } from "lucide-react";
 import type React from "react";
 import { useCallback, useState } from "react";
+import { adminApi } from "../../lib/api";
 import VideoNode from "./VideoNode";
 
 interface CustomEditorProps {
@@ -43,21 +44,15 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
       }
 
       const formData = new FormData();
-      formData.append("file", file);
-      formData.append("type", "image");
+      formData.append("image", file);
 
-      const response = await fetch("/api/upload-media.php", {
-        method: "POST",
-        body: formData,
-      });
+      const response = await adminApi.uploadImage(formData);
 
-      const data = await response.json();
-
-      if (!data.success) {
-        throw new Error(data.message || "Upload failed");
+      if (!response.success) {
+        throw new Error(response.error || "Upload failed");
       }
 
-      return data.file.url;
+      return response.url;
     } catch (error) {
       const message = error instanceof Error ? error.message : "Upload failed";
       setUploadError(message);
@@ -66,42 +61,48 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
     }
   }, []);
 
-  const handleVideoUpload = useCallback(async (file: File) => {
-    try {
-      setUploadError("");
+  const handleVideoUpload = useCallback(
+    async (videoFile: File, thumbnailFile: File | null) => {
+      if (!editor) return;
 
-      if (!file.type.startsWith("video/")) {
-        throw new Error("Please upload a valid video file");
+      try {
+        setUploadError("");
+
+        if (!videoFile.type.startsWith("video/")) {
+          throw new Error("Please upload a valid video file");
+        }
+
+        const maxSize = 100 * 1024 * 1024; // 100MB
+        if (videoFile.size > maxSize) {
+          throw new Error("Video size must be less than 100MB");
+        }
+
+        const formData = new FormData();
+        formData.append("media", videoFile);
+        if (thumbnailFile) {
+          formData.append("thumbnail", thumbnailFile);
+        }
+
+        const data = await adminApi.uploadMedia(formData);
+
+        if (!data.success) {
+          throw new Error(data.error || "Upload failed");
+        }
+
+        editor
+          .chain()
+          .focus()
+          .setVideo({ src: data.url, poster: data.thumbnailUrl })
+          .run();
+      } catch (error) {
+        const message =
+          error instanceof Error ? error.message : "Upload failed";
+        setUploadError(message);
+        console.error("Video upload error:", error);
       }
-
-      const maxSize = 100 * 1024 * 1024;
-      if (file.size > maxSize) {
-        throw new Error("Video size must be less than 100MB");
-      }
-
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("type", "video");
-
-      const response = await fetch("/api/upload-media.php", {
-        method: "POST",
-        body: formData,
-      });
-
-      const data = await response.json();
-
-      if (!data.success) {
-        throw new Error(data.message || "Upload failed");
-      }
-
-      return data.file.url;
-    } catch (error) {
-      const message = error instanceof Error ? error.message : "Upload failed";
-      setUploadError(message);
-      console.error("Video upload error:", error);
-      return null;
-    }
-  }, []);
+    },
+    [editor]
+  );
 
   const editor = useEditor({
     extensions: [
@@ -110,10 +111,7 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
         inline: false,
         allowBase64: true,
       }),
-      VideoNode.configure({
-        inline: false,
-        allowBase64: true,
-      }),
+      VideoNode,
       Placeholder.configure({
         placeholder,
       }),
@@ -144,11 +142,9 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
             }
           });
         } else if (file.type.startsWith("video/")) {
-          handleVideoUpload(file).then((url) => {
-            if (url && editor) {
-              editor.chain().focus().setVideo({ src: url }).run();
-            }
-          });
+          // Drag-and-drop for video with thumbnail is more complex,
+          // so we'll just upload the video for now.
+          handleVideoUpload(file, null);
         }
       }
     },
@@ -174,22 +170,31 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
   }, [editor, handleImageUpload]);
 
   const handleVideoButtonClick = useCallback(() => {
-    const input = document.createElement("input");
-    input.type = "file";
-    input.accept = "video/*";
-    input.onchange = (e: Event) => {
-      const target = e.target as HTMLInputElement;
-      const file = target.files?.[0];
-      if (file) {
-        handleVideoUpload(file).then((url) => {
-          if (url && editor) {
-            editor.chain().focus().setVideo({ src: url }).run();
-          }
-        });
+    const videoInput = document.createElement("input");
+    videoInput.type = "file";
+    videoInput.accept = "video/*";
+    videoInput.onchange = (e: Event) => {
+      const videoTarget = e.target as HTMLInputElement;
+      const videoFile = videoTarget.files?.[0];
+      if (videoFile) {
+        const thumbnailInput = document.createElement("input");
+        thumbnailInput.type = "file";
+        thumbnailInput.accept = "image/*";
+        thumbnailInput.onchange = (e2: Event) => {
+          const thumbnailTarget = e2.target as HTMLInputElement;
+          const thumbnailFile = thumbnailTarget.files?.[0];
+          handleVideoUpload(videoFile, thumbnailFile);
+        };
+        // Ask for thumbnail
+        if (window.confirm("Do you want to add a thumbnail for this video?")) {
+          thumbnailInput.click();
+        } else {
+          handleVideoUpload(videoFile, null);
+        }
       }
     };
-    input.click();
-  }, [editor, handleVideoUpload]);
+    videoInput.click();
+  }, [handleVideoUpload]);
 
   if (!editor) {
     return <div>Loading editor...</div>;

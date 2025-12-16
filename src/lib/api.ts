@@ -247,6 +247,24 @@ export const adminApi = {
     return response.data;
   },
 
+  uploadMedia: async (
+    formData: FormData
+  ): Promise<{
+    success: boolean;
+    url?: string;
+    thumbnailUrl?: string;
+    size?: number;
+    message?: string;
+    error?: string;
+  }> => {
+    const response = await api.post("/upload_media.php", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response.data;
+  },
+
   getUsers: async (): Promise<{
     success: boolean;
     users?: User[];
