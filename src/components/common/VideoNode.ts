@@ -89,7 +89,7 @@ export const VideoNode = Node.create<VideoOptions>({
   renderHTML({ HTMLAttributes }) {
     return [
       "video",
-      mergeAttributes(this.options.HTMLAttributes, HTMLAttributes, {
+      mergeAttributes(HTMLAttributes, {
         controls: "controls",
         style: "width: 100%; height: auto;",
       }),

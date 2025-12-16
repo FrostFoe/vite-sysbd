@@ -29,6 +29,7 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
   className = "",
 }) => {
   const [uploadError, setUploadError] = useState<string>("");
+  const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
 
   const handleImageUpload = useCallback(async (file: File) => {
     try {
@@ -61,6 +62,29 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
     }
   }, []);
 
+  const editor = useEditor({
+    extensions: [
+      StarterKit.configure({}),
+      Image.configure({
+        inline: false,
+        allowBase64: true,
+      }),
+      VideoNode,
+      Placeholder.configure({
+        placeholder,
+      }),
+    ],
+    content: value,
+    onUpdate: ({ editor }) => {
+      onChange(editor.getHTML());
+    },
+    editorProps: {
+      attributes: {
+        class: "focus:outline-none min-h-full p-3",
+      },
+    },
+  });
+
   const handleVideoUpload = useCallback(
     async (videoFile: File, thumbnailFile: File | null) => {
       if (!editor) return;
@@ -85,7 +109,7 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
 
         const data = await adminApi.uploadMedia(formData);
 
-        if (!data.success) {
+        if (!data.success || !data.url) {
           throw new Error(data.error || "Upload failed");
         }
 
@@ -104,28 +128,6 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
     [editor]
   );
 
-  const editor = useEditor({
-    extensions: [
-      StarterKit.configure({}),
-      Image.configure({
-        inline: false,
-        allowBase64: true,
-      }),
-      VideoNode,
-      Placeholder.configure({
-        placeholder,
-      }),
-    ],
-    content: value,
-    onUpdate: ({ editor }) => {
-      onChange(editor.getHTML());
-    },
-    editorProps: {
-      attributes: {
-        class: "focus:outline-none min-h-full p-3",
-      },
-    },
-  });
 
   const handleDrop = useCallback(
     (e: React.DragEvent<HTMLDivElement>) => {
@@ -169,32 +171,9 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
     input.click();
   }, [editor, handleImageUpload]);
 
-  const handleVideoButtonClick = useCallback(() => {
-    const videoInput = document.createElement("input");
-    videoInput.type = "file";
-    videoInput.accept = "video/*";
-    videoInput.onchange = (e: Event) => {
-      const videoTarget = e.target as HTMLInputElement;
-      const videoFile = videoTarget.files?.[0];
-      if (videoFile) {
-        const thumbnailInput = document.createElement("input");
-        thumbnailInput.type = "file";
-        thumbnailInput.accept = "image/*";
-        thumbnailInput.onchange = (e2: Event) => {
-          const thumbnailTarget = e2.target as HTMLInputElement;
-          const thumbnailFile = thumbnailTarget.files?.[0];
-          handleVideoUpload(videoFile, thumbnailFile);
-        };
-        // Ask for thumbnail
-        if (window.confirm("Do you want to add a thumbnail for this video?")) {
-          thumbnailInput.click();
-        } else {
-          handleVideoUpload(videoFile, null);
-        }
-      }
-    };
-    videoInput.click();
-  }, [handleVideoUpload]);
+  const handleVideoButtonClick = () => {
+    setIsVideoModalOpen(true);
+  };
 
   if (!editor) {
     return <div>Loading editor...</div>;
@@ -384,6 +363,70 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
         <div className="mt-2 p-3 bg-danger/10 border border-danger/30 rounded-lg flex items-center gap-2 text-danger">
           <AlertCircle size={18} />
           <span>{uploadError}</span>
+        </div>
+      )}
+
+      {/* Video Upload Modal */}
+      {isVideoModalOpen && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center">
+          <div className="bg-card p-6 rounded-lg shadow-xl w-full max-w-md">
+            <h3 className="text-lg font-bold mb-4">Upload Video</h3>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                const form = e.currentTarget;
+                const videoFile = (form.elements.namedItem("videoFile") as HTMLInputElement).files?.[0];
+                const thumbnailFile = (form.elements.namedItem("thumbnailFile") as HTMLInputElement).files?.[0];
+                if (videoFile) {
+                  handleVideoUpload(videoFile, thumbnailFile || null);
+                  setIsVideoModalOpen(false);
+                }
+              }}
+            >
+              <div className="space-y-4">
+                <div>
+                  <label htmlFor="videoFile" className="block text-sm font-medium text-card-text mb-1">
+                    Video File
+                  </label>
+                  <input
+                    type="file"
+                    id="videoFile"
+                    name="videoFile"
+                    accept="video/*"
+                    required
+                    className="w-full text-sm text-card-text file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-bbcRed/10 file:text-bbcRed hover:file:bg-bbcRed/20"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="thumbnailFile" className="block text-sm font-medium text-card-text mb-1">
+                    Thumbnail (Optional)
+                  </label>
+                  <input
+                    type="file"
+                    id="thumbnailFile"
+                    name="thumbnailFile"
+                    accept="image/*"
+                    className="w-full text-sm text-card-text file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-bbcRed/10 file:text-bbcRed hover:file:bg-bbcRed/20"
+                  />
+                </div>
+              </div>
+              <div className="mt-6 flex justify-end gap-3">
+                <button
+                  type="button"
+                  onClick={() => setIsVideoModalOpen(false)}
+                  className="px-4 py-2 text-sm font-medium rounded-md bg-muted-bg text-card-text hover:bg-border-color"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-2 text-sm font-medium rounded-md bg-bbcRed text-white hover:bg-bbcRed/90"
+                >
+                  Upload
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       )}
     </div>
