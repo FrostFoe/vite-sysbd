@@ -12,7 +12,18 @@ class FileUploader
     public function __construct()
     {
         $this->config = require __DIR__ . "/../config/uploads.php";
-        $this->publicPath = __DIR__ . "/../../public/";
+        
+        // Detect the correct base path
+        // Check if we're in dist/lib (production) or public/lib (development)
+        $currentDir = __DIR__;
+        
+        if (strpos($currentDir, '/dist/') !== false) {
+            // We're in dist/lib - go up to dist/
+            $this->publicPath = __DIR__ . "/../../";
+        } else {
+            // We're in public/lib - go up to public/
+            $this->publicPath = __DIR__ . "/../../public/";
+        }
     }
 
     /**
