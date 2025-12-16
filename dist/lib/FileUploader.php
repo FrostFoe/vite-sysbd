@@ -14,15 +14,18 @@ class FileUploader
         $this->config = require __DIR__ . "/../config/uploads.php";
         
         // Detect the correct base path
-        // Check if we're in dist/lib (production) or public/lib (development)
+        // Check if we're in dist/lib (production nested) or lib (production root) or public/lib (development)
         $currentDir = __DIR__;
         
         if (strpos($currentDir, '/dist/') !== false) {
             // We're in dist/lib - go up to dist/
             $this->publicPath = __DIR__ . "/../../";
-        } else {
-            // We're in public/lib - go up to public/
+        } elseif (basename(dirname(dirname($currentDir))) === 'public') {
+            // We're in public/lib (development) - go up to public/
             $this->publicPath = __DIR__ . "/../../public/";
+        } else {
+            // We're in domain root/lib (production) - go up to domain root/
+            $this->publicPath = __DIR__ . "/../";
         }
     }
 
