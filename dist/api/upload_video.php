@@ -14,13 +14,13 @@ try {
     }
 
     if (
-        !isset($_FILES["image"]) ||
-        $_FILES["image"]["error"] !== UPLOAD_ERR_OK
+        !isset($_FILES["video"]) ||
+        $_FILES["video"]["error"] !== UPLOAD_ERR_OK
     ) {
         send_response(
             [
                 "success" => false,
-                "error" => "Image upload failed or no file selected",
+                "error" => "Video upload failed or no file selected",
             ],
             400,
         );
@@ -28,16 +28,16 @@ try {
     }
 
     $uploader = new FileUploader();
-    $imagePath = $uploader->uploadImage($_FILES["image"]);
+    $videoPath = $uploader->uploadVideo($_FILES["video"]);
     
     // Return path accessible from browser - assets folder is served by the web server
-    $imageUrl = "/" . $imagePath;
+    $videoUrl = "/" . $videoPath;
 
     send_response([
         "success" => true,
-        "url" => $imageUrl,
-        "size" => $_FILES["image"]["size"],
-        "message" => "Image uploaded successfully",
+        "url" => $videoUrl,
+        "size" => $_FILES["video"]["size"],
+        "message" => "Video uploaded successfully",
     ]);
 } catch (Exception $e) {
     send_response(
@@ -54,6 +54,5 @@ function send_response($data, $code = 200)
 {
     http_response_code($code);
     echo json_encode($data);
-    exit();
 }
 ?>

@@ -1,6 +1,7 @@
 import { Eye, EyeOff } from "lucide-react";
 import type React from "react";
 import { useState } from "react";
+import { normalizeMediaUrl } from "../../lib/utils";
 
 interface CustomImageProps {
   src: string;
@@ -31,6 +32,9 @@ const CustomImage: React.FC<CustomImageProps> = ({
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
   const [showImage, setShowImage] = useState(true);
+  
+  // Normalize the image URL to ensure it works from both editor and detail pages
+  const normalizedSrc = normalizeMediaUrl(src);
 
   const handleLoad = () => {
     setIsLoading(false);
@@ -75,7 +79,7 @@ const CustomImage: React.FC<CustomImageProps> = ({
         <div className="text-center p-4">
           <div className="bg-muted-bg border-2 border-dashed border-border-color rounded-xl w-16 h-16 mx-auto" />
           <p className="mt-2 text-sm text-muted-text">Image failed to load</p>
-          <p className="text-xs text-muted-text">{src}</p>
+          <p className="text-xs text-muted-text">{normalizedSrc}</p>
         </div>
       </div>
     );
@@ -89,11 +93,12 @@ const CustomImage: React.FC<CustomImageProps> = ({
         </div>
       )}
       <img
-        src={src}
+        src={normalizedSrc}
         alt={alt}
         title={title}
         width={width}
         height={height}
+        crossOrigin="anonymous"
         onLoad={handleLoad}
         onError={handleError}
         className={`w-full h-auto rounded-lg ${isLoading ? "opacity-0" : "opacity-100"} transition-opacity duration-300`}

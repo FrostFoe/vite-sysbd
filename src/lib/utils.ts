@@ -182,3 +182,24 @@ export function handleItemSelect(
     onDesktop?.();
   }
 }
+/**
+ * Normalize media URLs to ensure they work from both editor and article detail pages
+ * Handles relative paths returned from upload APIs
+ * @param url - The media URL from API response
+ * @returns Normalized URL accessible from frontend
+ */
+export function normalizeMediaUrl(url: string | null | undefined): string {
+  if (!url) return "";
+  
+  // If URL is already absolute (starts with http/https), return as-is
+  if (url.startsWith("http://") || url.startsWith("https://")) {
+    return url;
+  }
+  
+  // If URL doesn't start with /, add it
+  if (!url.startsWith("/")) {
+    return "/" + url;
+  }
+  
+  return url;
+}

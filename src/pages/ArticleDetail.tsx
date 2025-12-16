@@ -26,6 +26,7 @@ import { t } from "../lib/translations";
 import {
   escapeHtml,
   formatTimestamp,
+  normalizeMediaUrl,
   PLACEHOLDER_IMAGE,
   sanitizeHtml,
   showToastMsg,
@@ -431,8 +432,9 @@ const ArticleDetail: React.FC = () => {
             {/* Featured Image */}
             <div className="mb-10 relative aspect-video bg-muted-bg rounded-2xl overflow-hidden shadow-lg">
               <img
-                src={article.image || PLACEHOLDER_IMAGE}
+                src={normalizeMediaUrl(article.image) || PLACEHOLDER_IMAGE}
                 alt={article.title}
+                crossOrigin="anonymous"
                 className="w-full h-full object-cover"
               />
             </div>

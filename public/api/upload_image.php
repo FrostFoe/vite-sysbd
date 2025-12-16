@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . "/../config/db.php";
-require_once __DIR__ . "/../lib/security.php"; // Assuming security.php is still used for other things
+require_once __DIR__ . "/../lib/security.php";
 require_once __DIR__ . "/../lib/FileUploader.php";
 
 header("Content-Type: application/json");
@@ -29,10 +29,13 @@ try {
 
     $uploader = new FileUploader();
     $imagePath = $uploader->uploadImage($_FILES["image"]);
+    
+    // Return path accessible from browser - assets folder is served by the web server
+    $imageUrl = "/" . $imagePath;
 
     send_response([
         "success" => true,
-        "url" => $imagePath,
+        "url" => $imageUrl,
         "size" => $_FILES["image"]["size"],
         "message" => "Image uploaded successfully",
     ]);

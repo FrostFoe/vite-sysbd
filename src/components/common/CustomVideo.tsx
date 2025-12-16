@@ -1,6 +1,7 @@
 import { Maximize, Pause, Play, Volume2, VolumeX } from "lucide-react";
 import type React from "react";
 import { useRef, useState } from "react";
+import { normalizeMediaUrl } from "../../lib/utils";
 
 interface CustomVideoProps {
   src: string;
@@ -40,6 +41,10 @@ const CustomVideo: React.FC<CustomVideoProps> = ({
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
+  
+  // Normalize media URLs to ensure they work from both pages
+  const normalizedSrc = normalizeMediaUrl(src);
+  const normalizedPoster = normalizeMediaUrl(poster);
 
   const handlePlayPause = () => {
     if (videoRef.current) {
@@ -100,7 +105,7 @@ const CustomVideo: React.FC<CustomVideoProps> = ({
             <Play className="w-6 h-6 text-muted-text" />
           </div>
           <p className="mt-2 text-sm text-muted-text">Video failed to load</p>
-          <p className="text-xs text-muted-text">{src}</p>
+          <p className="text-xs text-muted-text">{normalizedSrc}</p>
         </div>
       </div>
     );
@@ -116,14 +121,15 @@ const CustomVideo: React.FC<CustomVideoProps> = ({
         )}
         <video
           ref={videoRef}
-          src={src}
-          poster={poster}
+          src={normalizedSrc}
+          poster={normalizedPoster}
           loop={loop}
           muted={isMuted}
           controls={controls}
           width={width}
           height={height}
           title={title}
+          crossOrigin="anonymous"
           className={`w-full h-auto ${isLoading ? "opacity-0" : "opacity-100"} transition-opacity duration-300`}
           onPlay={() => setIsPlaying(true)}
           onPause={() => setIsPlaying(false)}

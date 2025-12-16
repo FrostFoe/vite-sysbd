@@ -247,17 +247,16 @@ export const adminApi = {
     return response.data;
   },
 
-  uploadMedia: async (
+  uploadVideo: async (
     formData: FormData
   ): Promise<{
     success: boolean;
     url?: string;
-    thumbnailUrl?: string;
     size?: number;
     message?: string;
     error?: string;
   }> => {
-    const response = await api.post("/upload_media.php", formData, {
+    const response = await api.post("/upload_video.php", formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },

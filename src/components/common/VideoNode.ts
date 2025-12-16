@@ -10,7 +10,6 @@ declare module "@tiptap/core" {
         src: string;
         alt?: string;
         title?: string;
-        poster?: string;
       }) => ReturnType;
     };
   }
@@ -48,9 +47,6 @@ export const VideoNode = Node.create<VideoOptions>({
       src: {
         default: null,
       },
-      poster: {
-        default: null,
-      },
       alt: {
         default: null,
       },
@@ -77,7 +73,6 @@ export const VideoNode = Node.create<VideoOptions>({
           const video = dom as HTMLVideoElement;
           return {
             src: video.getAttribute("src"),
-            poster: video.getAttribute("poster"),
             alt: video.getAttribute("alt"),
             title: video.getAttribute("title"),
           };
@@ -91,6 +86,7 @@ export const VideoNode = Node.create<VideoOptions>({
       "video",
       mergeAttributes(HTMLAttributes, {
         controls: "controls",
+        crossorigin: "anonymous",
         style: "width: 100%; height: auto;",
       }),
     ];
