@@ -63,7 +63,7 @@ const Header: React.FC = () => {
             <button
               type="button"
               onClick={() => toggleSidebar(true)}
-              className="p-2 md:p-2.5 hover:bg-muted-bg rounded-full text-white transition-colors active:scale-95"
+              className="p-2 md:p-2.5 hover:bg-muted-bg rounded-full text-muted-text dark:text-card-text transition-colors active:scale-95"
             >
               <Menu className="w-6 h-6" />
             </button>

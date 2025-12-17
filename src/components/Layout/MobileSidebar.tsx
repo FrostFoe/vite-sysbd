@@ -50,7 +50,7 @@ const MobileSidebar: React.FC = () => {
 
       {/* Sidebar */}
       <div
-        className={`fixed top-0 left-0 bottom-0 z-[60] w-full sm:w-2/3 md:w-1/2 lg:w-1/4 bg-white/95 dark:bg-black/95 backdrop-blur-xl transition-all duration-300 shadow-2xl ${
+        className={`fixed top-0 left-0 bottom-0 z-[60] w-full sm:w-2/3 md:w-1/2 lg:w-1/4 bg-page/95 backdrop-blur-xl transition-all duration-300 shadow-2xl ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
