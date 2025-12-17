@@ -2,20 +2,25 @@
 require_once 'api_header.php';
 require_once __DIR__ . '/../lib/CacheManager.php';
 
-session_start();
+// --- Authorization & Request Method Check ---
+// Allow running from CLI for development/deployment purposes.
+// For web requests, enforce session-based admin authentication and POST method.
+if (php_sapi_name() !== 'cli') {
+    session_start();
 
-// --- Authorization Check ---
-// IMPORTANT: This is a destructive operation.
-// In a real production environment, this endpoint should be removed or heavily secured.
-if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
-    send_response(['error' => 'Unauthorized. Admin access required.'], 403);
-    exit();
+    // Check for admin role in session
+    if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
+        send_response(['error' => 'Unauthorized. Admin access required.'], 403);
+        exit();
+    }
+
+    // Check for POST request method
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        send_response(['error' => 'Method not allowed. Use POST to reset the database.'], 405);
+        exit();
+    }
 }
 
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    send_response(['error' => 'Method not allowed. Use POST to reset the database.'], 405);
-    exit();
-}
 
 try {
     // 1. Read the SQL file to reset the schema
