@@ -3,7 +3,7 @@ import type React from "react";
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { adminApi } from "../../lib/api";
-import { escapeHtml, handleItemSelect, showToastMsg } from "../../lib/utils";
+import { handleItemSelect, showToastMsg } from "../../lib/utils";
 
 interface AdminUser {
   id: number;
@@ -65,10 +65,7 @@ const Users: React.FC = () => {
         fetchUsers();
         closeMuteDialog();
       } else {
-        showToastMsg(
-          response.error || "ব্যবহারকারীকে মিউট করতে ব্যর্থ",
-          "error",
-        );
+        showToastMsg(response.error || "ব্যবহারকারীকে মিউট করতে ব্যর্থ", "error");
       }
     } catch (_error) {
       showToastMsg("সার্ভার ত্রুটি!", "error");
@@ -76,11 +73,7 @@ const Users: React.FC = () => {
   };
 
   const handleUnmuteUser = async (userId: number) => {
-    if (
-      !window.confirm(
-        "আপনি কি নিশ্চিত যে আপনি এই ব্যবহারকারীকে আনমিউট করতে চান?",
-      )
-    )
+    if (!window.confirm("আপনি কি নিশ্চিত যে আপনি এই ব্যবহারকারীকে আনমিউট করতে চান?"))
       return;
     try {
       const response = await adminApi.unmuteUser(userId);
@@ -88,10 +81,7 @@ const Users: React.FC = () => {
         showToastMsg("ব্যবহারকারীকে সফলভাবে আনমিউট করা হয়েছে");
         fetchUsers();
       } else {
-        showToastMsg(
-          response.error || "ব্যবহারকারীকে আনমিউট করতে ব্যর্থ",
-          "error",
-        );
+        showToastMsg(response.error || "ব্যবহারকারীকে আনমিউট করতে ব্যর্থ", "error");
       }
     } catch (_error) {
       showToastMsg("সার্ভার ত্রুটি!", "error");
@@ -126,7 +116,7 @@ const Users: React.FC = () => {
                     handleItemSelect(
                       window.innerWidth < 768,
                       navigate,
-                      `/admin/users/${user.id}`,
+                      `/admin/users/${user.id}`
                     )
                   }
                   type="button"
@@ -194,7 +184,7 @@ const Users: React.FC = () => {
                   </div>
                   {isMuted && user.reason && (
                     <div className="mt-2 text-xs text-muted-text bg-danger/5 p-2 rounded">
-                      Reason: {escapeHtml(user.reason)}
+                      Reason: {user.reason}
                     </div>
                   )}
                 </button>
@@ -237,8 +227,7 @@ const Users: React.FC = () => {
               <span className="font-bold text-card-text">
                 {selectedUserEmail}
               </span>
-              কে মিউট করতে চলেছেন। এই ব্যবহারকারী আর মন্তব্য পোস্ট করতে পারবেন
-              না।
+              কে মিউট করতে চলেছেন। এই ব্যবহারকারী আর মন্তব্য পোস্ট করতে পারবেন না।
             </p>
             <div className="mb-4">
               <label

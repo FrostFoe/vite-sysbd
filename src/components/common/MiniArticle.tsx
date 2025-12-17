@@ -1,7 +1,7 @@
 import type React from "react";
 import { Link } from "react-router-dom";
 import { useLayout } from "../../context/LayoutContext";
-import { escapeHtml, PLACEHOLDER_IMAGE } from "../../lib/utils";
+import { PLACEHOLDER_IMAGE } from "../../lib/utils";
 import type { Article } from "../../types";
 
 interface MiniArticleProps {
@@ -37,7 +37,7 @@ const MiniArticle: React.FC<MiniArticleProps> = ({
             <h4
               className={`text-sm font-bold leading-snug group-hover:${colorClass} transition-colors ${titleColor} line-clamp-2`}
             >
-              {escapeHtml(article.title)}
+              {article.title}
             </h4>
           </div>
         </div>

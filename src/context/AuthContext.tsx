@@ -104,7 +104,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const register = async (
     email: string,
-    password: string,
+    password: string
   ): Promise<boolean> => {
     setIsLoading(true);
     try {
@@ -121,7 +121,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const err = error as { response?: { data?: { message?: string } } };
       showToastMsg(
         err.response?.data?.message || "Registration failed",
-        "error",
+        "error"
       );
       return false;
     } finally {

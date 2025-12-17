@@ -22,7 +22,7 @@ export const DEPLOYMENT_CONFIG = {
       return "/api";
     }
     // Remove trailing slash and append /api
-    return baseUrl.replace(/\/$/, "") + "/api";
+    return `${baseUrl.replace(/\/$/, "")}/api`;
   },
 
   // Get asset base URL

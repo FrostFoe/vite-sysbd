@@ -6,7 +6,6 @@ import { CustomDropdown } from "../../components/common/CustomDropdown";
 import { useLayout } from "../../context/LayoutContext";
 import { adminApi } from "../../lib/api";
 import {
-  escapeHtml,
   formatTimestamp,
   handleItemSelect,
   PLACEHOLDER_IMAGE,
@@ -66,7 +65,7 @@ const ArticleList: React.FC = () => {
   const handleDeleteArticle = useCallback(async (id: string) => {
     if (
       !window.confirm(
-        "আপনি কি নিশ্চিত এই নিবন্ধটি মুছে ফেলতে চান? এটি উভয় ভাষার সংস্করণ মুছে দেবে।",
+        "আপনি কি নিশ্চিত এই নিবন্ধটি মুছে ফেলতে চান? এটি উভয় ভাষার সংস্করণ মুছে দেবে।"
       )
     )
       return;
@@ -86,7 +85,7 @@ const ArticleList: React.FC = () => {
 
   const handleFilterChange = (
     type: "search" | "cat" | "status",
-    value: string,
+    value: string
   ) => {
     const newParams = new URLSearchParams(searchParams.toString());
     if (value) {
@@ -195,7 +194,7 @@ const ArticleList: React.FC = () => {
                     handleItemSelect(
                       window.innerWidth < 768,
                       navigate,
-                      `/admin/articles/${a.id}/edit`,
+                      `/admin/articles/${a.id}/edit`
                     )
                   }
                   type="button"
@@ -213,24 +212,22 @@ const ArticleList: React.FC = () => {
                           to={`/admin/articles/${a.id}/edit`}
                           className="font-bold text-sm block hover:text-bbcRed truncate font-hind"
                         >
-                          {escapeHtml(
-                            a.title_bn || a.title_en || "(শিরোনাম নেই)",
-                          )}
+                          {a.title_bn || a.title_en || "(শিরোনাম নেই)"}
                         </Link>
                         {a.title_bn && a.title_en && (
                           <p className="text-xs text-muted-text truncate">
-                            {escapeHtml(a.title_en)}
+                            {a.title_en}
                           </p>
                         )}
                         <div className="flex gap-2 items-center mt-2 flex-wrap">
                           <span
                             className={`px-2 py-1 rounded-full text-xs font-bold border ${colorClass}`}
                           >
-                            {escapeHtml(a.status)}
+                            {a.status}
                           </span>
                           {a.category && (
                             <span className="text-xs bg-muted-bg text-card-text px-2 py-1 rounded-full border border-border-color">
-                              {escapeHtml(a.category)}
+                              {a.category}
                             </span>
                           )}
                         </div>

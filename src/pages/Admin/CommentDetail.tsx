@@ -1,3 +1,4 @@
+import DOMPurify from "dompurify";
 import { ArrowLeft, Loader } from "lucide-react";
 import type React from "react";
 import { createElement, useEffect, useState } from "react";
@@ -5,12 +6,7 @@ import { Link, useParams } from "react-router-dom";
 import { useLayout } from "../../context/LayoutContext";
 import { adminApi } from "../../lib/api";
 import { t } from "../../lib/translations";
-import {
-  escapeHtml,
-  formatTimestamp,
-  sanitizeHtml,
-  showToastMsg,
-} from "../../lib/utils";
+import { formatTimestamp, showToastMsg } from "../../lib/utils";
 
 interface AdminComment {
   id: number;
@@ -40,7 +36,7 @@ const CommentDetail: React.FC = () => {
         const response = await adminApi.getAllComments();
         if (response.success && response.comments) {
           const foundComment = (response.comments as AdminComment[]).find(
-            (c) => c.id === commentId,
+            (c) => c.id === commentId
           );
           if (foundComment) {
             setComment(foundComment);
@@ -91,7 +87,7 @@ const CommentDetail: React.FC = () => {
           </div>
           <div className="min-w-0">
             <h1 className="text-base sm:text-xl font-bold truncate">
-              {escapeHtml(comment.user_name)}
+              {comment.user_name}
             </h1>
             <p className="text-muted-text text-xs sm:text-sm">
               {formatTimestamp(comment.created_at, language)}
@@ -108,11 +104,9 @@ const CommentDetail: React.FC = () => {
               to={`/admin/articles/${comment.article_id}/edit`}
               className="text-bbcRed hover:opacity-80 text-xs sm:text-sm mt-1 block truncate"
             >
-              {escapeHtml(
-                language === "bn"
-                  ? comment.title_bn
-                  : comment.title_en || "Unknown Article",
-              )}
+              {language === "bn"
+                ? comment.title_bn
+                : comment.title_en || "Unknown Article"}
             </Link>
           </div>
 
@@ -122,12 +116,12 @@ const CommentDetail: React.FC = () => {
             </div>
             <div className="prose prose-sm dark:prose-invert mt-2 text-card-text">
               {(() => {
-                const sanitizedText = sanitizeHtml(comment.text);
+                const sanitizedText = DOMPurify.sanitize(comment.text);
                 const tempDiv = document.createElement("div");
                 tempDiv.innerHTML = sanitizedText;
 
                 const convertNodeToReactElement = (
-                  node: Node,
+                  node: Node
                 ): React.ReactNode => {
                   if (node.nodeType === Node.TEXT_NODE) {
                     return node.textContent;
@@ -145,20 +139,20 @@ const CommentDetail: React.FC = () => {
 
                     // Process child nodes
                     const children = Array.from(element.childNodes).map(
-                      convertNodeToReactElement,
+                      convertNodeToReactElement
                     );
 
                     return createElement(
                       element.tagName.toLowerCase(),
                       props,
-                      ...children,
+                      ...children
                     );
                   }
                   return null;
                 };
 
                 return Array.from(tempDiv.childNodes).map((node, _index) =>
-                  convertNodeToReactElement(node),
+                  convertNodeToReactElement(node)
                 );
               })()}
             </div>

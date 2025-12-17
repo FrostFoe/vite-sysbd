@@ -1,3 +1,4 @@
+import DOMPurify from "dompurify";
 import {
   Bookmark,
   Clock,
@@ -24,11 +25,9 @@ import { useLayout } from "../context/LayoutContext";
 import { adminApi, publicApi } from "../lib/api";
 import { t } from "../lib/translations";
 import {
-  escapeHtml,
   formatTimestamp,
   normalizeMediaUrl,
   PLACEHOLDER_IMAGE,
-  sanitizeHtml,
   showToastMsg,
 } from "../lib/utils";
 import type { Article, UserProfile } from "../types";
@@ -109,7 +108,7 @@ const ArticleDetail: React.FC = () => {
         .flat()
         .forEach((cls) => {
           proseEl.classList.remove(
-            `[&_p]:${cls.replace("text-lg", "text-base")}`,
+            `[&_p]:${cls.replace("text-lg", "text-base")}`
           );
           proseEl.classList.remove(`[&_p]:${cls}`);
         });
@@ -133,10 +132,10 @@ const ArticleDetail: React.FC = () => {
           : [...prevBookmarks, id];
       localStorage.setItem(
         "breachtimes-bookmarks",
-        JSON.stringify(newBookmarks),
+        JSON.stringify(newBookmarks)
       );
       showToastMsg(
-        index > -1 ? t("removed", language) : t("saved_successfully", language),
+        index > -1 ? t("removed", language) : t("saved_successfully", language)
       );
       return newBookmarks;
     });
@@ -183,7 +182,7 @@ const ArticleDetail: React.FC = () => {
         }
       } else {
         setCommentError(
-          response.error || t("failed_to_post_comment", language),
+          response.error || t("failed_to_post_comment", language)
         );
       }
     } catch (_error) {
@@ -217,7 +216,7 @@ const ArticleDetail: React.FC = () => {
                     upvotes: response.upvotes,
                     downvotes: response.downvotes,
                   }
-                : comment,
+                : comment
             );
             return { ...prevArticle, comments: updatedComments };
           });
@@ -225,7 +224,7 @@ const ArticleDetail: React.FC = () => {
         } else {
           showToastMsg(
             response.error || t("failed_to_vote", language),
-            "error",
+            "error"
           );
         }
       } catch (_error) {
@@ -233,7 +232,7 @@ const ArticleDetail: React.FC = () => {
         showToastMsg(t("server_error", language), "error");
       }
     },
-    [id, language],
+    [id, language]
   );
 
   const handleCommentSortChange = useCallback(
@@ -241,7 +240,7 @@ const ArticleDetail: React.FC = () => {
       setCommentSort(newSort as typeof commentSort);
       localStorage.setItem(`sort-${id}`, newSort);
     },
-    [id],
+    [id]
   );
 
   const toggleReplyForm = useCallback((commentId: number) => {
@@ -263,7 +262,7 @@ const ArticleDetail: React.FC = () => {
         const response = await publicApi.postReply(
           parentCommentId,
           text,
-          language,
+          language
         );
         if (response.success) {
           setReplyInput((prev) => ({ ...prev, [parentCommentId]: "" }));
@@ -271,7 +270,7 @@ const ArticleDetail: React.FC = () => {
           showToastMsg(t("reply_posted", language));
           const updatedArticleResponse = await publicApi.getArticle(
             id,
-            language,
+            language
           );
           if (
             updatedArticleResponse.success &&
@@ -282,7 +281,7 @@ const ArticleDetail: React.FC = () => {
         } else {
           showToastMsg(
             response.error || t("failed_to_post_reply", language),
-            "error",
+            "error"
           );
         }
       } catch (_error) {
@@ -290,7 +289,7 @@ const ArticleDetail: React.FC = () => {
         showToastMsg(t("server_error", language), "error");
       }
     },
-    [id, replyInput, language],
+    [id, replyInput, language]
   );
 
   const deleteComment = useCallback(
@@ -305,7 +304,7 @@ const ArticleDetail: React.FC = () => {
           if (!id) return;
           const updatedArticleResponse = await publicApi.getArticle(
             id,
-            language,
+            language
           );
           if (
             updatedArticleResponse.success &&
@@ -316,7 +315,7 @@ const ArticleDetail: React.FC = () => {
         } else {
           showToastMsg(
             response.error || t("failed_to_delete_comment", language),
-            "error",
+            "error"
           );
         }
       } catch (_error) {
@@ -324,7 +323,7 @@ const ArticleDetail: React.FC = () => {
         showToastMsg(t("server_error", language), "error");
       }
     },
-    [id, isAdmin, language],
+    [id, isAdmin, language]
   );
 
   const openProfileModal = useCallback(
@@ -339,7 +338,7 @@ const ArticleDetail: React.FC = () => {
         } else {
           showToastMsg(
             response.error || t("failed_to_fetch_profile", language),
-            "error",
+            "error"
           );
         }
       } catch (_error) {
@@ -349,7 +348,7 @@ const ArticleDetail: React.FC = () => {
         setProfileModalLoading(false);
       }
     },
-    [language],
+    [language]
   );
 
   const closeProfileModal = useCallback(() => {
@@ -372,7 +371,7 @@ const ArticleDetail: React.FC = () => {
         } else {
           showToastMsg(
             response.error || t("submission_failed", language),
-            "error",
+            "error"
           );
         }
       } catch (_error) {
@@ -380,7 +379,7 @@ const ArticleDetail: React.FC = () => {
         showToastMsg(t("server_error", language), "error");
       }
     },
-    [id, language],
+    [id, language]
   );
 
   if (isLoading) {
@@ -409,10 +408,10 @@ const ArticleDetail: React.FC = () => {
             {/* Article Header */}
             <div className="mb-4 sm:mb-6">
               <span className="bg-bbcRed text-white text-xs font-bold px-3 py-1 rounded-full mb-3 inline-block">
-                {escapeHtml(article.category)}
+                {article.category}
               </span>
               <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold leading-tight mb-3 sm:mb-4 text-card-text">
-                {escapeHtml(article.title)}
+                {article.title}
               </h1>
 
               <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-xs sm:text-sm text-muted-text font-medium">
@@ -422,8 +421,7 @@ const ArticleDetail: React.FC = () => {
                 </span>
                 {article.readTime && (
                   <span className="flex items-center gap-1.5">
-                    <FileText className="w-4 h-4" />{" "}
-                    {escapeHtml(article.readTime)}
+                    <FileText className="w-4 h-4" /> {article.readTime}
                   </span>
                 )}
               </div>
@@ -666,7 +664,7 @@ const ArticleDetail: React.FC = () => {
                     {t("category", language)}
                   </span>
                   <span className="font-bold text-card-text">
-                    {escapeHtml(article.category)}
+                    {article.category}
                   </span>
                 </div>
                 <div className="flex justify-between items-center pb-2 sm:pb-3 border-b border-border-color">
@@ -683,7 +681,7 @@ const ArticleDetail: React.FC = () => {
                       {t("read_time", language)}
                     </span>
                     <span className="font-bold text-card-text">
-                      {escapeHtml(article.readTime)}
+                      {article.readTime}
                     </span>
                   </div>
                 )}
@@ -766,7 +764,7 @@ const ArticleDetail: React.FC = () => {
                             onClick={() => openProfileModal(comment.user)}
                             className="font-bold text-sm text-card-text block hover:text-bbcRed cursor-pointer transition-colors bg-transparent border-none p-0"
                           >
-                            {escapeHtml(comment.user)}
+                            {comment.user}
                           </button>
                           <span className="text-xs text-muted-text">
                             {comment.time}
@@ -776,12 +774,14 @@ const ArticleDetail: React.FC = () => {
 
                       <p className="text-sm text-card-text ml-12 leading-relaxed mb-3">
                         {(() => {
-                          const sanitizedText = sanitizeHtml(comment.text);
+                          const sanitizedText = DOMPurify.sanitize(
+                            comment.text
+                          );
                           const tempDiv = document.createElement("div");
                           tempDiv.innerHTML = sanitizedText;
 
                           const convertNodeToReactElement = (
-                            node: Node,
+                            node: Node
                           ): React.ReactNode => {
                             if (node.nodeType === Node.TEXT_NODE) {
                               return node.textContent;
@@ -805,20 +805,20 @@ const ArticleDetail: React.FC = () => {
 
                               // Process child nodes
                               const children = Array.from(
-                                element.childNodes,
+                                element.childNodes
                               ).map(convertNodeToReactElement);
 
                               return createElement(
                                 element.tagName.toLowerCase(),
                                 props,
-                                ...children,
+                                ...children
                               );
                             }
                             return null;
                           };
 
                           return Array.from(tempDiv.childNodes).map(
-                            (node, _index) => convertNodeToReactElement(node),
+                            (node, _index) => convertNodeToReactElement(node)
                           );
                         })()}
                       </p>
@@ -873,7 +873,7 @@ const ArticleDetail: React.FC = () => {
                                 </div>
                                 <div className="flex-grow min-w-0">
                                   <span className="font-bold text-xs text-card-text block">
-                                    {escapeHtml(reply.user)}
+                                    {reply.user}
                                   </span>
                                   <span className="text-xs text-muted-text">
                                     {reply.time}
@@ -882,14 +882,14 @@ const ArticleDetail: React.FC = () => {
                               </div>
                               <p className="text-xs text-card-text ml-9 leading-relaxed">
                                 {(() => {
-                                  const sanitizedText = sanitizeHtml(
-                                    reply.text,
+                                  const sanitizedText = DOMPurify.sanitize(
+                                    reply.text
                                   );
                                   const tempDiv = document.createElement("div");
                                   tempDiv.innerHTML = sanitizedText;
 
                                   const convertNodeToReactElement = (
-                                    node: Node,
+                                    node: Node
                                   ): React.ReactNode => {
                                     if (node.nodeType === Node.TEXT_NODE) {
                                       return node.textContent;
@@ -915,13 +915,13 @@ const ArticleDetail: React.FC = () => {
 
                                       // Process child nodes
                                       const children = Array.from(
-                                        element.childNodes,
+                                        element.childNodes
                                       ).map(convertNodeToReactElement);
 
                                       return createElement(
                                         element.tagName.toLowerCase(),
                                         props,
-                                        ...children,
+                                        ...children
                                       );
                                     }
                                     return null;
@@ -929,7 +929,7 @@ const ArticleDetail: React.FC = () => {
 
                                   return Array.from(tempDiv.childNodes).map(
                                     (node, _index) =>
-                                      convertNodeToReactElement(node),
+                                      convertNodeToReactElement(node)
                                   );
                                 })()}
                               </p>

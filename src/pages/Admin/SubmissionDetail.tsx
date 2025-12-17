@@ -5,7 +5,7 @@ import { Link, useParams } from "react-router-dom";
 import { useLayout } from "../../context/LayoutContext";
 import { adminApi } from "../../lib/api";
 import { t } from "../../lib/translations";
-import { escapeHtml, formatTimestamp, showToastMsg } from "../../lib/utils";
+import { formatTimestamp, showToastMsg } from "../../lib/utils";
 
 interface Submission {
   id: number;
@@ -40,7 +40,7 @@ const SubmissionDetail: React.FC = () => {
         const response = await adminApi.getSubmissions();
         if (response.success && response.submissions) {
           const foundSubmission = (response.submissions as Submission[]).find(
-            (s) => s.id === submissionId,
+            (s) => s.id === submissionId
           );
           if (foundSubmission) {
             setSubmission(foundSubmission);
@@ -93,9 +93,7 @@ const SubmissionDetail: React.FC = () => {
             to={`/admin/articles/${submission.article_id}/edit`}
             className="text-bbcRed hover:opacity-80 text-xs sm:text-sm mt-1 block font-bold truncate"
           >
-            {escapeHtml(
-              submission.title_en || submission.title_bn || "Unknown Article",
-            )}
+            {submission.title_en || submission.title_bn || "Unknown Article"}
           </Link>
         </div>
 
@@ -104,9 +102,7 @@ const SubmissionDetail: React.FC = () => {
             <div className="text-xs font-bold text-muted-text uppercase">
               {t("message", language)}
             </div>
-            <p className="text-sm text-card-text mt-1">
-              {escapeHtml(submission.message)}
-            </p>
+            <p className="text-sm text-card-text mt-1">{submission.message}</p>
           </div>
         )}
 

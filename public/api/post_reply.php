@@ -50,6 +50,8 @@ if (!$userName || empty(trim($userName))) {
     $userName = "Anonymous User";
 }
 
+$userName = htmlspecialchars($userName, ENT_QUOTES, 'UTF-8');
+
 $articleId = $parent["article_id"];
 
 try {

@@ -9,7 +9,7 @@
  */
 export function generateImageSrcSet(
   basePath: string,
-  widths: number[] = [400, 800, 1200, 1600],
+  widths: number[] = [400, 800, 1200, 1600]
 ): { srcSet: string; sizes: string } {
   const srcSet = widths
     .map((width) => `${basePath}?w=${width}&q=85&fmt=webp ${width}w`)
@@ -26,7 +26,7 @@ export function generateImageSrcSet(
  */
 export function getImageWithWebP(
   path: string,
-  alt: string = "Image",
+  alt: string = "Image"
 ): {
   src: string;
   srcSet: string;

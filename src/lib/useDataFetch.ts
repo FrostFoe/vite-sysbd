@@ -27,7 +27,7 @@ interface ApiResponse {
 
 export const useDataFetch = <T>(
   fetchFn: () => Promise<ApiResponse>,
-  options: UseDataFetchOptions = {},
+  options: UseDataFetchOptions = {}
 ): UseDataFetchReturn<T> => {
   const {
     onSuccess,

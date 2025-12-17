@@ -1,7 +1,6 @@
 import DOMPurify from "dompurify";
 import type React from "react";
 import { createElement } from "react";
-import { sanitizeHtml } from "../../lib/utils";
 import CustomImage from "./CustomImage";
 import CustomVideo from "./CustomVideo";
 
@@ -19,7 +18,7 @@ const ContentRenderer: React.FC<ContentRendererProps> = ({
   content,
   className = "",
 }) => {
-  const safeContent = sanitizeHtml(content);
+  const safeContent = DOMPurify.sanitize(content);
 
   const renderProcessedContent = () => {
     let processedContent = safeContent;
@@ -45,11 +44,11 @@ const ContentRenderer: React.FC<ContentRendererProps> = ({
             width={widthMatch ? widthMatch[1] : undefined}
             height={heightMatch ? heightMatch[1] : undefined}
             className="my-4"
-          />,
+          />
         );
 
         return `__CUSTOM_COMPONENT_PLACEHOLDER_${componentIndex}__`;
-      },
+      }
     );
 
     processedContent = processedContent.replace(
@@ -79,15 +78,15 @@ const ContentRenderer: React.FC<ContentRendererProps> = ({
             muted={muted}
             controls={controls}
             className="my-4"
-          />,
+          />
         );
 
         return `__CUSTOM_COMPONENT_PLACEHOLDER_${componentIndex}__`;
-      },
+      }
     );
 
     const parts = processedContent.split(
-      /(__CUSTOM_COMPONENT_PLACEHOLDER_\d+__)/,
+      /(__CUSTOM_COMPONENT_PLACEHOLDER_\d+__)/
     );
 
     let keyCounter = 0;
@@ -96,7 +95,7 @@ const ContentRenderer: React.FC<ContentRendererProps> = ({
         keyCounter++;
         if (part.startsWith("__CUSTOM_COMPONENT_PLACEHOLDER_")) {
           const matchResult = part.match(
-            /__CUSTOM_COMPONENT_PLACEHOLDER_(\d+)__/,
+            /__CUSTOM_COMPONENT_PLACEHOLDER_(\d+)__/
           );
           if (matchResult) {
             const componentIndex = parseInt(matchResult[1], 10);
@@ -129,20 +128,20 @@ const ContentRenderer: React.FC<ContentRendererProps> = ({
 
               // Process child nodes recursively
               const children = Array.from(element.childNodes).map(
-                convertNodeToReactElement,
+                convertNodeToReactElement
               );
 
               return createElement(
                 element.tagName.toLowerCase(),
                 props,
-                ...children,
+                ...children
               );
             }
             return null;
           };
 
           return Array.from(tempDiv.childNodes).map((node, _index) =>
-            convertNodeToReactElement(node),
+            convertNodeToReactElement(node)
           );
         }
         return null;

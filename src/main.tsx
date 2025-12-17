@@ -14,7 +14,7 @@ if (rootElement) {
           <App />
         </ToastProvider>
       </ErrorBoundary>
-    </StrictMode>,
+    </StrictMode>
   );
 } else {
   // Root element not found, cannot mount app

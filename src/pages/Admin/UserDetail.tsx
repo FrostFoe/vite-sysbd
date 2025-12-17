@@ -5,7 +5,7 @@ import { Link, useParams } from "react-router-dom";
 import { useLayout } from "../../context/LayoutContext";
 import { adminApi } from "../../lib/api";
 import { t } from "../../lib/translations";
-import { escapeHtml, showToastMsg } from "../../lib/utils";
+import { showToastMsg } from "../../lib/utils";
 
 interface AdminUser {
   id: number;
@@ -35,7 +35,7 @@ const UserDetail: React.FC = () => {
         const response = await adminApi.getUsers();
         if (response.success && response.users) {
           const foundUser = (response.users as unknown as AdminUser[]).find(
-            (u) => u.id === userId,
+            (u) => u.id === userId
           );
           if (foundUser) {
             setUser(foundUser);
@@ -88,7 +88,7 @@ const UserDetail: React.FC = () => {
           </div>
           <div className="min-w-0">
             <h1 className="text-lg sm:text-2xl font-bold truncate">
-              {escapeHtml(user.email)}
+              {user.email}
             </h1>
             <p className="text-muted-text text-xs sm:text-sm">ID: {user.id}</p>
           </div>
@@ -122,9 +122,7 @@ const UserDetail: React.FC = () => {
               <div className="text-xs font-bold text-danger block mb-1">
                 {t("mute_reason", language)}
               </div>
-              <p className="text-sm text-card-text">
-                {escapeHtml(user.reason)}
-              </p>
+              <p className="text-sm text-card-text">{user.reason}</p>
             </div>
           )}
 

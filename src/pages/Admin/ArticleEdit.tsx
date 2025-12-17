@@ -74,8 +74,8 @@ const ArticleEdit: React.FC = () => {
                 ({
                   ...s,
                   title: s.title || "Untitled Section",
-                }) as unknown as Section,
-            ),
+                }) as unknown as Section
+            )
           );
         }
 
@@ -100,7 +100,7 @@ const ArticleEdit: React.FC = () => {
           } else {
             showToastMsg(
               articleRes.error || "নিবন্ধ লোড করতে ব্যর্থ হয়েছে।",
-              "error",
+              "error"
             );
           }
         } else {
@@ -121,7 +121,7 @@ const ArticleEdit: React.FC = () => {
     };
 
     fetchData();
-  }, [id, fetchDocuments]);
+  }, [id, fetchDocuments, language]);
 
   useEffect(() => {
     const saved = localStorage.getItem(storageKey);
@@ -187,7 +187,7 @@ const ArticleEdit: React.FC = () => {
         showToastMsg("সার্ভার ত্রুটি!", "error");
       }
     },
-    [],
+    []
   );
 
   const handleSubmit = useCallback(
@@ -210,7 +210,7 @@ const ArticleEdit: React.FC = () => {
       formData.append("status", article.status || "draft");
       formData.append(
         "allow_submissions",
-        article.allow_submissions ? "1" : "0",
+        article.allow_submissions ? "1" : "0"
       );
 
       try {
@@ -224,7 +224,7 @@ const ArticleEdit: React.FC = () => {
         } else {
           showToastMsg(
             response.error || "নিবন্ধ সংরক্ষণ করতে ব্যর্থ হয়েছে!",
-            "error",
+            "error"
           );
         }
       } catch (_error) {
@@ -233,7 +233,7 @@ const ArticleEdit: React.FC = () => {
         setIsSaving(false);
       }
     },
-    [article, id, navigate, storageKey],
+    [article, id, navigate, storageKey]
   );
 
   const handleOpenModal = async (doc: DocType | null) => {
@@ -453,8 +453,7 @@ const ArticleEdit: React.FC = () => {
                       অসংরক্ষিত খসড়া পাওয়া গেছে
                     </h4>
                     <p className="text-xs text-card-text mt-1">
-                      আপনার ব্রাউজারে এই নিবন্ধটির একটি নতুন সংস্করণ পাওয়া
-                      গেছে।
+                      আপনার ব্রাউজারে এই নিবন্ধটির একটি নতুন সংস্করণ পাওয়া গেছে।
                     </p>
                     <button
                       type="button"

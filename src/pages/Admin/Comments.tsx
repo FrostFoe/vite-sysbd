@@ -1,3 +1,4 @@
+import DOMPurify from "dompurify";
 import { ExternalLink, MessageCircle, Trash2 } from "lucide-react";
 import type React from "react";
 import { createElement, useCallback } from "react";
@@ -9,10 +10,8 @@ import {
 import { adminApi } from "../../lib/api";
 import { useDataFetch } from "../../lib/useDataFetch";
 import {
-  escapeHtml,
   formatTimestamp,
   handleItemSelect,
-  sanitizeHtml,
   showToastMsg,
 } from "../../lib/utils";
 
@@ -39,7 +38,7 @@ const Comments: React.FC = () => {
     useCallback(() => adminApi.getAllComments(), []),
     {
       showErrorToast: true,
-    },
+    }
   );
 
   const comments = data?.comments || [];
@@ -59,7 +58,7 @@ const Comments: React.FC = () => {
         showToastMsg("সার্ভার ত্রুটি!", "error");
       }
     },
-    [refetch],
+    [refetch]
   );
 
   return (
@@ -84,7 +83,7 @@ const Comments: React.FC = () => {
                     handleItemSelect(
                       window.innerWidth < 768,
                       navigate,
-                      `/admin/comments/${c.id}`,
+                      `/admin/comments/${c.id}`
                     )
                   }
                   type="button"
@@ -97,10 +96,10 @@ const Comments: React.FC = () => {
                       </div>
                       <div className="truncate">
                         <div className="font-bold text-sm truncate">
-                          {escapeHtml(c.user_name)}
+                          {c.user_name}
                         </div>
                         <div className="text-xs text-muted-text truncate">
-                          {escapeHtml(c.title_bn) || "অজানা নিবন্ধ"}
+                          {c.title_bn || "অজানা নিবন্ধ"}
                         </div>
                       </div>
                     </div>
@@ -130,12 +129,12 @@ const Comments: React.FC = () => {
                   </div>
                   <div className="text-sm text-card-text max-h-16 overflow-hidden prose prose-sm dark:prose-invert">
                     {(() => {
-                      const sanitizedText = sanitizeHtml(c.text);
+                      const sanitizedText = DOMPurify.sanitize(c.text);
                       const tempDiv = document.createElement("div");
                       tempDiv.innerHTML = sanitizedText;
 
                       const convertNodeToReactElement = (
-                        node: Node,
+                        node: Node
                       ): React.ReactNode => {
                         if (node.nodeType === Node.TEXT_NODE) {
                           return node.textContent;
@@ -153,20 +152,20 @@ const Comments: React.FC = () => {
 
                           // Process child nodes
                           const children = Array.from(element.childNodes).map(
-                            convertNodeToReactElement,
+                            convertNodeToReactElement
                           );
 
                           return createElement(
                             element.tagName.toLowerCase(),
                             props,
-                            ...children,
+                            ...children
                           );
                         }
                         return null;
                       };
 
                       return Array.from(tempDiv.childNodes).map(
-                        (node, _index) => convertNodeToReactElement(node),
+                        (node, _index) => convertNodeToReactElement(node)
                       );
                     })()}
                   </div>

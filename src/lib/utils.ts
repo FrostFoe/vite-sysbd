@@ -11,94 +11,15 @@ declare global {
 export const PLACEHOLDER_IMAGE =
   "https://placehold.co/600x400/1a1a1a/FFF?text=BreachTimes";
 
-export function escapeHtml(unsafe: string | null | undefined): string {
-  if (typeof unsafe !== "string") return String(unsafe || "");
-  const div = document.createElement("div");
-  div.appendChild(document.createTextNode(unsafe));
-  return div.innerHTML;
-}
-
-/**
- * Sanitize HTML content to prevent XSS attacks
- * Allows safe tags like p, br, strong, em, a, ul, li, etc.
- */
-export function sanitizeHtml(html: string | null | undefined): string {
-  if (!html) return "";
-
-  const div = document.createElement("div");
-  div.innerHTML = html;
-
-  const allowedTags = [
-    "p",
-    "br",
-    "strong",
-    "em",
-    "b",
-    "i",
-    "u",
-    "a",
-    "ul",
-    "li",
-    "ol",
-    "h1",
-    "h2",
-    "h3",
-    "blockquote",
-    "img",
-    "video",
-    "source",
-    "div",
-    "span",
-  ];
-
-  const sanitize = (node: Node): void => {
-    const nodesToRemove: Node[] = [];
-
-    Array.from(node.childNodes).forEach((child) => {
-      if (child.nodeType === 1) {
-        const element = child as Element;
-        const tagName = element.tagName.toLowerCase();
-
-        if (!allowedTags.includes(tagName)) {
-          while (element.firstChild) {
-            node.insertBefore(element.firstChild, element);
-          }
-          nodesToRemove.push(element);
-        } else {
-          Array.from(element.attributes).forEach((attr) => {
-            const attrName = attr.name.toLowerCase();
-            if (
-              attrName.startsWith("on") ||
-              attrName.startsWith("javascript")
-            ) {
-              element.removeAttribute(attr.name);
-            }
-          });
-          sanitize(child);
-        }
-      } else if (child.nodeType === 8) {
-        nodesToRemove.push(child);
-      }
-    });
-
-    nodesToRemove.forEach((node) => {
-      node.parentNode?.removeChild(node);
-    });
-  };
-
-  sanitize(div);
-  return div.innerHTML;
-}
-
 export function formatTimestamp(
   timestampString: string | null | undefined,
-  lang: "en" | "bn",
+  lang: "en" | "bn"
 ): string {
   if (!timestampString) return "";
   let date = new Date(timestampString);
   if (Number.isNaN(date.getTime())) {
     const parts = timestampString.match(
-      /^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})$/,
+      /^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})$/
     );
     if (parts)
       date = new Date(
@@ -107,7 +28,7 @@ export function formatTimestamp(
         parseInt(parts[3], 10),
         parseInt(parts[4], 10),
         parseInt(parts[5], 10),
-        parseInt(parts[6], 10),
+        parseInt(parts[6], 10)
       );
     else return timestampString;
   }
@@ -140,7 +61,7 @@ export function formatTimestamp(
 
 export function showToastMsg(
   msg: string,
-  type: "success" | "error" = "success",
+  type: "success" | "error" = "success"
 ) {
   const container = document.getElementById("toast-container");
   if (!container) return;
@@ -174,7 +95,7 @@ export function handleItemSelect(
   isMobile: boolean,
   navigate: (path: string) => void,
   detailPath: string,
-  onDesktop?: () => void,
+  onDesktop?: () => void
 ) {
   if (isMobile) {
     navigate(detailPath);
@@ -204,4 +125,8 @@ export function normalizeMediaUrl(url: string | null | undefined): string {
 
   // Return other URLs as-is
   return url;
+}
+
+export function cn(...inputs: (string | boolean | undefined | null)[]): string {
+  return inputs.filter(Boolean).join(" ");
 }

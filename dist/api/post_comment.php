@@ -79,6 +79,8 @@ if (isset($_SESSION["user_id"])) {
     );
 }
 
+$userName = htmlspecialchars($userName, ENT_QUOTES, "UTF-8");
+
 // --- Dynamic Timestamp ---
 // DB handles created_at. We don't need to manually insert time unless we want to override.
 // The 'time' column is deprecated.

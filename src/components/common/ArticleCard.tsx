@@ -3,11 +3,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useLayout } from "../../context/LayoutContext";
 import { t } from "../../lib/translations";
-import {
-  escapeHtml,
-  formatTimestamp,
-  PLACEHOLDER_IMAGE,
-} from "../../lib/utils";
+import { formatTimestamp, PLACEHOLDER_IMAGE } from "../../lib/utils";
 import type { Article } from "../../types";
 
 interface ArticleCardProps {
@@ -71,7 +67,7 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
         <div className="flex flex-col flex-grow p-3 sm:p-4 md:p-5">
           <div className="mb-2 flex items-center gap-2">
             <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-bbcRed bg-danger/10 dark:bg-danger/20 px-2 py-0.5 rounded">
-              {escapeHtml(article.category)}
+              {article.category}
             </span>
             <span className="text-[9px] sm:text-[10px] text-muted-text">
               • {timeAgo}
@@ -80,13 +76,13 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
           <h3
             className={`text-base sm:text-lg md:text-xl font-bold mb-2 sm:mb-3 leading-tight group-hover:text-bbcRed transition-colors ${textColor}`}
           >
-            {escapeHtml(article.title)}
+            {article.title}
           </h3>
           {(type === "hero-grid" || type === "grid") && article.summary && (
             <p
               className={`${subTextColor} text-xs sm:text-sm leading-relaxed mb-3 sm:mb-4 line-clamp-3`}
             >
-              {escapeHtml(article.summary)}
+              {article.summary}
             </p>
           )}
           <div
@@ -97,7 +93,7 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
             </span>
             {article.readTime && (
               <span className="flex items-center gap-1">
-                <Clock className="w-3 h-3" /> {escapeHtml(article.readTime)}
+                <Clock className="w-3 h-3" /> {article.readTime}
               </span>
             )}
           </div>

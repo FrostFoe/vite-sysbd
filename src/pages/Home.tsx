@@ -40,7 +40,7 @@ const HomePage: React.FC = () => {
       }
       localStorage.setItem(
         "breachtimes-bookmarks",
-        JSON.stringify(newBookmarks),
+        JSON.stringify(newBookmarks)
       );
       return newBookmarks;
     });
@@ -52,7 +52,7 @@ const HomePage: React.FC = () => {
       try {
         const data = await publicApi.getHomeData(
           language,
-          currentCategory === "saved" ? undefined : currentCategory,
+          currentCategory === "saved" ? undefined : currentCategory
         );
         setHomeData(data);
       } catch (_error) {
@@ -147,7 +147,7 @@ const HomePage: React.FC = () => {
                   {subArticles
                     .slice(0, 5)
                     .map((article) =>
-                      renderArticleListItem(article, isSectionDark),
+                      renderArticleListItem(article, isSectionDark)
                     )}
                 </div>
               </div>
@@ -159,7 +159,7 @@ const HomePage: React.FC = () => {
       content = (
         <div className="space-y-2">
           {section.articles.map((article) =>
-            renderArticleListItem(article, isSectionDark),
+            renderArticleListItem(article, isSectionDark)
           )}
         </div>
       );
@@ -281,7 +281,7 @@ const HomePage: React.FC = () => {
 
     if (currentCategory === "home" || currentCategory === null) {
       const heroStoriesSection = homeData?.sections?.find(
-        (s) => s.id === "hero-stories",
+        (s) => s.id === "hero-stories"
       );
 
       if (heroStoriesSection) {
@@ -290,13 +290,13 @@ const HomePage: React.FC = () => {
         const moreNewsArticles = heroStoriesSection.articles.slice(1, 6); // First 5 after hero
         const excludedIds = new Set(
           [heroArticle?.id, ...moreNewsArticles.map((a) => a.id)].filter(
-            Boolean,
-          ),
+            Boolean
+          )
         );
         const allArticles =
           homeData?.sections?.flatMap((section) => section.articles) || [];
         const remainingArticles = allArticles.filter(
-          (article) => !excludedIds.has(article.id),
+          (article) => !excludedIds.has(article.id)
         );
 
         return (

@@ -4,7 +4,6 @@ import { useCallback, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { adminApi } from "../../lib/api";
 import {
-  escapeHtml,
   formatTimestamp,
   handleItemSelect,
   showToastMsg,
@@ -65,9 +64,7 @@ const Submissions: React.FC = () => {
   return (
     <div className="space-y-4 sm:space-y-6">
       <div className="mb-4 sm:mb-6">
-        <h1 className="text-xl sm:text-2xl font-bold">
-          ব্যবহারকারী জমা দেওয়া তথ্য
-        </h1>
+        <h1 className="text-xl sm:text-2xl font-bold">ব্যবহারকারী জমা দেওয়া তথ্য</h1>
       </div>
 
       <div className="bg-card rounded-xl border border-border-color shadow-sm overflow-hidden">
@@ -87,7 +84,7 @@ const Submissions: React.FC = () => {
                   handleItemSelect(
                     window.innerWidth < 768,
                     navigate,
-                    `/admin/submissions/${s.id}`,
+                    `/admin/submissions/${s.id}`
                   )
                 }
                 type="button"
@@ -103,9 +100,7 @@ const Submissions: React.FC = () => {
                         to={`/admin/articles/${s.article_id}/edit`}
                         className="font-bold text-sm truncate block hover:text-bbcRed"
                       >
-                        {escapeHtml(
-                          s.title_en || s.title_bn || "Unknown Article",
-                        )}
+                        {s.title_en || s.title_bn || "Unknown Article"}
                       </Link>
                       <p className="text-xs text-muted-text truncate">
                         {s.article_id}
@@ -128,7 +123,7 @@ const Submissions: React.FC = () => {
                       onClick={() => {
                         if (
                           window.confirm(
-                            "আপনি কি নিশ্চিত যে আপনি এই জমা মুছে ফেলতে চান?",
+                            "আপনি কি নিশ্চিত যে আপনি এই জমা মুছে ফেলতে চান?"
                           )
                         ) {
                           handleDeleteSubmission(s.id);
@@ -141,7 +136,7 @@ const Submissions: React.FC = () => {
                   </div>
                 </div>
                 <div className="text-sm text-card-text max-h-12 overflow-hidden">
-                  {escapeHtml(s.message || "-")}
+                  {s.message || "-"}
                 </div>
                 <div className="text-xs text-muted-text mt-2">
                   {formatTimestamp(s.created_at, "bn")}
