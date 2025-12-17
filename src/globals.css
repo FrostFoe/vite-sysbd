@@ -99,7 +99,7 @@
   /* Lucide Icons - Pure Black in Light Mode, Pure White in Dark Mode */
   svg[class*="lucide"],
   .lucide {
-    color: #ffffff;
+    color: #000000;
   }
 
   :root.dark svg[class*="lucide"],
