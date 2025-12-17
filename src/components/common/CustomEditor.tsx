@@ -1,12 +1,6 @@
-import Image from "@tiptap/extension-image";
-import Placeholder from "@tiptap/extension-placeholder";
-import { EditorContent, useEditor } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
+import React, { useRef, useState, useCallback } from "react";
 import { AlertCircle, Upload, Video } from "lucide-react";
-import type React from "react";
-import { useCallback, useState } from "react";
 import { adminApi } from "../../lib/api";
-import VideoNode from "./VideoNode";
 
 interface CustomEditorProps {
   value: string;
@@ -17,10 +11,6 @@ interface CustomEditorProps {
   id?: string;
 }
 
-/**
- * CustomEditor Component - TipTap based rich text editor
- * Handles basic text formatting, images, and videos
- */
 const CustomEditor: React.FC<CustomEditorProps> = ({
   value,
   onChange,
@@ -28,7 +18,23 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
   height = "400px",
   className = "",
 }) => {
+  const editorRef = useRef<HTMLDivElement>(null);
   const [uploadError, setUploadError] = useState<string>("");
+
+  const handleInput = (e: React.FormEvent<HTMLDivElement>) => {
+    onChange(e.currentTarget.innerHTML);
+  };
+
+  const handleFormat = (command: string, value?: string) => {
+    // Note: document.execCommand is largely deprecated but is the simplest
+    // way to enact rich-text commands in a from-scratch contentEditable editor.
+    // For a more robust solution, a library that manages browser inconsistencies
+    // and selection state is recommended.
+    document.execCommand(command, false, value);
+    if (editorRef.current) {
+      editorRef.current.focus();
+    }
+  };
 
   const handleImageUpload = useCallback(async (file: File) => {
     try {
@@ -61,33 +67,8 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
     }
   }, []);
 
-  const editor = useEditor({
-    extensions: [
-      StarterKit.configure({}),
-      Image.configure({
-        inline: false,
-        allowBase64: true,
-      }),
-      VideoNode,
-      Placeholder.configure({
-        placeholder,
-      }),
-    ],
-    content: value,
-    onUpdate: ({ editor }) => {
-      onChange(editor.getHTML());
-    },
-    editorProps: {
-      attributes: {
-        class: "focus:outline-none min-h-full p-3",
-      },
-    },
-  });
-
-  const handleVideoUpload = useCallback(
+    const handleVideoUpload = useCallback(
     async (videoFile: File) => {
-      if (!editor) return;
-
       try {
         setUploadError("");
 
@@ -108,38 +89,18 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
         if (!data.success || !data.url) {
           throw new Error(data.error || "Upload failed");
         }
+        
+        return data.url;
 
-        editor.chain().focus().setVideo({ src: data.url }).run();
       } catch (error) {
         const message =
           error instanceof Error ? error.message : "Upload failed";
         setUploadError(message);
         console.error("Video upload error:", error);
+        return null;
       }
     },
-    [editor],
-  );
-
-  const handleDrop = useCallback(
-    (e: React.DragEvent<HTMLDivElement>) => {
-      e.preventDefault();
-      e.stopPropagation();
-
-      const files = e.dataTransfer.files;
-      if (files && files.length > 0) {
-        const file = files[0];
-        if (file.type.startsWith("image/")) {
-          handleImageUpload(file).then((url) => {
-            if (url && editor) {
-              editor.chain().focus().setImage({ src: url }).run();
-            }
-          });
-        } else if (file.type.startsWith("video/")) {
-          handleVideoUpload(file);
-        }
-      }
-    },
-    [editor, handleImageUpload, handleVideoUpload],
+    [],
   );
 
   const handleImageButtonClick = useCallback(() => {
@@ -151,14 +112,15 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
       const file = target.files?.[0];
       if (file) {
         handleImageUpload(file).then((url) => {
-          if (url && editor) {
-            editor.chain().focus().setImage({ src: url }).run();
+          if (url) {
+            const html = `<img src="${url}" />`;
+            document.execCommand("insertHTML", false, html);
           }
         });
       }
     };
     input.click();
-  }, [editor, handleImageUpload]);
+  }, [handleImageUpload]);
 
   const handleVideoButtonClick = useCallback(() => {
     const input = document.createElement("input");
@@ -168,28 +130,53 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
       const target = e.target as HTMLInputElement;
       const file = target.files?.[0];
       if (file) {
-        handleVideoUpload(file);
+        handleVideoUpload(file).then(url => {
+            if (url) {
+                const html = `<video controls src="${url}"></video>`;
+                document.execCommand("insertHTML", false, html);
+            }
+        });
       }
     };
     input.click();
   }, [handleVideoUpload]);
 
-  if (!editor) {
-    return <div>Loading editor...</div>;
-  }
+  const handleDrop = useCallback(
+    (e: React.DragEvent<HTMLDivElement>) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      const files = e.dataTransfer.files;
+      if (files && files.length > 0) {
+        const file = files[0];
+        if (file.type.startsWith("image/")) {
+          handleImageUpload(file).then((url) => {
+            if (url) {
+              const html = `<img src="${url}" />`;
+              document.execCommand("insertHTML", false, html);
+            }
+          });
+        } else if (file.type.startsWith("video/")) {
+            handleVideoUpload(file).then(url => {
+                if (url) {
+                    const html = `<video controls src="${url}"></video>`;
+                    document.execCommand("insertHTML", false, html);
+                }
+            });
+        }
+      }
+    },
+    [handleImageUpload, handleVideoUpload],
+  );
 
   return (
     <div className={`custom-editor-wrapper ${className}`}>
-      {/* Toolbar */}
+      {/* Basic Toolbar */}
       <div className="border-b border-border-color bg-muted-bg p-2 rounded-t-lg flex flex-wrap gap-1">
         <button
           type="button"
-          onClick={() => editor.chain().focus().toggleBold().run()}
-          className={`px-3 py-1 rounded text-sm font-medium ${
-            editor.isActive("bold")
-              ? "bg-bbcRed text-white"
-              : "bg-card border border-border-color hover:bg-muted-bg"
-          }`}
+          onClick={() => handleFormat("bold")}
+          className="px-3 py-1 rounded text-sm font-medium bg-card border border-border-color hover:bg-muted-bg"
           title="Bold (Ctrl+B)"
         >
           <strong>B</strong>
@@ -197,12 +184,8 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
 
         <button
           type="button"
-          onClick={() => editor.chain().focus().toggleItalic().run()}
-          className={`px-3 py-1 rounded text-sm font-medium ${
-            editor.isActive("italic")
-              ? "bg-bbcRed text-white"
-              : "bg-card border border-border-color hover:bg-muted-bg"
-          }`}
+          onClick={() => handleFormat("italic")}
+          className="px-3 py-1 rounded text-sm font-medium bg-card border border-border-color hover:bg-muted-bg"
           title="Italic (Ctrl+I)"
         >
           <em>I</em>
@@ -210,12 +193,8 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
 
         <button
           type="button"
-          onClick={() => editor.chain().focus().toggleStrike().run()}
-          className={`px-3 py-1 rounded text-sm font-medium ${
-            editor.isActive("strike")
-              ? "bg-bbcRed text-white"
-              : "bg-card border border-border-color hover:bg-muted-bg"
-          }`}
+          onClick={() => handleFormat("strikeThrough")}
+          className="px-3 py-1 rounded text-sm font-medium bg-card border border-border-color hover:bg-muted-bg"
           title="Strikethrough"
         >
           <s>S</s>
@@ -225,14 +204,8 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
 
         <button
           type="button"
-          onClick={() =>
-            editor.chain().focus().toggleHeading({ level: 1 }).run()
-          }
-          className={`px-3 py-1 rounded text-sm font-medium ${
-            editor.isActive("heading", { level: 1 })
-              ? "bg-bbcRed text-white"
-              : "bg-card border border-border-color hover:bg-muted-bg"
-          }`}
+          onClick={() => handleFormat("formatBlock", "<h1>")}
+          className="px-3 py-1 rounded text-sm font-medium bg-card border border-border-color hover:bg-muted-bg"
           title="Heading 1"
         >
           H1
@@ -240,14 +213,8 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
 
         <button
           type="button"
-          onClick={() =>
-            editor.chain().focus().toggleHeading({ level: 2 }).run()
-          }
-          className={`px-3 py-1 rounded text-sm font-medium ${
-            editor.isActive("heading", { level: 2 })
-              ? "bg-bbcRed text-white"
-              : "bg-card border border-border-color hover:bg-muted-bg"
-          }`}
+          onClick={() => handleFormat("formatBlock", "<h2>")}
+          className="px-3 py-1 rounded text-sm font-medium bg-card border border-border-color hover:bg-muted-bg"
           title="Heading 2"
         >
           H2
@@ -255,12 +222,8 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
 
         <button
           type="button"
-          onClick={() => editor.chain().focus().toggleBulletList().run()}
-          className={`px-3 py-1 rounded text-sm font-medium ${
-            editor.isActive("bulletList")
-              ? "bg-bbcRed text-white"
-              : "bg-card border border-border-color hover:bg-muted-bg"
-          }`}
+          onClick={() => handleFormat("insertUnorderedList")}
+          className="px-3 py-1 rounded text-sm font-medium bg-card border border-border-color hover:bg-muted-bg"
           title="Bullet List"
         >
           • List
@@ -268,15 +231,31 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
 
         <button
           type="button"
-          onClick={() => editor.chain().focus().toggleOrderedList().run()}
-          className={`px-3 py-1 rounded text-sm font-medium ${
-            editor.isActive("orderedList")
-              ? "bg-bbcRed text-white"
-              : "bg-card border border-border-color hover:bg-muted-bg"
-          }`}
+          onClick={() => handleFormat("insertOrderedList")}
+          className="px-3 py-1 rounded text-sm font-medium bg-card border border-border-color hover:bg-muted-bg"
           title="Ordered List"
         >
           1. List
+        </button>
+
+        <div className="w-px bg-border-color" />
+
+        <button
+          type="button"
+          onClick={() => handleFormat("formatBlock", "<blockquote>")}
+          className="px-3 py-1 rounded text-sm font-medium bg-card border border-border-color hover:bg-muted-bg"
+          title="Blockquote"
+        >
+          " Quote
+        </button>
+
+        <button
+          type="button"
+          onClick={() => handleFormat("insertHorizontalRule")}
+          className="px-3 py-1 rounded text-sm font-medium bg-card border border-border-color hover:bg-muted-bg"
+          title="Horizontal Rule"
+        >
+          —
         </button>
 
         <div className="w-px bg-border-color" />
@@ -299,33 +278,11 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
           <Video size={16} /> Video
         </button>
 
-        <button
-          type="button"
-          onClick={() => editor.chain().focus().toggleBlockquote().run()}
-          className={`px-3 py-1 rounded text-sm font-medium ${
-            editor.isActive("blockquote")
-              ? "bg-bbcRed text-white"
-              : "bg-card border border-border-color hover:bg-muted-bg"
-          }`}
-          title="Blockquote"
-        >
-          " Quote
-        </button>
-
-        <button
-          type="button"
-          onClick={() => editor.chain().focus().setHorizontalRule().run()}
-          className="px-3 py-1 rounded text-sm font-medium bg-card border border-border-color hover:bg-muted-bg"
-          title="Horizontal Rule"
-        >
-          —
-        </button>
-
         <div className="w-px bg-border-color" />
 
         <button
           type="button"
-          onClick={() => editor.chain().focus().undo().run()}
+          onClick={() => handleFormat("undo")}
           className="px-3 py-1 rounded text-sm font-medium bg-card border border-border-color hover:bg-muted-bg"
           title="Undo"
         >
@@ -334,7 +291,7 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
 
         <button
           type="button"
-          onClick={() => editor.chain().focus().redo().run()}
+          onClick={() => handleFormat("redo")}
           className="px-3 py-1 rounded text-sm font-medium bg-card border border-border-color hover:bg-muted-bg"
           title="Redo"
         >
@@ -344,19 +301,27 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
 
       {/* Editor Content Area */}
       <div
-        role="application"
-        tabIndex={-1}
+        ref={editorRef}
+        contentEditable
+        onInput={handleInput}
         style={{ height, minHeight: height }}
-        className="border border-t-0 border-border-color rounded-b-lg overflow-y-auto bg-card p-3 prose prose-sm max-w-none text-card-text"
+        className="border border-t-0 border-border-color rounded-b-lg overflow-y-auto bg-card p-3 prose prose-sm max-w-none text-card-text focus:outline-none"
+        dangerouslySetInnerHTML={{ __html: value }}
         onDrop={handleDrop}
         onDragOver={(e) => {
           e.preventDefault();
           e.stopPropagation();
         }}
-      >
-        <EditorContent editor={editor} aria-label="Editor content area" />
-      </div>
+      />
 
+      {/* Placeholder */}
+      {/* This is a simple implementation. A more robust solution would hide the placeholder as soon as the user starts typing. */}
+      {(!value || value === "<p><br></p>") && (
+        <div className="absolute top-12 left-4 text-muted-foreground pointer-events-none">
+          {placeholder}
+        </div>
+      )}
+      
       {/* Error Message */}
       {uploadError && (
         <div className="mt-2 p-3 bg-danger/10 border border-danger/30 rounded-lg flex items-center gap-2 text-danger">
