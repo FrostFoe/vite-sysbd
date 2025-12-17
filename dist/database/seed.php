@@ -2,29 +2,6 @@
 require_once __DIR__ . "/../config/db.php";
 require_once __DIR__ . "/../config/colors.php";
 
-// Drop tables to reset
-try {
-    $pdo->exec("SET FOREIGN_KEY_CHECKS = 0");
-    $pdo->exec(
-        "DROP TABLE IF EXISTS muted_users, comment_votes, comments, documents, article_submissions, articles, sections, categories, users",
-    );
-    $pdo->exec("SET FOREIGN_KEY_CHECKS = 1");
-} catch (PDOException $e) {
-    echo "Error dropping tables: " . $e->getMessage() . "\n";
-}
-
-// Run schema
-$sql = file_get_contents(__DIR__ . "/database.sql");
-if (!$sql) {
-    die("Error reading database.sql");
-}
-try {
-    $pdo->exec($sql);
-    echo "✓ Database schema imported.\n";
-} catch (PDOException $e) {
-    die("Error importing schema: " . $e->getMessage());
-}
-
 // Seed Demo Users
 echo "\n--- Seeding Users ---\n";
 $users = [

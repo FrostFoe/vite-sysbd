@@ -15,9 +15,6 @@ CREATE TABLE IF NOT EXISTS `users` (
   UNIQUE KEY `email` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-INSERT INTO `users` (`email`, `password`, `role`) VALUES
-('admin@breachtimes.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'admin');
-
 -- Categories Table (Already Unified)
 CREATE TABLE IF NOT EXISTS `categories` (
   `id` varchar(50) NOT NULL,

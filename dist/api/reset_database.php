@@ -23,34 +23,62 @@ if (php_sapi_name() !== 'cli') {
 
 
 try {
-    // 1. Read the SQL file to reset the schema
+    // 1. Define all tables to be dropped.
+    $tables = [
+        'muted_users', 
+        'comment_votes', 
+        'comments', 
+        'documents', 
+        'article_submissions', 
+        'articles', 
+        'sections', 
+        'categories', 
+        'users'
+    ];
+    $dropTablesSql = 'DROP TABLE IF EXISTS ' . implode(', ', $tables) . ';';
+
+    // 2. Read the schema file.
     $sqlFilePath = __DIR__ . '/../database/database.sql';
     if (!file_exists($sqlFilePath)) {
         throw new Exception('Database schema file not found at ' . $sqlFilePath);
     }
-    $sql = file_get_contents($sqlFilePath);
+    $schemaSql = file_get_contents($sqlFilePath);
 
-    // 2. Execute the SQL to drop and recreate tables
-    $pdo->exec($sql);
+    // 3. Combine and execute the drop and create statements in a single transaction.
+    $fullResetSql = "
+        SET FOREIGN_KEY_CHECKS=0;
+        {$dropTablesSql}
+        SET FOREIGN_KEY_CHECKS=1;
+        {$schemaSql}
+    ";
+    $pdo->exec($fullResetSql);
 
-    // 3. Run the seeder script
+    // 4. Run the seeder script to populate the fresh tables.
     $seedFilePath = __DIR__ . '/../database/seed.php';
     if (!file_exists($seedFilePath)) {
         throw new Exception('Database seed file not found at ' . $seedFilePath);
     }
-    // The seed script uses the global $pdo object from db.php
     require $seedFilePath;
 
-    // 4. Clear the cache
+    // 5. Clear the cache.
     $cache = new CacheManager();
     $cache->flush();
 
-    send_response([
-        'success' => true,
-        'message' => 'Database has been successfully reset and seeded.'
-    ], 200);
+    // Check if running in CLI or web and send appropriate response
+    if (php_sapi_name() === 'cli') {
+        echo "Database has been successfully reset and seeded.\n";
+    } else {
+        send_response([
+            'success' => true,
+            'message' => 'Database has been successfully reset and seeded.'
+        ], 200);
+    }
 
 } catch (Exception $e) {
-    send_response(['error' => 'Database reset failed: ' . $e->getMessage()], 500);
+    if (php_sapi_name() === 'cli') {
+        echo 'Error: Database reset failed: ' . $e->getMessage() . "\n";
+    } else {
+        send_response(['error' => 'Database reset failed: ' . $e->getMessage()], 500);
+    }
 }
 ?>
