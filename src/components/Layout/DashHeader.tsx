@@ -23,7 +23,7 @@ const DashHeader: React.FC<DashHeaderProps> = ({ type, toggleSidebar }) => {
         <button
           type="button"
           onClick={toggleSidebar}
-          className="md:hidden p-2 -ml-2 rounded-lg hover:bg-muted-bg text-white transition-colors flex-shrink-0"
+          className="md:hidden p-2 -ml-2 rounded-lg hover:bg-muted-bg text-muted-text hover:text-card-text transition-colors flex-shrink-0"
         >
           <Menu className="w-6 h-6" />
         </button>
