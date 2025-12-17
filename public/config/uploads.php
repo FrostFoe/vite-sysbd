@@ -56,7 +56,7 @@ return [
 
     "images" => [
         "extensions" => ["jpg", "jpeg", "png", "gif", "webp"],
-        "max_size" => 5242880, // 5MB
+        "max_size" => 20971520, // 20MB
         "directory" => "assets/uploads/images/articles",
         "mime_types" => ["image/jpeg", "image/png", "image/gif", "image/webp"],
     ],

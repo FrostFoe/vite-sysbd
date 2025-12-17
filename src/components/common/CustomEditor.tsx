@@ -44,9 +44,9 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
         throw new Error("Please upload a valid image file");
       }
 
-      const maxSize = 5 * 1024 * 1024;
+      const maxSize = 20 * 1024 * 1024; // 20MB
       if (file.size > maxSize) {
-        throw new Error("Image size must be less than 5MB");
+        throw new Error("Image size must be less than 20MB");
       }
 
       const formData = new FormData();
@@ -76,9 +76,9 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
           throw new Error("Please upload a valid video file");
         }
 
-        const maxSize = 100 * 1024 * 1024; // 100MB
+        const maxSize = 500 * 1024 * 1024; // 500MB
         if (videoFile.size > maxSize) {
-          throw new Error("Video size must be less than 100MB");
+          throw new Error("Video size must be less than 500MB");
         }
 
         const formData = new FormData();
