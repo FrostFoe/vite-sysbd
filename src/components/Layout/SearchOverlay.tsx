@@ -2,9 +2,9 @@ import { Search as SearchIcon, X } from "lucide-react";
 import type React from "react";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import { publicApi } from "../../api";
 import { useLayout } from "../../context/LayoutContext";
-import { publicApi } from "../../lib/api";
-import { t } from "../../lib/translations";
+import { t } from "../../translations";
 import type { Article } from "../../types";
 
 const SearchOverlay: React.FC = () => {

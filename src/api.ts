@@ -1,3 +1,9 @@
+/**
+ * API Client & Endpoints
+ * Centralized API communication with auth, public, and admin endpoints
+ */
+
+import type { AxiosError, AxiosInstance, AxiosResponse } from "axios";
 import axios from "axios";
 import type {
   Article,
@@ -8,8 +14,68 @@ import type {
   Section,
   User,
   UserProfile,
-} from "../types";
-import { setupApiInterceptors } from "./apiInterceptors";
+} from "./types";
+
+/* ============================================================================
+   API INTERCEPTORS
+   ============================================================================ */
+
+/**
+ * Setup request/response interceptors for API client
+ * Handles error handling, rate limiting, authentication errors
+ */
+function setupApiInterceptors(api: AxiosInstance): void {
+  // Request interceptor
+  api.interceptors.request.use(
+    (config) => {
+      return config;
+    },
+    (error: AxiosError) => {
+      return Promise.reject(error);
+    }
+  );
+
+  // Response interceptor
+  api.interceptors.response.use(
+    (response: AxiosResponse) => {
+      return response;
+    },
+    (error: AxiosError) => {
+      // Handle specific error codes
+      if (error.response?.status === 401) {
+        // Could trigger logout here
+      }
+
+      if (error.response?.status === 403) {
+        // Handle forbidden access
+      }
+
+      if (error.response?.status === 429) {
+        // Handle rate limiting
+      }
+
+      return Promise.reject(error);
+    }
+  );
+}
+
+/* ============================================================================
+   API CLIENT SETUP
+   ============================================================================ */
+
+// API is always at /api from domain root (where dist/ is the root)
+const API_BASE_URL = "/api";
+
+const api = axios.create({
+  baseURL: API_BASE_URL,
+  withCredentials: true,
+});
+
+setupApiInterceptors(api);
+
+/* ============================================================================
+   INTERFACES
+   ============================================================================ */
 
 export interface AdminArticle {
   id: string;
@@ -30,15 +96,9 @@ export interface AdminArticle {
   allow_submissions?: boolean;
 }
 
-// API is always at /api from domain root (where dist/ is the root)
-const API_BASE_URL = "/api";
-
-const api = axios.create({
-  baseURL: API_BASE_URL,
-  withCredentials: true,
-});
-
-setupApiInterceptors(api);
+/* ============================================================================
+   AUTH API
+   ============================================================================ */
 
 export const authApi = {
   checkAuth: async (): Promise<{ authenticated: boolean; user?: User }> => {
@@ -67,6 +127,10 @@ export const authApi = {
     return response.data;
   },
 };
+
+/* ============================================================================
+   PUBLIC API
+   ============================================================================ */
 
 export const publicApi = {
   getHomeData: async (lang: string, category?: string): Promise<HomeData> => {
@@ -202,6 +266,10 @@ export const publicApi = {
   },
 };
 
+/* ============================================================================
+   ADMIN API
+   ============================================================================ */
+
 export const adminApi = {
   getAdminStats: async (): Promise<{
     success: boolean;
@@ -293,6 +361,59 @@ export const adminApi = {
       userId,
       action: "unmute",
     });
+    return response.data;
+  },
+
+  createUser: async (userData: {
+    email: string;
+    password: string;
+    role: "admin" | "user";
+  }): Promise<{ success: boolean; user?: User; error?: string }> => {
+    const response = await api.post("/create_user.php", userData);
+    return response.data;
+  },
+
+  updateUser: async (
+    userId: number,
+    userData: { email?: string; role?: string; password?: string }
+  ): Promise<{ success: boolean; user?: User; error?: string }> => {
+    const response = await api.post("/update_user.php", {
+      userId,
+      ...userData,
+    });
+    return response.data;
+  },
+
+  deleteUser: async (
+    userId: number
+  ): Promise<{ success: boolean; error?: string }> => {
+    const response = await api.post("/delete_user.php", { userId });
+    return response.data;
+  },
+
+  exportAllData: async (): Promise<{
+    success: boolean;
+    data?: {
+      users: User[];
+      articles: AdminArticle[];
+      comments: {
+        id: number;
+        text: string;
+        created_at: string;
+        user_name: string;
+        article_id: string;
+      }[];
+      submissions: {
+        id: number;
+        article_id: string;
+        file_path: string;
+        message?: string;
+        created_at: string;
+      }[];
+    };
+    error?: string;
+  }> => {
+    const response = await api.get("/export_data.php");
     return response.data;
   },
 

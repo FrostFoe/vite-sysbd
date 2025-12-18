@@ -2,12 +2,8 @@ import { FileText, Inbox, Loader, Trash2 } from "lucide-react";
 import type React from "react";
 import { useCallback, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { adminApi } from "../../lib/api";
-import {
-  formatTimestamp,
-  handleItemSelect,
-  showToastMsg,
-} from "../../lib/utils";
+import { adminApi } from "../../api";
+import { formatTimestamp, handleItemSelect, showToastMsg } from "../../utils";
 
 const Submissions: React.FC = () => {
   const navigate = useNavigate();

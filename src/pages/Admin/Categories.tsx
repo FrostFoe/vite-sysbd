@@ -2,7 +2,7 @@ import { Edit, Folder as FolderIcon, Plus, Trash2 } from "lucide-react";
 import type React from "react";
 import type { FormEvent } from "react";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { adminApi } from "../../lib/api";
+import { adminApi } from "../../api";
 import type { Category } from "../../types";
 
 const CategoryModal: React.FC<{

@@ -1,9 +1,18 @@
-import { AlertCircle, Ban, CheckCircle, Loader } from "lucide-react";
+import {
+  AlertCircle,
+  Ban,
+  CheckCircle,
+  Edit,
+  Loader,
+  Plus,
+  Trash2,
+} from "lucide-react";
 import type React from "react";
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { adminApi } from "../../lib/api";
-import { handleItemSelect, showToastMsg } from "../../lib/utils";
+import { adminApi } from "../../api";
+import { UserModal } from "../../components/admin/UserModal";
+import { handleItemSelect, showToastMsg } from "../../utils";
 
 interface AdminUser {
   id: number;
@@ -20,6 +29,8 @@ const Users: React.FC = () => {
   const [users, setUsers] = useState<AdminUser[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [muteModalOpen, setMuteModalOpen] = useState(false);
+  const [userModalOpen, setUserModalOpen] = useState(false);
+  const [editingUser, setEditingUser] = useState<AdminUser | null>(null);
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
   const [selectedUserEmail, setSelectedUserEmail] = useState("");
   const [muteReason, setMuteReason] = useState("");
@@ -54,6 +65,36 @@ const Users: React.FC = () => {
   const closeMuteDialog = () => {
     setMuteModalOpen(false);
     setSelectedUserId(null);
+  };
+
+  const openUserModal = (user?: AdminUser) => {
+    setEditingUser(user || null);
+    setUserModalOpen(true);
+  };
+
+  const closeUserModal = () => {
+    setUserModalOpen(false);
+    setEditingUser(null);
+  };
+
+  const handleDeleteUser = async (userId: number, email: string) => {
+    if (
+      !window.confirm(
+        `আপনি কি নিশ্চিত যে আপনি ${email} ব্যবহারকারীকে ডিলিট করতে চান?`
+      )
+    )
+      return;
+    try {
+      const response = await adminApi.deleteUser(userId);
+      if (response.success) {
+        showToastMsg("ব্যবহারকারী সফলভাবে ডিলিট হয়েছে");
+        fetchUsers();
+      } else {
+        showToastMsg(response.error || "ব্যবহারকারী ডিলিট করতে ব্যর্থ", "error");
+      }
+    } catch (_error) {
+      showToastMsg("সার্ভার ত্রুটি!", "error");
+    }
   };
 
   const handleMuteUser = async () => {
@@ -98,7 +139,16 @@ const Users: React.FC = () => {
 
   return (
     <div className="space-y-4 sm:space-y-6">
-      <h1 className="text-xl sm:text-2xl font-bold">ব্যবহারকারী</h1>
+      <div className="flex items-center justify-between gap-3">
+        <h1 className="text-xl sm:text-2xl font-bold">ব্যবহারকারী</h1>
+        <button
+          type="button"
+          onClick={() => openUserModal()}
+          className="flex items-center gap-2 px-4 py-2 bg-bbcRed text-white rounded-lg font-bold hover:bg-bbcRed/90 transition-colors"
+        >
+          <Plus className="w-4 h-4" /> নতুন ব্যবহারকারী
+        </button>
+      </div>
 
       <div className="bg-card rounded-xl border border-border-color shadow-sm overflow-hidden">
         {users.length === 0 ? (
@@ -161,7 +211,10 @@ const Users: React.FC = () => {
                           (isMuted ? (
                             <button
                               type="button"
-                              onClick={() => handleUnmuteUser(user.id)}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleUnmuteUser(user.id);
+                              }}
                               className="text-success hover:text-success/80 hover:bg-success/10 dark:hover:bg-success/20 p-2 rounded transition-colors"
                               title="আনমিউট"
                             >
@@ -170,15 +223,38 @@ const Users: React.FC = () => {
                           ) : (
                             <button
                               type="button"
-                              onClick={() =>
-                                openMuteDialog(user.id, user.email)
-                              }
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                openMuteDialog(user.id, user.email);
+                              }}
                               className="text-warning hover:text-warning/80 hover:bg-warning/10 dark:hover:bg-warning/20 p-2 rounded transition-colors"
                               title="মিউট"
                             >
                               <Ban className="w-4 h-4" />
                             </button>
                           ))}
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            openUserModal(user);
+                          }}
+                          className="text-muted-text hover:text-card-text hover:bg-muted-bg p-2 rounded transition-colors"
+                          title="সম্পাদনা"
+                        >
+                          <Edit className="w-4 h-4" />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDeleteUser(user.id, user.email);
+                          }}
+                          className="text-danger hover:text-danger/80 hover:bg-danger/10 dark:hover:bg-danger/20 p-2 rounded transition-colors"
+                          title="ডিলিট"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -264,6 +340,14 @@ const Users: React.FC = () => {
           </div>
         </button>
       )}
+
+      {/* User Modal */}
+      <UserModal
+        isOpen={userModalOpen}
+        user={editingUser}
+        onClose={closeUserModal}
+        onSuccess={fetchUsers}
+      />
     </div>
   );
 };

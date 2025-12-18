@@ -3,7 +3,7 @@ import type React from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useLayout } from "../context/LayoutContext";
-import { t } from "../lib/translations";
+import { t } from "../translations";
 
 const Dashboard: React.FC = () => {
   const { user } = useAuth();

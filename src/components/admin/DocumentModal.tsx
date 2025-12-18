@@ -1,10 +1,10 @@
 import { AlertCircle, UploadCloud, X } from "lucide-react";
 import type React from "react";
 import { useEffect, useState } from "react";
+import { adminApi } from "../../api";
+import { DANGEROUS_FILE_EXTENSIONS } from "../../config";
 import { useLayout } from "../../context/LayoutContext";
-import { adminApi } from "../../lib/api";
-import { DANGEROUS_FILE_EXTENSIONS } from "../../lib/constants";
-import { t } from "../../lib/translations";
+import { t } from "../../translations";
 import type { Document as DocType } from "../../types";
 
 export const DocumentModal: React.FC<{

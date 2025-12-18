@@ -2,16 +2,16 @@ import { Edit2, FileText, Loader, Plus, Search, Trash2 } from "lucide-react";
 import type React from "react";
 import { useCallback, useEffect, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { adminApi } from "../../api";
 import { CustomDropdown } from "../../components/common/CustomDropdown";
 import { useLayout } from "../../context/LayoutContext";
-import { adminApi } from "../../lib/api";
+import type { AdminArticle, Category } from "../../types";
 import {
   formatTimestamp,
   handleItemSelect,
   PLACEHOLDER_IMAGE,
   showToastMsg,
-} from "../../lib/utils";
-import type { AdminArticle, Category } from "../../types";
+} from "../../utils";
 
 const ArticleList: React.FC = () => {
   const { language } = useLayout();

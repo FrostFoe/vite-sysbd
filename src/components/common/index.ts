@@ -22,6 +22,7 @@ export {
 } from "./LoadingSpinner";
 export { AlertDialog, Dialog, Modal } from "./Modal";
 export { default as PageTransition } from "./PageTransition";
+export { RelatedArticles } from "./RelatedArticles";
 export { LayoutRouteWrapper, RouteWrapper } from "./RouteWrapper";
 export { EmptyState, ErrorState, LoadingState } from "./StateWrappers";
 export type { Toast, ToastType } from "./Toast";

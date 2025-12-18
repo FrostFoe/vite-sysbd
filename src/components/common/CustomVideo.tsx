@@ -1,7 +1,7 @@
 import { Maximize, Pause, Play, Volume2, VolumeX } from "lucide-react";
 import type React from "react";
 import { useRef, useState } from "react";
-import { normalizeMediaUrl } from "../../lib/utils";
+import { normalizeMediaUrl } from "../../utils";
 
 interface CustomVideoProps {
   src: string;

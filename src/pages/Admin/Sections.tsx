@@ -2,8 +2,8 @@ import { Edit, Layers as LayersIcon, Plus, Trash2 } from "lucide-react";
 import type React from "react";
 import type { FormEvent } from "react";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { adminApi } from "../../api";
 import { CustomDropdown } from "../../components/common/CustomDropdown";
-import { adminApi } from "../../lib/api";
 import type { Section } from "../../types";
 
 interface AdminSection {

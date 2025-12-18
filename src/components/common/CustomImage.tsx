@@ -1,7 +1,7 @@
 import { Eye, EyeOff } from "lucide-react";
 import type React from "react";
 import { useState } from "react";
-import { normalizeMediaUrl } from "../../lib/utils";
+import { normalizeMediaUrl } from "../../utils";
 
 interface CustomImageProps {
   src: string;

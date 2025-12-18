@@ -3,17 +3,17 @@ import { ExternalLink, MessageCircle, Trash2 } from "lucide-react";
 import type React from "react";
 import { createElement, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { adminApi } from "../../api";
 import {
   EmptyState,
   LoadingState,
 } from "../../components/common/StateWrappers";
-import { adminApi } from "../../lib/api";
-import { useDataFetch } from "../../lib/useDataFetch";
 import {
   formatTimestamp,
   handleItemSelect,
   showToastMsg,
-} from "../../lib/utils";
+  useDataFetch,
+} from "../../utils";
 
 const Comments: React.FC = () => {
   const navigate = useNavigate();

@@ -18,25 +18,27 @@ import {
 import type React from "react";
 import { createElement, useCallback, useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import { adminApi, publicApi } from "../api";
 import ContentRenderer from "../components/common/ContentRenderer";
 import { CustomDropdown } from "../components/common/CustomDropdown";
+import { RelatedArticles } from "../components/common/RelatedArticles";
 import { useAuth } from "../context/AuthContext";
 import { useLayout } from "../context/LayoutContext";
-import { adminApi, publicApi } from "../lib/api";
-import { t } from "../lib/translations";
+import { t } from "../translations";
+import type { Article, UserProfile } from "../types";
 import {
   formatTimestamp,
   normalizeMediaUrl,
   PLACEHOLDER_IMAGE,
   showToastMsg,
-} from "../lib/utils";
-import type { Article, UserProfile } from "../types";
+} from "../utils";
 
 const ArticleDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const { language } = useLayout();
   const { user, isAuthenticated } = useAuth();
   const [article, setArticle] = useState<Article | null>(null);
+  const [allArticles, setAllArticles] = useState<Article[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [bookmarks, setBookmarks] = useState<string[]>([]);
   const [fontSize, setFontSize] = useState<"sm" | "md" | "lg">("md");
@@ -83,6 +85,15 @@ const ArticleDetail: React.FC = () => {
         } else {
           // Failed to fetch article
           setArticle(null);
+        }
+
+        // Also fetch all articles for related articles section
+        const allArticlesResponse = await adminApi.getArticles({
+          status: "published",
+          lang: language,
+        });
+        if (allArticlesResponse.success && allArticlesResponse.articles) {
+          setAllArticles(allArticlesResponse.articles as unknown as Article[]);
         }
       } catch (_error) {
         // API error occurred
@@ -708,6 +719,14 @@ const ArticleDetail: React.FC = () => {
               </div>
             </div>
           </div>
+
+          {/* Related Articles */}
+          {article && allArticles.length > 0 && (
+            <RelatedArticles
+              currentArticle={article}
+              allArticles={allArticles}
+            />
+          )}
         </div>
 
         {/* Comments Section */}

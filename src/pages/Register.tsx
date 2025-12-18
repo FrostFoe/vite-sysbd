@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useLayout } from "../context/LayoutContext";
-import { t } from "../lib/translations";
+import { t } from "../translations";
 
 const Register: React.FC = () => {
   const [email, setEmail] = useState("");

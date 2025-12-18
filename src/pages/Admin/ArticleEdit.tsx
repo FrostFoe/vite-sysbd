@@ -10,19 +10,19 @@ import {
 import type React from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import { adminApi, publicApi } from "../../api";
 import { DocumentModal } from "../../components/admin/DocumentModal";
 import { CustomEditor } from "../../components/common";
 import { CustomDropdown } from "../../components/common/CustomDropdown";
+import { DANGEROUS_FILE_EXTENSIONS } from "../../config";
 import { useLayout } from "../../context/LayoutContext";
-import { adminApi, publicApi } from "../../lib/api";
-import { DANGEROUS_FILE_EXTENSIONS } from "../../lib/constants";
-import { showToastMsg } from "../../lib/utils";
 import type {
   AdminArticle,
   Category,
   Document as DocType,
   Section,
 } from "../../types";
+import { showToastMsg } from "../../utils";
 
 const ArticleEdit: React.FC = () => {
   const { id } = useParams<{ id: string }>();

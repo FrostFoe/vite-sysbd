@@ -1,4 +1,5 @@
 import {
+  Download,
   FileStack,
   FileText,
   Loader,
@@ -8,8 +9,9 @@ import {
 import type React from "react";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { adminApi } from "../api";
 import { useAuth } from "../context/AuthContext";
-import { adminApi } from "../lib/api";
+import { showToastMsg } from "../utils";
 
 interface AdminStats {
   articles: string;
@@ -22,6 +24,7 @@ const AdminDashboard: React.FC = () => {
   useAuth();
   const [stats, setStats] = useState<AdminStats | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isExporting, setIsExporting] = useState(false);
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -41,6 +44,33 @@ const AdminDashboard: React.FC = () => {
     };
     fetchStats();
   }, []);
+
+  const handleExportData = async () => {
+    setIsExporting(true);
+    try {
+      const response = await adminApi.exportAllData();
+      if (response.success && response.data) {
+        // Create JSON file
+        const jsonString = JSON.stringify(response.data, null, 2);
+        const blob = new Blob([jsonString], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = `breachtimes-export-${new Date().toISOString().split("T")[0]}.json`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+        showToastMsg("ডেটা সফলভাবে এক্সপোর্ট হয়েছে");
+      } else {
+        showToastMsg(response.error || "এক্সপোর্ট করতে ব্যর্থ", "error");
+      }
+    } catch (_error) {
+      showToastMsg("সার্ভার ত্রুটি!", "error");
+    } finally {
+      setIsExporting(false);
+    }
+  };
 
   if (isLoading) {
     return (
@@ -151,8 +181,25 @@ const AdminDashboard: React.FC = () => {
       </div>
 
       <div className="bg-card rounded-xl border border-border-color shadow-sm p-4 sm:p-6">
-        <h3 className="text-lg font-bold mb-4">সাম্প্রতিক কার্যকলাপ</h3>
-        <p className="text-muted-text text-sm">ক্রিয়াকলাপ লগ শীঘ্রই আসছে...</p>
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-lg font-bold">সাম্প্রতিক কার্যকলাপ</h3>
+          <button
+            type="button"
+            onClick={handleExportData}
+            disabled={isExporting}
+            className="flex items-center gap-2 px-4 py-2 bg-bbcRed text-white rounded-lg font-bold hover:bg-bbcRed/90 transition-colors disabled:opacity-50 text-sm"
+          >
+            {isExporting ? (
+              <Loader className="w-4 h-4 animate-spin" />
+            ) : (
+              <Download className="w-4 h-4" />
+            )}
+            ডেটা এক্সপোর্ট করুন
+          </button>
+        </div>
+        <p className="text-muted-text text-sm">
+          সমস্ত ডেটা (ব্যবহারকারী, নিবন্ধ, মন্তব্য, জমা) JSON ফরম্যাটে ডাউনলোড করুন।
+        </p>
       </div>
     </div>
   );

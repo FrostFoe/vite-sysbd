@@ -11,8 +11,8 @@ import {
 } from "lucide-react";
 import React, { useEffect } from "react";
 import { useLayout } from "../../context/LayoutContext";
-import { t } from "../../lib/translations";
-import { showToastMsg } from "../../lib/utils";
+import { t } from "../../translations";
+import { showToastMsg } from "../../utils";
 
 const Footer: React.FC = () => {
   const { language, theme } = useLayout();

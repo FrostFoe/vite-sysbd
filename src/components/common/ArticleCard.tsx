@@ -2,9 +2,9 @@ import { Bookmark, ChevronRight, Clock } from "lucide-react";
 import React from "react";
 import { Link } from "react-router-dom";
 import { useLayout } from "../../context/LayoutContext";
-import { t } from "../../lib/translations";
-import { formatTimestamp, PLACEHOLDER_IMAGE } from "../../lib/utils";
+import { t } from "../../translations";
 import type { Article } from "../../types";
+import { formatTimestamp, PLACEHOLDER_IMAGE } from "../../utils";
 
 interface ArticleCardProps {
   article: Article;

@@ -2,10 +2,10 @@ import { ArrowLeft, Loader } from "lucide-react";
 import type React from "react";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import { adminApi } from "../../api";
 import { useLayout } from "../../context/LayoutContext";
-import { adminApi } from "../../lib/api";
-import { t } from "../../lib/translations";
-import { formatTimestamp, showToastMsg } from "../../lib/utils";
+import { t } from "../../translations";
+import { formatTimestamp, showToastMsg } from "../../utils";
 
 interface Submission {
   id: number;

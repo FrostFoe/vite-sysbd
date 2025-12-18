@@ -2,10 +2,10 @@ import { LayoutDashboard, Menu, Moon, Search, Shield, Sun } from "lucide-react";
 import type React from "react";
 import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
+import { publicApi } from "../../api";
 import { useAuth } from "../../context/AuthContext";
 import { useLayout } from "../../context/LayoutContext";
-import { publicApi } from "../../lib/api";
-import { t } from "../../lib/translations";
+import { t } from "../../translations";
 import type { Category } from "../../types";
 
 const Header: React.FC = () => {

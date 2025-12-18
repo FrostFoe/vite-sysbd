@@ -6,7 +6,7 @@ import DashLayout from "./components/Layout/DashLayout";
 import MainLayout from "./components/Layout/MainLayout";
 import { useAuth } from "./context/AuthContext";
 import { LayoutProvider, useLayout } from "./context/LayoutContext";
-import { t } from "./lib/translations";
+import { t } from "./translations";
 
 const Login = lazy(() => import("./pages/Login"));
 const Register = lazy(() => import("./pages/Register"));

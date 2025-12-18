@@ -16,9 +16,9 @@ import {
   useEffect,
   useState,
 } from "react";
-import { authApi } from "../lib/api";
-import { showToastMsg } from "../lib/utils";
+import { authApi } from "../api";
 import type { User } from "../types";
+import { showToastMsg } from "../utils";
 
 /**
  * Authentication context type definition

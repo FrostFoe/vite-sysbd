@@ -2,12 +2,12 @@ import { Bookmark, BookOpen, ChevronRight, Clock } from "lucide-react";
 import type React from "react";
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { publicApi } from "../api";
 import ArticleCard from "../components/common/ArticleCard";
 import { useLayout } from "../context/LayoutContext";
-import { publicApi } from "../lib/api";
-import { t } from "../lib/translations";
-import { formatTimestamp, PLACEHOLDER_IMAGE } from "../lib/utils";
+import { t } from "../translations";
 import type { Article, Category, Section } from "../types";
+import { formatTimestamp, PLACEHOLDER_IMAGE } from "../utils";
 
 const HomePage: React.FC = () => {
   const { language, currentCategory } = useLayout();

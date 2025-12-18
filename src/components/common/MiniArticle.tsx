@@ -1,8 +1,8 @@
 import type React from "react";
 import { Link } from "react-router-dom";
 import { useLayout } from "../../context/LayoutContext";
-import { PLACEHOLDER_IMAGE } from "../../lib/utils";
 import type { Article } from "../../types";
+import { PLACEHOLDER_IMAGE } from "../../utils";
 
 interface MiniArticleProps {
   article: Article;
