@@ -11,20 +11,30 @@ interface State {
   hasError: boolean;
   error: Error | null;
   errorInfo: ErrorInfo | null;
+  autoReloadCountdown: number;
 }
 
 /**
  * Error Boundary component to catch React component errors
  * Prevents the entire app from crashing if a single component fails
+ * Auto-reloads after 5 seconds if error occurs
  */
 export class ErrorBoundary extends React.Component<Props, State> {
+  private reloadTimer: NodeJS.Timeout | null = null;
+  private countdownInterval: NodeJS.Timeout | null = null;
+
   public constructor(props: Props) {
     super(props);
-    this.state = { hasError: false, error: null, errorInfo: null };
+    this.state = {
+      hasError: false,
+      error: null,
+      errorInfo: null,
+      autoReloadCountdown: 5,
+    };
   }
 
   public static getDerivedStateFromError(error: Error): State {
-    return { hasError: true, error, errorInfo: null };
+    return { hasError: true, error, errorInfo: null, autoReloadCountdown: 5 };
   }
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
@@ -33,7 +43,26 @@ export class ErrorBoundary extends React.Component<Props, State> {
       hasError: true,
       error,
       errorInfo,
+      autoReloadCountdown: 5,
     });
+
+    // Auto-reload after 5 seconds
+    this.reloadTimer = setTimeout(() => {
+      console.log("Auto-reloading due to error...");
+      window.location.reload();
+    }, 5000);
+
+    // Update countdown every second
+    this.countdownInterval = setInterval(() => {
+      this.setState((prev) => ({
+        autoReloadCountdown: Math.max(0, prev.autoReloadCountdown - 1),
+      }));
+    }, 1000);
+  }
+
+  public componentWillUnmount() {
+    if (this.reloadTimer) clearTimeout(this.reloadTimer);
+    if (this.countdownInterval) clearInterval(this.countdownInterval);
   }
 
   public render() {
@@ -54,6 +83,13 @@ export class ErrorBoundary extends React.Component<Props, State> {
                   We're sorry for the inconvenience. The application encountered
                   an unexpected error.
                 </p>
+
+                <div className="bg-bbcRed/10 border border-bbcRed/30 rounded p-3 mb-4">
+                  <p className="text-xs text-bbcRed font-semibold">
+                    🔄 Auto-reloading in {this.state.autoReloadCountdown}{" "}
+                    seconds...
+                  </p>
+                </div>
 
                 {process.env.NODE_ENV === "development" && this.state.error && (
                   <details className="mt-4 p-3 bg-black/5 rounded text-xs">
