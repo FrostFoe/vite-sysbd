@@ -132,7 +132,7 @@ const Footer: React.FC = () => {
 
             <div className="space-y-3 mt-4">
               {/* USDT Section */}
-              <div className="bg-muted-bg p-2.5 sm:p-3 rounded-lg border border-border-color hover:border-success/50 transition-colors duration-300">
+              <div className="bg-transparent p-2.5 sm:p-3 rounded-lg border border-border-color hover:border-success/50 transition-colors duration-300">
                 <div className="flex items-center gap-2 mb-1">
                   <Coins className="w-4 h-4 text-success" />
                   <span className="font-bold text-xs text-card-text uppercase tracking-wide">
@@ -160,7 +160,7 @@ const Footer: React.FC = () => {
               </div>
 
               {/* Bitcoin Section */}
-              <div className="bg-muted-bg p-3 rounded-lg border border-border-color hover:border-warning/50 transition-colors duration-300">
+              <div className="bg-transparent p-3 rounded-lg border border-border-color hover:border-warning/50 transition-colors duration-300">
                 <div className="flex items-center gap-2 mb-1">
                   <Bitcoin className="w-4 h-4 text-warning" />
                   <span className="font-bold text-xs text-card-text uppercase tracking-wide">
