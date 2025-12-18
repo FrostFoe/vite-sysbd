@@ -9,11 +9,6 @@ interface ContentRendererProps {
   className?: string;
 }
 
-/**
- * ContentRenderer Component
- * Renders HTML content with custom image and video components while maintaining
- * security by sanitizing the HTML content first
- */
 const ContentRenderer: React.FC<ContentRendererProps> = ({
   content,
   className = "",
@@ -89,10 +84,8 @@ const ContentRenderer: React.FC<ContentRendererProps> = ({
       /(__CUSTOM_COMPONENT_PLACEHOLDER_\d+__)/
     );
 
-    let keyCounter = 0;
     return parts
-      .map((part) => {
-        keyCounter++;
+      .map((part, partIndex) => {
         if (part.startsWith("__CUSTOM_COMPONENT_PLACEHOLDER_")) {
           const matchResult = part.match(
             /__CUSTOM_COMPONENT_PLACEHOLDER_(\d+)__/
@@ -108,13 +101,16 @@ const ContentRenderer: React.FC<ContentRendererProps> = ({
           tempDiv.innerHTML = sanitizedPart;
 
           // Convert the HTML elements to React elements recursively
-          const convertNodeToReactElement = (node: Node): React.ReactNode => {
+          const convertNodeToReactElement = (
+            node: Node,
+            nodeKey: string
+          ): React.ReactNode => {
             if (node.nodeType === Node.TEXT_NODE) {
               return node.textContent;
             } else if (node.nodeType === Node.ELEMENT_NODE) {
               const element = node as HTMLElement;
               const props: Record<string, unknown> = {
-                key: `html-${Date.now()}-${keyCounter}-${node.textContent?.slice(0, 10) || "node"}`,
+                key: nodeKey,
               };
 
               // Copy attributes
@@ -128,7 +124,11 @@ const ContentRenderer: React.FC<ContentRendererProps> = ({
 
               // Process child nodes recursively
               const children = Array.from(element.childNodes).map(
-                convertNodeToReactElement
+                (childNode, childIndex) =>
+                  convertNodeToReactElement(
+                    childNode,
+                    `${nodeKey}-child-${childIndex}`
+                  )
               );
 
               return createElement(
@@ -140,8 +140,8 @@ const ContentRenderer: React.FC<ContentRendererProps> = ({
             return null;
           };
 
-          return Array.from(tempDiv.childNodes).map((node, _index) =>
-            convertNodeToReactElement(node)
+          return Array.from(tempDiv.childNodes).map((node, nodeIndex) =>
+            convertNodeToReactElement(node, `part-${partIndex}-node-${nodeIndex}`)
           );
         }
         return null;

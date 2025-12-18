@@ -22,13 +22,13 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
   const [uploadError, setUploadError] = useState<string>("");
   const [isInitialized, setIsInitialized] = useState(false);
 
-  // Initialize editor content on mount and value change
+  // Initialize editor content on mount
   useEffect(() => {
-    if (editorRef.current && !isInitialized) {
+    if (editorRef.current && !isInitialized && value) {
       editorRef.current.innerHTML = value;
       setIsInitialized(true);
     }
-  }, []);
+  }, [value, isInitialized]);
 
   // Update editor content when value prop changes externally
   useEffect(() => {
