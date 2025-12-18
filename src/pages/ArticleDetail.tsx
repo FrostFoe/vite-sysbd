@@ -1,9 +1,9 @@
 import DOMPurify from "dompurify";
 import {
   Bookmark,
+  BookOpen,
   Clock,
   Download,
-  FileText,
   FileWarning,
   Loader,
   Lock,
@@ -421,7 +421,7 @@ const ArticleDetail: React.FC = () => {
                 </span>
                 {article.readTime && (
                   <span className="flex items-center gap-1.5">
-                    <FileText className="w-4 h-4" /> {article.readTime}
+                    <BookOpen className="w-4 h-4" /> {article.readTime}
                   </span>
                 )}
               </div>

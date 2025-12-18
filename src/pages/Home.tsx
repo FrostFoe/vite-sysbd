@@ -1,4 +1,4 @@
-import { Bookmark, ChevronRight, Clock, Newspaper } from "lucide-react";
+import { Bookmark, BookOpen, ChevronRight, Clock } from "lucide-react";
 import type React from "react";
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
@@ -236,7 +236,7 @@ const HomePage: React.FC = () => {
       return (
         <div className="flex flex-col items-center justify-center py-32 text-center animate-fade-in">
           <div className="bg-muted-bg p-6 rounded-full mb-4">
-            <Newspaper className="w-12 h-12 text-muted-text" />
+            <BookOpen className="w-12 h-12 text-muted-text" />
           </div>
           <h3 className="text-2xl font-bold mb-2 text-card-text">
             {t("no_news_in_this_category", language)}

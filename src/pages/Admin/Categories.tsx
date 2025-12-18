@@ -1,4 +1,4 @@
-import { Edit2, Folder as FolderIcon, Plus, Trash2 } from "lucide-react";
+import { Edit, Folder as FolderIcon, Plus, Trash2 } from "lucide-react";
 import type React from "react";
 import type { FormEvent } from "react";
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -266,7 +266,7 @@ const Categories: React.FC = () => {
                       onClick={() => handleOpenModal(cat)}
                       className="p-2 text-card-text hover:bg-muted-bg rounded"
                     >
-                      <Edit2 className="w-4 h-4" />
+                      <Edit className="w-4 h-4" />
                     </button>
                     <button
                       type="button"

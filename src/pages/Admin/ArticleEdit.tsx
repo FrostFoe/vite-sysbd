@@ -1,5 +1,5 @@
 import {
-  Edit2,
+  Edit,
   ExternalLink,
   FileText,
   Loader,
@@ -682,7 +682,7 @@ const ArticleEdit: React.FC = () => {
                           onClick={() => handleOpenModal(doc)}
                           className="p-1.5 hover:bg-black/10 rounded-md"
                         >
-                          <Edit2 className="w-4 h-4" />
+                          <Edit className="w-4 h-4" />
                         </button>
                         <button
                           type="button"

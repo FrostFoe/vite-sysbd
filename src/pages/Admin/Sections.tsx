@@ -1,4 +1,4 @@
-import { Edit2, Layers as LayersIcon, Plus, Trash2 } from "lucide-react";
+import { Edit, Layers as LayersIcon, Plus, Trash2 } from "lucide-react";
 import type React from "react";
 import type { FormEvent } from "react";
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -308,7 +308,7 @@ const Sections: React.FC = () => {
                       onClick={() => handleOpenModal(sec)}
                       className="p-2 text-card-text hover:bg-muted-bg rounded"
                     >
-                      <Edit2 className="w-4 h-4" />
+                      <Edit className="w-4 h-4" />
                     </button>
                     <button
                       type="button"
