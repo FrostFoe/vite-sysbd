@@ -1,4 +1,12 @@
-import { AlertCircle, Upload, Video } from "lucide-react";
+import {
+  AlertCircle,
+  Bold,
+  Image,
+  Italic,
+  List,
+  ListOrdered,
+  Video,
+} from "lucide-react";
 import type React from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
 
@@ -10,13 +18,11 @@ interface CustomEditorProps {
   placeholder?: string;
   height?: string;
   className?: string;
-  id?: string;
 }
 
 const CustomEditor: React.FC<CustomEditorProps> = ({
   value,
   onChange,
-  placeholder = "Start typing...",
   height = "400px",
   className = "",
 }) => {
@@ -24,23 +30,13 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
   const [uploadError, setUploadError] = useState<string>("");
   const [isInitialized, setIsInitialized] = useState(false);
 
-  // Initialize editor content on mount
+  // Initialize editor content on mount only
   useEffect(() => {
-    if (editorRef.current && !isInitialized && value) {
-      editorRef.current.innerHTML = value;
+    if (editorRef.current && !isInitialized) {
+      editorRef.current.innerHTML = value || "";
       setIsInitialized(true);
     }
-  }, [value, isInitialized]);
-
-  // Update editor content when value prop changes externally
-  useEffect(() => {
-    if (editorRef.current && isInitialized) {
-      // Only update if the content actually changed
-      if (editorRef.current.innerHTML !== value) {
-        editorRef.current.innerHTML = value;
-      }
-    }
-  }, [value, isInitialized]);
+  }, [isInitialized, value]);
 
   const handleInput = (e: React.FormEvent<HTMLDivElement>) => {
     onChange(e.currentTarget.innerHTML);
@@ -62,28 +58,27 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
       setUploadError("");
 
       if (!file.type.startsWith("image/")) {
-        throw new Error("Please upload a valid image file");
+        throw new Error("অনুগ্রহ করে একটি বৈধ ছবি ফাইল আপলোড করুন");
       }
 
-      const maxSize = 20 * 1024 * 1024; // 20MB
+      const maxSize = 10 * 1024 * 1024; // 10MB
       if (file.size > maxSize) {
-        throw new Error("Image size must be less than 20MB");
+        throw new Error("ছবির আকার 10MB এর চেয়ে কম হতে হবে");
       }
 
       const formData = new FormData();
       formData.append("image", file);
 
       const response = await adminApi.uploadImage(formData);
-
       if (!response.success) {
-        throw new Error(response.error || "Upload failed");
+        throw new Error(response.error || "ছবি আপলোড ব্যর্থ");
       }
 
       return response.url;
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Upload failed";
+      const message =
+        error instanceof Error ? error.message : "আপলোড ব্যর্থ হয়েছে";
       setUploadError(message);
-      console.error("Image upload error:", error);
       return null;
     }
   }, []);
@@ -93,28 +88,27 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
       setUploadError("");
 
       if (!videoFile.type.startsWith("video/")) {
-        throw new Error("Please upload a valid video file");
+        throw new Error("অনুগ্রহ করে একটি বৈধ ভিডিও ফাইল আপলোড করুন");
       }
 
-      const maxSize = 500 * 1024 * 1024; // 500MB
+      const maxSize = 100 * 1024 * 1024; // 100MB
       if (videoFile.size > maxSize) {
-        throw new Error("Video size must be less than 500MB");
+        throw new Error("ভিডিওর আকার 100MB এর চেয়ে কম হতে হবে");
       }
 
       const formData = new FormData();
       formData.append("video", videoFile);
 
       const data = await adminApi.uploadVideo(formData);
-
       if (!data.success || !data.url) {
-        throw new Error(data.error || "Upload failed");
+        throw new Error(data.error || "ভিডিও আপলোড ব্যর্থ");
       }
 
       return data.url;
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Upload failed";
+      const message =
+        error instanceof Error ? error.message : "আপলোড ব্যর্থ হয়েছে";
       setUploadError(message);
-      console.error("Video upload error:", error);
       return null;
     }
   }, []);
@@ -186,121 +180,85 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
   );
 
   return (
-    <div className={`custom-editor-wrapper ${className}`}>
-      {/* Basic Toolbar */}
-      <div className="border-b border-border-color bg-muted-bg p-2 rounded-t-lg flex flex-wrap gap-1">
+    <div className={`flex flex-col gap-3 ${className}`}>
+      {/* Toolbar - Clean & Minimal */}
+      <div className="flex flex-wrap gap-2 items-center p-3 bg-muted-bg rounded-lg border border-border-color">
+        {/* Text Formatting */}
         <button
           type="button"
           onClick={() => handleFormat("bold")}
-          className="px-3 py-1 rounded text-sm font-medium bg-card border border-border-color hover:bg-muted-bg"
+          className="p-2 rounded hover:bg-hover-bg transition-colors text-muted-text hover:text-card-text"
           title="Bold (Ctrl+B)"
+          aria-label="Bold"
         >
-          <strong>B</strong>
+          <Bold size={18} />
         </button>
 
         <button
           type="button"
           onClick={() => handleFormat("italic")}
-          className="px-3 py-1 rounded text-sm font-medium bg-card border border-border-color hover:bg-muted-bg"
+          className="p-2 rounded hover:bg-hover-bg transition-colors text-muted-text hover:text-card-text"
           title="Italic (Ctrl+I)"
+          aria-label="Italic"
         >
-          <em>I</em>
+          <Italic size={18} />
         </button>
 
-        <button
-          type="button"
-          onClick={() => handleFormat("strikeThrough")}
-          className="px-3 py-1 rounded text-sm font-medium bg-card border border-border-color hover:bg-muted-bg"
-          title="Strikethrough"
-        >
-          <s>S</s>
-        </button>
+        <div className="w-px h-6 bg-border-color" />
 
-        <div className="w-px bg-border-color" />
-
-        <button
-          type="button"
-          onClick={() => handleFormat("formatBlock", "<h1>")}
-          className="px-3 py-1 rounded text-sm font-medium bg-card border border-border-color hover:bg-muted-bg"
-          title="Heading 1"
-        >
-          H1
-        </button>
-
-        <button
-          type="button"
-          onClick={() => handleFormat("formatBlock", "<h2>")}
-          className="px-3 py-1 rounded text-sm font-medium bg-card border border-border-color hover:bg-muted-bg"
-          title="Heading 2"
-        >
-          H2
-        </button>
-
+        {/* Lists */}
         <button
           type="button"
           onClick={() => handleFormat("insertUnorderedList")}
-          className="px-3 py-1 rounded text-sm font-medium bg-card border border-border-color hover:bg-muted-bg"
+          className="p-2 rounded hover:bg-hover-bg transition-colors text-muted-text hover:text-card-text"
           title="Bullet List"
+          aria-label="Bullet List"
         >
-          • List
+          <List size={18} />
         </button>
 
         <button
           type="button"
           onClick={() => handleFormat("insertOrderedList")}
-          className="px-3 py-1 rounded text-sm font-medium bg-card border border-border-color hover:bg-muted-bg"
+          className="p-2 rounded hover:bg-hover-bg transition-colors text-muted-text hover:text-card-text"
           title="Ordered List"
+          aria-label="Ordered List"
         >
-          1. List
+          <ListOrdered size={18} />
         </button>
 
-        <div className="w-px bg-border-color" />
+        <div className="w-px h-6 bg-border-color" />
 
-        <button
-          type="button"
-          onClick={() => handleFormat("formatBlock", "<blockquote>")}
-          className="px-3 py-1 rounded text-sm font-medium bg-card border border-border-color hover:bg-muted-bg"
-          title="Blockquote"
-        >
-          " Quote
-        </button>
-
-        <button
-          type="button"
-          onClick={() => handleFormat("insertHorizontalRule")}
-          className="px-3 py-1 rounded text-sm font-medium bg-card border border-border-color hover:bg-muted-bg"
-          title="Horizontal Rule"
-        >
-          —
-        </button>
-
-        <div className="w-px bg-border-color" />
-
+        {/* Media */}
         <button
           type="button"
           onClick={handleImageButtonClick}
-          className="px-3 py-1 rounded text-sm font-medium bg-card border border-border-color hover:bg-muted-bg flex items-center gap-1"
+          className="p-2 rounded hover:bg-hover-bg transition-colors text-muted-text hover:text-card-text"
           title="Insert Image"
+          aria-label="Insert Image"
         >
-          <Upload size={16} /> Image
+          <Image size={18} />
         </button>
 
         <button
           type="button"
           onClick={handleVideoButtonClick}
-          className="px-3 py-1 rounded text-sm font-medium bg-card border border-border-color hover:bg-muted-bg flex items-center gap-1"
+          className="p-2 rounded hover:bg-hover-bg transition-colors text-muted-text hover:text-card-text"
           title="Insert Video"
+          aria-label="Insert Video"
         >
-          <Video size={16} /> Video
+          <Video size={18} />
         </button>
 
-        <div className="w-px bg-border-color" />
+        <div className="w-px h-6 bg-border-color" />
 
+        {/* Actions */}
         <button
           type="button"
           onClick={() => handleFormat("undo")}
-          className="px-3 py-1 rounded text-sm font-medium bg-card border border-border-color hover:bg-muted-bg"
+          className="p-2 rounded hover:bg-hover-bg transition-colors text-muted-text hover:text-card-text"
           title="Undo"
+          aria-label="Undo"
         >
           ↶
         </button>
@@ -308,8 +266,9 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
         <button
           type="button"
           onClick={() => handleFormat("redo")}
-          className="px-3 py-1 rounded text-sm font-medium bg-card border border-border-color hover:bg-muted-bg"
+          className="p-2 rounded hover:bg-hover-bg transition-colors text-muted-text hover:text-card-text"
           title="Redo"
+          aria-label="Redo"
         >
           ↷
         </button>
@@ -325,7 +284,7 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
         onInput={handleInput}
         suppressContentEditableWarning
         style={{ height, minHeight: height }}
-        className="border border-t-0 border-border-color rounded-b-lg overflow-y-auto bg-card p-3 prose prose-sm max-w-none text-card-text focus:outline-none"
+        className="relative p-4 bg-card border border-border-color rounded-lg overflow-y-auto focus:outline-none focus:ring-2 focus:ring-bbcRed focus:border-transparent"
         onDrop={handleDrop}
         onDragOver={(e) => {
           e.preventDefault();
@@ -333,19 +292,11 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
         }}
       />
 
-      {/* Placeholder */}
-      {/* This is a simple implementation. A more robust solution would hide the placeholder as soon as the user starts typing. */}
-      {(!value || value === "<p><br></p>") && (
-        <div className="absolute top-12 left-4 text-muted-foreground pointer-events-none">
-          {placeholder}
-        </div>
-      )}
-
       {/* Error Message */}
       {uploadError && (
-        <div className="mt-2 p-3 bg-danger/10 border border-danger/30 rounded-lg flex items-center gap-2 text-danger">
-          <AlertCircle size={18} />
-          <span>{uploadError}</span>
+        <div className="flex items-center gap-2 p-3 bg-danger/10 border border-danger/30 rounded-lg text-danger animate-in fade-in duration-300">
+          <AlertCircle size={18} className="flex-shrink-0" />
+          <span className="text-sm">{uploadError}</span>
         </div>
       )}
     </div>
