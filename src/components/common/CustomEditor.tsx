@@ -1,4 +1,4 @@
-import React, { useRef, useState, useCallback } from "react";
+import React, { useRef, useState, useCallback, useEffect } from "react";
 import { AlertCircle, Upload, Video } from "lucide-react";
 import { adminApi } from "../../lib/api";
 
@@ -20,6 +20,25 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
 }) => {
   const editorRef = useRef<HTMLDivElement>(null);
   const [uploadError, setUploadError] = useState<string>("");
+  const [isInitialized, setIsInitialized] = useState(false);
+
+  // Initialize editor content on mount and value change
+  useEffect(() => {
+    if (editorRef.current && !isInitialized) {
+      editorRef.current.innerHTML = value;
+      setIsInitialized(true);
+    }
+  }, []);
+
+  // Update editor content when value prop changes externally
+  useEffect(() => {
+    if (editorRef.current && isInitialized) {
+      // Only update if the content actually changed
+      if (editorRef.current.innerHTML !== value) {
+        editorRef.current.innerHTML = value;
+      }
+    }
+  }, [value, isInitialized]);
 
   const handleInput = (e: React.FormEvent<HTMLDivElement>) => {
     onChange(e.currentTarget.innerHTML);
@@ -304,9 +323,9 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
         ref={editorRef}
         contentEditable
         onInput={handleInput}
+        suppressContentEditableWarning
         style={{ height, minHeight: height }}
         className="border border-t-0 border-border-color rounded-b-lg overflow-y-auto bg-card p-3 prose prose-sm max-w-none text-card-text focus:outline-none"
-        dangerouslySetInnerHTML={{ __html: value }}
         onDrop={handleDrop}
         onDragOver={(e) => {
           e.preventDefault();
