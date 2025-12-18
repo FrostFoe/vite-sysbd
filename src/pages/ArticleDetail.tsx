@@ -17,7 +17,7 @@ import {
 } from "lucide-react";
 import type React from "react";
 import { createElement, useCallback, useEffect, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import ContentRenderer from "../components/common/ContentRenderer";
 import { CustomDropdown } from "../components/common/CustomDropdown";
 import { useAuth } from "../context/AuthContext";
@@ -35,7 +35,7 @@ import type { Article, UserProfile } from "../types";
 const ArticleDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const { language } = useLayout();
-  const { user } = useAuth();
+  const { user, isAuthenticated } = useAuth();
   const [article, setArticle] = useState<Article | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [bookmarks, setBookmarks] = useState<string[]>([]);
@@ -590,7 +590,27 @@ const ArticleDetail: React.FC = () => {
 
             {/* Submit Documents / Status */}
             <div className="bg-card p-4 sm:p-6 rounded-2xl shadow-soft border border-border-color">
-              {article.allow_submissions ? (
+              {!isAuthenticated ? (
+                <>
+                  <h4 className="text-lg font-bold mb-2 text-card-text flex items-center gap-2">
+                    <Lock className="w-5 h-5 text-muted-text" />
+                    {language === "bn"
+                      ? "ফাইল জমা দিতে লগইন করুন"
+                      : "Sign in to submit"}
+                  </h4>
+                  <p className="text-sm text-muted-text mb-4">
+                    {language === "bn"
+                      ? "নথি জমা দিতে দয়া করে লগইন করুন"
+                      : "Please sign in to submit documents"}
+                  </p>
+                  <Link
+                    to="/login"
+                    className="inline-block bg-bbcRed text-white px-6 py-2 rounded-full font-bold hover:bg-opacity-90 transition-all"
+                  >
+                    {t("sign_in", language)}
+                  </Link>
+                </>
+              ) : article.allow_submissions ? (
                 <>
                   <h4 className="text-base sm:text-lg font-bold mb-3 sm:mb-4 text-card-text border-b border-border-color pb-2 flex items-center gap-2">
                     <Upload className="w-5 h-5 text-bbcRed" />
@@ -984,33 +1004,52 @@ const ArticleDetail: React.FC = () => {
 
           {/* Comment Input Form - at the bottom */}
           <div className="border-t border-border-color pt-6">
-            <h4 className="font-bold text-sm text-card-text mb-4">
-              {t("write_your_comment", language)}
-            </h4>
-            <textarea
-              id="comment-input"
-              className="w-full p-4 rounded-xl border border-border-color bg-card text-card-text focus:ring-2 focus:ring-bbcRed/20 focus:border-bbcRed outline-none transition-all resize-y text-base min-h-[150px]"
-              placeholder={t("write_your_comment", language)}
-              value={commentInput}
-              onChange={(e) => setCommentInput(e.target.value)}
-            />
-            <div className="flex justify-between items-center mt-3 gap-4">
-              <div className="text-xs text-muted-text">
-                {commentInput.length}/5000
-              </div>
-              {commentError && (
-                <div className="text-xs text-danger font-bold">
-                  {commentError}
+            {isAuthenticated ? (
+              <>
+                <h4 className="font-bold text-sm text-card-text mb-4">
+                  {t("write_your_comment", language)}
+                </h4>
+                <textarea
+                  id="comment-input"
+                  className="w-full p-4 rounded-xl border border-border-color bg-card text-card-text focus:ring-2 focus:ring-bbcRed/20 focus:border-bbcRed outline-none transition-all resize-y text-base min-h-[150px]"
+                  placeholder={t("write_your_comment", language)}
+                  value={commentInput}
+                  onChange={(e) => setCommentInput(e.target.value)}
+                />
+                <div className="flex justify-between items-center mt-3 gap-4">
+                  <div className="text-xs text-muted-text">
+                    {commentInput.length}/5000
+                  </div>
+                  {commentError && (
+                    <div className="text-xs text-danger font-bold">
+                      {commentError}
+                    </div>
+                  )}
+                  <button
+                    type="button"
+                    onClick={postComment}
+                    className="bg-bbcRed text-white px-6 py-2.5 rounded-full font-bold hover:bg-opacity-90 hover:shadow-lg hover:-translate-y-0.5 transition-all text-sm"
+                  >
+                    {t("post_comment", language)}
+                  </button>
                 </div>
-              )}
-              <button
-                type="button"
-                onClick={postComment}
-                className="bg-bbcRed text-white px-6 py-2.5 rounded-full font-bold hover:bg-opacity-90 hover:shadow-lg hover:-translate-y-0.5 transition-all text-sm"
-              >
-                {t("post_comment", language)}
-              </button>
-            </div>
+              </>
+            ) : (
+              <div className="flex flex-col items-center justify-center py-8 text-center">
+                <Lock className="w-12 h-12 text-muted-text mb-3" />
+                <p className="text-card-text font-bold mb-3">
+                  {language === "bn"
+                    ? "মন্তব্য করতে লগইন করুন"
+                    : "Sign in to comment"}
+                </p>
+                <Link
+                  to="/login"
+                  className="bg-bbcRed text-white px-6 py-2 rounded-full font-bold hover:bg-opacity-90 transition-all"
+                >
+                  {t("sign_in", language)}
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       </div>
