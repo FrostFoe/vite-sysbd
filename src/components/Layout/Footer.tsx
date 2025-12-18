@@ -131,15 +131,16 @@ const Footer: React.FC = () => {
             </p>
 
             <div className="space-y-3 mt-4">
-              <div className="bg-muted-bg p-2.5 sm:p-3 rounded-lg border border-border-color">
+              {/* USDT Section */}
+              <div className="bg-muted-bg p-2.5 sm:p-3 rounded-lg border border-border-color hover:border-success/50 transition-colors duration-300">
                 <div className="flex items-center gap-2 mb-1">
                   <Coins className="w-4 h-4 text-success" />
-                  <span className="font-bold text-xs text-card-text">
+                  <span className="font-bold text-xs text-card-text uppercase tracking-wide">
                     USDT (TRC-20)
                   </span>
                 </div>
                 <div className="flex items-center justify-between gap-2 bg-card p-2 rounded border border-border-color">
-                  <code className="text-[9px] sm:text-[10px] text-muted-text break-all">
+                  <code className="text-[9px] sm:text-[10px] text-muted-text break-all font-mono">
                     TNztLXjP7zYWotPRpzdtPCNVu8JB3DG5jV
                   </code>
                   <button
@@ -150,22 +151,24 @@ const Footer: React.FC = () => {
                         t("link_copied", language)
                       )
                     }
-                    className="text-bbcRed hover:opacity-70 p-1 transition-opacity flex-shrink-0"
+                    className="text-success hover:text-success/70 p-1 transition-colors flex-shrink-0 active:scale-95"
+                    title="Copy to clipboard"
                   >
                     <Copy className="w-3 h-3" />
                   </button>
                 </div>
               </div>
 
-              <div className="bg-muted-bg p-3 rounded-lg border border-border-color">
+              {/* Bitcoin Section */}
+              <div className="bg-muted-bg p-3 rounded-lg border border-border-color hover:border-warning/50 transition-colors duration-300">
                 <div className="flex items-center gap-2 mb-1">
                   <Bitcoin className="w-4 h-4 text-warning" />
-                  <span className="font-bold text-xs text-card-text">
+                  <span className="font-bold text-xs text-card-text uppercase tracking-wide">
                     Bitcoin (BTC)
                   </span>
                 </div>
                 <div className="flex items-center justify-between gap-2 bg-card p-2 rounded border border-border-color">
-                  <code className="text-[10px] text-muted-text break-all">
+                  <code className="text-[9px] sm:text-[10px] text-muted-text break-all font-mono">
                     18kgAYsUMVF51MNUeMt6vr1WhfgHtzcWai
                   </code>
                   <button
@@ -176,7 +179,8 @@ const Footer: React.FC = () => {
                         t("link_copied", language)
                       )
                     }
-                    className="text-bbcRed hover:opacity-70 p-1 transition-opacity"
+                    className="text-warning hover:text-warning/70 p-1 transition-colors flex-shrink-0 active:scale-95"
+                    title="Copy to clipboard"
                   >
                     <Copy className="w-3 h-3" />
                   </button>
