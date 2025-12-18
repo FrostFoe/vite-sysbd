@@ -15,6 +15,7 @@ import { CustomEditor } from "../../components/common";
 import { CustomDropdown } from "../../components/common/CustomDropdown";
 import { useLayout } from "../../context/LayoutContext";
 import { adminApi, publicApi } from "../../lib/api";
+import { DANGEROUS_FILE_EXTENSIONS } from "../../lib/constants";
 import { showToastMsg } from "../../lib/utils";
 import type {
   AdminArticle,
@@ -166,6 +167,16 @@ const ArticleEdit: React.FC = () => {
     async (e: React.ChangeEvent<HTMLInputElement>) => {
       const file = e.target.files?.[0];
       if (!file) return;
+
+      // Check for dangerous file extensions
+      const fileExtension = file.name.split(".").pop()?.toLowerCase() || "";
+      if (DANGEROUS_FILE_EXTENSIONS.includes(fileExtension)) {
+        showToastMsg(
+          `File type not allowed (potentially dangerous): .${fileExtension}`,
+          "error"
+        );
+        return;
+      }
 
       if (file.size > 2 * 1024 * 1024) {
         showToastMsg("ফাইল খুব বড়! সর্বোচ্চ ২এমবি।", "error");

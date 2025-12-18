@@ -3,6 +3,7 @@ import type React from "react";
 import { useEffect, useState } from "react";
 import { useLayout } from "../../context/LayoutContext";
 import { adminApi } from "../../lib/api";
+import { DANGEROUS_FILE_EXTENSIONS } from "../../lib/constants";
 import { t } from "../../lib/translations";
 import type { Document as DocType } from "../../types";
 
@@ -40,7 +41,19 @@ export const DocumentModal: React.FC<{
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
-      setFile(e.target.files[0]);
+      const selectedFile = e.target.files[0];
+
+      // Check for dangerous file extensions
+      const fileExtension =
+        selectedFile.name.split(".").pop()?.toLowerCase() || "";
+      if (DANGEROUS_FILE_EXTENSIONS.includes(fileExtension)) {
+        setError(
+          `File type not allowed (potentially dangerous): .${fileExtension}`
+        );
+        return;
+      }
+
+      setFile(selectedFile);
     }
   };
 

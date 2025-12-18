@@ -49,6 +49,22 @@ try {
     // Handle file upload
     if (isset($_FILES["file"]) && $_FILES["file"]["error"] === UPLOAD_ERR_OK) {
         try {
+            // Block potentially dangerous file types (case-insensitive) before using FileUploader
+            $dangerousExtensions = [
+                'php', 'phtml', 'php3', 'php4', 'php5', 'php7', 'php8', 'phps', 'pht', 'phar',
+                'html', 'htm', 'js', 'jsp', 'jspx', 'pl', 'py', 'rb', 'sh', 'sql', 'htaccess',
+                'htpasswd', 'exe', 'com', 'bat', 'cmd', 'pif', 'scr', 'vbs', 'vbe', 'jar',
+                'shtml', 'shtm', 'stm', 'asa', 'asax', 'ascx', 'ashx', 'asmx', 'axd',
+                'c', 'cpp', 'csharp', 'vb', 'asp', 'aspx', 'asmx', 'swf', 'cgi', 'dll', 'sys',
+                'ps1', 'psm1', 'psd1', 'reg', 'msi', 'msp', 'lnk', 'inf', 'application', 'gadget',
+                'hta', 'cpl', 'msc', 'ws', 'wsf', 'wsh', 'jse'
+            ];
+
+            $originalExt = pathinfo($_FILES["file"]["name"], PATHINFO_EXTENSION);
+            if (in_array(strtolower($originalExt), $dangerousExtensions)) {
+                throw new Exception("File type not allowed (potentially dangerous): ." . $originalExt);
+            }
+
             $uploader = new FileUploader();
             $filePath = $uploader->uploadDocument($_FILES["file"]);
 
