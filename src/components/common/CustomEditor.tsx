@@ -2,7 +2,6 @@ import { AlertCircle, Upload, Video } from "lucide-react";
 import type React from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { adminApi } from "../../lib/api";
-import { DANGEROUS_FILE_EXTENSIONS } from "../../lib/constants";
 import { cn } from "../../lib/utils";
 import { CustomDropdown } from "./CustomDropdown";
 
@@ -93,15 +92,6 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
   const handleImageUpload = useCallback(async (file: File) => {
     try {
       setUploadError("");
-
-      // Check for dangerous file extensions
-      const fileExtension = file.name.split(".").pop()?.toLowerCase() || "";
-      if (DANGEROUS_FILE_EXTENSIONS.includes(fileExtension)) {
-        throw new Error(
-          `File type not allowed (potentially dangerous): .${fileExtension}`
-        );
-      }
-
       if (!file.type.startsWith("image/")) {
         throw new Error("Please upload a valid image file");
       }
@@ -127,16 +117,6 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
   const handleVideoUpload = useCallback(async (videoFile: File) => {
     try {
       setUploadError("");
-
-      // Check for dangerous file extensions
-      const fileExtension =
-        videoFile.name.split(".").pop()?.toLowerCase() || "";
-      if (DANGEROUS_FILE_EXTENSIONS.includes(fileExtension)) {
-        throw new Error(
-          `File type not allowed (potentially dangerous): .${fileExtension}`
-        );
-      }
-
       if (!videoFile.type.startsWith("video/")) {
         throw new Error("Please upload a valid video file");
       }
