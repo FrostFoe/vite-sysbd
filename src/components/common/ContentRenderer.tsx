@@ -1,6 +1,7 @@
 import DOMPurify from "dompurify";
 import type React from "react";
-import { createElement } from "react";
+import { createElement, useMemo } from "react";
+
 import CustomImage from "./CustomImage";
 import CustomVideo from "./CustomVideo";
 
@@ -15,11 +16,11 @@ const ContentRenderer: React.FC<ContentRendererProps> = ({
 }) => {
   const safeContent = DOMPurify.sanitize(content);
 
-  const renderProcessedContent = () => {
+  const processedContent = useMemo(() => {
     let processedContent = safeContent;
-
     const customComponents: React.ReactElement[] = [];
 
+    // Replace images with placeholders
     processedContent = processedContent.replace(
       /<img\s+([^>]*?)\s*>/gi,
       (_, attributes) => {
@@ -46,6 +47,7 @@ const ContentRenderer: React.FC<ContentRendererProps> = ({
       }
     );
 
+    // Replace videos with placeholders
     processedContent = processedContent.replace(
       /<video\s+([^>]*?)\s*\/?>.*?<\/video>|<video\s+([^>]*?)\s*>/gi,
       (fullMatch) => {
@@ -84,6 +86,44 @@ const ContentRenderer: React.FC<ContentRendererProps> = ({
       /(__CUSTOM_COMPONENT_PLACEHOLDER_\d+__)/
     );
 
+    // Convert parts to React elements
+    const convertNodeToReactElement = (
+      node: Node,
+      nodeKey: string
+    ): React.ReactNode => {
+      if (node.nodeType === Node.TEXT_NODE) {
+        const text = node.textContent;
+        return text?.trim() ? text : null;
+      }
+      if (node.nodeType === Node.ELEMENT_NODE) {
+        const element = node as HTMLElement;
+        const props: Record<string, unknown> = {
+          key: nodeKey,
+        };
+
+        // Copy attributes
+        for (let i = 0; i < element.attributes.length; i++) {
+          const attr = element.attributes[i];
+          // Convert HTML attributes to React equivalents
+          const propName = attr.name === "class" ? "className" : attr.name;
+          props[propName] = attr.value;
+        }
+
+        // Process child nodes
+        const children = Array.from(element.childNodes)
+          .map((childNode, childIndex) =>
+            convertNodeToReactElement(
+              childNode,
+              `${nodeKey}-child-${childIndex}`
+            )
+          )
+          .filter((child) => child !== null && child !== undefined);
+
+        return createElement(element.tagName.toLowerCase(), props, ...children);
+      }
+      return null;
+    };
+
     return parts
       .map((part, partIndex) => {
         if (part.startsWith("__CUSTOM_COMPONENT_PLACEHOLDER_")) {
@@ -96,63 +136,26 @@ const ContentRenderer: React.FC<ContentRendererProps> = ({
           }
         } else if (part.trim()) {
           const sanitizedPart = DOMPurify.sanitize(part);
-          // Create a temporary element to parse the HTML
           const tempDiv = document.createElement("div");
           tempDiv.innerHTML = sanitizedPart;
 
-          // Convert the HTML elements to React elements recursively
-          const convertNodeToReactElement = (
-            node: Node,
-            nodeKey: string
-          ): React.ReactNode => {
-            if (node.nodeType === Node.TEXT_NODE) {
-              return node.textContent;
-            } else if (node.nodeType === Node.ELEMENT_NODE) {
-              const element = node as HTMLElement;
-              const props: Record<string, unknown> = {
-                key: nodeKey,
-              };
-
-              // Copy attributes
-              for (let i = 0; i < element.attributes.length; i++) {
-                const attr = element.attributes[i];
-                // Convert HTML attributes to React equivalents (e.g. class to className)
-                const propName =
-                  attr.name === "class" ? "className" : attr.name;
-                props[propName] = attr.value;
-              }
-
-              // Process child nodes recursively
-              const children = Array.from(element.childNodes).map(
-                (childNode, childIndex) =>
-                  convertNodeToReactElement(
-                    childNode,
-                    `${nodeKey}-child-${childIndex}`
-                  )
-              );
-
-              return createElement(
-                element.tagName.toLowerCase(),
-                props,
-                ...children
-              );
-            }
-            return null;
-          };
-
-          return Array.from(tempDiv.childNodes).map((node, nodeIndex) =>
-            convertNodeToReactElement(node, `part-${partIndex}-node-${nodeIndex}`)
-          );
+          return Array.from(tempDiv.childNodes)
+            .map((node, nodeIndex) =>
+              convertNodeToReactElement(
+                node,
+                `part-${partIndex}-node-${nodeIndex}`
+              )
+            )
+            .filter((item) => item !== null);
         }
         return null;
       })
-      .filter(Boolean);
-  };
+      .filter(Boolean)
+      .flat();
+  }, [safeContent]);
 
   return (
-    <div className={`prose max-w-none ${className}`}>
-      {renderProcessedContent()}
-    </div>
+    <div className={`prose max-w-none ${className}`}>{processedContent}</div>
   );
 };
 

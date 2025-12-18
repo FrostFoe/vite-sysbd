@@ -1,5 +1,7 @@
-import React, { useRef, useState, useCallback, useEffect } from "react";
 import { AlertCircle, Upload, Video } from "lucide-react";
+import type React from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+
 import { adminApi } from "../../lib/api";
 
 interface CustomEditorProps {
@@ -86,41 +88,36 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
     }
   }, []);
 
-    const handleVideoUpload = useCallback(
-    async (videoFile: File) => {
-      try {
-        setUploadError("");
+  const handleVideoUpload = useCallback(async (videoFile: File) => {
+    try {
+      setUploadError("");
 
-        if (!videoFile.type.startsWith("video/")) {
-          throw new Error("Please upload a valid video file");
-        }
-
-        const maxSize = 500 * 1024 * 1024; // 500MB
-        if (videoFile.size > maxSize) {
-          throw new Error("Video size must be less than 500MB");
-        }
-
-        const formData = new FormData();
-        formData.append("video", videoFile);
-
-        const data = await adminApi.uploadVideo(formData);
-
-        if (!data.success || !data.url) {
-          throw new Error(data.error || "Upload failed");
-        }
-        
-        return data.url;
-
-      } catch (error) {
-        const message =
-          error instanceof Error ? error.message : "Upload failed";
-        setUploadError(message);
-        console.error("Video upload error:", error);
-        return null;
+      if (!videoFile.type.startsWith("video/")) {
+        throw new Error("Please upload a valid video file");
       }
-    },
-    [],
-  );
+
+      const maxSize = 500 * 1024 * 1024; // 500MB
+      if (videoFile.size > maxSize) {
+        throw new Error("Video size must be less than 500MB");
+      }
+
+      const formData = new FormData();
+      formData.append("video", videoFile);
+
+      const data = await adminApi.uploadVideo(formData);
+
+      if (!data.success || !data.url) {
+        throw new Error(data.error || "Upload failed");
+      }
+
+      return data.url;
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Upload failed";
+      setUploadError(message);
+      console.error("Video upload error:", error);
+      return null;
+    }
+  }, []);
 
   const handleImageButtonClick = useCallback(() => {
     const input = document.createElement("input");
@@ -149,11 +146,11 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
       const target = e.target as HTMLInputElement;
       const file = target.files?.[0];
       if (file) {
-        handleVideoUpload(file).then(url => {
-            if (url) {
-                const html = `<video controls src="${url}"></video>`;
-                document.execCommand("insertHTML", false, html);
-            }
+        handleVideoUpload(file).then((url) => {
+          if (url) {
+            const html = `<video controls src="${url}"></video>`;
+            document.execCommand("insertHTML", false, html);
+          }
         });
       }
     };
@@ -176,16 +173,16 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
             }
           });
         } else if (file.type.startsWith("video/")) {
-            handleVideoUpload(file).then(url => {
-                if (url) {
-                    const html = `<video controls src="${url}"></video>`;
-                    document.execCommand("insertHTML", false, html);
-                }
-            });
+          handleVideoUpload(file).then((url) => {
+            if (url) {
+              const html = `<video controls src="${url}"></video>`;
+              document.execCommand("insertHTML", false, html);
+            }
+          });
         }
       }
     },
-    [handleImageUpload, handleVideoUpload],
+    [handleImageUpload, handleVideoUpload]
   );
 
   return (
@@ -319,9 +316,12 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
       </div>
 
       {/* Editor Content Area */}
+      {/* biome-ignore lint/a11y/useSemanticElements: Rich text editor requires contentEditable div */}
       <div
         ref={editorRef}
         contentEditable
+        role="textbox"
+        tabIndex={0}
         onInput={handleInput}
         suppressContentEditableWarning
         style={{ height, minHeight: height }}
@@ -340,7 +340,7 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
           {placeholder}
         </div>
       )}
-      
+
       {/* Error Message */}
       {uploadError && (
         <div className="mt-2 p-3 bg-danger/10 border border-danger/30 rounded-lg flex items-center gap-2 text-danger">
