@@ -4,6 +4,8 @@ import {
   Coins,
   Copy,
   Facebook,
+  Heart,
+  Mail,
   Twitter,
   Youtube,
 } from "lucide-react";
@@ -95,7 +97,7 @@ const Footer: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 sm:gap-8 md:gap-12 mb-8 sm:mb-12">
           <div className="col-span-1 md:col-span-2">
             <h3 className="font-bold text-base sm:text-lg mb-4 sm:mb-6 flex items-center gap-2">
-              <Coins className="w-5 h-5 text-bbcRed" />{" "}
+              <Mail className="w-5 h-5 text-bbcRed" />
               {t("newsletter", language)}
             </h3>
             <p className="text-muted-text text-xs sm:text-sm mb-4 max-w-sm">
@@ -123,7 +125,7 @@ const Footer: React.FC = () => {
           </div>
           <div className="col-span-1 md:col-span-2 space-y-4">
             <h3 className="font-bold text-base sm:text-lg flex items-center gap-2">
-              <Coins className="w-5 h-5 text-bbcRed" />{" "}
+              <Heart className="w-5 h-5 text-bbcRed" />
               {t("support_work", language)}
             </h3>
             <p className="text-muted-text text-xs sm:text-sm max-w-sm">

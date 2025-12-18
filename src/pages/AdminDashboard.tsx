@@ -1,4 +1,10 @@
-import { Edit3, FileText, Loader, MessageSquare, Users } from "lucide-react";
+import {
+  FileStack,
+  FileText,
+  Loader,
+  MessageSquare,
+  Users,
+} from "lucide-react";
 import type React from "react";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
@@ -110,7 +116,7 @@ const AdminDashboard: React.FC = () => {
               </h3>
             </div>
             <div className="p-3 bg-muted-bg text-card-text rounded-lg">
-              <Edit3 className="w-6 h-6" />
+              <FileStack className="w-6 h-6" />
             </div>
           </div>
           <Link
