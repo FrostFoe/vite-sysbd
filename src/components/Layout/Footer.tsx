@@ -49,19 +49,17 @@ const Footer: React.FC = () => {
     <footer className="pt-12 sm:pt-16 pb-6 sm:pb-8 bg-card text-card-text transition-colors border-t border-border-color mt-auto">
       <div className="container mx-auto px-4 lg:px-8 max-w-[1380px]">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 sm:mb-12 border-b border-border-color pb-8 sm:pb-12 gap-4 sm:gap-8">
-          <div className="flex items-center select-none gap-2">
+          <div className="flex items-center select-none gap-0 group">
             <span
-              className={`font-bold text-lg sm:text-2xl rounded shadow transition-colors duration-300 ${
-                theme === "dark"
-                  ? "bg-green-600 text-red-400 px-2.5 py-0.5"
-                  : "bg-red-600 text-green-400 px-2.5 py-0.5"
+              className={`font-bold text-lg md:text-xl transition-all duration-300 ${
+                theme === "dark" ? "text-green-500" : "text-red-500"
               }`}
             >
               Breach
             </span>
             <span
-              className={`font-bold text-2xl sm:text-3xl tracking-tighter leading-none ${
-                theme === "dark" ? "text-green-400" : "text-red-600"
+              className={`font-bold text-lg md:text-2xl tracking-tighter leading-none transition-all duration-300 ${
+                theme === "dark" ? "text-red-400" : "text-green-600"
               }`}
             >
               Times
