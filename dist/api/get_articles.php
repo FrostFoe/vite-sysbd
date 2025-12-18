@@ -4,7 +4,13 @@ require_once __DIR__ . "/../lib/CacheManager.php";
 session_start();
 
 // --- Authorization Check ---
-if (!isset($_SESSION["user_role"]) || $_SESSION["user_role"] !== "admin") {
+// Allow public access to fetch published articles
+// Only admin can access drafts/archived articles
+$status = isset($_GET["status"]) ? $_GET["status"] : "all";
+$isAdmin = isset($_SESSION["user_role"]) && $_SESSION["user_role"] === "admin";
+
+// If status is anything other than "published", user must be admin
+if ($status !== "published" && !$isAdmin) {
     send_response(["error" => "Unauthorized"], 403);
     exit();
 }
@@ -13,8 +19,6 @@ if (!isset($_SESSION["user_role"]) || $_SESSION["user_role"] !== "admin") {
 if ($_SERVER["REQUEST_METHOD"] !== "GET") {
     send_response(["error" => "Method not allowed"], 405);
 }
-
-$status = isset($_GET["status"]) ? $_GET["status"] : "all";
 $search = isset($_GET["search"]) ? trim($_GET["search"]) : "";
 $catFilter = isset($_GET["cat"]) ? $_GET["cat"] : "";
 
