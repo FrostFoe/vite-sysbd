@@ -195,10 +195,18 @@ const ContentRenderer: React.FC<ContentRendererProps> = ({
         return;
       }
 
-      // Position the toolbar above the selection
-      const rect = range.getBoundingClientRect();
-      const top = rect.top + window.scrollY - 60; // Position above the selection
-      const left = rect.left + window.scrollX + rect.width / 2;
+      // Position the toolbar near the end of the selection
+      const endRange = document.createRange();
+      endRange.setStart(range.endContainer, range.endOffset);
+      endRange.collapse(true); // Collapse to end position
+      const endRect = endRange.getBoundingClientRect();
+
+      // Calculate position above the end of selection
+      const top = endRect.top + window.scrollY - 60; // Position above the end of selection
+      const left = Math.min(
+        endRect.left + window.scrollX,
+        window.innerWidth - 150 // Prevent going off-screen on the right
+      );
 
       setToolbarPosition({ top, left });
       setSelectedText(selectedTextContent);
@@ -317,9 +325,18 @@ const ContentRenderer: React.FC<ContentRendererProps> = ({
       if (selectedTextContent && containerRef?.current) {
         const range = selection.getRangeAt(0);
         if (containerRef.current.contains(range.commonAncestorContainer)) {
-          const rect = range.getBoundingClientRect();
-          const top = rect.top + window.scrollY - 60; // Position above the selection
-          const left = e.clientX; // Use mouse position for right-click
+          // Position the toolbar near the end of the selection
+          const endRange = document.createRange();
+          endRange.setStart(range.endContainer, range.endOffset);
+          endRange.collapse(true); // Collapse to end position
+          const endRect = endRange.getBoundingClientRect();
+
+          // Calculate position above the end of selection (prefer over mouse position for consistency)
+          const top = endRect.top + window.scrollY - 60; // Position above the end of selection
+          const left = Math.min(
+            endRect.left + window.scrollX,
+            window.innerWidth - 150 // Prevent going off-screen on the right
+          );
 
           setToolbarPosition({ top, left });
           setSelectedText(selectedTextContent);
@@ -350,7 +367,11 @@ const ContentRenderer: React.FC<ContentRendererProps> = ({
         <div
           ref={toolbarRef}
           className="fixed z-[100] flex items-center gap-1 bg-card text-card-text shadow-soft rounded-lg p-2 border border-border-color"
-          style={{ top: toolbarPosition.top, left: toolbarPosition.left - 60 }}
+          style={{
+            top: toolbarPosition.top,
+            left: toolbarPosition.left,
+            transform: 'translateX(-50%)' // Center the toolbar on the left position
+          }}
         >
           <button
             type="button"
