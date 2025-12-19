@@ -12,8 +12,6 @@ interface LayoutContextType {
   toggleTheme: () => void;
   language: "en" | "bn";
   toggleLanguage: () => void;
-  isSidebarOpen: boolean;
-  toggleSidebar: (open?: boolean) => void;
   isSearchOpen: boolean;
   toggleSearch: (open?: boolean) => void;
   currentCategory: string;
@@ -39,7 +37,6 @@ export const LayoutProvider = ({ children }: { children: ReactNode }) => {
         : "en";
   });
 
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [currentCategory, setCurrentCategory] = useState<string>(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -68,10 +65,6 @@ export const LayoutProvider = ({ children }: { children: ReactNode }) => {
     setLanguage((prevLang) => (prevLang === "bn" ? "en" : "bn"));
   }, []);
 
-  const toggleSidebar = useCallback((open?: boolean) => {
-    setIsSidebarOpen((prev) => (open !== undefined ? open : !prev));
-  }, []);
-
   const toggleSearch = useCallback((open?: boolean) => {
     setIsSearchOpen((prev) => (open !== undefined ? open : !prev));
   }, []);
@@ -83,8 +76,6 @@ export const LayoutProvider = ({ children }: { children: ReactNode }) => {
         toggleTheme,
         language,
         toggleLanguage,
-        isSidebarOpen,
-        toggleSidebar,
         isSearchOpen,
         toggleSearch,
         currentCategory,

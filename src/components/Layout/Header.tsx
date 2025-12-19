@@ -1,4 +1,4 @@
-import { LayoutDashboard, Menu, Moon, Search, Shield, Sun } from "lucide-react";
+import { LayoutDashboard, Moon, Search, Shield, Sun } from "lucide-react";
 import type React from "react";
 import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
@@ -15,7 +15,6 @@ const Header: React.FC = () => {
     toggleTheme,
     language,
     toggleLanguage,
-    toggleSidebar,
     toggleSearch,
     currentCategory,
     setCurrentCategory,
@@ -60,13 +59,6 @@ const Header: React.FC = () => {
       <div className="container mx-auto px-4 lg:px-8 max-w-[1380px]">
         <div className="h-[70px] flex items-center justify-between">
           <div className="flex items-center gap-3 md:gap-6">
-            <button
-              type="button"
-              onClick={() => toggleSidebar(true)}
-              className="p-2 md:p-2.5 hover:bg-muted-bg rounded-full text-muted-text dark:text-card-text transition-colors active:scale-95"
-            >
-              <Menu className="w-6 h-6" />
-            </button>
             <Link
               to="/"
               className="block text-card-text transition-transform hover:scale-[1.02] active:scale-95 duration-300"

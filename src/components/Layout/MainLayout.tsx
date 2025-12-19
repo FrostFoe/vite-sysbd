@@ -2,7 +2,6 @@ import type React from "react";
 import type { ReactNode } from "react";
 import Footer from "./Footer";
 import Header from "./Header";
-import MobileSidebar from "./MobileSidebar";
 import SearchOverlay from "./SearchOverlay";
 
 interface MainLayoutProps {
@@ -21,7 +20,6 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
       />
 
       <Header />
-      <MobileSidebar />
       <SearchOverlay />
 
       <main className="flex-grow container mx-auto px-4 lg:px-8 max-w-[1380px] py-4">
