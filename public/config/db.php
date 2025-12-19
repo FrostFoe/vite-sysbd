@@ -1,32 +1,43 @@
 <?php
 
-$host = "127.0.0.1";
-$db = "breachtimes";
-$user = "sysbdadm";
-$pass = "lzx26NGPR58";
-$charset = "utf8mb4";
-
-// Load GEMINI_API_KEY from .env if it exists
+// Load .env variables
 if (file_exists(__DIR__ . '/../../.env')) {
     $env_lines = file(__DIR__ . '/../../.env', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
     foreach ($env_lines as $line) {
-        if (strpos(trim($line), '#') === 0) continue;
+        $line = trim($line);
+        if ($line === '' || strpos($line, '#') === 0) continue;
+        
         if (strpos($line, '=') !== false) {
             list($name, $value) = explode('=', $line, 2);
-            if (trim($name) === 'GEMINI_API_KEY') {
-                $gemini_api_key = trim($value);
-                break;
+            $name = trim($name);
+            $value = trim($value);
+            // Remove surrounding quotes if present
+            if (preg_match('/^"(.*)"$/', $value, $matches) || preg_match("/^'(.*)'$/", $value, $matches)) {
+                $value = $matches[1];
             }
+            putenv("$name=$value");
+            $_ENV[$name] = $value;
         }
     }
 }
 
-// Fallback to hardcoded key if not in .env
-if (!isset($gemini_api_key)) {
-    $gemini_api_key = "AIzaSyD-wmqmiXKltxHabN0t6SVzdxub0Itj1F0";
+$host = getenv('DB_HOST');
+$db = getenv('DB_NAME');
+$user = getenv('DB_USER');
+$pass = getenv('DB_PASS');
+$port = getenv('DB_PORT') ?: 3306;
+$charset = "utf8mb4";
+$gemini_api_key = getenv('GEMINI_API_KEY');
+
+if (!$host || !$db || !$user) {
+    // We cannot proceed without DB credentials. 
+    // Since this is an API, we should probably return a 500 or log error.
+    error_log("Database configuration missing in .env");
+    // We won't exit here immediately to allow for better error handling in the try-catch block if needed,
+    // but the connection will likely fail.
 }
 
-$dsn = "mysql:host=$host;port=3306;dbname=$db;charset=$charset";
+$dsn = "mysql:host=$host;port=$port;dbname=$db;charset=$charset";
 $options = [
     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
