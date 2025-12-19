@@ -29,13 +29,22 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
   const editorRef = useRef<HTMLDivElement>(null);
   const [uploadError, setUploadError] = useState<string>("");
   const [isInitialized, setIsInitialized] = useState(false);
+  const [lastSyncedValue, setLastSyncedValue] = useState<string>("");
 
   useEffect(() => {
     if (editorRef.current && !isInitialized) {
       editorRef.current.innerHTML = value || "";
+      setLastSyncedValue(value || "");
       setIsInitialized(true);
     }
-  }, [isInitialized, value]);
+  }, [isInitialized]);
+
+  useEffect(() => {
+    if (editorRef.current && isInitialized && value !== lastSyncedValue) {
+      editorRef.current.innerHTML = value || "";
+      setLastSyncedValue(value || "");
+    }
+  }, [value, isInitialized, lastSyncedValue]);
 
   const handleInput = (e: React.FormEvent<HTMLDivElement>) => {
     onChange(e.currentTarget.innerHTML);

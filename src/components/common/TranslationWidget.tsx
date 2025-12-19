@@ -63,15 +63,7 @@ export const TranslationWidget: React.FC<TranslationWidgetProps> = ({
 
   const handleUseTranslation = () => {
     if (translatedText) {
-      let finalTranslation = translatedText;
-      
-      if (finalTranslation.includes('<')) {
-        const tempDiv = document.createElement('div');
-        tempDiv.innerHTML = finalTranslation;
-        finalTranslation = tempDiv.textContent || tempDiv.innerText || finalTranslation;
-      }
-      
-      onTranslate(finalTranslation.trim(), targetLang);
+      onTranslate(translatedText.trim(), targetLang);
       setTranslatedText(null);
       setIsExpanded(false);
     }

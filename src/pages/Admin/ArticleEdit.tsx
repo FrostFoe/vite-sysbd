@@ -438,11 +438,11 @@ const ArticleEdit: React.FC = () => {
                 <TranslationWidget
                   text={article.content_bn || ""}
                   onTranslate={(translation) => {
-                    contentEnRef.current = translation;
                     setArticle((prev) => ({
                       ...prev,
                       content_en: translation,
                     }));
+                    contentEnRef.current = translation;
                   }}
                   currentLang="bn"
                   buttonLabel="Translate to English"
@@ -471,11 +471,11 @@ const ArticleEdit: React.FC = () => {
                 <TranslationWidget
                   text={article.content_en || ""}
                   onTranslate={(translation) => {
-                    contentBnRef.current = translation;
                     setArticle((prev) => ({
                       ...prev,
                       content_bn: translation,
                     }));
+                    contentBnRef.current = translation;
                   }}
                   currentLang="en"
                   buttonLabel="Translate to Bengali"
