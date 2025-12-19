@@ -1,6 +1,8 @@
 import DOMPurify from "dompurify";
+import { Copy, Palette, Square, Type } from "lucide-react";
 import type React from "react";
-import { createElement, useMemo } from "react";
+import { createElement, useEffect, useMemo, useRef, useState } from "react";
+import { showToastMsg } from "../../utils";
 
 import CustomImage from "./CustomImage";
 import CustomVideo from "./CustomVideo";
@@ -10,6 +12,8 @@ interface ContentRendererProps {
   className?: string;
   fontSizeClass?: string; // Added fontSizeClass prop
   containerRef?: React.RefObject<HTMLDivElement>; // Optional ref for text selection
+  enableTextSelectionToolbar?: boolean; // Whether to enable the floating toolbar
+  onTextSelected?: (text: string) => void; // Callback when text is selected
 }
 
 const ContentRenderer: React.FC<ContentRendererProps> = ({
@@ -17,7 +21,14 @@ const ContentRenderer: React.FC<ContentRendererProps> = ({
   className = "",
   fontSizeClass = "", // Added fontSizeClass with default
   containerRef,
+  enableTextSelectionToolbar = false,
+  onTextSelected,
 }) => {
+  const [toolbarVisible, setToolbarVisible] = useState(false);
+  const [toolbarPosition, setToolbarPosition] = useState({ top: 0, left: 0 });
+  const [selectedText, setSelectedText] = useState('');
+  const [showColorPicker, setShowColorPicker] = useState(false);
+  const toolbarRef = useRef<HTMLDivElement>(null);
   const safeContent = DOMPurify.sanitize(content);
 
   const processedContent = useMemo(() => {
@@ -158,13 +169,225 @@ const ContentRenderer: React.FC<ContentRendererProps> = ({
       .flat();
   }, [safeContent]);
 
+  // Handle text selection
+  useEffect(() => {
+    if (!enableTextSelectionToolbar) return;
+
+    const handleSelection = () => {
+      const selection = window.getSelection();
+      if (!selection || selection.toString().trim() === '') {
+        setToolbarVisible(false);
+        setSelectedText('');
+        return;
+      }
+
+      const selectedTextContent = selection.toString().trim();
+      if (!selectedTextContent) {
+        setToolbarVisible(false);
+        return;
+      }
+
+      // Check if selection is within the content container
+      const range = selection.getRangeAt(0);
+      const container = containerRef?.current;
+      if (!container || !container.contains(range.commonAncestorContainer)) {
+        setToolbarVisible(false);
+        return;
+      }
+
+      // Position the toolbar above the selection
+      const rect = range.getBoundingClientRect();
+      const top = rect.top + window.scrollY - 60; // Position above the selection
+      const left = rect.left + window.scrollX + rect.width / 2;
+
+      setToolbarPosition({ top, left });
+      setSelectedText(selectedTextContent);
+      setToolbarVisible(true);
+
+      // Call the callback if provided
+      if (onTextSelected) {
+        onTextSelected(selectedTextContent);
+      }
+    };
+
+    const handleMouseUp = () => {
+      // Use setTimeout to ensure selection is completed
+      setTimeout(handleSelection, 0);
+    };
+
+    document.addEventListener('mouseup', handleMouseUp);
+
+    return () => {
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, [enableTextSelectionToolbar, containerRef, onTextSelected]);
+
+  // Close color picker when clicking outside
+  useEffect(() => {
+    if (!enableTextSelectionToolbar) return;
+
+    const handleClickOutside = (event: MouseEvent) => {
+      if (toolbarRef.current && !toolbarRef.current.contains(event.target as Node)) {
+        setShowColorPicker(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [enableTextSelectionToolbar]);
+
+  // Hide toolbar when clicking elsewhere
+  useEffect(() => {
+    if (!enableTextSelectionToolbar) return;
+
+    const handleClick = () => {
+      setToolbarVisible(false);
+    };
+
+    if (enableTextSelectionToolbar && toolbarVisible) {
+      document.addEventListener("click", handleClick);
+      return () => {
+        document.removeEventListener("click", handleClick);
+      };
+    }
+  }, [enableTextSelectionToolbar, toolbarVisible]);
+
+  const handleCopy = () => {
+    if (selectedText) {
+      navigator.clipboard.writeText(selectedText).then(() => {
+        showToastMsg("Text copied to clipboard");
+        setToolbarVisible(false);
+      }).catch(() => {
+        // Fallback if clipboard API fails
+        const textArea = document.createElement('textarea');
+        textArea.value = selectedText;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        showToastMsg("Text copied to clipboard");
+        setToolbarVisible(false);
+      });
+    }
+  };
+
+  const handleSelectAll = () => {
+    const container = containerRef?.current;
+    if (container) {
+      const selection = window.getSelection();
+      if (selection) {
+        const range = document.createRange();
+        range.selectNodeContents(container);
+        selection.removeAllRanges();
+        selection.addRange(range);
+      }
+    }
+  };
+
+  const handleHighlight = (color: string) => {
+    const selection = window.getSelection();
+    if (!selection || selection.toString().trim() === '') return;
+
+    const range = selection.getRangeAt(0);
+    const span = document.createElement('span');
+    span.className = `${color} rounded-sm transition-colors duration-200`;
+
+    // Wrap the selected content in the span
+    range.surroundContents(span);
+
+    // Deselect after highlighting
+    selection.removeAllRanges();
+    setToolbarVisible(false);
+  };
+
+  const handleContextMenu = (e: React.MouseEvent) => {
+    // Check if there's a text selection
+    const selection = window.getSelection();
+    if (selection && selection.toString().trim() !== '') {
+      e.preventDefault(); // Suppress default context menu if text is selected
+    }
+  };
+
+  const colorOptions = [
+    { name: "Yellow", value: "bg-yellow-200", displayColor: "bg-yellow-400" },
+    { name: "Green", value: "bg-green-200", displayColor: "bg-green-400" },
+    { name: "Blue", value: "bg-blue-200", displayColor: "bg-blue-400" },
+    { name: "Pink", value: "bg-pink-200", displayColor: "bg-pink-400" },
+    { name: "Purple", value: "bg-purple-200", displayColor: "bg-purple-400" },
+  ];
+
   return (
     <div
       ref={containerRef}
       className={`prose max-w-none ${fontSizeClass} ${className} transition-all duration-300 ease-in-out`}
       style={{ fontSize: 'inherit' }}
+      onContextMenu={handleContextMenu}
     >
       {processedContent}
+
+      {enableTextSelectionToolbar && toolbarVisible && (
+        <div
+          ref={toolbarRef}
+          className="fixed z-[100] flex items-center gap-1 bg-card text-card-text shadow-soft rounded-lg p-2 border border-border-color"
+          style={{ top: toolbarPosition.top, left: toolbarPosition.left - 60 }}
+        >
+          <button
+            type="button"
+            onClick={handleCopy}
+            className="p-2 rounded-md hover:bg-muted-bg transition-colors"
+            title="Copy text"
+          >
+            <Copy className="w-4 h-4" />
+          </button>
+
+          <button
+            type="button"
+            onClick={handleSelectAll}
+            className="p-2 rounded-md hover:bg-muted-bg transition-colors"
+            title="Select all"
+          >
+            <Square className="w-4 h-4" />
+          </button>
+
+          <div className="relative">
+            <button
+              type="button"
+              onClick={() => setShowColorPicker(!showColorPicker)}
+              className="p-2 rounded-md hover:bg-muted-bg transition-colors flex items-center gap-1"
+              title="Highlight text"
+            >
+              <Palette className="w-4 h-4" />
+            </button>
+
+            {showColorPicker && (
+              <div className="absolute bottom-full mb-2 left-0 bg-card border border-border-color rounded-lg shadow-soft p-2 flex flex-wrap gap-1 w-24 z-10">
+                {colorOptions.map((color) => (
+                  <button
+                    key={color.name}
+                    type="button"
+                    onClick={() => {
+                      handleHighlight(color.value);
+                      setShowColorPicker(false);
+                    }}
+                    className={`w-5 h-5 rounded-full ${color.displayColor} hover:scale-110 transition-transform`}
+                    title={`Highlight with ${color.name}`}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+
+          <button
+            type="button"
+            onClick={() => setToolbarVisible(false)}
+            className="p-1 rounded-md hover:bg-muted-bg transition-colors ml-1"
+          >
+            <Type className="w-4 h-4" />
+          </button>
+        </div>
+      )}
     </div>
   );
 };

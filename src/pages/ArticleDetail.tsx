@@ -21,8 +21,6 @@ import { Link, useParams } from "react-router-dom";
 import { adminApi, publicApi } from "../api";
 import ContentRenderer from "../components/common/ContentRenderer";
 import { CustomDropdown } from "../components/common/CustomDropdown";
-import TextSelectionToolbar from "../components/common/TextSelectionToolbar";
-import { useTextSelection } from "../hooks/useTextSelection";
 import { RelatedArticles } from "../components/common/RelatedArticles";
 import { useAuth } from "../context/AuthContext";
 import { useLayout } from "../context/LayoutContext";
@@ -61,14 +59,6 @@ const ArticleDetail: React.FC = () => {
 
   const isAdmin = user?.role === "admin";
 
-  const {
-    toolbarVisible,
-    toolbarPosition,
-    handleCopy,
-    handleSelectAll,
-    handleHighlight,
-    handleToolbarClose
-  } = useTextSelection(contentRef);
 
   useEffect(() => {
     try {
@@ -497,14 +487,7 @@ const ArticleDetail: React.FC = () => {
                       : "[&_*:not(button):not(img):not(video):not(audio)]:text-base sm:[&_*:not(button):not(img):not(video):not(audio)]:text-lg [&_p]:leading-[1.8]"
                 }
                 containerRef={contentRef as React.RefObject<HTMLDivElement>}
-              />
-              <TextSelectionToolbar
-                visible={toolbarVisible}
-                position={toolbarPosition}
-                onCopy={handleCopy}
-                onSelectAll={handleSelectAll}
-                onHighlight={handleHighlight}
-                onClose={handleToolbarClose}
+                enableTextSelectionToolbar={true}
               />
             </div>
           </article>
