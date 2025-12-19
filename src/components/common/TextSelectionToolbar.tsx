@@ -5,7 +5,7 @@ import {
   Palette,
   Search,
   Square,
-  Type,
+  X,
 } from "lucide-react";
 import type React from "react";
 import { useEffect, useRef, useState } from "react";
@@ -194,7 +194,7 @@ const TextSelectionToolbar: React.FC<TextSelectionToolbarProps> = ({
         className="p-1 rounded-md hover:bg-red-100 hover:text-red-600 transition-colors ml-1"
         title="Close toolbar"
       >
-        <Type className="w-4 h-4" />
+        <X className="w-4 h-4" />
       </button>
     </div>
   );
