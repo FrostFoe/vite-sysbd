@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import type React from "react";
 import { createElement, useCallback, useEffect, useRef, useState } from "react";
+import { Helmet } from "react-helmet-async";
 import { Link, useParams } from "react-router-dom";
 import { adminApi, publicApi } from "../api";
 import ContentRenderer from "../components/common/ContentRenderer";
@@ -401,9 +402,32 @@ const ArticleDetail: React.FC = () => {
   }
 
   const isArticleBookmarked = bookmarks.includes(article.id);
+  const articleImageUrl = normalizeMediaUrl(article.image) || PLACEHOLDER_IMAGE;
+  const absoluteImageUrl = articleImageUrl.startsWith("http")
+    ? articleImageUrl
+    : `${window.location.origin}${articleImageUrl}`;
+  const currentUrl = window.location.href;
 
   return (
     <div className="max-w-[1280px] mx-auto px-2 sm:px-3">
+      <Helmet>
+        <title>{article.meta_title || article.title}</title>
+        <meta
+          name="description"
+          content={article.meta_description || article.summary}
+        />
+        <meta name="keywords" content={article.meta_keywords || ""} />
+        <link rel="canonical" href={currentUrl} />
+        
+        <meta property="og:title" content={article.meta_title || article.title} />
+        <meta
+          property="og:description"
+          content={article.meta_description || article.summary}
+        />
+        <meta property="og:image" content={absoluteImageUrl} />
+        <meta property="og:url" content={currentUrl} />
+        <meta property="og:type" content="article" />
+      </Helmet>
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 lg:gap-12">
         <div className="lg:col-span-8">
           <article className="bg-card p-3 sm:p-4 md:p-5 rounded-2xl shadow-soft border border-border-color">

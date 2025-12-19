@@ -49,9 +49,14 @@ $summary_en = $_POST["summary_en"] ?? "";
 $content_bn = $_POST["content_bn"] ?? "";
 $content_en = $_POST["content_en"] ?? "";
 
+// SEO Fields
+$meta_title = isset($_POST["meta_title"]) ? substr(trim(strip_tags($_POST["meta_title"])), 0, 255) : null;
+$meta_description = isset($_POST["meta_description"]) ? trim(strip_tags($_POST["meta_description"])) : null;
+$meta_keywords = isset($_POST["meta_keywords"]) ? substr(trim(strip_tags($_POST["meta_keywords"])), 0, 255) : null;
+
 // Common Fields
 $category_id = $_POST["category_id"] ?? "";
-$sectionId = $_POST["sectionId"] ?? "news";
+$section_id = $_POST["sectionId"] ?? "news";
 $image = $_POST["image"] ?? "";
 $leaked_documents = $_POST["leaked_documents"] ?? null;
 $status = $_POST["status"] ?? "draft"; // Default to draft
@@ -73,6 +78,7 @@ if ($exists) {
             summary_bn=?, summary_en=?, 
             content_bn=?, content_en=?, 
             read_time_bn=?, read_time_en=?,
+            meta_title=?, meta_description=?, meta_keywords=?,
             category_id=?, section_id=?, 
             image=?, leaked_documents=?, status=?, allow_submissions=?
         WHERE id=?",
@@ -86,8 +92,11 @@ if ($exists) {
         $content_en,
         $read_time_bn,
         $read_time_en,
+        $meta_title,
+        $meta_description,
+        $meta_keywords,
         $category_id,
-        $sectionId,
+        $section_id,
         $image,
         $leaked_documents,
         $status,
@@ -103,9 +112,10 @@ if ($exists) {
             summary_bn, summary_en, 
             content_bn, content_en, 
             read_time_bn, read_time_en,
+            meta_title, meta_description, meta_keywords,
             category_id, section_id, 
             image, leaked_documents, status, allow_submissions, published_at
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())",
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())",
     );
     $stmt->execute([
         $id,
@@ -117,8 +127,11 @@ if ($exists) {
         $content_en,
         $read_time_bn,
         $read_time_en,
+        $meta_title,
+        $meta_description,
+        $meta_keywords,
         $category_id,
-        $sectionId,
+        $section_id,
         $image,
         $leaked_documents,
         $status,

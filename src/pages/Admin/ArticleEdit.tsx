@@ -97,6 +97,9 @@ const ArticleEdit: React.FC = () => {
               section_id: articleRes.article.section_id || "",
               status: articleRes.article.status,
               allow_submissions: articleRes.article.allow_submissions,
+              meta_title: articleRes.article.meta_title || "",
+              meta_description: articleRes.article.meta_description || "",
+              meta_keywords: articleRes.article.meta_keywords || "",
             });
           } else {
             showToastMsg(
@@ -219,6 +222,9 @@ const ArticleEdit: React.FC = () => {
       formData.append("category_id", article.category_id || "");
       formData.append("sectionId", article.section_id || "");
       formData.append("status", article.status || "draft");
+      formData.append("meta_title", article.meta_title || "");
+      formData.append("meta_description", article.meta_description || "");
+      formData.append("meta_keywords", article.meta_keywords || "");
       formData.append(
         "allow_submissions",
         article.allow_submissions ? "1" : "0"
@@ -477,6 +483,86 @@ const ArticleEdit: React.FC = () => {
                 </div>
               </div>
             )}
+
+            <div className="bg-card p-4 rounded-xl border border-border-color shadow-sm">
+              <h3 className="font-bold mb-3 text-sm uppercase text-muted-text">
+                SEO Metadata (এসইও মেটাডেটা)
+              </h3>
+              <div className="mb-4">
+                <div className="flex justify-between items-center mb-1">
+                  <label className="block text-xs font-bold">
+                    Meta Title (মেটা শিরোনাম)
+                  </label>
+                  <span
+                    className={`text-[10px] font-bold ${
+                      (article.meta_title?.length || 0) > 60
+                        ? "text-danger"
+                        : "text-muted-text"
+                    }`}
+                  >
+                    {article.meta_title?.length || 0}/60
+                  </span>
+                </div>
+                <input
+                  name="meta_title"
+                  value={article.meta_title || ""}
+                  onChange={(e) =>
+                    setArticle((prev) => ({
+                      ...prev,
+                      meta_title: e.target.value,
+                    }))
+                  }
+                  className="w-full p-2 rounded border border-border-color bg-muted-bg text-sm focus:border-bbcRed outline-none"
+                  placeholder="SEO Title (Google Search)"
+                />
+              </div>
+              <div className="mb-4">
+                <div className="flex justify-between items-center mb-1">
+                  <label className="block text-xs font-bold">
+                    Meta Description (মেটা বর্ণনা)
+                  </label>
+                  <span
+                    className={`text-[10px] font-bold ${
+                      (article.meta_description?.length || 0) > 160
+                        ? "text-danger"
+                        : "text-muted-text"
+                    }`}
+                  >
+                    {article.meta_description?.length || 0}/160
+                  </span>
+                </div>
+                <textarea
+                  name="meta_description"
+                  value={article.meta_description || ""}
+                  onChange={(e) =>
+                    setArticle((prev) => ({
+                      ...prev,
+                      meta_description: e.target.value,
+                    }))
+                  }
+                  rows={3}
+                  className="w-full p-2 rounded border border-border-color bg-muted-bg text-sm focus:border-bbcRed outline-none"
+                  placeholder="Short description for search results..."
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-xs font-bold mb-1">
+                  Meta Keywords (কিওয়ার্ড)
+                </label>
+                <input
+                  name="meta_keywords"
+                  value={article.meta_keywords || ""}
+                  onChange={(e) =>
+                    setArticle((prev) => ({
+                      ...prev,
+                      meta_keywords: e.target.value,
+                    }))
+                  }
+                  className="w-full p-2 rounded border border-border-color bg-muted-bg text-sm focus:border-bbcRed outline-none"
+                  placeholder="news, bangladesh, politics (comma separated)"
+                />
+              </div>
+            </div>
 
             <div className="bg-card p-4 rounded-xl border border-border-color shadow-sm">
               <h3 className="font-bold mb-3 text-sm uppercase text-muted-text">

@@ -57,6 +57,9 @@ CREATE TABLE IF NOT EXISTS `articles` (
 
   `image` longtext,
   `published_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  `meta_title` varchar(255) DEFAULT NULL,
+  `meta_description` text,
+  `meta_keywords` varchar(255) DEFAULT NULL,
   `status` ENUM('published', 'draft', 'archived') DEFAULT 'draft',
   `leaked_documents` longtext DEFAULT NULL,
   `allow_submissions` tinyint(1) DEFAULT 0,

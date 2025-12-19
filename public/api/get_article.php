@@ -58,6 +58,9 @@ $article = [
             ? $articleRaw["read_time_en"] ?? ""
             : $articleRaw["read_time_bn"] ?? "",
     "image" => $articleRaw["image"],
+    "meta_title" => $articleRaw["meta_title"] ?? null,
+    "meta_description" => $articleRaw["meta_description"] ?? null,
+    "meta_keywords" => $articleRaw["meta_keywords"] ?? null,
     "published_at" => $articleRaw["published_at"],
     "category_id" => $articleRaw["category_id"],
     "section_id" => $articleRaw["section_id"],

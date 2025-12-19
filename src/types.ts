@@ -27,6 +27,9 @@ export interface Article {
   readTime: string;
   image: string;
   published_at: string;
+  meta_title?: string;
+  meta_description?: string;
+  meta_keywords?: string;
   status: "published" | "draft" | "archived";
   leaked_documents?: Document[];
   documents?: Document[];
@@ -45,6 +48,9 @@ export interface AdminArticle {
   summary_en?: string;
   content_bn?: string;
   content_en?: string;
+  meta_title?: string;
+  meta_description?: string;
+  meta_keywords?: string;
   status: "published" | "draft" | "archived";
   image: string;
   created_at?: string;
