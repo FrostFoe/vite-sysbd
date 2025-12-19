@@ -74,14 +74,17 @@ const TextSelectionToolbar: React.FC<TextSelectionToolbarProps> = ({
 
   // Prevent off-screen positioning (Simple boundary check)
   const calculatedTop = Math.max(10, position.top - 50);
-  const calculatedLeft = Math.max(10, position.left - 60);
 
   return (
     <div
       ref={toolbarRef}
       role="toolbar"
-      className="absolute z-[1000] flex items-center gap-1 bg-card text-card-text shadow-xl rounded-lg p-2 border border-border-color animate-in fade-in zoom-in-95 duration-200"
-      style={{ top: calculatedTop, left: calculatedLeft }}
+      className="absolute z-[1000] flex items-center gap-1 bg-card text-card-text shadow-xl rounded-lg p-2 border border-border-color animate-in fade-in zoom-in-95 duration-200 max-w-[95vw] overflow-x-auto"
+      style={{
+        top: calculatedTop,
+        left: position.left,
+        transform: "translateX(-50%)",
+      }}
       onMouseDown={(e) => e.stopPropagation()}
     >
       <button

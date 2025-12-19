@@ -207,15 +207,20 @@ const ContentRenderer: React.FC<ContentRendererProps> = ({
       const top = endRect.top - containerRect.top - 50; // Position just above the end of selection
       let left = endRect.left - containerRect.left + endRect.width / 2; // Position at the end of selection
 
-      // Adjust for toolbar width to keep it visible
-      const toolbarWidth = 150; // Approximate toolbar width
-      if (left + toolbarWidth > containerRect.width) {
-        // If toolbar would go off-screen (right), position it to the left of selection
-        left = Math.max(10, containerRect.width - toolbarWidth - 10);
-      }
+      // Adjust for toolbar width (approx 320px) to keep it visible
+      // Since toolbar is centered with translateX(-50%), we need to ensure 'left' is within bounds
+      const toolbarHalfWidth = 160;
 
-      // Ensure it doesn't go off the left side
-      left = Math.max(left, 10);
+      // Clamp left position
+      left = Math.max(
+        toolbarHalfWidth,
+        Math.min(left, containerRect.width - toolbarHalfWidth)
+      );
+
+      // Additional safety for very small screens: ensure it's at least center of screen if container is small
+      if (containerRect.width < 320) {
+        left = containerRect.width / 2;
+      }
 
       setToolbarPosition({ top, left });
       setSelectedText(selectedTextContent);
@@ -343,15 +348,20 @@ const ContentRenderer: React.FC<ContentRendererProps> = ({
           const top = endRect.top - containerRect.top - 50; // Position just above the end of selection
           let left = endRect.left - containerRect.left + endRect.width / 2; // Position at the end of selection
 
-          // Adjust for toolbar width to keep it visible
-          const toolbarWidth = 150; // Approximate toolbar width
-          if (left + toolbarWidth > containerRect.width) {
-            // If toolbar would go off-screen, position it to the left of selection
-            left = Math.max(10, containerRect.width - toolbarWidth - 10);
-          }
+          // Adjust for toolbar width (approx 320px) to keep it visible
+          // Since toolbar is centered with translateX(-50%), we need to ensure 'left' is within bounds
+          const toolbarHalfWidth = 160;
 
-          // Ensure it doesn't go off the left side
-          left = Math.max(left, 10);
+          // Clamp left position
+          left = Math.max(
+            toolbarHalfWidth,
+            Math.min(left, containerRect.width - toolbarHalfWidth)
+          );
+
+          // Additional safety for very small screens
+          if (containerRect.width < 320) {
+            left = containerRect.width / 2;
+          }
 
           setToolbarPosition({ top, left });
           setSelectedText(selectedTextContent);
