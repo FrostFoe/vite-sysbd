@@ -54,6 +54,9 @@ $request_body = [
                 ]
             ]
         ]
+    ],
+    'generationConfig' => [
+        'responseMimeType' => 'application/json'
     ]
 ];
 
@@ -80,7 +83,11 @@ if ($curl_error) {
 
 if ($http_code !== 200) {
     http_response_code(500);
-    echo json_encode(['error' => 'AI service returned an error', 'status' => $http_code]);
+    echo json_encode([
+        'error' => 'AI service returned an error', 
+        'status' => $http_code,
+        'raw_response' => $response
+    ]);
     exit;
 }
 
@@ -88,7 +95,10 @@ $gemini_response = json_decode($response, true);
 
 if (!isset($gemini_response['candidates'][0]['content']['parts'][0]['text'])) {
     http_response_code(500);
-    echo json_encode(['error' => 'Invalid response from AI service']);
+    echo json_encode([
+        'error' => 'Invalid response from AI service', 
+        'raw_response' => $gemini_response
+    ]);
     exit;
 }
 
