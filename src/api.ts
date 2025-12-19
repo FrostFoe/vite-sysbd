@@ -505,4 +505,23 @@ export const adminApi = {
     const response = await api.get("/get_articles_for_docs.php");
     return response.data;
   },
+
+  translateText: async (
+    text: string,
+    source_lang: "bn" | "en",
+    target_lang: "bn" | "en",
+  ): Promise<{
+    success: boolean;
+    translation?: string;
+    source_lang?: string;
+    target_lang?: string;
+    error?: string;
+  }> => {
+    const response = await api.post("/translate.php", {
+      text,
+      source_lang,
+      target_lang,
+    });
+    return response.data;
+  },
 };

@@ -14,6 +14,7 @@ import { adminApi, publicApi } from "../../api";
 import { DocumentModal } from "../../components/admin/DocumentModal";
 import { CustomEditor } from "../../components/common";
 import { CustomDropdown } from "../../components/common/CustomDropdown";
+import { TranslationWidget } from "../../components/common/TranslationWidget";
 import { DANGEROUS_FILE_EXTENSIONS } from "../../config";
 import { useLayout } from "../../context/LayoutContext";
 import type {
@@ -433,6 +434,20 @@ const ArticleEdit: React.FC = () => {
                 height="400px"
                 className="w-full rounded-lg border border-border-color bg-card focus:border-bbcRed"
               />
+              <div className="mt-3">
+                <TranslationWidget
+                  text={article.content_bn || ""}
+                  onTranslate={(translation) => {
+                    contentEnRef.current = translation;
+                    setArticle((prev) => ({
+                      ...prev,
+                      content_en: translation,
+                    }));
+                  }}
+                  currentLang="bn"
+                  buttonLabel="Translate to English"
+                />
+              </div>
             </div>
 
             <div>
@@ -452,6 +467,20 @@ const ArticleEdit: React.FC = () => {
                 height="400px"
                 className="w-full rounded-lg border border-border-color bg-card focus:border-bbcRed"
               />
+              <div className="mt-3">
+                <TranslationWidget
+                  text={article.content_en || ""}
+                  onTranslate={(translation) => {
+                    contentBnRef.current = translation;
+                    setArticle((prev) => ({
+                      ...prev,
+                      content_bn: translation,
+                    }));
+                  }}
+                  currentLang="en"
+                  buttonLabel="Translate to Bengali"
+                />
+              </div>
             </div>
           </div>
 
