@@ -478,10 +478,10 @@ const ArticleDetail: React.FC = () => {
               className="[&_p]:leading-[1.8] [&_p]:mb-[1em] space-y-6 sm:space-y-8 text-card-text transition-all duration-300"
               fontSizeClass={
                 fontSize === "sm"
-                  ? "[&_p]:text-[0.95rem] [&_p]:leading-[1.6]"
+                  ? "[&_*:not(button):not(img):not(video):not(audio)]:text-[0.95rem] [&_p]:leading-[1.6]"
                   : fontSize === "lg"
-                    ? "[&_p]:text-[1.35rem] [&_p]:leading-loose"
-                    : "[&_p]:text-base sm:[&_p]:text-lg [&_p]:leading-[1.8]"
+                    ? "[&_*:not(button):not(img):not(video):not(audio)]:text-[1.35rem] [&_p]:leading-loose"
+                    : "[&_*:not(button):not(img):not(video):not(audio)]:text-base sm:[&_*:not(button):not(img):not(video):not(audio)]:text-lg [&_p]:leading-[1.8]"
               }
             />
           </article>

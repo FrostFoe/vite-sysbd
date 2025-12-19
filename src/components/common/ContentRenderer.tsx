@@ -157,7 +157,7 @@ const ContentRenderer: React.FC<ContentRendererProps> = ({
   }, [safeContent]);
 
   return (
-    <div className={`prose max-w-none ${fontSizeClass} ${className}`}>{processedContent}</div>
+    <div className={`prose max-w-none ${fontSizeClass} ${className} transition-all duration-300 ease-in-out`} style={{ fontSize: 'inherit' }}>{processedContent}</div>
   );
 };
 
