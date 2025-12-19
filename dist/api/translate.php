@@ -47,8 +47,8 @@ if ($source_lang === $target_lang) {
     exit;
 }
 
-$api_key = $gemini_api_key;
-if (empty($api_key) || $api_key === 'YOUR_GEMINI_API_KEY_HERE') {
+$api_key = getenv('GEMINI_API_KEY');
+if (empty($api_key)) {
     http_response_code(500);
     echo json_encode(['error' => 'Translation service not configured']);
     exit;
