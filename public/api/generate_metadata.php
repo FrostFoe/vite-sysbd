@@ -94,16 +94,22 @@ if (!isset($gemini_response['candidates'][0]['content']['parts'][0]['text'])) {
 
 $generated_text = trim($gemini_response['candidates'][0]['content']['parts'][0]['text']);
 
-// Remove markdown formatting if present (e.g., ```json ... ```)
-$generated_text = preg_replace('/^```json\s*|\s*```$/', '', $generated_text);
-$generated_text = trim($generated_text);
+// Robust JSON extraction
+if (preg_match('/\{[\s\S]*\}/', $generated_text, $matches)) {
+    $json_str = $matches[0];
+} else {
+    $json_str = $generated_text;
+}
 
-$metadata = json_decode($generated_text, true);
+$metadata = json_decode($json_str, true);
 
 if (json_last_error() !== JSON_ERROR_NONE) {
-    // Fallback if JSON parsing fails - simple extraction or error
     http_response_code(500);
-    echo json_encode(['error' => 'Failed to parse AI response', 'raw_response' => $generated_text]);
+    echo json_encode([
+        'error' => 'Failed to parse AI response', 
+        'raw_response' => $generated_text,
+        'json_error' => json_last_error_msg()
+    ]);
     exit;
 }
 
