@@ -1,11 +1,11 @@
 import DOMPurify from "dompurify";
-import { Copy, Palette, Square, Type } from "lucide-react";
 import type React from "react";
-import { createElement, useEffect, useMemo, useRef, useState } from "react";
+import { createElement, useEffect, useMemo, useState } from "react";
 import { showToastMsg } from "../../utils";
 
 import CustomImage from "./CustomImage";
 import CustomVideo from "./CustomVideo";
+import TextSelectionToolbar from "./TextSelectionToolbar";
 
 interface ContentRendererProps {
   content: string;
@@ -26,13 +26,12 @@ const ContentRenderer: React.FC<ContentRendererProps> = ({
 }) => {
   const [toolbarVisible, setToolbarVisible] = useState(false);
   const [toolbarPosition, setToolbarPosition] = useState({ top: 0, left: 0 });
-  const [selectedText, setSelectedText] = useState('');
-  const [showColorPicker, setShowColorPicker] = useState(false);
-  const toolbarRef = useRef<HTMLDivElement>(null);
-  const safeContent = DOMPurify.sanitize(content);
+  const [selectedText, setSelectedText] = useState("");
+
+  // Close color picker when clicking outside
 
   const processedContent = useMemo(() => {
-    let processedContent = safeContent;
+    let processedContent = content;
     const customComponents: React.ReactElement[] = [];
 
     // Replace images with placeholders
@@ -167,7 +166,7 @@ const ContentRenderer: React.FC<ContentRendererProps> = ({
       })
       .filter(Boolean)
       .flat();
-  }, [safeContent]);
+  }, [content]);
 
   // Handle text selection
   useEffect(() => {
@@ -175,9 +174,9 @@ const ContentRenderer: React.FC<ContentRendererProps> = ({
 
     const handleSelection = () => {
       const selection = window.getSelection();
-      if (!selection || selection.toString().trim() === '') {
+      if (!selection || selection.toString().trim() === "") {
         setToolbarVisible(false);
-        setSelectedText('');
+        setSelectedText("");
         return;
       }
 
@@ -203,7 +202,7 @@ const ContentRenderer: React.FC<ContentRendererProps> = ({
 
       // Calculate position just above and slightly to the right of the end of selection
       const top = endRect.top + window.scrollY - 50; // Position just above the end of selection
-      let left = endRect.left + window.scrollX + (endRect.width / 2); // Position at the end of selection
+      let left = endRect.left + window.scrollX + endRect.width / 2; // Position at the end of selection
 
       // Adjust for toolbar width to keep it visible
       const toolbarWidth = 150; // Approximate toolbar width
@@ -231,65 +230,36 @@ const ContentRenderer: React.FC<ContentRendererProps> = ({
     };
 
     // Add the event listener to the document
-    document.addEventListener('mouseup', handleMouseUp);
+    document.addEventListener("mouseup", handleMouseUp);
 
     // Also add a selectionchange listener for better detection
-    document.addEventListener('selectionchange', handleSelection);
+    document.addEventListener("selectionchange", handleSelection);
 
     return () => {
-      document.removeEventListener('mouseup', handleMouseUp);
-      document.removeEventListener('selectionchange', handleSelection);
+      document.removeEventListener("mouseup", handleMouseUp);
+      document.removeEventListener("selectionchange", handleSelection);
     };
   }, [enableTextSelectionToolbar, containerRef, onTextSelected]);
 
-  // Close color picker when clicking outside
-  useEffect(() => {
-    if (!enableTextSelectionToolbar) return;
-
-    const handleClickOutside = (event: MouseEvent) => {
-      if (toolbarRef.current && !toolbarRef.current.contains(event.target as Node)) {
-        setShowColorPicker(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [enableTextSelectionToolbar]);
-
-  // Hide toolbar when clicking elsewhere
-  useEffect(() => {
-    if (!enableTextSelectionToolbar) return;
-
-    const handleClick = () => {
-      setToolbarVisible(false);
-    };
-
-    if (enableTextSelectionToolbar && toolbarVisible) {
-      document.addEventListener("click", handleClick);
-      return () => {
-        document.removeEventListener("click", handleClick);
-      };
-    }
-  }, [enableTextSelectionToolbar, toolbarVisible]);
-
   const handleCopy = () => {
     if (selectedText) {
-      navigator.clipboard.writeText(selectedText).then(() => {
-        showToastMsg("Text copied to clipboard");
-        setToolbarVisible(false);
-      }).catch(() => {
-        // Fallback if clipboard API fails
-        const textArea = document.createElement('textarea');
-        textArea.value = selectedText;
-        document.body.appendChild(textArea);
-        textArea.select();
-        document.execCommand('copy');
-        document.body.removeChild(textArea);
-        showToastMsg("Text copied to clipboard");
-        setToolbarVisible(false);
-      });
+      navigator.clipboard
+        .writeText(selectedText)
+        .then(() => {
+          showToastMsg("Text copied to clipboard");
+          setToolbarVisible(false);
+        })
+        .catch(() => {
+          // Fallback if clipboard API fails
+          const textArea = document.createElement("textarea");
+          textArea.value = selectedText;
+          document.body.appendChild(textArea);
+          textArea.select();
+          document.execCommand("copy");
+          document.body.removeChild(textArea);
+          showToastMsg("Text copied to clipboard");
+          setToolbarVisible(false);
+        });
     }
   };
 
@@ -308,10 +278,10 @@ const ContentRenderer: React.FC<ContentRendererProps> = ({
 
   const handleHighlight = (color: string) => {
     const selection = window.getSelection();
-    if (!selection || selection.toString().trim() === '') return;
+    if (!selection || selection.toString().trim() === "") return;
 
     const range = selection.getRangeAt(0);
-    const span = document.createElement('span');
+    const span = document.createElement("span");
     span.className = `${color} rounded-sm transition-colors duration-200`;
 
     // Wrap the selected content in the span
@@ -325,7 +295,7 @@ const ContentRenderer: React.FC<ContentRendererProps> = ({
   const handleContextMenu = (e: React.MouseEvent) => {
     // Check if there's a text selection
     const selection = window.getSelection();
-    if (selection && selection.toString().trim() !== '') {
+    if (selection && selection.toString().trim() !== "") {
       e.preventDefault(); // Suppress default context menu if text is selected
       // Show the toolbar if text is selected and right-clicked
       const selectedTextContent = selection.toString().trim();
@@ -340,7 +310,7 @@ const ContentRenderer: React.FC<ContentRendererProps> = ({
 
           // Calculate position just above and slightly to the right of the end of selection
           const top = endRect.top + window.scrollY - 50; // Position just above the end of selection
-          let left = endRect.left + window.scrollX + (endRect.width / 2); // Position at the end of selection
+          let left = endRect.left + window.scrollX + endRect.width / 2; // Position at the end of selection
 
           // Adjust for toolbar width to keep it visible
           const toolbarWidth = 150; // Approximate toolbar width
@@ -360,88 +330,25 @@ const ContentRenderer: React.FC<ContentRendererProps> = ({
     }
   };
 
-  const colorOptions = [
-    { name: "Yellow", value: "bg-yellow-200", displayColor: "bg-yellow-400" },
-    { name: "Green", value: "bg-green-200", displayColor: "bg-green-400" },
-    { name: "Blue", value: "bg-blue-200", displayColor: "bg-blue-400" },
-    { name: "Pink", value: "bg-pink-200", displayColor: "bg-pink-400" },
-    { name: "Purple", value: "bg-purple-200", displayColor: "bg-purple-400" },
-  ];
-
   return (
-    <div
+    <article
       ref={containerRef}
+      tabIndex={-1}
       className={`prose max-w-none ${fontSizeClass} ${className} transition-all duration-300 ease-in-out`}
-      style={{ fontSize: 'inherit' }}
+      style={{ fontSize: "inherit" }}
       onContextMenu={handleContextMenu}
     >
       {processedContent}
 
-      {enableTextSelectionToolbar && toolbarVisible && (
-        <div
-          ref={toolbarRef}
-          className="fixed z-[100] flex items-center gap-1 bg-card text-card-text shadow-soft rounded-lg p-2 border border-border-color"
-          style={{
-            top: toolbarPosition.top,
-            left: toolbarPosition.left
-          }}
-        >
-          <button
-            type="button"
-            onClick={handleCopy}
-            className="p-2 rounded-md hover:bg-muted-bg transition-colors"
-            title="Copy text"
-          >
-            <Copy className="w-4 h-4" />
-          </button>
-
-          <button
-            type="button"
-            onClick={handleSelectAll}
-            className="p-2 rounded-md hover:bg-muted-bg transition-colors"
-            title="Select all"
-          >
-            <Square className="w-4 h-4" />
-          </button>
-
-          <div className="relative">
-            <button
-              type="button"
-              onClick={() => setShowColorPicker(!showColorPicker)}
-              className="p-2 rounded-md hover:bg-muted-bg transition-colors flex items-center gap-1"
-              title="Highlight text"
-            >
-              <Palette className="w-4 h-4" />
-            </button>
-
-            {showColorPicker && (
-              <div className="absolute bottom-full mb-2 left-0 bg-card border border-border-color rounded-lg shadow-soft p-2 flex flex-wrap gap-1 w-24 z-10">
-                {colorOptions.map((color) => (
-                  <button
-                    key={color.name}
-                    type="button"
-                    onClick={() => {
-                      handleHighlight(color.value);
-                      setShowColorPicker(false);
-                    }}
-                    className={`w-5 h-5 rounded-full ${color.displayColor} hover:scale-110 transition-transform`}
-                    title={`Highlight with ${color.name}`}
-                  />
-                ))}
-              </div>
-            )}
-          </div>
-
-          <button
-            type="button"
-            onClick={() => setToolbarVisible(false)}
-            className="p-1 rounded-md hover:bg-muted-bg transition-colors ml-1"
-          >
-            <Type className="w-4 h-4" />
-          </button>
-        </div>
-      )}
-    </div>
+      <TextSelectionToolbar
+        visible={enableTextSelectionToolbar && toolbarVisible}
+        position={toolbarPosition}
+        onHighlight={handleHighlight}
+        onCopy={handleCopy}
+        onSelectAll={handleSelectAll}
+        onClose={() => setToolbarVisible(false)}
+      />
+    </article>
   );
 };
 

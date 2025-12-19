@@ -29,7 +29,7 @@ const TextSelectionToolbar: React.FC<TextSelectionToolbarProps> = ({
       if (!visible) return;
 
       // Check if click is inside the toolbar
-      if (toolbarRef.current && toolbarRef.current.contains(event.target as Node)) {
+      if (toolbarRef.current?.contains(event.target as Node)) {
         return;
       }
 
@@ -65,6 +65,7 @@ const TextSelectionToolbar: React.FC<TextSelectionToolbarProps> = ({
   return (
     <div
       ref={toolbarRef}
+      role="toolbar"
       className="fixed z-[1000] flex items-center gap-1 bg-card text-card-text shadow-xl rounded-lg p-2 border border-border-color animate-in fade-in zoom-in-95 duration-200"
       style={{ top: calculatedTop, left: calculatedLeft }}
       onMouseDown={(e) => e.stopPropagation()}

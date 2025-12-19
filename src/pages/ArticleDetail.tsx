@@ -59,7 +59,6 @@ const ArticleDetail: React.FC = () => {
 
   const isAdmin = user?.role === "admin";
 
-
   useEffect(() => {
     try {
       const savedBookmarks = localStorage.getItem("breachtimes-bookmarks");
