@@ -1,8 +1,15 @@
 <?php
 
 // Load .env variables
+$env_path = null;
 if (file_exists(__DIR__ . '/../../.env')) {
-    $env_lines = file(__DIR__ . '/../../.env', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+    $env_path = __DIR__ . '/../../.env';
+} elseif (file_exists(__DIR__ . '/../.env')) {
+    $env_path = __DIR__ . '/../.env';
+}
+
+if ($env_path) {
+    $env_lines = file($env_path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
     foreach ($env_lines as $line) {
         $line = trim($line);
         if ($line === '' || strpos($line, '#') === 0) continue;
