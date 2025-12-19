@@ -27,6 +27,18 @@ try {
         exit();
     }
 
+    // Check file size (50MB max for videos)
+    if ($_FILES["video"]["size"] > 52428800) { // 50MB
+        send_response(
+            [
+                "success" => false,
+                "error" => "File too large (max 50MB)",
+            ],
+            413,
+        );
+        exit();
+    }
+
     $uploader = new FileUploader();
     $videoPath = $uploader->uploadVideo($_FILES["video"]);
 

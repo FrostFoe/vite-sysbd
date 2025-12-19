@@ -56,7 +56,7 @@ $meta_keywords = isset($_POST["meta_keywords"]) ? substr(trim(strip_tags($_POST[
 
 // Common Fields
 $category_id = $_POST["category_id"] ?? "";
-$section_id = $_POST["sectionId"] ?? "news";
+$section_id = $_POST["section_id"] ?? $_POST["sectionId"] ?? "news"; // Support both naming conventions
 $image = $_POST["image"] ?? "";
 $leaked_documents = $_POST["leaked_documents"] ?? null;
 $status = $_POST["status"] ?? "draft"; // Default to draft

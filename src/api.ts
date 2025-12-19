@@ -342,27 +342,7 @@ export const adminApi = {
     return response.data;
   },
 
-  muteUser: async (
-    userId: number,
-    reason?: string
-  ): Promise<{ success: boolean; message?: string; error?: string }> => {
-    const response = await api.post("/mute_user.php", {
-      userId,
-      action: "mute",
-      reason,
-    });
-    return response.data;
-  },
 
-  unmuteUser: async (
-    userId: number
-  ): Promise<{ success: boolean; message?: string; error?: string }> => {
-    const response = await api.post("/mute_user.php", {
-      userId,
-      action: "unmute",
-    });
-    return response.data;
-  },
 
   createUser: async (userData: {
     email: string;
@@ -459,49 +439,7 @@ export const adminApi = {
     return response.data;
   },
 
-  getAdminConversations: async (
-    sort: string
-  ): Promise<{
-    success: boolean;
-    conversations?: Record<string, unknown>[];
-    count?: number;
-    error?: string;
-  }> => {
-    const response = await api.get("/get_conversations.php", {
-      params: { sort },
-    });
-    return response.data;
-  },
 
-  getAdminMessages: async (
-    userId: number
-  ): Promise<{
-    success: boolean;
-    messages?: Record<string, unknown>[];
-    count?: number;
-    error?: string;
-  }> => {
-    const response = await api.get("/get_messages.php", {
-      params: { user_id: userId },
-    });
-    return response.data;
-  },
-
-  sendAdminMessage: async (
-    recipientId: number,
-    content: string
-  ): Promise<{
-    success: boolean;
-    message_id?: number;
-    timestamp?: string;
-    error?: string;
-  }> => {
-    const response = await api.post("/send_message.php", {
-      recipient_id: recipientId,
-      content,
-    });
-    return response.data;
-  },
 
   getCategories: async (): Promise<{
     success: boolean;

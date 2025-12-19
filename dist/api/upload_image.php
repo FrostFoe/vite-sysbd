@@ -27,6 +27,18 @@ try {
         exit();
     }
 
+    // Check file size (5MB max for images)
+    if ($_FILES["image"]["size"] > 5242880) { // 5MB
+        send_response(
+            [
+                "success" => false,
+                "error" => "File too large (max 5MB)",
+            ],
+            413,
+        );
+        exit();
+    }
+
     $uploader = new FileUploader();
     $imagePath = $uploader->uploadImage($_FILES["image"]);
 

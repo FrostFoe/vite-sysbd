@@ -13,10 +13,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 try {
-    // Fetch all users
+    // Fetch all users (without muted fields - they're in separate table)
     $stmt = $pdo->query('
         SELECT 
-            id, email, role, is_muted, reason, muted_at, created_at
+            id, email, role, created_at
         FROM users
         ORDER BY created_at DESC
     ');
@@ -44,12 +44,14 @@ try {
     ');
     $comments = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    // Fetch all submissions
+    // Fetch all submissions with article titles (fixed table name: article_submissions not submissions)
     $stmt = $pdo->query('
         SELECT 
-            id, article_id, user_id, file_path, message, created_at
-        FROM submissions
-        ORDER BY created_at DESC
+            s.id, s.article_id, s.user_id, s.file_path, s.message, s.created_at,
+            a.title_bn, a.title_en
+        FROM article_submissions s
+        LEFT JOIN articles a ON s.article_id = a.id
+        ORDER BY s.created_at DESC
     ');
     $submissions = $stmt->fetchAll(PDO::FETCH_ASSOC);
 

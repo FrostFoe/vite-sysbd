@@ -1,6 +1,13 @@
 <?php
 require_once "api_header.php";
 
+// POST /post_comment.php
+// Parameters:
+//   - articleId (required) - Article ID
+//   - text (required) - Comment text  
+//   - lang (optional, default "bn") - "bn" or "en"
+//   - user (optional) - Anonymous user name (if not logged in)
+
 // Start session for user context (e.g., logged-in user name)
 session_start();
 
