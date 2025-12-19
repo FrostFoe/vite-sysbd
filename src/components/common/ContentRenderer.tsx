@@ -199,16 +199,17 @@ const ContentRenderer: React.FC<ContentRendererProps> = ({
       endRange.setStart(range.endContainer, range.endOffset);
       endRange.collapse(true); // Collapse to end position
       const endRect = endRange.getBoundingClientRect();
+      const containerRect = container.getBoundingClientRect();
 
-      // Calculate position just above and slightly to the right of the end of selection
-      const top = endRect.top + window.scrollY - 50; // Position just above the end of selection
-      let left = endRect.left + window.scrollX + endRect.width / 2; // Position at the end of selection
+      // Calculate position relative to the container
+      const top = endRect.top - containerRect.top - 50; // Position just above the end of selection
+      let left = endRect.left - containerRect.left + endRect.width / 2; // Position at the end of selection
 
       // Adjust for toolbar width to keep it visible
       const toolbarWidth = 150; // Approximate toolbar width
-      if (left + toolbarWidth > window.innerWidth) {
-        // If toolbar would go off-screen, position it to the left of selection
-        left = endRect.right + window.scrollX - toolbarWidth;
+      if (left + toolbarWidth > containerRect.width) {
+        // If toolbar would go off-screen (right), position it to the left of selection
+        left = Math.max(10, containerRect.width - toolbarWidth - 10);
       }
 
       // Ensure it doesn't go off the left side
@@ -307,16 +308,17 @@ const ContentRenderer: React.FC<ContentRendererProps> = ({
           endRange.setStart(range.endContainer, range.endOffset);
           endRange.collapse(true); // Collapse to end position
           const endRect = endRange.getBoundingClientRect();
+          const containerRect = containerRef.current.getBoundingClientRect();
 
-          // Calculate position just above and slightly to the right of the end of selection
-          const top = endRect.top + window.scrollY - 50; // Position just above the end of selection
-          let left = endRect.left + window.scrollX + endRect.width / 2; // Position at the end of selection
+          // Calculate position relative to the container
+          const top = endRect.top - containerRect.top - 50; // Position just above the end of selection
+          let left = endRect.left - containerRect.left + endRect.width / 2; // Position at the end of selection
 
           // Adjust for toolbar width to keep it visible
           const toolbarWidth = 150; // Approximate toolbar width
-          if (left + toolbarWidth > window.innerWidth) {
+          if (left + toolbarWidth > containerRect.width) {
             // If toolbar would go off-screen, position it to the left of selection
-            left = endRect.right + window.scrollX - toolbarWidth;
+            left = Math.max(10, containerRect.width - toolbarWidth - 10);
           }
 
           // Ensure it doesn't go off the left side
@@ -334,7 +336,7 @@ const ContentRenderer: React.FC<ContentRendererProps> = ({
     <article
       ref={containerRef}
       tabIndex={-1}
-      className={`prose max-w-none ${fontSizeClass} ${className} transition-all duration-300 ease-in-out`}
+      className={`relative prose max-w-none ${fontSizeClass} ${className} transition-all duration-300 ease-in-out`}
       style={{ fontSize: "inherit" }}
       onContextMenu={handleContextMenu}
     >

@@ -66,7 +66,7 @@ const TextSelectionToolbar: React.FC<TextSelectionToolbarProps> = ({
     <div
       ref={toolbarRef}
       role="toolbar"
-      className="fixed z-[1000] flex items-center gap-1 bg-card text-card-text shadow-xl rounded-lg p-2 border border-border-color animate-in fade-in zoom-in-95 duration-200"
+      className="absolute z-[1000] flex items-center gap-1 bg-card text-card-text shadow-xl rounded-lg p-2 border border-border-color animate-in fade-in zoom-in-95 duration-200"
       style={{ top: calculatedTop, left: calculatedLeft }}
       onMouseDown={(e) => e.stopPropagation()}
     >
