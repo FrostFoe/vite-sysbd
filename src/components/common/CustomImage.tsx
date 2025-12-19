@@ -1,6 +1,6 @@
 import { Eye, EyeOff } from "lucide-react";
 import type React from "react";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { normalizeMediaUrl } from "../../utils";
 
 interface CustomImageProps {
@@ -12,6 +12,7 @@ interface CustomImageProps {
   height?: string | number;
   caption?: string;
   showCaption?: boolean;
+  priority?: boolean;
 }
 
 const CustomImage: React.FC<CustomImageProps> = ({
@@ -23,12 +24,48 @@ const CustomImage: React.FC<CustomImageProps> = ({
   height,
   caption,
   showCaption = true,
+  priority = false,
 }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
   const [showImage, setShowImage] = useState(true);
+  const [shouldLoad, setShouldLoad] = useState(priority);
+  const imageRef = useRef<HTMLImageElement>(null);
 
   const normalizedSrc = normalizeMediaUrl(src);
+
+  useEffect(() => {
+    if (priority) {
+      setShouldLoad(true);
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setShouldLoad(true);
+          if (imageRef.current) {
+            observer.unobserve(imageRef.current);
+          }
+        }
+      },
+      {
+        root: null,
+        rootMargin: "100px",
+        threshold: 0.01,
+      },
+    );
+
+    if (imageRef.current) {
+      observer.observe(imageRef.current);
+    }
+
+    return () => {
+      if (imageRef.current) {
+        observer.unobserve(imageRef.current);
+      }
+    };
+  }, [priority]);
 
   const handleLoad = () => {
     setIsLoading(false);
@@ -80,23 +117,52 @@ const CustomImage: React.FC<CustomImageProps> = ({
   }
 
   return (
-    <figure className={`relative ${className}`}>
+    <figure className={`relative ${className}`} ref={imageRef}>
       {isLoading && (
-        <div className="absolute inset-0 bg-muted-bg animate-pulse rounded-lg flex items-center justify-center">
+        <div className="absolute inset-0 bg-muted-bg animate-pulse rounded-lg flex items-center justify-center"
+>
           <span className="text-sm text-muted-text">Loading...</span>
         </div>
       )}
-      <img
-        src={normalizedSrc}
-        alt={alt}
-        title={title}
-        width={width}
-        height={height}
-        crossOrigin="anonymous"
-        onLoad={handleLoad}
-        onError={handleError}
-        className={`w-full h-auto rounded-lg ${isLoading ? "opacity-0" : "opacity-100"} transition-opacity duration-300`}
-      />
+      <picture>
+        {shouldLoad && normalizedSrc.includes(".") ? (
+          <>
+            <source
+              srcSet={normalizedSrc.replace(/\.\w+$/, ".webp")}
+              type="image/webp"
+            />
+            <img
+              ref={imageRef}
+              src={normalizedSrc}
+              alt={alt}
+              title={title}
+              width={width}
+              height={height}
+              crossOrigin="anonymous"
+              onLoad={handleLoad}
+              onError={handleError}
+              className={`w-full h-auto rounded-lg ${isLoading ? "opacity-0" : "opacity-100"} transition-opacity duration-300`}
+              loading={priority ? "eager" : "lazy"}
+              decoding="async"
+            />
+          </>
+        ) : (
+          <img
+            ref={imageRef}
+            src={shouldLoad ? normalizedSrc : ""}
+            alt={alt}
+            title={title}
+            width={width}
+            height={height}
+            crossOrigin="anonymous"
+            onLoad={handleLoad}
+            onError={handleError}
+            className={`w-full h-auto rounded-lg ${isLoading ? "opacity-0" : "opacity-100"} transition-opacity duration-300`}
+            loading={priority ? "eager" : "lazy"}
+            decoding="async"
+          />
+        )}
+      </picture>
       {showCaption && caption && (
         <figcaption className="mt-2 text-sm text-center text-muted-text italic">
           {caption}

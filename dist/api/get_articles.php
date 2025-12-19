@@ -17,6 +17,10 @@ if ($_SERVER["REQUEST_METHOD"] !== "GET") {
 $search = isset($_GET["search"]) ? trim($_GET["search"]) : "";
 $catFilter = isset($_GET["cat"]) ? $_GET["cat"] : "";
 
+$page = isset($_GET["page"]) ? max(1, (int)$_GET["page"]) : 1;
+$limit = isset($_GET["limit"]) ? min(100, max(1, (int)$_GET["limit"])) : 20;
+$offset = ($page - 1) * $limit;
+
 $cache = new CacheManager();
 $cacheKey = $cache->generateKey([
     "admin_articles",
@@ -58,6 +62,35 @@ try {
     }
 
     $sql .= " ORDER BY a.created_at DESC";
+    
+    $countSql = "SELECT COUNT(*) as total FROM articles a WHERE 1=1";
+    $countParams = [];
+
+    if ($status !== "all") {
+        $countSql .= " AND a.status = ?";
+        $countParams[] = $status;
+    }
+
+    if (!empty($search)) {
+        $countSql .= " AND (a.title_bn LIKE ? OR a.title_en LIKE ?)";
+        $countParams[] = "%$search%";
+        $countParams[] = "%$search%";
+    }
+
+    if (!empty($catFilter)) {
+        $countSql .= " AND a.category_id = ?";
+        $countParams[] = $catFilter;
+    }
+
+    $countStmt = $pdo->prepare($countSql);
+    $countStmt->execute($countParams);
+    $countResult = $countStmt->fetch(PDO::FETCH_ASSOC);
+    $total = (int)$countResult['total'];
+    $totalPages = ceil($total / $limit);
+
+    $sql .= " LIMIT ? OFFSET ?";
+    $params[] = $limit;
+    $params[] = $offset;
 
     $stmt = $pdo->prepare($sql);
     $stmt->execute($params);
@@ -85,7 +118,18 @@ try {
         ];
     }
 
-    $result = ["success" => true, "articles" => $articles];
+    $result = [
+        "success" => true,
+        "articles" => $articles,
+        "pagination" => [
+            "page" => $page,
+            "limit" => $limit,
+            "total" => $total,
+            "totalPages" => $totalPages,
+            "hasNextPage" => $page < $totalPages,
+            "hasPrevPage" => $page > 1
+        ]
+    ];
 
     if (empty($search) && $catFilter === "" && $status === "all") {
         $cache->set($cacheKey, $result, 300);
