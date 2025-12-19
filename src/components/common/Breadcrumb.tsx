@@ -13,10 +13,6 @@ interface BreadcrumbProps {
   maxItems?: number;
 }
 
-/**
- * Breadcrumb Navigation Component
- * Provides hierarchical navigation path
- */
 export const Breadcrumb: React.FC<BreadcrumbProps> = ({
   items,
   separator = <ChevronRight className="w-4 h-4 text-muted-text" />,
@@ -66,10 +62,6 @@ export const Breadcrumb: React.FC<BreadcrumbProps> = ({
   );
 };
 
-/**
- * Simplified breadcrumb using current location
- * Automatically generates breadcrumbs from URL path
- */
 export const RouteBreadcrumb: React.FC = () => {
   const location = window.location.pathname;
   const segments = location.split("/").filter(Boolean);

@@ -3,18 +3,13 @@ require_once "api_header.php";
 require_once __DIR__ . "/../lib/CacheManager.php";
 session_start();
 
-// --- Authorization Check ---
-// Allow public access to fetch published articles
-// Only admin can access drafts/archived articles
 $status = isset($_GET["status"]) ? $_GET["status"] : "all";
 $isAdmin = isset($_SESSION["user_role"]) && $_SESSION["user_role"] === "admin";
 
-// If status is anything other than "published", user must be admin
 if ($status !== "published" && !$isAdmin) {
     send_response(["error" => "Unauthorized"], 403);
     exit();
 }
-// --- End Authorization Check ---
 
 if ($_SERVER["REQUEST_METHOD"] !== "GET") {
     send_response(["error" => "Method not allowed"], 405);
@@ -22,7 +17,6 @@ if ($_SERVER["REQUEST_METHOD"] !== "GET") {
 $search = isset($_GET["search"]) ? trim($_GET["search"]) : "";
 $catFilter = isset($_GET["cat"]) ? $_GET["cat"] : "";
 
-// Create cache key for this specific query
 $cache = new CacheManager();
 $cacheKey = $cache->generateKey([
     "admin_articles",
@@ -31,19 +25,16 @@ $cacheKey = $cache->generateKey([
     $catFilter,
 ]);
 
-// Don't cache if there are filters applied or for admin views that might change frequently
 if (empty($search) && $catFilter === "" && $status === "all") {
-    // Try to get from cache first (for unfiltered admin view, cache for 5 minutes)
     $cachedArticles = $cache->get($cacheKey);
     if ($cachedArticles) {
         send_response($cachedArticles);
         exit();
     }
 }
-$lang = isset($_GET["lang"]) ? $_GET["lang"] : "bn"; // Language for title fallback and category names
+$lang = isset($_GET["lang"]) ? $_GET["lang"] : "bn";
 
 try {
-    // Fetch Articles
     $sql = "SELECT a.id, a.title_bn, a.title_en, a.status, a.image, a.created_at, a.published_at, c.title_en as cat_en, c.title_bn as cat_bn 
             FROM articles a 
             LEFT JOIN categories c ON a.category_id = c.id 
@@ -81,7 +72,7 @@ try {
             "title" =>
                 $lang === "bn"
                     ? $art["title_bn"] ?? $art["title_en"]
-                    : $art["title_en"] ?? $art["title_bn"], // Fallback
+                    : $art["title_en"] ?? $art["title_bn"],
             "status" => $art["status"],
             "image" => $art["image"],
             "created_at" => $art["created_at"],
@@ -90,15 +81,14 @@ try {
             "category" =>
                 $lang === "bn"
                     ? $art["cat_bn"] ?? $art["cat_en"]
-                    : $art["cat_en"] ?? $art["cat_bn"], // Fallback
+                    : $art["cat_en"] ?? $art["cat_bn"],
         ];
     }
 
     $result = ["success" => true, "articles" => $articles];
 
-    // Cache only the unfiltered results
     if (empty($search) && $catFilter === "" && $status === "all") {
-        $cache->set($cacheKey, $result, 300); // Cache for 5 minutes
+        $cache->set($cacheKey, $result, 300);
     }
 
     send_response($result);

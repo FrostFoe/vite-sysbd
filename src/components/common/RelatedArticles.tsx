@@ -14,22 +14,18 @@ export const RelatedArticles: React.FC<RelatedArticlesProps> = ({
   allArticles,
 }) => {
   const relatedArticles = useMemo(() => {
-    // Get related articles based on category and section
     const related = allArticles
       .filter((article) => {
-        // Exclude current article
         if (article.id === currentArticle.id) return false;
 
-        // Must be published
         if (article.status !== "published") return false;
 
-        // Match by category or section
         return (
           article.category_id === currentArticle.category_id ||
           article.section_id === currentArticle.section_id
         );
       })
-      .slice(0, 4); // Limit to 4 articles
+      .slice(0, 4);
 
     return related;
   }, [currentArticle, allArticles]);

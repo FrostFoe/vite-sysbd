@@ -71,9 +71,7 @@ const ArticleDetail: React.FC = () => {
         const savedSort = localStorage.getItem(`sort-${id}`);
         if (savedSort) setCommentSort(savedSort as typeof commentSort);
       }
-    } catch (_e) {
-      // Silently fail if local storage is corrupted
-    }
+    } catch (_e) {}
   }, [id]);
 
   useEffect(() => {
@@ -85,11 +83,9 @@ const ArticleDetail: React.FC = () => {
         if (response.success && response.article) {
           setArticle(response.article);
         } else {
-          // Failed to fetch article
           setArticle(null);
         }
 
-        // Also fetch all articles for related articles section
         const allArticlesResponse = await adminApi.getArticles({
           status: "published",
           lang: language,
@@ -98,7 +94,6 @@ const ArticleDetail: React.FC = () => {
           setAllArticles(allArticlesResponse.articles as unknown as Article[]);
         }
       } catch (_error) {
-        // API error occurred
         setArticle(null);
       } finally {
         setIsLoading(false);
@@ -121,10 +116,10 @@ const ArticleDetail: React.FC = () => {
           : [...prevBookmarks, id];
       localStorage.setItem(
         "breachtimes-bookmarks",
-        JSON.stringify(newBookmarks)
+        JSON.stringify(newBookmarks),
       );
       showToastMsg(
-        index > -1 ? t("removed", language) : t("saved_successfully", language)
+        index > -1 ? t("removed", language) : t("saved_successfully", language),
       );
       return newBookmarks;
     });
@@ -137,9 +132,7 @@ const ArticleDetail: React.FC = () => {
           title: article?.title || document.title,
           url: window.location.href,
         })
-        .catch(() => {
-          // Share failed silently
-        });
+        .catch(() => {});
     } else {
       navigator.clipboard.writeText(window.location.href).then(() => {
         showToastMsg(t("link_copied", language));
@@ -171,11 +164,10 @@ const ArticleDetail: React.FC = () => {
         }
       } else {
         setCommentError(
-          response.error || t("failed_to_post_comment", language)
+          response.error || t("failed_to_post_comment", language),
         );
       }
     } catch (_error) {
-      // Post comment error occurred
       setCommentError(t("server_error", language));
     }
   }, [id, commentInput, language]);
@@ -205,7 +197,7 @@ const ArticleDetail: React.FC = () => {
                     upvotes: response.upvotes,
                     downvotes: response.downvotes,
                   }
-                : comment
+                : comment,
             );
             return { ...prevArticle, comments: updatedComments };
           });
@@ -213,15 +205,14 @@ const ArticleDetail: React.FC = () => {
         } else {
           showToastMsg(
             response.error || t("failed_to_vote", language),
-            "error"
+            "error",
           );
         }
       } catch (_error) {
-        // Vote comment error occurred
         showToastMsg(t("server_error", language), "error");
       }
     },
-    [id, language]
+    [id, language],
   );
 
   const handleCommentSortChange = useCallback(
@@ -229,7 +220,7 @@ const ArticleDetail: React.FC = () => {
       setCommentSort(newSort as typeof commentSort);
       localStorage.setItem(`sort-${id}`, newSort);
     },
-    [id]
+    [id],
   );
 
   const toggleReplyForm = useCallback((commentId: number) => {
@@ -251,7 +242,7 @@ const ArticleDetail: React.FC = () => {
         const response = await publicApi.postReply(
           parentCommentId,
           text,
-          language
+          language,
         );
         if (response.success) {
           setReplyInput((prev) => ({ ...prev, [parentCommentId]: "" }));
@@ -259,7 +250,7 @@ const ArticleDetail: React.FC = () => {
           showToastMsg(t("reply_posted", language));
           const updatedArticleResponse = await publicApi.getArticle(
             id,
-            language
+            language,
           );
           if (
             updatedArticleResponse.success &&
@@ -270,15 +261,14 @@ const ArticleDetail: React.FC = () => {
         } else {
           showToastMsg(
             response.error || t("failed_to_post_reply", language),
-            "error"
+            "error",
           );
         }
       } catch (_error) {
-        // Post reply error occurred
         showToastMsg(t("server_error", language), "error");
       }
     },
-    [id, replyInput, language]
+    [id, replyInput, language],
   );
 
   const deleteComment = useCallback(
@@ -293,7 +283,7 @@ const ArticleDetail: React.FC = () => {
           if (!id) return;
           const updatedArticleResponse = await publicApi.getArticle(
             id,
-            language
+            language,
           );
           if (
             updatedArticleResponse.success &&
@@ -304,15 +294,14 @@ const ArticleDetail: React.FC = () => {
         } else {
           showToastMsg(
             response.error || t("failed_to_delete_comment", language),
-            "error"
+            "error",
           );
         }
       } catch (_error) {
-        // Delete comment error occurred
         showToastMsg(t("server_error", language), "error");
       }
     },
-    [id, isAdmin, language]
+    [id, isAdmin, language],
   );
 
   const openProfileModal = useCallback(
@@ -327,17 +316,16 @@ const ArticleDetail: React.FC = () => {
         } else {
           showToastMsg(
             response.error || t("failed_to_fetch_profile", language),
-            "error"
+            "error",
           );
         }
       } catch (_error) {
-        // Fetch profile error occurred
         showToastMsg(t("server_error", language), "error");
       } finally {
         setProfileModalLoading(false);
       }
     },
-    [language]
+    [language],
   );
 
   const closeProfileModal = useCallback(() => {
@@ -351,7 +339,6 @@ const ArticleDetail: React.FC = () => {
       return prev ? `${prev}\n${quote}` : quote;
     });
 
-    // Scroll to comment input
     const commentInputEl = document.getElementById("comment-input");
     if (commentInputEl) {
       commentInputEl.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -374,15 +361,14 @@ const ArticleDetail: React.FC = () => {
         } else {
           showToastMsg(
             response.error || t("submission_failed", language),
-            "error"
+            "error",
           );
         }
       } catch (_error) {
-        // Document submission error occurred
         showToastMsg(t("server_error", language), "error");
       }
     },
-    [id, language]
+    [id, language],
   );
 
   if (isLoading) {
@@ -418,8 +404,11 @@ const ArticleDetail: React.FC = () => {
         />
         <meta name="keywords" content={article.meta_keywords || ""} />
         <link rel="canonical" href={currentUrl} />
-        
-        <meta property="og:title" content={article.meta_title || article.title} />
+
+        <meta
+          property="og:title"
+          content={article.meta_title || article.title}
+        />
         <meta
           property="og:description"
           content={article.meta_description || article.summary}
@@ -431,7 +420,7 @@ const ArticleDetail: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 lg:gap-12">
         <div className="lg:col-span-8">
           <article className="bg-card p-3 sm:p-4 md:p-5 rounded-2xl shadow-soft border border-border-color">
-            {/* Article Header */}
+            {}
             <div className="mb-4 sm:mb-6">
               <span className="bg-bbcRed text-white text-xs font-bold px-3 py-1 rounded-full mb-3 inline-block">
                 {article.category}
@@ -453,7 +442,7 @@ const ArticleDetail: React.FC = () => {
               </div>
             </div>
 
-            {/* Featured Image */}
+            {}
             <div className="mb-10 relative aspect-video bg-muted-bg rounded-2xl overflow-hidden shadow-lg">
               <img
                 src={normalizeMediaUrl(article.image) || PLACEHOLDER_IMAGE}
@@ -463,7 +452,7 @@ const ArticleDetail: React.FC = () => {
               />
             </div>
 
-            {/* Article Controls */}
+            {}
             <div className="flex flex-col sm:flex-row items-center justify-between border-y border-border-color py-3 sm:py-4 mb-6 sm:mb-8 gap-3 sm:gap-0">
               <div className="flex items-center gap-1 bg-muted-bg rounded-lg p-1">
                 <button
@@ -511,7 +500,7 @@ const ArticleDetail: React.FC = () => {
               </div>
             </div>
 
-            {/* Article Content */}
+            {}
             <div className="relative">
               <ContentRenderer
                 content={article.content}
@@ -531,10 +520,10 @@ const ArticleDetail: React.FC = () => {
           </article>
         </div>
 
-        {/* Sidebar */}
+        {}
         <div className="lg:col-span-4 w-full">
           <div className="w-full space-y-4 sm:space-y-6 lg:sticky lg:top-28">
-            {/* Leaked Documents */}
+            {}
             {article.leaked_documents &&
               article.leaked_documents.length > 0 && (
                 <div className="bg-card p-4 sm:p-6 rounded-2xl shadow-soft border border-border-color">
@@ -577,7 +566,7 @@ const ArticleDetail: React.FC = () => {
                 </div>
               )}
 
-            {/* Downloadable Documents */}
+            {}
             {article.documents && article.documents.length > 0 && (
               <div className="bg-card p-4 sm:p-6 rounded-2xl shadow-soft border border-border-color">
                 <h4 className="text-base sm:text-lg font-bold mb-3 sm:mb-4 text-card-text border-b border-border-color pb-2 flex items-center gap-2">
@@ -626,7 +615,7 @@ const ArticleDetail: React.FC = () => {
               </div>
             )}
 
-            {/* Submit Documents / Status */}
+            {}
             <div className="bg-card p-4 sm:p-6 rounded-2xl shadow-soft border border-border-color">
               {!isAuthenticated ? (
                 <>
@@ -711,7 +700,7 @@ const ArticleDetail: React.FC = () => {
               )}
             </div>
 
-            {/* Quick Info Card */}
+            {}
             <div className="bg-card p-4 sm:p-6 rounded-2xl shadow-soft border border-border-color">
               <h4 className="text-base sm:text-lg font-bold mb-3 sm:mb-4 text-card-text">
                 {t("article_info", language)}
@@ -747,7 +736,7 @@ const ArticleDetail: React.FC = () => {
             </div>
           </div>
 
-          {/* Related Articles */}
+          {}
           {article && allArticles.length > 0 && (
             <RelatedArticles
               currentArticle={article}
@@ -756,7 +745,7 @@ const ArticleDetail: React.FC = () => {
           )}
         </div>
 
-        {/* Comments Section */}
+        {}
         <div className="lg:col-span-8 bg-card p-4 sm:p-6 md:p-8 rounded-2xl shadow-soft border border-border-color">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 sm:mb-6 gap-3">
             <h3 className="text-xl sm:text-2xl font-bold text-card-text flex items-center gap-2">
@@ -791,7 +780,7 @@ const ArticleDetail: React.FC = () => {
             </div>
           </div>
 
-          {/* Comments List */}
+          {}
           <div className="bg-card rounded-xl border border-border-color overflow-hidden">
             {article.comments && article.comments.length > 0 ? (
               <div className="divide-y divide-border-color">
@@ -841,13 +830,13 @@ const ArticleDetail: React.FC = () => {
                       <p className="text-sm text-card-text ml-12 leading-relaxed mb-3">
                         {(() => {
                           const sanitizedText = DOMPurify.sanitize(
-                            comment.text
+                            comment.text,
                           );
                           const tempDiv = document.createElement("div");
                           tempDiv.innerHTML = sanitizedText;
 
                           const convertNodeToReactElement = (
-                            node: Node
+                            node: Node,
                           ): React.ReactNode => {
                             if (node.nodeType === Node.TEXT_NODE) {
                               return node.textContent;
@@ -855,7 +844,6 @@ const ArticleDetail: React.FC = () => {
                               const element = node as HTMLElement;
                               const props: Record<string, unknown> = {};
 
-                              // Copy attributes (converting class to className)
                               for (
                                 let i = 0;
                                 i < element.attributes.length;
@@ -869,22 +857,21 @@ const ArticleDetail: React.FC = () => {
                                 props[propName] = attr.value;
                               }
 
-                              // Process child nodes
                               const children = Array.from(
-                                element.childNodes
+                                element.childNodes,
                               ).map(convertNodeToReactElement);
 
                               return createElement(
                                 element.tagName.toLowerCase(),
                                 props,
-                                ...children
+                                ...children,
                               );
                             }
                             return null;
                           };
 
                           return Array.from(tempDiv.childNodes).map(
-                            (node, _index) => convertNodeToReactElement(node)
+                            (node, _index) => convertNodeToReactElement(node),
                           );
                         })()}
                       </p>
@@ -949,13 +936,13 @@ const ArticleDetail: React.FC = () => {
                               <p className="text-xs text-card-text ml-9 leading-relaxed">
                                 {(() => {
                                   const sanitizedText = DOMPurify.sanitize(
-                                    reply.text
+                                    reply.text,
                                   );
                                   const tempDiv = document.createElement("div");
                                   tempDiv.innerHTML = sanitizedText;
 
                                   const convertNodeToReactElement = (
-                                    node: Node
+                                    node: Node,
                                   ): React.ReactNode => {
                                     if (node.nodeType === Node.TEXT_NODE) {
                                       return node.textContent;
@@ -965,7 +952,6 @@ const ArticleDetail: React.FC = () => {
                                       const element = node as HTMLElement;
                                       const props: Record<string, unknown> = {};
 
-                                      // Copy attributes (converting class to className)
                                       for (
                                         let i = 0;
                                         i < element.attributes.length;
@@ -979,15 +965,14 @@ const ArticleDetail: React.FC = () => {
                                         props[propName] = attr.value;
                                       }
 
-                                      // Process child nodes
                                       const children = Array.from(
-                                        element.childNodes
+                                        element.childNodes,
                                       ).map(convertNodeToReactElement);
 
                                       return createElement(
                                         element.tagName.toLowerCase(),
                                         props,
-                                        ...children
+                                        ...children,
                                       );
                                     }
                                     return null;
@@ -995,7 +980,7 @@ const ArticleDetail: React.FC = () => {
 
                                   return Array.from(tempDiv.childNodes).map(
                                     (node, _index) =>
-                                      convertNodeToReactElement(node)
+                                      convertNodeToReactElement(node),
                                   );
                                 })()}
                               </p>
@@ -1048,7 +1033,7 @@ const ArticleDetail: React.FC = () => {
             )}
           </div>
 
-          {/* Comment Input Form - at the bottom */}
+          {}
           <div className="border-t border-border-color pt-6">
             {isAuthenticated ? (
               <>
@@ -1100,7 +1085,7 @@ const ArticleDetail: React.FC = () => {
         </div>
       </div>
 
-      {/* User Profile Modal */}
+      {}
       {profileModalOpen && (
         <button
           type="button"

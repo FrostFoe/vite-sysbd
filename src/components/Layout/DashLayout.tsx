@@ -42,17 +42,17 @@ const DashLayout: React.FC<DashLayoutProps> = ({ children }) => {
 
   return (
     <div className="bg-page text-page-text font-sans transition-colors duration-500 flex flex-col h-screen overflow-hidden">
-      {/* Toast Container Placeholder */}
+      {}
       <output
         id="toast-container"
         aria-live="polite"
         className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-[120] pointer-events-none w-full max-w-sm flex flex-col items-center gap-2"
       />
 
-      {/* Header is part of the main layout, not the sidebar/content flex container */}
+      {}
       <DashHeader type={layoutType} toggleSidebar={toggleSidebar} />
 
-      {/* Main Layout */}
+      {}
       <div className="flex flex-1 overflow-hidden relative">
         <DashSidebar
           type={layoutType}
@@ -62,7 +62,7 @@ const DashLayout: React.FC<DashLayoutProps> = ({ children }) => {
           toggleSidebarCollapse={toggleSidebarCollapse}
         />
 
-        {/* Content Wrapper */}
+        {}
         <div
           className="flex-1 flex flex-col overflow-y-auto bg-page relative w-full scroll-smooth"
           id="main-scroll"

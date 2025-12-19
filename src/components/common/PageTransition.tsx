@@ -5,10 +5,6 @@ interface PageTransitionProps {
   children: ReactNode;
 }
 
-/**
- * Page Transition Wrapper Component
- * Applies smooth fade-in and up animation to pages on mount
- */
 export const PageTransition: React.FC<PageTransitionProps> = ({ children }) => {
   return (
     <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">

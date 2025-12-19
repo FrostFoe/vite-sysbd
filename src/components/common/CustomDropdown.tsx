@@ -57,7 +57,7 @@ export const CustomDropdown: React.FC<CustomDropdownProps> = ({
       className={`custom-dropdown-wrapper ${className}`}
       id={id}
     >
-      {/* Dropdown Button */}
+      {}
       <button
         type="button"
         onClick={() => !disabled && setIsOpen(!isOpen)}
@@ -72,7 +72,7 @@ export const CustomDropdown: React.FC<CustomDropdownProps> = ({
         <ChevronDown className="custom-dropdown-icon" />
       </button>
 
-      {/* Dropdown Menu */}
+      {}
       <div className={`custom-dropdown-menu ${isOpen ? "open" : ""}`}>
         {options.length === 0 ? (
           <div className="px-3 py-2 text-sm text-muted-text">

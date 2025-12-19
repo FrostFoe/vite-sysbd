@@ -28,7 +28,6 @@ const translations: Translations = {
     support_text: "We depend 100% on donations to stay independent.",
     link_copied: "Link copied to clipboard",
 
-    // ArticleDetail Specific
     share: "Share",
     leaked_documents: "Leaked Documents",
     downloadable_documents: "Documents",
@@ -86,7 +85,6 @@ const translations: Translations = {
     day: "day",
     days: "days",
 
-    // Dashboard Specific
     not_logged_in: "Not logged in.",
     dashboard_overview: "Dashboard Overview",
     this_is_your_personal_dashboard: "This is your personal dashboard.",
@@ -97,7 +95,6 @@ const translations: Translations = {
     your_activity: "Your Activity",
     activity_placeholder: "Recent activity or stats can be shown here.",
 
-    // AdminDashboard Specific
     failed_to_load_stats: "Failed to load statistics.",
     total_articles: "Total Articles",
     view_details: "View Details",
@@ -110,7 +107,6 @@ const translations: Translations = {
     recent_activity: "Recent Activity",
     activity_logs_coming_soon: "Activity logs coming soon...",
 
-    // ArticleList Specific
     confirm_delete_article:
       "Are you sure you want to delete this article? This will delete both language versions.",
     article_deleted_successfully: "Article deleted successfully",
@@ -132,7 +128,6 @@ const translations: Translations = {
     pub: "Pub",
     cr: "Cr",
 
-    // ArticleEdit Specific
     failed_to_load_article: "Failed to load article.",
     draft_saved: "Draft saved!",
     draft_restored: "Draft restored successfully!",
@@ -178,7 +173,6 @@ const translations: Translations = {
     archived_status: "Archived",
     allow_submissions: "Allow User Submissions",
 
-    // UserInbox Specific
     failed_to_send_message: "Failed to send message.",
     type_your_message: "Type your message...",
     send_message_enter: "Send message (Enter)",
@@ -189,7 +183,6 @@ const translations: Translations = {
     choose_conversation_to_start_messaging:
       "Choose a conversation to start messaging",
 
-    // Login Specific
     login_welcome: "Welcome!",
     login_to_account: "Login to your account",
     email: "Email",
@@ -199,21 +192,18 @@ const translations: Translations = {
     dont_have_account: "Don't have an account?",
     create_account: "Register",
 
-    // Register Specific
     register_title: "Register",
     create_new_account: "Create a new account",
     register_btn: "Register",
     registering: "Registering...",
     already_have_account: "Already have an account?",
 
-    // Home Page Specific
     no_saved_articles: "No Saved Articles",
     bookmark_your_favorites:
       "Bookmark your favorite articles to save them here",
     no_news_in_this_category: "No News in This Category",
     read_more: "Read More",
 
-    // Article Bookmark Specific
     saved_successfully: "Saved to bookmarks!",
     removed: "Removed from bookmarks!",
   },
@@ -243,7 +233,6 @@ const translations: Translations = {
     support_text: "স্বাধীন থাকার জন্য আমরা ১০০% অনুদানের উপর নির্ভরশীল।",
     link_copied: "লিঙ্ক ক্লিপবোর্ডে কপি করা হয়েছে",
 
-    // ArticleDetail Specific
     share: "শেয়ার",
     leaked_documents: "ফাঁস হওয়া নথি",
     downloadable_documents: "ডাউনলোডযোগ্য নথি",
@@ -253,7 +242,8 @@ const translations: Translations = {
     write_details: "বিস্তারিত লিখুন...",
     submit: "জমা দিন",
     submissions_closed: "তথ্য জমা বন্ধ",
-    submissions_turned_off_by_admin: "অ্যাডমিন কর্তৃক জমা দেওয়া বন্ধ করা হয়েছে।",
+    submissions_turned_off_by_admin:
+      "অ্যাডমিন কর্তৃক জমা দেওয়া বন্ধ করা হয়েছে।",
     article_info: "নিবন্ধ তথ্য",
     category: "বিভাগ:",
     published: "প্রকাশনা:",
@@ -301,7 +291,6 @@ const translations: Translations = {
     day: "দিন",
     days: "দিন",
 
-    // Dashboard Specific
     not_logged_in: "লগইন করা নেই।",
     dashboard_overview: "ড্যাশবোর্ড ওভারভিউ",
     this_is_your_personal_dashboard: "এটি আপনার ব্যক্তিগত ড্যাশবোর্ড।",
@@ -310,9 +299,9 @@ const translations: Translations = {
     saved_articles: "সংরক্ষিত নিবন্ধ",
     messages: "মেসেজ",
     your_activity: "আপনার কার্যকলাপ",
-    activity_placeholder: "সাম্প্রতিক কার্যকলাপ বা পরিসংখ্যান এখানে দেখানো যেতে পারে।",
+    activity_placeholder:
+      "সাম্প্রতিক কার্যকলাপ বা পরিসংখ্যান এখানে দেখানো যেতে পারে।",
 
-    // AdminDashboard Specific
     failed_to_load_stats: "পরিসংখ্যান লোড করতে ব্যর্থ হয়েছে।",
     total_articles: "মোট নিবন্ধ",
     view_details: "বিস্তারিত দেখুন",
@@ -325,7 +314,6 @@ const translations: Translations = {
     recent_activity: "সাম্প্রতিক কার্যকলাপ",
     activity_logs_coming_soon: "ক্রিয়াকলাপ লগ শীঘ্রই আসছে...",
 
-    // ArticleList Specific
     confirm_delete_article:
       "আপনি কি নিশ্চিত এই নিবন্ধটি মুছে ফেলতে চান? এটি উভয় ভাষার সংস্করণ মুছে দেবে।",
     article_deleted_successfully: "নিবন্ধ সফলভাবে মুছে ফেলা হয়েছে",
@@ -340,13 +328,13 @@ const translations: Translations = {
     date: "তারিখ",
     actions: "ক্রিয়াকলাপ",
     no_articles_found: "কোনো নিবন্ধ পাওয়া যায়নি",
-    no_articles_matching_criteria: "আপনার মানদণ্ডের সাথে মেলে এমন কোনো নিবন্ধ নেই।",
+    no_articles_matching_criteria:
+      "আপনার মানদণ্ডের সাথে মেলে এমন কোনো নিবন্ধ নেই।",
     create_new_article: "নতুন নিবন্ধ তৈরি করুন",
     no_title: "(শিরোনাম নেই)",
     pub: "প্রকাশিত",
     cr: "তৈরি",
 
-    // ArticleEdit Specific
     failed_to_load_article: "নিবন্ধ লোড করতে ব্যর্থ হয়েছে।",
     draft_saved: "খসড়া সংরক্ষিত হয়েছে!",
     draft_restored: "খসড়া সফলভাবে পুনরুদ্ধার করা হয়েছে!",
@@ -392,7 +380,6 @@ const translations: Translations = {
     archived_status: "আর্কাইভ করা হয়েছে",
     allow_submissions: "ব্যবহারকারী জমা দেওয়ার অনুমতি দিন",
 
-    // Login Specific
     login_welcome: "স্বাগতম!",
     login_to_account: "আপনার অ্যাকাউন্টে লগইন করুন",
     email: "ইমেইল",
@@ -402,24 +389,21 @@ const translations: Translations = {
     dont_have_account: "অ্যাকাউন্ট নেই?",
     create_account: "নিবন্ধন",
 
-    // Register Specific
     register_title: "নিবন্ধন",
     create_new_account: "নতুন অ্যাকাউন্ট তৈরি করুন",
     register_btn: "নিবন্ধন",
     registering: "নিবন্ধন হচ্ছে...",
     already_have_account: "ইতিমধ্যে অ্যাকাউন্ট আছে?",
 
-    // Home Page Specific
     no_saved_articles: "কোনো সংরক্ষিত নিবন্ধ নেই",
-    bookmark_your_favorites: "আপনার প্রিয় নিবন্ধগুলি এখানে সংরক্ষণ করতে বুকমার্ক করুন",
+    bookmark_your_favorites:
+      "আপনার প্রিয় নিবন্ধগুলি এখানে সংরক্ষণ করতে বুকমার্ক করুন",
     no_news_in_this_category: "এই বিভাগে কোনো সংবাদ নেই",
     read_more: "আরও পড়ুন",
 
-    // Article Bookmark Specific
     saved_successfully: "বুকমার্কে সংরক্ষিত হয়েছে!",
     removed: "বুকমার্ক থেকে সরিয়ে ফেলা হয়েছে!",
 
-    // Admin Specific
     user_submissions: "ব্যবহারকারী জমা দেওয়া তথ্য",
     no_submissions_found: "কোনো জমা পাওয়া যায়নি",
     manage_categories: "বিভাগ পরিচালনা করুন",
@@ -449,7 +433,8 @@ const translations: Translations = {
     title_english: "শিরোনাম (ইংরেজি)",
     color: "রং",
     save: "সংরক্ষণ",
-    confirm_delete_category: "আপনি কি নিশ্চিত যে আপনি এই বিভাগটি মুছে ফেলতে চান?",
+    confirm_delete_category:
+      "আপনি কি নিশ্চিত যে আপনি এই বিভাগটি মুছে ফেলতে চান?",
     failed_to_fetch_categories: "বিভাগগুলি আনতে ব্যর্থ হয়েছে",
     edit_section: "বিভাগ সম্পাদনা করুন",
     new_section: "নতুন বিভাগ",
@@ -459,13 +444,15 @@ const translations: Translations = {
     list: "তালিকা",
     carousel: "ক্যারোজেল",
     highlight: "হাইলাইট",
-    confirm_delete_section: "আপনি কি নিশ্চিত যে আপনি এই বিভাগটি মুছে ফেলতে চান?",
+    confirm_delete_section:
+      "আপনি কি নিশ্চিত যে আপনি এই বিভাগটি মুছে ফেলতে চান?",
     failed_to_fetch_sections: "বিভাগগুলি আনতে ব্যর্থ হয়েছে",
     user_muted_successfully: "ব্যবহারকারীকে সফলভাবে মিউট করা হয়েছে",
     failed_to_mute_user: "ব্যবহারকারীকে মিউট করতে ব্যর্থ হয়েছে",
     user_unmuted_successfully: "ব্যবহারকারীকে সফলভাবে আনমিউট করা হয়েছে",
     failed_to_unmute_user: "ব্যবহারকারীকে আনমিউট করতে ব্যর্থ হয়েছে",
-    confirm_unmute_user: "আপনি কি নিশ্চিত যে আপনি এই ব্যবহারকারীকে আনমিউট করতে চান?",
+    confirm_unmute_user:
+      "আপনি কি নিশ্চিত যে আপনি এই ব্যবহারকারীকে আনমিউট করতে চান?",
     muted: "মিউট করা হয়েছে",
     active: "সক্রিয়",
     unmute: "আনমিউট",

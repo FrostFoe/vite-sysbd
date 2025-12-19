@@ -3,7 +3,6 @@ require_once "api_header.php";
 require_once __DIR__ . "/../lib/CacheManager.php";
 session_start();
 
-// --- Authorization Check ---
 if (!isset($_SESSION["user_role"]) || $_SESSION["user_role"] !== "admin") {
     send_response(["error" => "Unauthorized"], 403);
     exit();
@@ -13,11 +12,9 @@ if ($_SERVER["REQUEST_METHOD"] !== "GET") {
     send_response(["error" => "Method not allowed"], 405);
 }
 
-// Create cache key for users list
 $cache = new CacheManager();
 $cacheKey = $cache->generateKey(["admin_users"]);
 
-// Try to get from cache first (admin data changes less frequently)
 $cachedUsers = $cache->get($cacheKey);
 if ($cachedUsers) {
     send_response($cachedUsers);
@@ -39,7 +36,6 @@ try {
 
     $result = ["success" => true, "users" => $users];
 
-    // Cache for 10 minutes since user data changes less frequently
     $cache->set($cacheKey, $result, 600);
 
     send_response($result);

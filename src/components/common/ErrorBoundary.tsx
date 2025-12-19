@@ -14,11 +14,6 @@ interface State {
   autoReloadCountdown: number;
 }
 
-/**
- * Error Boundary component to catch React component errors
- * Prevents the entire app from crashing if a single component fails
- * Auto-reloads after 5 seconds if error occurs
- */
 export class ErrorBoundary extends React.Component<Props, State> {
   private reloadTimer: NodeJS.Timeout | null = null;
   private countdownInterval: NodeJS.Timeout | null = null;
@@ -46,13 +41,11 @@ export class ErrorBoundary extends React.Component<Props, State> {
       autoReloadCountdown: 5,
     });
 
-    // Auto-reload after 5 seconds
     this.reloadTimer = setTimeout(() => {
       console.log("Auto-reloading due to error...");
       window.location.reload();
     }, 5000);
 
-    // Update countdown every second
     this.countdownInterval = setInterval(() => {
       this.setState((prev) => ({
         autoReloadCountdown: Math.max(0, prev.autoReloadCountdown - 1),

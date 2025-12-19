@@ -6,7 +6,6 @@ require_once __DIR__ . "/../lib/FileUploader.php";
 header("Content-Type: application/json");
 
 try {
-    // Validate inputs
     $docId = isset($_POST["id"]) ? $_POST["id"] : null;
     $articleId = isset($_POST["article_id"]) ? $_POST["article_id"] : null;
     $displayNameBn = isset($_POST["display_name_bn"])
@@ -34,7 +33,6 @@ try {
         throw new Exception("Display name required (Bengali or English)");
     }
 
-    // Verify article exists
     $artStmt = $pdo->prepare("SELECT id FROM articles WHERE id = ?");
     $artStmt->execute([$articleId]);
     if (!$artStmt->fetch()) {
@@ -46,23 +44,88 @@ try {
     $fileType = null;
     $fileSize = null;
 
-    // Handle file upload
     if (isset($_FILES["file"]) && $_FILES["file"]["error"] === UPLOAD_ERR_OK) {
         try {
-            // Block potentially dangerous file types (case-insensitive) before using FileUploader
             $dangerousExtensions = [
-                'php', 'phtml', 'php3', 'php4', 'php5', 'php7', 'php8', 'phps', 'pht', 'phar',
-                'html', 'htm', 'js', 'jsp', 'jspx', 'pl', 'py', 'rb', 'sh', 'sql', 'htaccess',
-                'htpasswd', 'exe', 'com', 'bat', 'cmd', 'pif', 'scr', 'vbs', 'vbe', 'jar',
-                'shtml', 'shtm', 'stm', 'asa', 'asax', 'ascx', 'ashx', 'asmx', 'axd',
-                'c', 'cpp', 'csharp', 'vb', 'asp', 'aspx', 'asmx', 'swf', 'cgi', 'dll', 'sys',
-                'ps1', 'psm1', 'psd1', 'reg', 'msi', 'msp', 'lnk', 'inf', 'application', 'gadget',
-                'hta', 'cpl', 'msc', 'ws', 'wsf', 'wsh', 'jse'
+                "php",
+                "phtml",
+                "php3",
+                "php4",
+                "php5",
+                "php7",
+                "php8",
+                "phps",
+                "pht",
+                "phar",
+                "html",
+                "htm",
+                "js",
+                "jsp",
+                "jspx",
+                "pl",
+                "py",
+                "rb",
+                "sh",
+                "sql",
+                "htaccess",
+                "htpasswd",
+                "exe",
+                "com",
+                "bat",
+                "cmd",
+                "pif",
+                "scr",
+                "vbs",
+                "vbe",
+                "jar",
+                "shtml",
+                "shtm",
+                "stm",
+                "asa",
+                "asax",
+                "ascx",
+                "ashx",
+                "asmx",
+                "axd",
+                "c",
+                "cpp",
+                "csharp",
+                "vb",
+                "asp",
+                "aspx",
+                "asmx",
+                "swf",
+                "cgi",
+                "dll",
+                "sys",
+                "ps1",
+                "psm1",
+                "psd1",
+                "reg",
+                "msi",
+                "msp",
+                "lnk",
+                "inf",
+                "application",
+                "gadget",
+                "hta",
+                "cpl",
+                "msc",
+                "ws",
+                "wsf",
+                "wsh",
+                "jse",
             ];
 
-            $originalExt = pathinfo($_FILES["file"]["name"], PATHINFO_EXTENSION);
+            $originalExt = pathinfo(
+                $_FILES["file"]["name"],
+                PATHINFO_EXTENSION,
+            );
             if (in_array(strtolower($originalExt), $dangerousExtensions)) {
-                throw new Exception("File type not allowed (potentially dangerous): ." . $originalExt);
+                throw new Exception(
+                    "File type not allowed (potentially dangerous): ." .
+                        $originalExt,
+                );
             }
 
             $uploader = new FileUploader();
@@ -78,7 +141,6 @@ try {
         }
     }
 
-    // If edit mode and no file uploaded, use existing file path and size
     if ($docId) {
         $docStmt = $pdo->prepare(
             "SELECT file_path, file_size, file_name, file_type FROM documents WHERE id = ?",
@@ -97,7 +159,6 @@ try {
             $fileSize = $existingDoc["file_size"];
         }
 
-        // Update existing document
         $updateStmt = $pdo->prepare("
             UPDATE documents 
             SET display_name_bn = ?, display_name_en = ?, description_bn = ?, description_en = ?,
@@ -118,7 +179,6 @@ try {
             $docId,
         ]);
     } else {
-        // Create new document
         if (!$filePath && !$downloadUrl) {
             throw new Exception(
                 "Either file upload or external URL is required",

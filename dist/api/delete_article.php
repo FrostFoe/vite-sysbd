@@ -3,12 +3,10 @@ require_once "api_header.php";
 
 session_start();
 
-// --- Authorization Check ---
 if (!isset($_SESSION["user_role"]) || $_SESSION["user_role"] !== "admin") {
     send_response(["error" => "Unauthorized"], 403);
-    exit(); // Stop execution if unauthorized
+    exit();
 }
-// --- End Authorization Check ---
 
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
     send_response(["error" => "Method not allowed"], 405);

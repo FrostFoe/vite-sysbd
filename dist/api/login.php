@@ -5,7 +5,6 @@ require_once __DIR__ . "/../lib/security.php";
 header("Content-Type: application/json");
 session_start();
 
-// Get input
 $data = json_decode(file_get_contents("php://input"), true);
 
 if (!$data || !isset($data["email"]) || !isset($data["password"])) {
@@ -20,7 +19,6 @@ if (!$data || !isset($data["email"]) || !isset($data["password"])) {
 $email = trim($data["email"]);
 $password = $data["password"];
 
-// Basic email validation
 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
     http_response_code(400);
     echo json_encode(["success" => false, "message" => "Invalid email format"]);
@@ -35,7 +33,6 @@ try {
     $user = $stmt->fetch();
 
     if ($user && password_verify($password, $user["password"])) {
-        // Set session
         $_SESSION["user_id"] = $user["id"];
         $_SESSION["user_email"] = $user["email"];
         $_SESSION["user_role"] = $user["role"];

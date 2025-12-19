@@ -52,7 +52,7 @@ const DashHeader: React.FC<DashHeaderProps> = ({ type, toggleSidebar }) => {
       </div>
 
       <div className="flex items-center gap-2 md:gap-4 flex-shrink-0">
-        {/* Theme Toggle Button */}
+        {}
         <button
           type="button"
           onClick={toggleTheme}

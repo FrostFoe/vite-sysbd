@@ -142,7 +142,7 @@ const DashSidebar: React.FC<DashSidebarProps> = ({
 
   return (
     <>
-      {/* Sidebar Overlay (Mobile) */}
+      {}
       <button
         type="button"
         id="sidebar-overlay"
@@ -152,7 +152,7 @@ const DashSidebar: React.FC<DashSidebarProps> = ({
         }`}
       />
 
-      {/* Sidebar */}
+      {}
       <aside
         id="sidebar"
         className={`${
@@ -161,7 +161,7 @@ const DashSidebar: React.FC<DashSidebarProps> = ({
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
         } md:translate-x-0 md:static md:inset-auto md:transform-none flex flex-col h-full md:h-[calc(100vh-70px)] shadow-xl md:shadow-none overflow-y-auto`}
       >
-        {/* Collapse Button - Visible only on desktop */}
+        {}
         <div className="hidden md:block p-4 border-b border-border-color flex justify-end">
           <button
             type="button"
@@ -193,7 +193,7 @@ const DashSidebar: React.FC<DashSidebarProps> = ({
         </nav>
 
         <div className="mt-auto p-4 border-t border-border-color">
-          {/* Profile Section (Mobile) */}
+          {}
           <div className="md:hidden mb-4 pb-4 border-b border-border-color">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-full bg-gradient-to-br from-bbcRed to-orange-600 text-white flex items-center justify-center font-bold text-sm shadow-md">

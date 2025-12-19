@@ -23,13 +23,11 @@ try {
 
     $filePath = __DIR__ . "/../" . $doc["file_path"];
 
-    // Check if file exists
     if (!file_exists($filePath)) {
         http_response_code(404);
         throw new Exception("File not found on server");
     }
 
-    // For images, send them directly
     $imageExtensions = ["jpg", "jpeg", "png", "gif", "webp"];
     $ext = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
 
@@ -42,7 +40,6 @@ try {
         header("Cache-Control: public, max-age=31536000");
         readfile($filePath);
     } else {
-        // For other files, return JSON with info
         echo json_encode([
             "success" => true,
             "document" => [

@@ -20,10 +20,6 @@ const sizeClasses = {
   xl: "w-full max-w-2xl",
 };
 
-/**
- * Reusable Modal Component
- * Provides a consistent modal dialog across the application
- */
 export const Modal: React.FC<ModalProps> = ({
   isOpen,
   onClose,
@@ -69,7 +65,7 @@ export const Modal: React.FC<ModalProps> = ({
         onClick={(e) => e.stopPropagation()}
         onKeyDown={(e) => e.stopPropagation()}
       >
-        {/* Header */}
+        {}
         {title && (
           <div className="flex items-center justify-between px-6 py-4 border-b border-border">
             <h2
@@ -91,7 +87,7 @@ export const Modal: React.FC<ModalProps> = ({
           </div>
         )}
 
-        {/* Content */}
+        {}
         <div className="px-6 py-4">{children}</div>
       </div>
     </div>
@@ -106,10 +102,6 @@ interface DialogProps extends ModalProps {
   isLoading?: boolean;
 }
 
-/**
- * Confirmation Dialog Component
- * Extends Modal with confirmation/cancellation buttons
- */
 export const Dialog: React.FC<DialogProps> = ({
   isOpen,
   onClose,
@@ -177,10 +169,6 @@ interface AlertDialogProps {
   confirmText?: string;
 }
 
-/**
- * Alert Dialog Component
- * Simple alert with single action button
- */
 export const AlertDialog: React.FC<AlertDialogProps> = ({
   isOpen,
   onClose,

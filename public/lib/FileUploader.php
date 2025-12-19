@@ -1,8 +1,4 @@
 <?php
-/**
- * File Upload Utility Class
- * Handles all file uploads securely
- */
 
 class FileUploader
 {
@@ -13,60 +9,39 @@ class FileUploader
     {
         $this->config = require __DIR__ . "/../config/uploads.php";
 
-        // Detect the correct base path
-        // Check if we're in dist/lib (production nested) or lib (production root) or public/lib (development)
         $currentDir = __DIR__;
 
         if (strpos($currentDir, "/dist/") !== false) {
-            // We're in dist/lib - go up to dist/
             $this->publicPath = __DIR__ . "/../../";
         } elseif (basename(dirname(dirname($currentDir))) === "public") {
-            // We're in public/lib (development) - go up to public/
             $this->publicPath = __DIR__ . "/../../public/";
         } else {
-            // We're in domain root/lib (production) - go up to domain root/
             $this->publicPath = __DIR__ . "/../";
         }
     }
 
-    /**
-     * Upload a document
-     */
     public function uploadDocument($file)
     {
         return $this->upload($file, "documents");
     }
 
-    /**
-     * Upload an image
-     */
     public function uploadImage($file)
     {
         return $this->upload($file, "images");
     }
 
-    /**
-     * Upload a video
-     */
     public function uploadVideo($file)
     {
         return $this->upload($file, "videos");
     }
 
-    /**
-     * Upload audio
-     */
     public function uploadAudio($file)
     {
         return $this->upload($file, "audio");
     }
 
-    /**
-     * Generic upload handler
-     */
     private function upload($file, $type)
     {
-        // Validate file
         if (!isset($file["tmp_name"]) || $file["error"] !== UPLOAD_ERR_OK) {
             throw new Exception(
                 "File upload failed: " . $this->getUploadError($file["error"]),
@@ -76,29 +51,89 @@ class FileUploader
         $config = $this->config[$type];
         $ext = strtolower(pathinfo($file["name"], PATHINFO_EXTENSION));
 
-        // Block potentially dangerous file types (case-insensitive)
         $dangerousExtensions = [
-            'php', 'phtml', 'php3', 'php4', 'php5', 'php7', 'php8', 'phps', 'pht', 'phar',
-            'html', 'htm', 'js', 'jsp', 'jspx', 'pl', 'py', 'rb', 'sh', 'sql', 'htaccess',
-            'htpasswd', 'exe', 'com', 'bat', 'cmd', 'pif', 'scr', 'vbs', 'vbe', 'jar',
-            'shtml', 'shtm', 'stm', 'asa', 'asax', 'ascx', 'ashx', 'asmx', 'axd',
-            'c', 'cpp', 'csharp', 'vb', 'asp', 'aspx', 'asmx', 'swf', 'cgi', 'dll', 'sys',
-            'ps1', 'psm1', 'psd1', 'reg', 'msi', 'msp', 'lnk', 'inf', 'application', 'gadget',
-            'hta', 'cpl', 'msc', 'ws', 'wsf', 'wsh', 'jse'
+            "php",
+            "phtml",
+            "php3",
+            "php4",
+            "php5",
+            "php7",
+            "php8",
+            "phps",
+            "pht",
+            "phar",
+            "html",
+            "htm",
+            "js",
+            "jsp",
+            "jspx",
+            "pl",
+            "py",
+            "rb",
+            "sh",
+            "sql",
+            "htaccess",
+            "htpasswd",
+            "exe",
+            "com",
+            "bat",
+            "cmd",
+            "pif",
+            "scr",
+            "vbs",
+            "vbe",
+            "jar",
+            "shtml",
+            "shtm",
+            "stm",
+            "asa",
+            "asax",
+            "ascx",
+            "ashx",
+            "asmx",
+            "axd",
+            "c",
+            "cpp",
+            "csharp",
+            "vb",
+            "asp",
+            "aspx",
+            "asmx",
+            "swf",
+            "cgi",
+            "dll",
+            "sys",
+            "ps1",
+            "psm1",
+            "psd1",
+            "reg",
+            "msi",
+            "msp",
+            "lnk",
+            "inf",
+            "application",
+            "gadget",
+            "hta",
+            "cpl",
+            "msc",
+            "ws",
+            "wsf",
+            "wsh",
+            "jse",
         ];
 
-        // Check for dangerous extensions (including case variations like .PhP, .pHp, etc.)
         $originalExt = pathinfo($file["name"], PATHINFO_EXTENSION);
         if (in_array(strtolower($originalExt), $dangerousExtensions)) {
-            throw new Exception("File type not allowed (potentially dangerous): ." . $originalExt);
+            throw new Exception(
+                "File type not allowed (potentially dangerous): ." .
+                    $originalExt,
+            );
         }
 
-        // Validate extension
         if (!in_array($ext, $config["extensions"])) {
             throw new Exception("File type not allowed: ." . $ext);
         }
 
-        // Validate size
         if ($file["size"] > $config["max_size"]) {
             throw new Exception(
                 "File too large. Maximum: " .
@@ -107,7 +142,6 @@ class FileUploader
             );
         }
 
-        // Verify MIME type
         if (
             $this->config["security"]["verify_mime_type"] &&
             isset($config["mime_types"])
@@ -121,25 +155,20 @@ class FileUploader
             }
         }
 
-        // Create directory
         $uploadDir = $this->publicPath . $config["directory"] . "/";
         if (!is_dir($uploadDir)) {
             @mkdir($uploadDir, 0755, true);
         }
 
-        // Generate unique filename
         $uniqueName = $this->generateFilename($type, $ext);
         $uploadPath = $uploadDir . $uniqueName;
 
-        // Move file
         if (!move_uploaded_file($file["tmp_name"], $uploadPath)) {
             throw new Exception("Failed to save file");
         }
 
-        // Set permissions
         @chmod($uploadPath, 0644);
 
-        // Optimize images if needed
         if (
             $type === "images" &&
             $this->config["security"]["compress_images"]
@@ -147,13 +176,9 @@ class FileUploader
             $this->compressImage($uploadPath, $ext);
         }
 
-        // Return relative path
         return $config["directory"] . "/" . $uniqueName;
     }
 
-    /**
-     * Generate unique filename
-     */
     private function generateFilename($type, $ext)
     {
         $format = $this->config["filename_format"];
@@ -164,9 +189,6 @@ class FileUploader
         return $format;
     }
 
-    /**
-     * Compress image
-     */
     private function compressImage($path, $ext)
     {
         if (!extension_loaded("gd")) {
@@ -206,9 +228,6 @@ class FileUploader
         }
     }
 
-    /**
-     * Get upload error message
-     */
     private function getUploadError($code)
     {
         $errors = [

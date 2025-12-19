@@ -36,24 +36,19 @@ const TextSelectionToolbar: React.FC<TextSelectionToolbarProps> = ({
   const [showColorPicker, setShowColorPicker] = useState(false);
   const toolbarRef = useRef<HTMLDivElement>(null);
 
-  // Consolidated click outside handler
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      // If toolbar is not visible, do nothing
       if (!visible) return;
 
-      // Check if click is inside the toolbar
       if (toolbarRef.current?.contains(event.target as Node)) {
         return;
       }
 
-      // If click is outside, close everything
       setShowColorPicker(false);
       onClose();
     };
 
     if (visible) {
-      // Use 'mousedown' instead of 'click' for better responsiveness on selection clear
       document.addEventListener("mousedown", handleClickOutside);
     }
 
@@ -72,7 +67,6 @@ const TextSelectionToolbar: React.FC<TextSelectionToolbarProps> = ({
 
   if (!visible) return null;
 
-  // Prevent off-screen positioning (Simple boundary check)
   const calculatedTop = Math.max(10, position.top - 50);
 
   return (

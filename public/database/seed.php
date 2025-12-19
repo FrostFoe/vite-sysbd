@@ -2,7 +2,6 @@
 require_once __DIR__ . "/../config/db.php";
 require_once __DIR__ . "/../config/colors.php";
 
-// Seed Demo Users
 echo "\n--- Seeding Users ---\n";
 $users = [
     [
@@ -27,7 +26,6 @@ foreach ($users as $user) {
     }
 }
 
-// Get user IDs
 $adminId = $pdo
     ->query("SELECT id FROM users WHERE email = 'admin@breachtimes.com'")
     ->fetch(PDO::FETCH_ASSOC)["id"];
@@ -44,7 +42,6 @@ $emmaId = $pdo
     ->query("SELECT id FROM users WHERE email = 'emma@example.com'")
     ->fetch(PDO::FETCH_ASSOC)["id"];
 
-// Seed Categories
 echo "\n--- Seeding Categories ---\n";
 $cats = [
     ["news", "খবর", "News", COLOR_BBC_RED],
@@ -60,7 +57,6 @@ foreach ($cats as $cat) {
     echo "✓ Category created: " . $cat[1] . " / " . $cat[2] . "\n";
 }
 
-// Seed Sections
 echo "\n--- Seeding Sections ---\n";
 $sections = [
     [
@@ -82,7 +78,6 @@ foreach ($sections as $sec) {
     echo "✓ Section created: " . $sec[1] . " / " . $sec[2] . "\n";
 }
 
-// Seed Articles
 echo "\n--- Seeding Articles ---\n";
 $articles = [
     [
@@ -219,7 +214,6 @@ foreach ($articles as $article) {
     echo "✓ Article created: " . $article[3] . "\n";
 }
 
-// Seed Comments and Replies
 echo "\n--- Seeding Comments and Replies ---\n";
 $comments = [
     [
@@ -258,7 +252,6 @@ foreach ($comments as $index => $comment) {
     echo "✓ Comment created by: " . $comment[2] . "\n";
 }
 
-// Add replies to comments
 echo "\n--- Seeding Replies ---\n";
 $replies = [
     [
@@ -292,7 +285,6 @@ foreach ($replies as $index => $reply) {
     echo "✓ Reply created by: " . $reply[2] . "\n";
 }
 
-// Seed Comment Votes
 echo "\n--- Seeding Comment Votes ---\n";
 $votes = [
     [$commentIds[0], $sarahId, "upvote"],
@@ -309,7 +301,6 @@ foreach ($votes as $vote) {
     echo "✓ Vote created\n";
 }
 
-// Seed Documents
 echo "\n--- Seeding Documents ---\n";
 $documents = [
     [
@@ -351,7 +342,6 @@ foreach ($documents as $doc) {
     echo "✓ Document created: " . $doc[7] . "\n";
 }
 
-// Seed Article Submissions
 echo "\n--- Seeding Article Submissions ---\n";
 $submissions = [
     [

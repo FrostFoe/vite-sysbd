@@ -1,13 +1,3 @@
-/**
- * Authentication Context
- * Manages user authentication state across the application
- *
- * @provides User login, registration, logout functionality
- * @provides User authentication state and loading states
- * @example
- * const { user, isAuthenticated, login } = useAuth();
- */
-
 import type { ReactNode } from "react";
 import {
   createContext,
@@ -20,27 +10,20 @@ import { authApi } from "../api";
 import type { User } from "../types";
 import { showToastMsg } from "../utils";
 
-/**
- * Authentication context type definition
- */
 interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
   isLoading: boolean;
-  /** Login user with email and password */
+
   login: (email: string, password: string) => Promise<boolean>;
-  /** Register new user */
+
   register: (email: string, password: string) => Promise<boolean>;
-  /** Logout current user */
+
   logout: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-/**
- * Auth Provider Component
- * Wraps app with authentication context
- */
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
@@ -52,11 +35,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setUser(null);
       setIsAuthenticated(false);
       console.warn("Auth check timed out. Defaulting to unauthenticated.");
-    }, 5000); // 5 second timeout
+    }, 5000);
 
     try {
       const response = await authApi.checkAuth();
-      clearTimeout(timer); // Clear timeout if API responds in time
+      clearTimeout(timer);
       if (response.authenticated && response.user) {
         setUser(response.user);
         setIsAuthenticated(true);
@@ -71,7 +54,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setIsAuthenticated(false);
     } finally {
       if (isLoading) {
-        // Only set if it hasn't been set by the timer
         setIsLoading(false);
       }
     }
@@ -104,7 +86,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const register = async (
     email: string,
-    password: string
+    password: string,
   ): Promise<boolean> => {
     setIsLoading(true);
     try {
@@ -121,7 +103,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const err = error as { response?: { data?: { message?: string } } };
       showToastMsg(
         err.response?.data?.message || "Registration failed",
-        "error"
+        "error",
       );
       return false;
     } finally {
@@ -151,24 +133,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
-/**
- * useAuth Hook
- * Access authentication state and methods
- *
- * @throws Error if used outside AuthProvider
- * @returns {AuthContextType} Authentication context
- *
- * @example
- * const { user, login, isLoading } = useAuth();
- *
- * const handleLogin = async () => {
- *   const success = await login('user@example.com', 'password');
- *   if (success) {
- *     navigate('/dashboard');
- *   }
- * };
- */
-// eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (context === undefined) {

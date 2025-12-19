@@ -1,8 +1,4 @@
 <?php
-/**
- * Server-Side Cache Manager
- * Implements caching for frequently accessed data
- */
 
 class CacheManager
 {
@@ -11,27 +7,19 @@ class CacheManager
 
     public function __construct($cacheDir = null, $defaultTtl = 300)
     {
-        // 5 minutes default
         $this->cacheDir = $cacheDir ?: sys_get_temp_dir() . "/bt_cache";
         $this->defaultTtl = $defaultTtl;
 
-        // Create cache directory if it doesn't exist
         if (!is_dir($this->cacheDir)) {
             mkdir($this->cacheDir, 0755, true);
         }
     }
 
-    /**
-     * Generate a cache key from data
-     */
     public function generateKey($data)
     {
         return md5(json_encode($data));
     }
 
-    /**
-     * Get cached data
-     */
     public function get($key)
     {
         $cacheFile = $this->getCacheFile($key);
@@ -43,7 +31,6 @@ class CacheManager
         $cacheData = json_decode(file_get_contents($cacheFile), true);
 
         if (time() - $cacheData["timestamp"] > $cacheData["ttl"]) {
-            // Cache expired
             unlink($cacheFile);
             return null;
         }
@@ -51,9 +38,6 @@ class CacheManager
         return $cacheData["data"];
     }
 
-    /**
-     * Set cached data
-     */
     public function set($key, $data, $ttl = null)
     {
         $ttl = $ttl ?: $this->defaultTtl;
@@ -68,9 +52,6 @@ class CacheManager
         file_put_contents($cacheFile, json_encode($cacheData));
     }
 
-    /**
-     * Delete cached data
-     */
     public function delete($key)
     {
         $cacheFile = $this->getCacheFile($key);
@@ -79,9 +60,6 @@ class CacheManager
         }
     }
 
-    /**
-     * Check if cache exists and is valid
-     */
     public function exists($key)
     {
         $data = $this->get($key);
@@ -94,9 +72,6 @@ class CacheManager
     }
 }
 
-/**
- * Usage example in API endpoints
- */
 function getCachedArticle($articleId, $lang = "bn")
 {
     global $pdo;
@@ -109,7 +84,6 @@ function getCachedArticle($articleId, $lang = "bn")
         return $cached;
     }
 
-    // Fetch from database
     $stmt = $pdo->prepare("SELECT * FROM articles WHERE id = ?");
     $stmt->execute([$articleId]);
     $articleRaw = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -118,7 +92,6 @@ function getCachedArticle($articleId, $lang = "bn")
         return null;
     }
 
-    // Process article data (same as before)
     $article = [
         "id" => $articleRaw["id"],
         "title" =>
@@ -142,15 +115,11 @@ function getCachedArticle($articleId, $lang = "bn")
         "status" => $articleRaw["status"],
     ];
 
-    // Cache for 10 minutes as article data is relatively stable
     $cache->set($cacheKey, $article, 600);
 
     return $article;
 }
 
-/**
- * Cache for frequently accessed lookup data
- */
 function getCachedCategories($lang = "bn")
 {
     global $pdo;
@@ -163,13 +132,11 @@ function getCachedCategories($lang = "bn")
         return $cached;
     }
 
-    // Fetch from database
     $stmt = $pdo->query(
         "SELECT id, title_bn, title_en, color FROM categories ORDER BY id ASC",
     );
     $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    // Cache for 60 minutes as categories rarely change
     $cache->set($cacheKey, $categories, 3600);
 
     return $categories;
@@ -187,14 +154,12 @@ function getCachedSections($lang = "bn")
         return $cached;
     }
 
-    // Fetch from database
     $titleCol = "title_{$lang}";
     $stmt = $pdo->query(
         "SELECT id, {$titleCol} as title, type, highlight_color, associated_category, style, sort_order FROM sections ORDER BY sort_order ASC",
     );
     $sections = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    // Cache for 60 minutes as sections rarely change
     $cache->set($cacheKey, $sections, 3600);
 
     return $sections;

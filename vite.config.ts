@@ -2,7 +2,6 @@ import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 
-// https://vite.dev/config/
 export default defineConfig(({ command }) => {
   const config = {
     plugins: [
@@ -43,7 +42,7 @@ export default defineConfig(({ command }) => {
   if (command === "build") {
     return {
       ...config,
-      base: "/", // Use absolute paths for domain root deployment
+      base: "/",
     };
   } else {
     return {

@@ -51,7 +51,7 @@ export const LayoutProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     localStorage.setItem("breachtimes-lang", language);
     document.documentElement.lang = language;
-    // Update URL parameter without reload
+
     const urlParams = new URLSearchParams(window.location.search);
     urlParams.set("lang", language);
     window.history.replaceState({}, "", `?${urlParams.toString()}`);
@@ -87,8 +87,6 @@ export const LayoutProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
-// Allow both components and hooks in context files
-// eslint-disable-next-line react-refresh/only-export-components
 export const useLayout = () => {
   const context = useContext(LayoutContext);
   if (context === undefined) {

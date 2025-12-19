@@ -1,7 +1,6 @@
 <?php
 session_start();
 
-// Only output JSON if this file is called directly, not when included
 if (basename(__FILE__) === basename($_SERVER["SCRIPT_FILENAME"])) {
     header("Content-Type: application/json");
 

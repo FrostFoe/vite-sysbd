@@ -11,13 +11,11 @@ if (mb_strlen($query) < 2) {
     exit();
 }
 
-// Search in specific language columns using FULLTEXT indexes
 $titleCol = "title_{$lang}";
 $summaryCol = "summary_{$lang}";
 $contentCol = "content_{$lang}";
 $readTimeCol = "read_time_{$lang}";
 
-// Optimized search using FULLTEXT indexes with MATCH/AGAINST for better performance and relevance
 $sql = "SELECT
             a.id,
             a.{$titleCol} as title,
@@ -38,7 +36,6 @@ $stmt = $pdo->prepare($sql);
 $stmt->execute([$query, $query]);
 $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Process results
 foreach ($results as &$article) {
     $catName = null;
     if (!empty($article["category_title"])) {
@@ -46,7 +43,7 @@ foreach ($results as &$article) {
     }
     $article["category"] = $catName ?? ($lang === "bn" ? "অন্যান্য" : "Other");
     $article["timestamp"] = $article["published_at"];
-    // Clean up temporary field
+
     unset($article["category_title"]);
 }
 

@@ -38,7 +38,7 @@ const Comments: React.FC = () => {
     useCallback(() => adminApi.getAllComments(), []),
     {
       showErrorToast: true,
-    }
+    },
   );
 
   const comments = data?.comments || [];
@@ -58,7 +58,7 @@ const Comments: React.FC = () => {
         showToastMsg("সার্ভার ত্রুটি!", "error");
       }
     },
-    [refetch]
+    [refetch],
   );
 
   return (
@@ -83,7 +83,7 @@ const Comments: React.FC = () => {
                     handleItemSelect(
                       window.innerWidth < 768,
                       navigate,
-                      `/admin/comments/${c.id}`
+                      `/admin/comments/${c.id}`,
                     )
                   }
                   type="button"
@@ -134,7 +134,7 @@ const Comments: React.FC = () => {
                       tempDiv.innerHTML = sanitizedText;
 
                       const convertNodeToReactElement = (
-                        node: Node
+                        node: Node,
                       ): React.ReactNode => {
                         if (node.nodeType === Node.TEXT_NODE) {
                           return node.textContent;
@@ -142,7 +142,6 @@ const Comments: React.FC = () => {
                           const element = node as HTMLElement;
                           const props: Record<string, unknown> = {};
 
-                          // Copy attributes (converting class to className)
                           for (let i = 0; i < element.attributes.length; i++) {
                             const attr = element.attributes[i];
                             const propName =
@@ -150,22 +149,21 @@ const Comments: React.FC = () => {
                             props[propName] = attr.value;
                           }
 
-                          // Process child nodes
                           const children = Array.from(element.childNodes).map(
-                            convertNodeToReactElement
+                            convertNodeToReactElement,
                           );
 
                           return createElement(
                             element.tagName.toLowerCase(),
                             props,
-                            ...children
+                            ...children,
                           );
                         }
                         return null;
                       };
 
                       return Array.from(tempDiv.childNodes).map(
-                        (node, _index) => convertNodeToReactElement(node)
+                        (node, _index) => convertNodeToReactElement(node),
                       );
                     })()}
                   </div>

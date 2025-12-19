@@ -6,7 +6,6 @@ require_once __DIR__ . "/../lib/FileUploader.php";
 header("Content-Type: application/json");
 
 try {
-    // Check authentication
     session_start();
     if (!isset($_SESSION["user_role"]) || $_SESSION["user_role"] !== "admin") {
         send_response(["success" => false, "error" => "Unauthorized"], 403);
@@ -27,8 +26,7 @@ try {
         exit();
     }
 
-    // Check file size (5MB max for images)
-    if ($_FILES["image"]["size"] > 5242880) { // 5MB
+    if ($_FILES["image"]["size"] > 5242880) {
         send_response(
             [
                 "success" => false,
@@ -42,7 +40,6 @@ try {
     $uploader = new FileUploader();
     $imagePath = $uploader->uploadImage($_FILES["image"]);
 
-    // Return path accessible from browser - assets folder is served by the web server
     $imageUrl = "/" . $imagePath;
 
     send_response([
@@ -61,7 +58,6 @@ try {
     );
 }
 
-// Helper function from api_header.php
 function send_response($data, $code = 200)
 {
     http_response_code($code);

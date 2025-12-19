@@ -18,11 +18,9 @@ if (!$articleId || $page < 1) {
     exit();
 }
 
-// Initialize pagination
 $pagination = new Pagination($page, DEFAULT_PAGE_SIZE);
 
-// Determine sorting
-$orderBy = "c.created_at DESC"; // default newest
+$orderBy = "c.created_at DESC";
 switch ($sort) {
     case "oldest":
         $orderBy = "c.created_at ASC";
@@ -35,7 +33,6 @@ switch ($sort) {
         break;
 }
 
-// Get total count
 $countStmt = $pdo->prepare("
     SELECT COUNT(*) as count FROM comments
     WHERE article_id = ? AND parent_comment_id IS NULL
@@ -43,10 +40,8 @@ $countStmt = $pdo->prepare("
 $countStmt->execute([$articleId]);
 $totalCount = $countStmt->fetch(PDO::FETCH_ASSOC)["count"];
 
-// Update pagination with total count
 $pagination = new Pagination($page, DEFAULT_PAGE_SIZE, $totalCount);
 
-// Optimized query: Get comments with pre-joined vote counts and user info
 $commentStmt = $pdo->prepare(
     "
     SELECT
@@ -85,14 +80,12 @@ $rawComments = $commentStmt->fetchAll(PDO::FETCH_ASSOC);
 
 $processedComments = [];
 foreach ($rawComments as $c) {
-    // Determine display name
     $displayName = $c["user_name"];
     if (!empty($c["email"])) {
         $parts = explode("@", $c["email"]);
         $displayName = $parts[0];
     }
 
-    // Get replies for this comment with pre-joined vote counts
     $replyStmt = $pdo->prepare("
         SELECT
             c.id, c.text, c.created_at, c.user_name, c.user_id,

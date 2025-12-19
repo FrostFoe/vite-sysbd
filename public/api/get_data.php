@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . "/../config/db.php";
-require_once __DIR__ . "/../lib/functions.php"; // For time_ago
-require_once __DIR__ . "/../lib/CacheManager.php"; // Include the new cache manager
+require_once __DIR__ . "/../lib/functions.php";
+require_once __DIR__ . "/../lib/CacheManager.php";
 
 function get_data(
     $lang = "bn",
@@ -12,20 +12,17 @@ function get_data(
 ) {
     global $pdo;
 
-    // Validate language
     $lang = $lang === "en" ? "en" : "bn";
 
-    // Use cache for categories and sections since they change infrequently
     $cache = new CacheManager();
 
-    // Get categories from cache or database
     $categories = $cache->get($cache->generateKey(["categories", $lang]));
     if (!$categories) {
         $stmt = $pdo->query(
             "SELECT id, title_bn, title_en, color FROM categories ORDER BY id ASC",
         );
         $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        // Cache for 60 minutes as categories rarely change
+
         $cache->set(
             $cache->generateKey(["categories", $lang]),
             $categories,
@@ -33,7 +30,6 @@ function get_data(
         );
     }
 
-    // Create Category Map for O(1) Lookup
     $categoryMap = [];
     foreach ($categories as $cat) {
         $categoryMap[$cat["id"]] = [
@@ -42,21 +38,18 @@ function get_data(
         ];
     }
 
-    // Get sections from cache or database
     $sections = $cache->get(
         $cache->generateKey(["sections", $lang, $categoryFilter]),
     );
     if (!$sections) {
         $sectionParams = [];
-        $whereSectionListClause = "1=1"; // Always true
+        $whereSectionListClause = "1=1";
         if ($categoryFilter) {
             $whereSectionListClause .= " AND associated_category = ?";
             $sectionParams[] = $categoryFilter;
         }
 
-        // Dynamic Column Selection based on Language
         $titleCol = "title_{$lang}";
-        // Sections don't have translated type/style usually, but title is translated.
 
         $sectionSql = "
             SELECT id, {$titleCol} as title, type, highlight_color, associated_category, style, sort_order
@@ -67,7 +60,7 @@ function get_data(
         $stmt = $pdo->prepare($sectionSql);
         $stmt->execute($sectionParams);
         $sections = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        // Cache for 60 minutes as sections rarely change
+
         $cache->set(
             $cache->generateKey(["sections", $lang, $categoryFilter]),
             $sections,
@@ -75,9 +68,8 @@ function get_data(
         );
     }
 
-    // 3. Fetch Articles (Unified) - now with JOIN to get category info in one query
     $articleParams = [];
-    $whereArticleListClause = "a.status = 'published'"; // Default
+    $whereArticleListClause = "a.status = 'published'";
     if ($includeDrafts) {
         $whereArticleListClause = "1=1";
     }
@@ -87,12 +79,10 @@ function get_data(
         $articleParams[] = $categoryFilter;
     }
 
-    // Dynamic Column Selection for Articles
     $artTitleCol = "a.title_{$lang}";
     $artSummaryCol = "a.summary_{$lang}";
     $artReadTimeCol = "a.read_time_{$lang}";
 
-    // Optimized query with JOIN to get category names in one query
     $articleListSql = "
         SELECT
             a.id,
@@ -116,23 +106,18 @@ function get_data(
     $stmt->execute($articleParams);
     $allArticles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    // Group articles by section_id
     $articlesBySection = [];
     foreach ($allArticles as $article) {
-        // Filter out empty translations if necessary
         if (!empty($article["title"])) {
-            // Add category title to the article for easier access
             $article["category_title"] = $article["category_title"] ?? null;
             $articlesBySection[$article["section_id"]][] = $article;
         }
     }
 
-    // Construct Response
     $sectionsData = [];
     foreach ($sections as $section) {
         $sectionId = $section["id"];
 
-        // Skip sections with no title in requested language?
         if (empty($section["title"])) {
             continue;
         }
@@ -212,7 +197,6 @@ if (count(debug_backtrace()) == 0) {
         isset($_SESSION["user_role"]) && $_SESSION["user_role"] === "admin";
     $includeDrafts = $isAdmin;
 
-    // Create cache key for the entire response
     $cache = new CacheManager();
     $cacheKey = $cache->generateKey([
         "get_data",
@@ -223,15 +207,13 @@ if (count(debug_backtrace()) == 0) {
         $includeDrafts,
     ]);
 
-    // Try to get from cache first
     $data = $cache->get($cacheKey);
     if (!$data) {
         $data = get_data($lang, $page, $limit, $categoryFilter, $includeDrafts);
-        // Cache for 5 minutes for data that changes frequently
+
         $cache->set($cacheKey, $data, 300);
     }
 
-    // Send response with ETag for HTTP caching
     $json = json_encode($data);
     $etag = '"' . md5($json) . '"';
 

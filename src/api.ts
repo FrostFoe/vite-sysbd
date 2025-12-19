@@ -1,8 +1,3 @@
-/**
- * API Client & Endpoints
- * Centralized API communication with auth, public, and admin endpoints
- */
-
 import type { AxiosError, AxiosInstance, AxiosResponse } from "axios";
 import axios from "axios";
 import type {
@@ -16,54 +11,35 @@ import type {
   UserProfile,
 } from "./types";
 
-/* ============================================================================
-   API INTERCEPTORS
-   ============================================================================ */
-
-/**
- * Setup request/response interceptors for API client
- * Handles error handling, rate limiting, authentication errors
- */
 function setupApiInterceptors(api: AxiosInstance): void {
-  // Request interceptor
   api.interceptors.request.use(
     (config) => {
       return config;
     },
     (error: AxiosError) => {
       return Promise.reject(error);
-    }
+    },
   );
 
-  // Response interceptor
   api.interceptors.response.use(
     (response: AxiosResponse) => {
       return response;
     },
     (error: AxiosError) => {
-      // Handle specific error codes
       if (error.response?.status === 401) {
-        // Could trigger logout here
       }
 
       if (error.response?.status === 403) {
-        // Handle forbidden access
       }
 
       if (error.response?.status === 429) {
-        // Handle rate limiting
       }
 
       return Promise.reject(error);
-    }
+    },
   );
 }
 
-/* ============================================================================
-   API CLIENT SETUP
-   ============================================================================ */
-
-// API is always at /api from domain root (where dist/ is the root)
 const API_BASE_URL = "/api";
 
 const api = axios.create({
@@ -72,10 +48,6 @@ const api = axios.create({
 });
 
 setupApiInterceptors(api);
-
-/* ============================================================================
-   INTERFACES
-   ============================================================================ */
 
 export interface AdminArticle {
   id: string;
@@ -96,10 +68,6 @@ export interface AdminArticle {
   allow_submissions?: boolean;
 }
 
-/* ============================================================================
-   AUTH API
-   ============================================================================ */
-
 export const authApi = {
   checkAuth: async (): Promise<{ authenticated: boolean; user?: User }> => {
     const response = await api.get("/check_auth.php");
@@ -108,7 +76,7 @@ export const authApi = {
 
   login: async (
     email: string,
-    password: string
+    password: string,
   ): Promise<{ success: boolean; user?: User; message?: string }> => {
     const response = await api.post("/login.php", { email, password });
     return response.data;
@@ -116,7 +84,7 @@ export const authApi = {
 
   register: async (
     email: string,
-    password: string
+    password: string,
   ): Promise<{ success: boolean; user?: User; message?: string }> => {
     const response = await api.post("/register.php", { email, password });
     return response.data;
@@ -127,10 +95,6 @@ export const authApi = {
     return response.data;
   },
 };
-
-/* ============================================================================
-   PUBLIC API
-   ============================================================================ */
 
 export const publicApi = {
   getHomeData: async (lang: string, category?: string): Promise<HomeData> => {
@@ -144,7 +108,7 @@ export const publicApi = {
 
   getArticle: async (
     id: string,
-    lang: string
+    lang: string,
   ): Promise<{ success: boolean; article?: Article; error?: string }> => {
     const response = await api.get(`/get_article.php`, {
       params: { id, lang },
@@ -157,7 +121,7 @@ export const publicApi = {
     page: number,
     perPage: number,
     sort: string,
-    lang: string
+    lang: string,
   ): Promise<{
     success: boolean;
     comments?: Array<{
@@ -192,7 +156,7 @@ export const publicApi = {
     articleId: string,
     text: string,
     lang: string,
-    userName?: string
+    userName?: string,
   ): Promise<{ success: boolean; message?: string; error?: string }> => {
     const response = await api.post("/post_comment.php", {
       articleId,
@@ -205,7 +169,7 @@ export const publicApi = {
 
   voteComment: async (
     commentId: number,
-    voteType: "upvote" | "downvote"
+    voteType: "upvote" | "downvote",
   ): Promise<{
     success: boolean;
     action?: string;
@@ -229,7 +193,7 @@ export const publicApi = {
   },
 
   submitDocument: async (
-    formData: FormData
+    formData: FormData,
   ): Promise<{ success: boolean; message?: string; error?: string }> => {
     const response = await api.post("/submit_document.php", formData, {
       headers: {
@@ -250,7 +214,7 @@ export const publicApi = {
   postReply: async (
     parentCommentId: number,
     text: string,
-    lang?: string
+    lang?: string,
   ): Promise<{
     success: boolean;
     replyId?: number;
@@ -265,10 +229,6 @@ export const publicApi = {
     return response.data;
   },
 };
-
-/* ============================================================================
-   ADMIN API
-   ============================================================================ */
 
 export const adminApi = {
   getAdminStats: async (): Promise<{
@@ -300,7 +260,7 @@ export const adminApi = {
   },
 
   uploadImage: async (
-    formData: FormData
+    formData: FormData,
   ): Promise<{
     success: boolean;
     url?: string;
@@ -317,7 +277,7 @@ export const adminApi = {
   },
 
   uploadVideo: async (
-    formData: FormData
+    formData: FormData,
   ): Promise<{
     success: boolean;
     url?: string;
@@ -342,8 +302,6 @@ export const adminApi = {
     return response.data;
   },
 
-
-
   createUser: async (userData: {
     email: string;
     password: string;
@@ -355,7 +313,7 @@ export const adminApi = {
 
   updateUser: async (
     userId: number,
-    userData: { email?: string; role?: string; password?: string }
+    userData: { email?: string; role?: string; password?: string },
   ): Promise<{ success: boolean; user?: User; error?: string }> => {
     const response = await api.post("/update_user.php", {
       userId,
@@ -365,7 +323,7 @@ export const adminApi = {
   },
 
   deleteUser: async (
-    userId: number
+    userId: number,
   ): Promise<{ success: boolean; error?: string }> => {
     const response = await api.post("/delete_user.php", { userId });
     return response.data;
@@ -415,7 +373,7 @@ export const adminApi = {
   },
 
   deleteComment: async (
-    id: number
+    id: number,
   ): Promise<{ success: boolean; error?: string }> => {
     const response = await api.post("/delete_comment.php", { id });
     return response.data;
@@ -439,8 +397,6 @@ export const adminApi = {
     return response.data;
   },
 
-
-
   getCategories: async (): Promise<{
     success: boolean;
     data?: Category[];
@@ -451,14 +407,14 @@ export const adminApi = {
   },
 
   saveCategory: async (
-    category: Partial<Category>
+    category: Partial<Category>,
   ): Promise<{ success: boolean; message?: string }> => {
     const response = await api.post("/save_category.php", category);
     return response.data;
   },
 
   deleteCategory: async (
-    id: string
+    id: string,
   ): Promise<{ success: boolean; message?: string }> => {
     const response = await api.post("/delete_category.php", { id });
     return response.data;
@@ -474,21 +430,21 @@ export const adminApi = {
   },
 
   saveSection: async (
-    section: Partial<Section>
+    section: Partial<Section>,
   ): Promise<{ success: boolean; message?: string }> => {
     const response = await api.post("/save_section.php", section);
     return response.data;
   },
 
   deleteSection: async (
-    id: string
+    id: string,
   ): Promise<{ success: boolean; message?: string }> => {
     const response = await api.post("/delete_section.php", { id });
     return response.data;
   },
 
   saveArticle: async (
-    formData: FormData
+    formData: FormData,
   ): Promise<{ success: boolean; id?: string; error?: string }> => {
     const response = await api.post("/save_article.php", formData, {
       headers: {
@@ -499,14 +455,14 @@ export const adminApi = {
   },
 
   deleteArticle: async (
-    id: string
+    id: string,
   ): Promise<{ success: boolean; error?: string }> => {
     const response = await api.post("/delete_article.php", { id });
     return response.data;
   },
 
   getArticleDocuments: async (
-    articleId: string
+    articleId: string,
   ): Promise<{ success: boolean; documents?: DocType[]; error?: string }> => {
     const response = await api.get(`/get_article_documents.php`, {
       params: { id: articleId },
@@ -515,7 +471,7 @@ export const adminApi = {
   },
 
   getDocument: async (
-    docId: string
+    docId: string,
   ): Promise<{ success: boolean; document?: DocType; error?: string }> => {
     const response = await api.get(`/get_document.php`, {
       params: { id: docId },
@@ -524,7 +480,7 @@ export const adminApi = {
   },
 
   saveDocument: async (
-    formData: FormData
+    formData: FormData,
   ): Promise<{ success: boolean; message?: string; error?: string }> => {
     const response = await api.post("/save_document.php", formData, {
       headers: {
@@ -535,7 +491,7 @@ export const adminApi = {
   },
 
   deleteDocument: async (
-    id: string
+    id: string,
   ): Promise<{ success: boolean; message?: string; error?: string }> => {
     const response = await api.post("/delete_document.php", { id });
     return response.data;

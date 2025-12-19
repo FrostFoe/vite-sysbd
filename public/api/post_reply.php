@@ -20,7 +20,6 @@ if (!$parentCommentId || !$text) {
     exit();
 }
 
-// Trim and validate text
 $text = trim($text);
 if (strlen($text) < 1 || strlen($text) > 5000) {
     send_response(
@@ -30,7 +29,6 @@ if (strlen($text) < 1 || strlen($text) > 5000) {
     exit();
 }
 
-// Verify parent comment exists
 $stmt = $pdo->prepare("SELECT article_id FROM comments WHERE id = ?");
 $stmt->execute([$parentCommentId]);
 $parent = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -40,7 +38,6 @@ if (!$parent) {
     exit();
 }
 
-// Get user info from session or use anonymous
 $userId = isset($_SESSION["user_id"]) ? $_SESSION["user_id"] : null;
 $userName = isset($_SESSION["user_name"])
     ? $_SESSION["user_name"]
@@ -50,12 +47,11 @@ if (!$userName || empty(trim($userName))) {
     $userName = "Anonymous User";
 }
 
-$userName = htmlspecialchars($userName, ENT_QUOTES, 'UTF-8');
+$userName = htmlspecialchars($userName, ENT_QUOTES, "UTF-8");
 
 $articleId = $parent["article_id"];
 
 try {
-    // Insert reply as a comment with parent_comment_id
     $stmt = $pdo->prepare(
         "INSERT INTO comments (article_id, user_id, user_name, text, parent_comment_id, created_at) VALUES (?, ?, ?, ?, ?, NOW())",
     );
@@ -63,7 +59,6 @@ try {
 
     $replyId = $pdo->lastInsertId();
 
-    // Get the inserted reply with formatted response
     $stmt = $pdo->prepare(
         "SELECT id, user_name, text, created_at FROM comments WHERE id = ?",
     );

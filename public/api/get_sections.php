@@ -4,7 +4,6 @@ require_once __DIR__ . "/../lib/CacheManager.php";
 require_once "api_header.php";
 require_once "check_auth.php";
 
-// Check admin role
 if (!isset($_SESSION["user_role"]) || $_SESSION["user_role"] !== "admin") {
     http_response_code(403);
     echo json_encode([
@@ -14,14 +13,11 @@ if (!isset($_SESSION["user_role"]) || $_SESSION["user_role"] !== "admin") {
     exit();
 }
 
-// Create cache key for sections
 $cache = new CacheManager();
 $cacheKey = $cache->generateKey(["sections_all"]);
 
-// Try to get from cache first
 $cachedSections = $cache->get($cacheKey);
 if ($cachedSections) {
-    // Send cached response with ETag
     $json = json_encode($cachedSections);
     $etag = '"' . md5($json) . '"';
 
@@ -50,10 +46,8 @@ try {
         "data" => $sections,
     ];
 
-    // Cache for 1 hour since sections rarely change
     $cache->set($cacheKey, $result, 3600);
 
-    // Send response with ETag
     $json = json_encode($result);
     $etag = '"' . md5($json) . '"';
     header("ETag: " . $etag);

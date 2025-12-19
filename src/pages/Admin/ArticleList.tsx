@@ -38,7 +38,6 @@ const ArticleList: React.FC = () => {
         setArticles(response.articles);
       }
     } catch (_error) {
-      // Failed to fetch articles
       showToastMsg("সার্ভার ত্রুটি!", "error");
     } finally {
       setIsLoading(false);
@@ -52,7 +51,6 @@ const ArticleList: React.FC = () => {
         setCategories(response.data);
       }
     } catch (_error) {
-      // Failed to fetch categories
       showToastMsg("সার্ভার ত্রুটি!", "error");
     }
   }, []);
@@ -65,7 +63,7 @@ const ArticleList: React.FC = () => {
   const handleDeleteArticle = useCallback(async (id: string) => {
     if (
       !window.confirm(
-        "আপনি কি নিশ্চিত এই নিবন্ধটি মুছে ফেলতে চান? এটি উভয় ভাষার সংস্করণ মুছে দেবে।"
+        "আপনি কি নিশ্চিত এই নিবন্ধটি মুছে ফেলতে চান? এটি উভয় ভাষার সংস্করণ মুছে দেবে।",
       )
     )
       return;
@@ -78,14 +76,13 @@ const ArticleList: React.FC = () => {
         showToastMsg(response.error || "নিবন্ধ মোছতে ব্যর্থ!", "error");
       }
     } catch (_error) {
-      // Delete article error occurred
       showToastMsg("সার্ভার ত্রুটি!", "error");
     }
   }, []);
 
   const handleFilterChange = (
     type: "search" | "cat" | "status",
-    value: string
+    value: string,
   ) => {
     const newParams = new URLSearchParams(searchParams.toString());
     if (value) {
@@ -110,7 +107,7 @@ const ArticleList: React.FC = () => {
         <h1 className="text-xl sm:text-2xl font-bold">নিবন্ধ পরিচালনা করুন</h1>
 
         <div className="flex flex-col sm:flex-row gap-2 w-full md:w-auto">
-          {/* Filter Form */}
+          {}
           <form
             onSubmit={(e) => {
               e.preventDefault();
@@ -194,7 +191,7 @@ const ArticleList: React.FC = () => {
                     handleItemSelect(
                       window.innerWidth < 768,
                       navigate,
-                      `/admin/articles/${a.id}/edit`
+                      `/admin/articles/${a.id}/edit`,
                     )
                   }
                   type="button"

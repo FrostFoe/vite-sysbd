@@ -72,7 +72,6 @@ export const UserModal: React.FC<UserModalProps> = ({
     setIsSaving(true);
     try {
       if (user?.id) {
-        // Update existing user
         const response = await adminApi.updateUser(user.id, {
           email: formData.email,
           role: formData.role,
@@ -86,7 +85,6 @@ export const UserModal: React.FC<UserModalProps> = ({
           setError(response.error || "ব্যবহারকারী আপডেট করতে ব্যর্থ");
         }
       } else {
-        // Create new user
         const response = await adminApi.createUser({
           email: formData.email,
           password: formData.password || "",
@@ -114,7 +112,9 @@ export const UserModal: React.FC<UserModalProps> = ({
       <div className="bg-card rounded-2xl shadow-2xl border border-border-color w-full max-w-md mx-4 animate-in zoom-in-95">
         <div className="flex items-center justify-between p-4 sm:p-6 border-b border-border-color">
           <h2 className="text-lg font-bold">
-            {user?.id ? "ব্যবহারকারী সম্পাদনা করুন" : "নতুন ব্যবহারকারী তৈরি করুন"}
+            {user?.id
+              ? "ব্যবহারকারী সম্পাদনা করুন"
+              : "নতুন ব্যবহারকারী তৈরি করুন"}
           </h2>
           <button
             type="button"

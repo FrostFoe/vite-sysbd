@@ -14,11 +14,6 @@ interface CustomImageProps {
   showCaption?: boolean;
 }
 
-/**
- * Custom Image Component for Article Content
- * Provides enhanced image display with lazy loading, error handling,
- * and accessibility features
- */
 const CustomImage: React.FC<CustomImageProps> = ({
   src,
   alt = "",
@@ -33,7 +28,6 @@ const CustomImage: React.FC<CustomImageProps> = ({
   const [hasError, setHasError] = useState(false);
   const [showImage, setShowImage] = useState(true);
 
-  // Normalize the image URL to ensure it works from both editor and detail pages
   const normalizedSrc = normalizeMediaUrl(src);
 
   const handleLoad = () => {

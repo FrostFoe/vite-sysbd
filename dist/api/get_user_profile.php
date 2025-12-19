@@ -16,7 +16,6 @@ if (!$userId && !$userName) {
     exit();
 }
 
-// Get user info
 $userStmt = $pdo->prepare(
     "SELECT id, email FROM users WHERE id = ? OR email = ?",
 );
@@ -31,10 +30,8 @@ if (!$user) {
 $userId = $user["id"];
 $email = $user["email"];
 
-// Extract display name from email
 $displayName = explode("@", $email)[0];
 
-// Get comment count
 $commentStmt = $pdo->prepare("
     SELECT COUNT(*) as count FROM comments 
     WHERE user_id = ? OR user_name = ?
@@ -42,7 +39,6 @@ $commentStmt = $pdo->prepare("
 $commentStmt->execute([$userId, $displayName]);
 $commentCount = $commentStmt->fetch(PDO::FETCH_ASSOC)["count"];
 
-// Get recent comments (last 5)
 $recentStmt = $pdo->prepare("
     SELECT c.text, c.created_at, 
         (SELECT COUNT(*) FROM comment_votes WHERE comment_id = c.id AND vote_type = 'upvote') as up

@@ -1,14 +1,8 @@
 <?php
-/**
- * Upload Configuration
- * Centralized configuration for all file uploads
- */
 
 return [
-    // Base upload directory (relative to public/)
     "base_path" => "assets/uploads",
 
-    // Directory mappings
     "directories" => [
         "images" => "assets/uploads/images",
         "images_articles" => "assets/uploads/images/articles",
@@ -19,7 +13,6 @@ return [
         "media_audio" => "assets/uploads/media/audio",
     ],
 
-    // File type configurations
     "documents" => [
         "extensions" => [
             "pdf",
@@ -37,7 +30,7 @@ return [
             "mp4",
             "mp3",
         ],
-        "max_size" => 104857600, // 100MB
+        "max_size" => 104857600,
         "directory" => "assets/uploads/documents",
         "mime_types" => [
             "application/pdf",
@@ -56,14 +49,14 @@ return [
 
     "images" => [
         "extensions" => ["jpg", "jpeg", "png", "gif", "webp"],
-        "max_size" => 20971520, // 20MB
+        "max_size" => 20971520,
         "directory" => "assets/uploads/images/articles",
         "mime_types" => ["image/jpeg", "image/png", "image/gif", "image/webp"],
     ],
 
     "videos" => [
         "extensions" => ["mp4", "webm", "avi", "mov", "mkv"],
-        "max_size" => 524288000, // 500MB
+        "max_size" => 524288000,
         "directory" => "assets/uploads/media/videos",
         "mime_types" => [
             "video/mp4",
@@ -76,7 +69,7 @@ return [
 
     "audio" => [
         "extensions" => ["mp3", "wav", "ogg", "m4a", "flac"],
-        "max_size" => 104857600, // 100MB
+        "max_size" => 104857600,
         "directory" => "assets/uploads/media/audio",
         "mime_types" => [
             "audio/mpeg",
@@ -87,15 +80,13 @@ return [
         ],
     ],
 
-    // Security settings
     "security" => [
         "verify_mime_type" => true,
-        "scan_virus" => false, // Set to true if ClamAV is available
+        "scan_virus" => false,
         "generate_thumbnails" => true,
         "compress_images" => true,
     ],
 
-    // Filename generation
     "filename_format" => "{type}_{timestamp}_{random}.{ext}",
 ];
 ?>

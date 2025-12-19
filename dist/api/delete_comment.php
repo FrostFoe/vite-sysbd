@@ -1,12 +1,11 @@
 <?php
 require_once "api_header.php";
-require_once "check_auth.php"; // Ensure admin
+require_once "check_auth.php";
 
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
     send_response(["error" => "Method not allowed"], 405);
 }
 
-// Check admin role (redundant if check_auth does it, but check_auth just returns JSON status usually)
 session_start();
 if (!isset($_SESSION["user_role"]) || $_SESSION["user_role"] !== "admin") {
     send_response(["error" => "Unauthorized"], 403);

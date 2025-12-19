@@ -12,9 +12,6 @@ interface FormInputProps extends InputHTMLAttributes<HTMLInputElement> {
   rightIcon?: React.ReactNode;
 }
 
-/**
- * Form Input Component with validation support
- */
 export const FormInput: FC<FormInputProps> = ({
   label,
   error,
@@ -102,9 +99,6 @@ interface FormTextAreaProps extends InputHTMLAttributes<HTMLTextAreaElement> {
   rows?: number;
 }
 
-/**
- * Form TextArea Component with validation support
- */
 export const FormTextArea: FC<FormTextAreaProps> = ({
   label,
   error,
@@ -166,9 +160,6 @@ interface FormSelectProps extends InputHTMLAttributes<HTMLSelectElement> {
   options: Array<{ value: string | number; label: string }>;
 }
 
-/**
- * Form Select Component with validation support
- */
 export const FormSelect: FC<FormSelectProps> = ({
   label,
   error,
@@ -233,9 +224,6 @@ interface FormCheckboxProps extends InputHTMLAttributes<HTMLInputElement> {
   error?: string | string[];
 }
 
-/**
- * Form Checkbox Component
- */
 export const FormCheckbox: FC<FormCheckboxProps> = ({
   label,
   error,

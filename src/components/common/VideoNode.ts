@@ -3,9 +3,6 @@ import { mergeAttributes, Node } from "@tiptap/core";
 declare module "@tiptap/core" {
   interface Commands<ReturnType> {
     video: {
-      /**
-       * Insert a video
-       */
       setVideo: (options: {
         src: string;
         alt?: string;
@@ -20,10 +17,6 @@ interface VideoOptions {
   allowBase64: boolean;
 }
 
-/**
- * Video Node Extension for TipTap
- * Handles embedding of video files and external video URLs
- */
 export const VideoNode = Node.create<VideoOptions>({
   name: "video",
 

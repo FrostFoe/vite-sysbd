@@ -12,7 +12,6 @@ try {
         throw new Exception("Document ID required");
     }
 
-    // Get document info first
     $stmt = $pdo->prepare(
         "SELECT file_path, download_url FROM documents WHERE id = ?",
     );
@@ -23,11 +22,9 @@ try {
         throw new Exception("Document not found");
     }
 
-    // Delete from database
     $delStmt = $pdo->prepare("DELETE FROM documents WHERE id = ?");
     $delStmt->execute([$docId]);
 
-    // Delete file if it exists
     if ($document["file_path"]) {
         $fullPath = __DIR__ . "/../" . $document["file_path"];
         if (file_exists($fullPath)) {

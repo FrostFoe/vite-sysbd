@@ -14,7 +14,6 @@ if (!$articleId) {
     exit();
 }
 
-// Fetch article
 $stmt = $pdo->prepare("SELECT * FROM articles WHERE id = ?");
 $stmt->execute([$articleId]);
 $articleRaw = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -25,10 +24,8 @@ if (!$articleRaw) {
     exit();
 }
 
-// Check status
 $status = $articleRaw["status"] ?? "published";
-// In a real API, we might check session for admin role to allow drafts
-// For now, let's strict check or allow if session says admin
+
 session_start();
 $isAdmin = isset($_SESSION["user_role"]) && $_SESSION["user_role"] === "admin";
 
@@ -38,7 +35,6 @@ if ($status !== "published" && !$isAdmin) {
     exit();
 }
 
-// Map localized fields
 $article = [
     "id" => $articleRaw["id"],
     "title_bn" => $articleRaw["title_bn"],
@@ -68,7 +64,6 @@ $article = [
     "status" => $status,
 ];
 
-// Fallback
 if (empty($article["title"])) {
     $article["title"] =
         $lang === "en" ? $articleRaw["title_bn"] : $articleRaw["title_en"];
@@ -77,7 +72,6 @@ if (empty($article["title"])) {
     $article["fallback_lang"] = true;
 }
 
-// Fetch Category Name
 $categoryName = "News";
 if ($articleRaw["category_id"]) {
     $catStmt = $pdo->prepare(
@@ -91,7 +85,6 @@ if ($articleRaw["category_id"]) {
 }
 $article["category"] = $categoryName;
 
-// Fetch Comments with pre-joined vote counts
 $commentStmt = $pdo->prepare("
     SELECT
         c.id, c.text, c.created_at, c.user_name, c.user_id, c.is_pinned, c.pin_order,
@@ -122,7 +115,6 @@ foreach ($rawComments as $c) {
         $displayName = $parts[0];
     }
 
-    // Replies with pre-joined vote counts
     $replyStmt = $pdo->prepare("
         SELECT
             c.id, c.text, c.created_at, c.user_name, c.user_id, u.email,
@@ -179,14 +171,12 @@ foreach ($rawComments as $c) {
 }
 $article["comments"] = $processedComments;
 
-// Leaked Documents
 $leakedDocuments = [];
 if (!empty($articleRaw["leaked_documents"])) {
     $leakedDocuments = json_decode($articleRaw["leaked_documents"], true);
 }
 $article["leaked_documents"] = $leakedDocuments;
 
-// Downloadable Documents
 $docsStmt = $pdo->prepare(
     "SELECT id, display_name_bn, display_name_en, file_type, file_path, download_url, description_bn, description_en, file_size FROM documents WHERE article_id = ? ORDER BY sort_order ASC",
 );

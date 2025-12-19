@@ -1,16 +1,7 @@
-/**
- * Unified Utilities, Validation, and Performance
- * Consolidated from: utils, formValidation, imageOptimization, performance, useDataFetch
- */
-
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useToast } from "./components/common/Toast";
 import { useLayout } from "./context/LayoutContext";
 import { t } from "./translations";
-
-/* ============================================================================
-   COMMON UTILITIES
-   ============================================================================ */
 
 declare global {
   interface Window {
@@ -25,13 +16,13 @@ export const PLACEHOLDER_IMAGE =
 
 export function formatTimestamp(
   timestampString: string | null | undefined,
-  lang: "en" | "bn"
+  lang: "en" | "bn",
 ): string {
   if (!timestampString) return "";
   let date = new Date(timestampString);
   if (Number.isNaN(date.getTime())) {
     const parts = timestampString.match(
-      /^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})$/
+      /^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})$/,
     );
     if (parts)
       date = new Date(
@@ -40,7 +31,7 @@ export function formatTimestamp(
         parseInt(parts[3], 10),
         parseInt(parts[4], 10),
         parseInt(parts[5], 10),
-        parseInt(parts[6], 10)
+        parseInt(parts[6], 10),
       );
     else return timestampString;
   }
@@ -73,7 +64,7 @@ export function formatTimestamp(
 
 export function showToastMsg(
   msg: string,
-  type: "success" | "error" = "success"
+  type: "success" | "error" = "success",
 ) {
   const container = document.getElementById("toast-container");
   if (!container) return;
@@ -96,18 +87,11 @@ export function showToastMsg(
   setTimeout(() => toast.remove(), 3000);
 }
 
-/**
- * Navigate to detail page on mobile, set active item on desktop
- * @param isMobile - Is current screen mobile
- * @param navigate - React Router navigate function
- * @param detailPath - Path to navigate to on mobile (e.g., `/admin/users/${id}`)
- * @param onDesktop - Callback to execute on desktop (e.g., setActiveItem)
- */
 export function handleItemSelect(
   isMobile: boolean,
   navigate: (path: string) => void,
   detailPath: string,
-  onDesktop?: () => void
+  onDesktop?: () => void,
 ) {
   if (isMobile) {
     navigate(detailPath);
@@ -116,37 +100,23 @@ export function handleItemSelect(
   }
 }
 
-/**
- * Normalize media URLs to ensure they work from both editor and article detail pages
- * Handles relative paths returned from upload APIs
- * @param url - The media URL from API response
- * @returns Normalized URL accessible from frontend
- */
 export function normalizeMediaUrl(url: string | null | undefined): string {
   if (!url) return "";
 
-  // If URL is already absolute (starts with http/https), return as-is
   if (url.startsWith("http://") || url.startsWith("https://")) {
     return url;
   }
 
-  // If URL is root-relative (starts with /), it already maps to domain root (dist/)
-  // so return as-is
   if (url.startsWith("/")) {
     return url;
   }
 
-  // Return other URLs as-is
   return url;
 }
 
 export function cn(...inputs: (string | boolean | undefined | null)[]): string {
   return inputs.filter(Boolean).join(" ");
 }
-
-/* ============================================================================
-   FORM VALIDATION
-   ============================================================================ */
 
 export interface ValidationRule {
   required?: boolean;
@@ -158,7 +128,7 @@ export interface ValidationRule {
   url?: boolean;
   min?: number;
   max?: number;
-  match?: string; // Field name to match
+  match?: string;
 }
 
 export interface ValidationErrors {
@@ -170,13 +140,10 @@ export interface FormValidationResult {
   errors: ValidationErrors;
 }
 
-/**
- * Validate a single field
- */
 function validateFieldInternal(
   value: unknown,
   rules: ValidationRule,
-  fieldName: string
+  fieldName: string,
 ): string[] {
   const errors: string[] = [];
 
@@ -189,19 +156,16 @@ function validateFieldInternal(
 
   const stringValue = String(value).trim();
 
-  // Min length validation
   if (rules.minLength && stringValue.length < rules.minLength) {
     errors.push(
-      `${fieldName} must be at least ${rules.minLength} characters long`
+      `${fieldName} must be at least ${rules.minLength} characters long`,
     );
   }
 
-  // Max length validation
   if (rules.maxLength && stringValue.length > rules.maxLength) {
     errors.push(`${fieldName} must not exceed ${rules.maxLength} characters`);
   }
 
-  // Email validation
   if (rules.email) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(stringValue)) {
@@ -209,7 +173,6 @@ function validateFieldInternal(
     }
   }
 
-  // URL validation
   if (rules.url) {
     try {
       new URL(stringValue);
@@ -218,12 +181,10 @@ function validateFieldInternal(
     }
   }
 
-  // Pattern validation
   if (rules.pattern && !rules.pattern.test(stringValue)) {
     errors.push(`${fieldName} format is invalid`);
   }
 
-  // Numeric range validation
   if (typeof value === "number") {
     if (rules.min !== undefined && value < rules.min) {
       errors.push(`${fieldName} must be at least ${rules.min}`);
@@ -234,12 +195,11 @@ function validateFieldInternal(
     }
   }
 
-  // Custom validation
   if (rules.custom) {
     const result = rules.custom(value);
     if (result !== true) {
       errors.push(
-        typeof result === "string" ? result : `${fieldName} validation failed`
+        typeof result === "string" ? result : `${fieldName} validation failed`,
       );
     }
   }
@@ -250,18 +210,15 @@ function validateFieldInternal(
 export function validateField(
   value: unknown,
   rules: ValidationRule,
-  fieldName: string = "Field"
+  fieldName: string = "Field",
 ): string[] {
   return validateFieldInternal(value, rules, fieldName);
 }
 
-/**
- * Validate entire form
- */
 export function validateForm(
   formData: Record<string, unknown>,
   schema: Record<string, ValidationRule>,
-  fieldLabels: Record<string, string> = {}
+  fieldLabels: Record<string, string> = {},
 ): FormValidationResult {
   const errors: ValidationErrors = {};
 
@@ -270,7 +227,7 @@ export function validateForm(
     const fieldErrors = validateFieldInternal(
       formData[fieldName],
       rules,
-      label
+      label,
     );
 
     if (fieldErrors.length > 0) {
@@ -284,20 +241,14 @@ export function validateForm(
   };
 }
 
-/**
- * Validate matching fields
- */
 export function validateFieldsMatch(
   formData: Record<string, unknown>,
   field1: string,
-  field2: string
+  field2: string,
 ): boolean {
   return formData[field1] === formData[field2];
 }
 
-/**
- * Common validation schemas
- */
 export const CommonSchemas = {
   email: { required: true, email: true } as ValidationRule,
 
@@ -349,9 +300,6 @@ export const CommonSchemas = {
   } as ValidationRule,
 };
 
-/**
- * React Hook for form validation
- */
 export function useFormValidation(schema: Record<string, ValidationRule>) {
   const [errors, setErrors] = useState<ValidationErrors>({});
   const [touched, setTouched] = useState<Set<string>>(new Set());
@@ -362,7 +310,7 @@ export function useFormValidation(schema: Record<string, ValidationRule>) {
       setErrors(result.errors);
       return result.isValid;
     },
-    [schema]
+    [schema],
   );
 
   const validateFieldFn = useCallback(
@@ -373,19 +321,19 @@ export function useFormValidation(schema: Record<string, ValidationRule>) {
       const fieldErrors = validateFieldInternal(
         value,
         rule,
-        fieldName.charAt(0).toUpperCase() + fieldName.slice(1)
+        fieldName.charAt(0).toUpperCase() + fieldName.slice(1),
       );
 
       setErrors(
         (prev): ValidationErrors => ({
           ...prev,
           [fieldName]: fieldErrors,
-        })
+        }),
       );
 
       setTouched((prev) => new Set([...prev, fieldName]));
     },
-    [schema]
+    [schema],
   );
 
   const clearErrors = useCallback(() => {
@@ -403,17 +351,9 @@ export function useFormValidation(schema: Record<string, ValidationRule>) {
   };
 }
 
-/* ============================================================================
-   IMAGE OPTIMIZATION
-   ============================================================================ */
-
-/**
- * Generate responsive image srcset with WebP format support
- * Supports multiple responsive breakpoints for optimal image loading
- */
 export function generateImageSrcSet(
   basePath: string,
-  widths: number[] = [400, 800, 1200, 1600]
+  widths: number[] = [400, 800, 1200, 1600],
 ): { srcSet: string; sizes: string } {
   const srcSet = widths
     .map((width) => `${basePath}?w=${width}&q=85&fmt=webp ${width}w`)
@@ -424,13 +364,9 @@ export function generateImageSrcSet(
   return { srcSet, sizes };
 }
 
-/**
- * Get WebP image source with multiple format fallbacks
- * Returns optimized srcset with WebP and JPEG formats
- */
 export function getImageWithWebP(
   path: string,
-  alt: string = "Image"
+  alt: string = "Image",
 ): {
   src: string;
   srcSet: string;
@@ -455,9 +391,6 @@ export function getImageWithWebP(
   };
 }
 
-/**
- * Intersection Observer setup for lazy loading
- */
 export function setupLazyLoading(selector: string = "img[data-lazy]") {
   if ("IntersectionObserver" in window) {
     const imageObserver = new IntersectionObserver((entries, observer) => {
@@ -482,9 +415,6 @@ export function setupLazyLoading(selector: string = "img[data-lazy]") {
   }
 }
 
-/**
- * React hook for lazy loading images
- */
 export function useLazyLoad() {
   const imgRef = useRef<HTMLImageElement>(null);
 
@@ -514,23 +444,17 @@ export function useLazyLoad() {
   return imgRef;
 }
 
-/**
- * Calculate optimal image dimensions for responsive design
- */
 export function getOptimalImageSize(containerWidth: number): {
   width: number;
   height: number;
 } {
-  const ratio = 16 / 9; // 16:9 aspect ratio
+  const ratio = 16 / 9;
   return {
     width: containerWidth,
     height: Math.round(containerWidth / ratio),
   };
 }
 
-/**
- * Create image loading skeleton placeholder element
- */
 export function createImageSkeleton(): HTMLDivElement {
   const skeleton = document.createElement("div");
   skeleton.className = "animate-pulse bg-muted-bg rounded-lg";
@@ -538,11 +462,6 @@ export function createImageSkeleton(): HTMLDivElement {
   return skeleton;
 }
 
-/* ============================================================================
-   PERFORMANCE UTILITIES
-   ============================================================================ */
-
-// Hook to prefetch resources when browser is idle
 export const useIdleCallback = (callback: () => void) => {
   useEffect(() => {
     const handle = requestIdleCallback(() => {
@@ -553,7 +472,6 @@ export const useIdleCallback = (callback: () => void) => {
   }, [callback]);
 };
 
-// Prefetch a resource when idle
 export const usePrefetchResource = (resource: string) => {
   useEffect(() => {
     const link = document.createElement("link");
@@ -567,7 +485,6 @@ export const usePrefetchResource = (resource: string) => {
   }, [resource]);
 };
 
-// Component to prefetch resources
 export const ResourcePrefetcher = ({ resources }: { resources: string[] }) => {
   useEffect(() => {
     resources.forEach((resource) => {
@@ -577,17 +494,11 @@ export const ResourcePrefetcher = ({ resources }: { resources: string[] }) => {
       document.head.appendChild(link);
     });
 
-    return () => {
-      // Cleanup would require tracking the specific links
-    };
+    return () => {};
   }, [resources]);
 
   return null;
 };
-
-/* ============================================================================
-   DATA FETCHING
-   ============================================================================ */
 
 interface UseDataFetchOptions {
   onSuccess?: (data: ApiResponse) => void;
@@ -613,7 +524,7 @@ interface ApiResponse {
 
 export const useDataFetch = <T>(
   fetchFn: () => Promise<ApiResponse>,
-  options: UseDataFetchOptions = {}
+  options: UseDataFetchOptions = {},
 ): UseDataFetchReturn<T> => {
   const {
     onSuccess,

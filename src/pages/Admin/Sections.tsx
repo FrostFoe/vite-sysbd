@@ -201,7 +201,7 @@ const Sections: React.FC = () => {
       if (res.success && res.data) {
         const typedData = res.data as unknown as AdminSection[];
         setSections(
-          typedData.sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0))
+          typedData.sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0)),
         );
       } else {
         throw new Error(res.message || "Failed to fetch sections");

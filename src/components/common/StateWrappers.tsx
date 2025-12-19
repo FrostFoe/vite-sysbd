@@ -10,10 +10,6 @@ interface LoadingStateProps {
   fullScreen?: boolean;
 }
 
-/**
- * Wrapper component for loading state
- * Shows spinner while loading, content otherwise
- */
 export const LoadingState: React.FC<LoadingStateProps> = ({
   isLoading,
   children,
@@ -39,10 +35,6 @@ interface EmptyStateProps {
   action?: ReactNode;
 }
 
-/**
- * Wrapper component for empty state
- * Shows empty message when no data, content otherwise
- */
 export const EmptyState: React.FC<EmptyStateProps> = ({
   isEmpty,
   children,
@@ -73,10 +65,6 @@ interface ErrorStateProps {
   children: ReactNode;
 }
 
-/**
- * Wrapper component for error state
- * Shows error message with retry option
- */
 export const ErrorState: React.FC<ErrorStateProps> = ({
   error,
   onRetry,

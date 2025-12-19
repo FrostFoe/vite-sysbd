@@ -16,7 +16,7 @@ interface UseTextSelectionReturn {
 }
 
 export const useTextSelection = (
-  containerRef: React.RefObject<HTMLElement | null>
+  containerRef: React.RefObject<HTMLElement | null>,
 ): UseTextSelectionReturn => {
   const [toolbarVisible, setToolbarVisible] = useState(false);
   const [toolbarPosition, setToolbarPosition] = useState({ top: 0, left: 0 });
@@ -27,7 +27,6 @@ export const useTextSelection = (
   });
   const selectionRef = useRef<Selection | null>(null);
 
-  // Track current selection
   const updateSelection = useCallback(() => {
     const selection = window.getSelection();
     if (!selection || selection.toString().trim() === "") {
@@ -43,7 +42,6 @@ export const useTextSelection = (
       return;
     }
 
-    // Check if selection is within the container
     const range = selection.getRangeAt(0);
     const container = containerRef.current;
     if (!container || !container.contains(range.commonAncestorContainer)) {
@@ -51,9 +49,8 @@ export const useTextSelection = (
       return;
     }
 
-    // Position the toolbar above the selection
     const rect = range.getBoundingClientRect();
-    const top = rect.top + window.scrollY - 60; // Position above the selection
+    const top = rect.top + window.scrollY - 60;
     const left = rect.left + window.scrollX + rect.width / 2;
 
     setToolbarPosition({ top, left });
@@ -63,10 +60,9 @@ export const useTextSelection = (
     selectionRef.current = selection;
   }, [containerRef]);
 
-  // Handle mouse up to show toolbar
   useEffect(() => {
     const handleMouseUp = () => {
-      setTimeout(updateSelection, 0); // Use timeout to ensure selection is completed
+      setTimeout(updateSelection, 0);
     };
 
     document.addEventListener("mouseup", handleMouseUp);
@@ -75,17 +71,14 @@ export const useTextSelection = (
     };
   }, [updateSelection]);
 
-  // Handle copy
   const handleCopy = useCallback(() => {
     if (selectedText) {
       navigator.clipboard
         .writeText(selectedText)
         .then(() => {
-          // Show a notification or feedback
           setToolbarVisible(false);
         })
         .catch(() => {
-          // Fallback if clipboard API fails
           const textArea = document.createElement("textarea");
           textArea.value = selectedText;
           document.body.appendChild(textArea);
@@ -97,7 +90,6 @@ export const useTextSelection = (
     }
   }, [selectedText]);
 
-  // Handle select all
   const handleSelectAll = useCallback(() => {
     const container = containerRef.current;
     if (container) {
@@ -111,7 +103,6 @@ export const useTextSelection = (
     }
   }, [containerRef]);
 
-  // Handle highlight
   const handleHighlight = useCallback(
     (color: string) => {
       if (!selectionData.range) return;
@@ -120,20 +111,17 @@ export const useTextSelection = (
       const span = document.createElement("span");
       span.className = `${color} rounded-sm transition-colors duration-200`;
 
-      // Wrap the selected content in the span
       range.surroundContents(span);
 
-      // Deselect after highlighting
       setToolbarVisible(false);
       const selection = window.getSelection();
       if (selection) {
         selection.removeAllRanges();
       }
     },
-    [selectionData.range]
+    [selectionData.range],
   );
 
-  // Handle closing toolbar
   const handleToolbarClose = useCallback(() => {
     setToolbarVisible(false);
     const selection = window.getSelection();
@@ -142,13 +130,11 @@ export const useTextSelection = (
     }
   }, []);
 
-  // Suppress default context menu on selections
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
 
     const preventDefaultContextMenu = (e: Event) => {
-      // If we have a selection and the context menu is being opened on selected text
       const selection = window.getSelection();
       if (selection && selection.toString().trim() !== "") {
         e.preventDefault();

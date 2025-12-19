@@ -10,17 +10,17 @@ import TextSelectionToolbar from "./TextSelectionToolbar";
 interface ContentRendererProps {
   content: string;
   className?: string;
-  fontSizeClass?: string; // Added fontSizeClass prop
-  containerRef?: React.RefObject<HTMLDivElement>; // Optional ref for text selection
-  enableTextSelectionToolbar?: boolean; // Whether to enable the floating toolbar
-  onTextSelected?: (text: string) => void; // Callback when text is selected
-  onAddComment?: (text: string) => void; // Callback when "Quote Reply" is clicked
+  fontSizeClass?: string;
+  containerRef?: React.RefObject<HTMLDivElement>;
+  enableTextSelectionToolbar?: boolean;
+  onTextSelected?: (text: string) => void;
+  onAddComment?: (text: string) => void;
 }
 
 const ContentRenderer: React.FC<ContentRendererProps> = ({
   content,
   className = "",
-  fontSizeClass = "", // Added fontSizeClass with default
+  fontSizeClass = "",
   containerRef,
   enableTextSelectionToolbar = false,
   onTextSelected,
@@ -30,13 +30,10 @@ const ContentRenderer: React.FC<ContentRendererProps> = ({
   const [toolbarPosition, setToolbarPosition] = useState({ top: 0, left: 0 });
   const [selectedText, setSelectedText] = useState("");
 
-  // Close color picker when clicking outside
-
   const processedContent = useMemo(() => {
     let processedContent = content;
     const customComponents: React.ReactElement[] = [];
 
-    // Replace images with placeholders
     processedContent = processedContent.replace(
       /<img\s+([^>]*?)\s*>/gi,
       (_, attributes) => {
@@ -56,14 +53,13 @@ const ContentRenderer: React.FC<ContentRendererProps> = ({
             width={widthMatch ? widthMatch[1] : undefined}
             height={heightMatch ? heightMatch[1] : undefined}
             className="my-4"
-          />
+          />,
         );
 
         return `__CUSTOM_COMPONENT_PLACEHOLDER_${componentIndex}__`;
-      }
+      },
     );
 
-    // Replace videos with placeholders
     processedContent = processedContent.replace(
       /<video\s+([^>]*?)\s*\/?>.*?<\/video>|<video\s+([^>]*?)\s*>/gi,
       (fullMatch) => {
@@ -91,21 +87,20 @@ const ContentRenderer: React.FC<ContentRendererProps> = ({
             muted={muted}
             controls={controls}
             className="my-4"
-          />
+          />,
         );
 
         return `__CUSTOM_COMPONENT_PLACEHOLDER_${componentIndex}__`;
-      }
+      },
     );
 
     const parts = processedContent.split(
-      /(__CUSTOM_COMPONENT_PLACEHOLDER_\d+__)/
+      /(__CUSTOM_COMPONENT_PLACEHOLDER_\d+__)/,
     );
 
-    // Convert parts to React elements
     const convertNodeToReactElement = (
       node: Node,
-      nodeKey: string
+      nodeKey: string,
     ): React.ReactNode => {
       if (node.nodeType === Node.TEXT_NODE) {
         const text = node.textContent;
@@ -117,21 +112,19 @@ const ContentRenderer: React.FC<ContentRendererProps> = ({
           key: nodeKey,
         };
 
-        // Copy attributes
         for (let i = 0; i < element.attributes.length; i++) {
           const attr = element.attributes[i];
-          // Convert HTML attributes to React equivalents
+
           const propName = attr.name === "class" ? "className" : attr.name;
           props[propName] = attr.value;
         }
 
-        // Process child nodes
         const children = Array.from(element.childNodes)
           .map((childNode, childIndex) =>
             convertNodeToReactElement(
               childNode,
-              `${nodeKey}-child-${childIndex}`
-            )
+              `${nodeKey}-child-${childIndex}`,
+            ),
           )
           .filter((child) => child !== null && child !== undefined);
 
@@ -144,7 +137,7 @@ const ContentRenderer: React.FC<ContentRendererProps> = ({
       .map((part, partIndex) => {
         if (part.startsWith("__CUSTOM_COMPONENT_PLACEHOLDER_")) {
           const matchResult = part.match(
-            /__CUSTOM_COMPONENT_PLACEHOLDER_(\d+)__/
+            /__CUSTOM_COMPONENT_PLACEHOLDER_(\d+)__/,
           );
           if (matchResult) {
             const componentIndex = parseInt(matchResult[1], 10);
@@ -159,8 +152,8 @@ const ContentRenderer: React.FC<ContentRendererProps> = ({
             .map((node, nodeIndex) =>
               convertNodeToReactElement(
                 node,
-                `part-${partIndex}-node-${nodeIndex}`
-              )
+                `part-${partIndex}-node-${nodeIndex}`,
+              ),
             )
             .filter((item) => item !== null);
         }
@@ -170,7 +163,6 @@ const ContentRenderer: React.FC<ContentRendererProps> = ({
       .flat();
   }, [content]);
 
-  // Handle text selection
   useEffect(() => {
     if (!enableTextSelectionToolbar) return;
 
@@ -188,7 +180,6 @@ const ContentRenderer: React.FC<ContentRendererProps> = ({
         return;
       }
 
-      // Check if selection is within the content container
       const range = selection.getRangeAt(0);
       const container = containerRef?.current;
       if (!container || !container.contains(range.commonAncestorContainer)) {
@@ -196,28 +187,22 @@ const ContentRenderer: React.FC<ContentRendererProps> = ({
         return;
       }
 
-      // Position the toolbar right next to the end of the selection
       const endRange = document.createRange();
       endRange.setStart(range.endContainer, range.endOffset);
-      endRange.collapse(true); // Collapse to end position
+      endRange.collapse(true);
       const endRect = endRange.getBoundingClientRect();
       const containerRect = container.getBoundingClientRect();
 
-      // Calculate position relative to the container
-      const top = endRect.top - containerRect.top - 50; // Position just above the end of selection
-      let left = endRect.left - containerRect.left + endRect.width / 2; // Position at the end of selection
+      const top = endRect.top - containerRect.top - 50;
+      let left = endRect.left - containerRect.left + endRect.width / 2;
 
-      // Adjust for toolbar width (approx 320px) to keep it visible
-      // Since toolbar is centered with translateX(-50%), we need to ensure 'left' is within bounds
       const toolbarHalfWidth = 160;
 
-      // Clamp left position
       left = Math.max(
         toolbarHalfWidth,
-        Math.min(left, containerRect.width - toolbarHalfWidth)
+        Math.min(left, containerRect.width - toolbarHalfWidth),
       );
 
-      // Additional safety for very small screens: ensure it's at least center of screen if container is small
       if (containerRect.width < 320) {
         left = containerRect.width / 2;
       }
@@ -226,21 +211,17 @@ const ContentRenderer: React.FC<ContentRendererProps> = ({
       setSelectedText(selectedTextContent);
       setToolbarVisible(true);
 
-      // Call the callback if provided
       if (onTextSelected) {
         onTextSelected(selectedTextContent);
       }
     };
 
     const handleMouseUp = () => {
-      // Use setTimeout to ensure selection is completed
       setTimeout(handleSelection, 0);
     };
 
-    // Add the event listener to the document
     document.addEventListener("mouseup", handleMouseUp);
 
-    // Also add a selectionchange listener for better detection
     document.addEventListener("selectionchange", handleSelection);
 
     return () => {
@@ -258,7 +239,6 @@ const ContentRenderer: React.FC<ContentRendererProps> = ({
           setToolbarVisible(false);
         })
         .catch(() => {
-          // Fallback if clipboard API fails
           const textArea = document.createElement("textarea");
           textArea.value = selectedText;
           document.body.appendChild(textArea);
@@ -275,7 +255,7 @@ const ContentRenderer: React.FC<ContentRendererProps> = ({
     if (selectedText) {
       window.open(
         `https://www.google.com/search?q=${encodeURIComponent(selectedText)}`,
-        "_blank"
+        "_blank",
       );
       setToolbarVisible(false);
     }
@@ -283,7 +263,6 @@ const ContentRenderer: React.FC<ContentRendererProps> = ({
 
   const handleAskAI = () => {
     if (selectedText) {
-      // Copy to clipboard first as a convenience
       navigator.clipboard.writeText(selectedText).catch(() => {});
       window.open("https://chat.openai.com", "_blank");
       showToastMsg("Text copied! Paste it in ChatGPT.");
@@ -319,46 +298,37 @@ const ContentRenderer: React.FC<ContentRendererProps> = ({
     const span = document.createElement("span");
     span.className = `${color} rounded-sm transition-colors duration-200`;
 
-    // Wrap the selected content in the span
     range.surroundContents(span);
 
-    // Deselect after highlighting
     selection.removeAllRanges();
     setToolbarVisible(false);
   };
 
   const handleContextMenu = (e: React.MouseEvent) => {
-    // Check if there's a text selection
     const selection = window.getSelection();
     if (selection && selection.toString().trim() !== "") {
-      e.preventDefault(); // Suppress default context menu if text is selected
-      // Show the toolbar if text is selected and right-clicked
+      e.preventDefault();
+
       const selectedTextContent = selection.toString().trim();
       if (selectedTextContent && containerRef?.current) {
         const range = selection.getRangeAt(0);
         if (containerRef.current.contains(range.commonAncestorContainer)) {
-          // Position the toolbar right next to the end of the selection
           const endRange = document.createRange();
           endRange.setStart(range.endContainer, range.endOffset);
-          endRange.collapse(true); // Collapse to end position
+          endRange.collapse(true);
           const endRect = endRange.getBoundingClientRect();
           const containerRect = containerRef.current.getBoundingClientRect();
 
-          // Calculate position relative to the container
-          const top = endRect.top - containerRect.top - 50; // Position just above the end of selection
-          let left = endRect.left - containerRect.left + endRect.width / 2; // Position at the end of selection
+          const top = endRect.top - containerRect.top - 50;
+          let left = endRect.left - containerRect.left + endRect.width / 2;
 
-          // Adjust for toolbar width (approx 320px) to keep it visible
-          // Since toolbar is centered with translateX(-50%), we need to ensure 'left' is within bounds
           const toolbarHalfWidth = 160;
 
-          // Clamp left position
           left = Math.max(
             toolbarHalfWidth,
-            Math.min(left, containerRect.width - toolbarHalfWidth)
+            Math.min(left, containerRect.width - toolbarHalfWidth),
           );
 
-          // Additional safety for very small screens
           if (containerRect.width < 320) {
             left = containerRect.width / 2;
           }

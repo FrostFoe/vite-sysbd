@@ -12,10 +12,6 @@ const sizeClasses = {
   lg: "w-16 h-16",
 };
 
-/**
- * Standard Loading Spinner Component
- * Shows rotating spinner with optional message
- */
 export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
   size = "md",
   message,
@@ -63,10 +59,6 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
   return content;
 };
 
-/**
- * Pulse Loading Component
- * Shows pulsing animation, good for skeleton screens
- */
 export const PulseLoader: React.FC<{ message?: string }> = ({ message }) => (
   <div className="flex flex-col items-center justify-center gap-4">
     <div className="flex gap-2">
@@ -82,10 +74,6 @@ export const PulseLoader: React.FC<{ message?: string }> = ({ message }) => (
   </div>
 );
 
-/**
- * Skeleton Component
- * Placeholder for content that's loading
- */
 export const Skeleton: React.FC<{
   width?: string;
   height?: string;
@@ -106,10 +94,6 @@ export const Skeleton: React.FC<{
   );
 };
 
-/**
- * Text Skeleton
- * Multiple lines of skeleton text
- */
 export const TextSkeleton: React.FC<{ lines?: number }> = ({ lines = 3 }) => (
   <div className="space-y-3">
     {Array.from({ length: lines }).map((_, i) => (
@@ -121,10 +105,6 @@ export const TextSkeleton: React.FC<{ lines?: number }> = ({ lines = 3 }) => (
   </div>
 );
 
-/**
- * Card Skeleton
- * Complete card placeholder
- */
 export const CardSkeleton: React.FC = () => (
   <div className="bg-card rounded-lg p-4 space-y-4">
     <Skeleton width="w-1/2" height="h-6" />
@@ -136,10 +116,6 @@ export const CardSkeleton: React.FC = () => (
   </div>
 );
 
-/**
- * Image Skeleton
- * Placeholder for loading images
- */
 export const ImageSkeleton: React.FC<{
   width?: string;
   height?: string;
@@ -151,10 +127,6 @@ export const ImageSkeleton: React.FC<{
   />
 );
 
-/**
- * List Skeleton
- * Placeholder for loading lists
- */
 export const ListSkeleton: React.FC<{ count?: number }> = ({ count = 5 }) => (
   <div className="space-y-3">
     {Array.from({ length: count }).map((_, i) => (
@@ -172,10 +144,6 @@ export const ListSkeleton: React.FC<{ count?: number }> = ({ count = 5 }) => (
   </div>
 );
 
-/**
- * Progress Bar Component
- * Shows progress with percentage
- */
 export const ProgressBar: React.FC<{
   progress: number;
   showLabel?: boolean;

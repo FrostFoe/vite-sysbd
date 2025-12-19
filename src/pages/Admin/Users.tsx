@@ -1,10 +1,4 @@
-import {
-  CheckCircle,
-  Edit,
-  Loader,
-  Plus,
-  Trash2,
-} from "lucide-react";
+import { CheckCircle, Edit, Loader, Plus, Trash2 } from "lucide-react";
 import type React from "react";
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -59,7 +53,7 @@ const Users: React.FC = () => {
   const handleDeleteUser = async (userId: number, email: string) => {
     if (
       !window.confirm(
-        `আপনি কি নিশ্চিত যে আপনি ${email} ব্যবহারকারীকে ডিলিট করতে চান?`
+        `আপনি কি নিশ্চিত যে আপনি ${email} ব্যবহারকারীকে ডিলিট করতে চান?`,
       )
     )
       return;
@@ -69,14 +63,15 @@ const Users: React.FC = () => {
         showToastMsg("ব্যবহারকারী সফলভাবে ডিলিট হয়েছে");
         fetchUsers();
       } else {
-        showToastMsg(response.error || "ব্যবহারকারী ডিলিট করতে ব্যর্থ", "error");
+        showToastMsg(
+          response.error || "ব্যবহারকারী ডিলিট করতে ব্যর্থ",
+          "error",
+        );
       }
     } catch (_error) {
       showToastMsg("সার্ভার ত্রুটি!", "error");
     }
   };
-
-
 
   if (isLoading) {
     return (
@@ -114,7 +109,7 @@ const Users: React.FC = () => {
                     handleItemSelect(
                       window.innerWidth < 768,
                       navigate,
-                      `/admin/users/${user.id}`
+                      `/admin/users/${user.id}`,
                     )
                   }
                   type="button"
@@ -181,7 +176,7 @@ const Users: React.FC = () => {
         )}
       </div>
 
-      {/* User Modal */}
+      {}
       <UserModal
         isOpen={userModalOpen}
         user={editingUser}

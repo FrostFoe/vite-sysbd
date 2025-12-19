@@ -75,8 +75,8 @@ const ArticleEdit: React.FC = () => {
                 ({
                   ...s,
                   title: s.title || "Untitled Section",
-                }) as unknown as Section
-            )
+                }) as unknown as Section,
+            ),
           );
         }
 
@@ -104,7 +104,7 @@ const ArticleEdit: React.FC = () => {
           } else {
             showToastMsg(
               articleRes.error || "নিবন্ধ লোড করতে ব্যর্থ হয়েছে।",
-              "error"
+              "error",
             );
           }
         } else {
@@ -171,12 +171,11 @@ const ArticleEdit: React.FC = () => {
       const file = e.target.files?.[0];
       if (!file) return;
 
-      // Check for dangerous file extensions
       const fileExtension = file.name.split(".").pop()?.toLowerCase() || "";
       if (DANGEROUS_FILE_EXTENSIONS.includes(fileExtension)) {
         showToastMsg(
           `File type not allowed (potentially dangerous): .${fileExtension}`,
-          "error"
+          "error",
         );
         return;
       }
@@ -201,7 +200,7 @@ const ArticleEdit: React.FC = () => {
         showToastMsg("সার্ভার ত্রুটি!", "error");
       }
     },
-    []
+    [],
   );
 
   const handleSubmit = useCallback(
@@ -227,7 +226,7 @@ const ArticleEdit: React.FC = () => {
       formData.append("meta_keywords", article.meta_keywords || "");
       formData.append(
         "allow_submissions",
-        article.allow_submissions ? "1" : "0"
+        article.allow_submissions ? "1" : "0",
       );
 
       try {
@@ -241,7 +240,7 @@ const ArticleEdit: React.FC = () => {
         } else {
           showToastMsg(
             response.error || "নিবন্ধ সংরক্ষণ করতে ব্যর্থ হয়েছে!",
-            "error"
+            "error",
           );
         }
       } catch (_error) {
@@ -250,7 +249,7 @@ const ArticleEdit: React.FC = () => {
         setIsSaving(false);
       }
     },
-    [article, id, navigate, storageKey]
+    [article, id, navigate, storageKey],
   );
 
   const handleOpenModal = async (doc: DocType | null) => {
@@ -323,13 +322,13 @@ const ArticleEdit: React.FC = () => {
 
       <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
-          {/* Main Content */}
+          {}
           <div className="lg:col-span-2 space-y-4 sm:space-y-6 bg-card p-3 sm:p-4 md:p-6 rounded-xl border border-border-color shadow-sm">
             <h3 className="font-bold text-base sm:text-lg mb-3 sm:mb-4 border-b border-border-color pb-2">
               বিষয়বস্তু (একত্রিত)
             </h3>
 
-            {/* Title fields */}
+            {}
             <div>
               <label
                 htmlFor="title-bn"
@@ -369,7 +368,7 @@ const ArticleEdit: React.FC = () => {
               />
             </div>
 
-            {/* Summary fields */}
+            {}
             <div>
               <label
                 htmlFor="summary-bn"
@@ -416,7 +415,7 @@ const ArticleEdit: React.FC = () => {
               />
             </div>
 
-            {/* Content fields (TipTap Editor) */}
+            {}
             <div>
               <label
                 htmlFor="content-bn"
@@ -456,7 +455,7 @@ const ArticleEdit: React.FC = () => {
             </div>
           </div>
 
-          {/* Sidebar Settings */}
+          {}
           <div className="space-y-6">
             {restoreAlert && (
               <div
@@ -470,7 +469,8 @@ const ArticleEdit: React.FC = () => {
                       অসংরক্ষিত খসড়া পাওয়া গেছে
                     </h4>
                     <p className="text-xs text-card-text mt-1">
-                      আপনার ব্রাউজারে এই নিবন্ধটির একটি নতুন সংস্করণ পাওয়া গেছে।
+                      আপনার ব্রাউজারে এই নিবন্ধটির একটি নতুন সংস্করণ পাওয়া
+                      গেছে।
                     </p>
                     <button
                       type="button"

@@ -34,10 +34,8 @@ const AdminDashboard: React.FC = () => {
         if (response.success && response.stats) {
           setStats(response.stats);
         } else {
-          // Failed to fetch admin stats
         }
       } catch (_error) {
-        // API error occurred
       } finally {
         setIsLoading(false);
       }
@@ -50,7 +48,6 @@ const AdminDashboard: React.FC = () => {
     try {
       const response = await adminApi.exportAllData();
       if (response.success && response.data) {
-        // Create JSON file
         const jsonString = JSON.stringify(response.data, null, 2);
         const blob = new Blob([jsonString], { type: "application/json" });
         const url = URL.createObjectURL(blob);
@@ -198,7 +195,8 @@ const AdminDashboard: React.FC = () => {
           </button>
         </div>
         <p className="text-muted-text text-sm">
-          সমস্ত ডেটা (ব্যবহারকারী, নিবন্ধ, মন্তব্য, জমা) JSON ফরম্যাটে ডাউনলোড করুন।
+          সমস্ত ডেটা (ব্যবহারকারী, নিবন্ধ, মন্তব্য, জমা) JSON ফরম্যাটে ডাউনলোড
+          করুন।
         </p>
       </div>
     </div>

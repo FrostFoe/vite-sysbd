@@ -13,7 +13,7 @@ export const DocumentModal: React.FC<{
   onSave: () => void;
   articleId: string;
   doc: DocType | null;
-  language?: "en" | "bn"; // Added to allow passing language prop if needed directly
+  language?: "en" | "bn";
 }> = ({ isOpen, onClose, onSave, articleId, doc, language: propLanguage }) => {
   const { language: contextLanguage } = useLayout();
   const language = propLanguage || contextLanguage;
@@ -43,12 +43,11 @@ export const DocumentModal: React.FC<{
     if (e.target.files) {
       const selectedFile = e.target.files[0];
 
-      // Check for dangerous file extensions
       const fileExtension =
         selectedFile.name.split(".").pop()?.toLowerCase() || "";
       if (DANGEROUS_FILE_EXTENSIONS.includes(fileExtension)) {
         setError(
-          `File type not allowed (potentially dangerous): .${fileExtension}`
+          `File type not allowed (potentially dangerous): .${fileExtension}`,
         );
         return;
       }

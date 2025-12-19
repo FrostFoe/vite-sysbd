@@ -30,7 +30,6 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
   const [uploadError, setUploadError] = useState<string>("");
   const [isInitialized, setIsInitialized] = useState(false);
 
-  // Initialize editor content on mount only
   useEffect(() => {
     if (editorRef.current && !isInitialized) {
       editorRef.current.innerHTML = value || "";
@@ -43,10 +42,6 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
   };
 
   const handleFormat = (command: string, value?: string) => {
-    // Note: document.execCommand is largely deprecated but is the simplest
-    // way to enact rich-text commands in a from-scratch contentEditable editor.
-    // For a more robust solution, a library that manages browser inconsistencies
-    // and selection state is recommended.
     document.execCommand(command, false, value);
     if (editorRef.current) {
       editorRef.current.focus();
@@ -61,7 +56,7 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
         throw new Error("অনুগ্রহ করে একটি বৈধ ছবি ফাইল আপলোড করুন");
       }
 
-      const maxSize = 10 * 1024 * 1024; // 10MB
+      const maxSize = 10 * 1024 * 1024;
       if (file.size > maxSize) {
         throw new Error("ছবির আকার 10MB এর চেয়ে কম হতে হবে");
       }
@@ -91,7 +86,7 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
         throw new Error("অনুগ্রহ করে একটি বৈধ ভিডিও ফাইল আপলোড করুন");
       }
 
-      const maxSize = 100 * 1024 * 1024; // 100MB
+      const maxSize = 100 * 1024 * 1024;
       if (videoFile.size > maxSize) {
         throw new Error("ভিডিওর আকার 100MB এর চেয়ে কম হতে হবে");
       }
@@ -176,14 +171,14 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
         }
       }
     },
-    [handleImageUpload, handleVideoUpload]
+    [handleImageUpload, handleVideoUpload],
   );
 
   return (
     <div className={`flex flex-col gap-3 ${className}`}>
-      {/* Toolbar - Clean & Minimal */}
+      {}
       <div className="flex flex-wrap gap-2 items-center p-3 bg-muted-bg rounded-lg border border-border-color">
-        {/* Text Formatting */}
+        {}
         <button
           type="button"
           onClick={() => handleFormat("bold")}
@@ -206,7 +201,7 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
 
         <div className="w-px h-6 bg-border-color" />
 
-        {/* Lists */}
+        {}
         <button
           type="button"
           onClick={() => handleFormat("insertUnorderedList")}
@@ -229,7 +224,7 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
 
         <div className="w-px h-6 bg-border-color" />
 
-        {/* Media */}
+        {}
         <button
           type="button"
           onClick={handleImageButtonClick}
@@ -252,7 +247,7 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
 
         <div className="w-px h-6 bg-border-color" />
 
-        {/* Actions */}
+        {}
         <button
           type="button"
           onClick={() => handleFormat("undo")}
@@ -274,8 +269,8 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
         </button>
       </div>
 
-      {/* Editor Content Area */}
-      {/* biome-ignore lint/a11y/useSemanticElements: Rich text editor requires contentEditable div */}
+      {}
+      {}
       <div
         ref={editorRef}
         contentEditable
@@ -292,7 +287,7 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
         }}
       />
 
-      {/* Error Message */}
+      {}
       {uploadError && (
         <div className="flex items-center gap-2 p-3 bg-danger/10 border border-danger/30 rounded-lg text-danger animate-in fade-in duration-300">
           <AlertCircle size={18} className="flex-shrink-0" />

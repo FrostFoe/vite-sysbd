@@ -24,9 +24,7 @@ const HomePage: React.FC = () => {
       if (saved) {
         setBookmarks(JSON.parse(saved));
       }
-    } catch (_e) {
-      // Silently fail if bookmarks are corrupted
-    }
+    } catch (_e) {}
   }, []);
 
   const toggleBookmark = useCallback((id: string) => {
@@ -40,7 +38,7 @@ const HomePage: React.FC = () => {
       }
       localStorage.setItem(
         "breachtimes-bookmarks",
-        JSON.stringify(newBookmarks)
+        JSON.stringify(newBookmarks),
       );
       return newBookmarks;
     });
@@ -52,11 +50,10 @@ const HomePage: React.FC = () => {
       try {
         const data = await publicApi.getHomeData(
           language,
-          currentCategory === "saved" ? undefined : currentCategory
+          currentCategory === "saved" ? undefined : currentCategory,
         );
         setHomeData(data);
       } catch (_error) {
-        // Failed to fetch home data
       } finally {
         setIsLoading(false);
       }
@@ -116,7 +113,7 @@ const HomePage: React.FC = () => {
       const subArticles = section.articles.slice(1);
       content = (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
-          {/* Main featured news */}
+          {}
           {heroArticle && (
             <div className="lg:col-span-2">
               <ArticleCard
@@ -128,7 +125,7 @@ const HomePage: React.FC = () => {
               />
             </div>
           )}
-          {/* Other news as list */}
+          {}
           {subArticles.length > 0 && (
             <div className="lg:col-span-1">
               <div
@@ -147,7 +144,7 @@ const HomePage: React.FC = () => {
                   {subArticles
                     .slice(0, 5)
                     .map((article) =>
-                      renderArticleListItem(article, isSectionDark)
+                      renderArticleListItem(article, isSectionDark),
                     )}
                 </div>
               </div>
@@ -159,7 +156,7 @@ const HomePage: React.FC = () => {
       content = (
         <div className="space-y-2">
           {section.articles.map((article) =>
-            renderArticleListItem(article, isSectionDark)
+            renderArticleListItem(article, isSectionDark),
           )}
         </div>
       );
@@ -281,22 +278,21 @@ const HomePage: React.FC = () => {
 
     if (currentCategory === "home" || currentCategory === null) {
       const heroStoriesSection = homeData?.sections?.find(
-        (s) => s.id === "hero-stories"
+        (s) => s.id === "hero-stories",
       );
 
       if (heroStoriesSection) {
-        // Render hero section first, then remaining articles in a single grid
         const heroArticle = heroStoriesSection.articles[0];
-        const moreNewsArticles = heroStoriesSection.articles.slice(1, 6); // First 5 after hero
+        const moreNewsArticles = heroStoriesSection.articles.slice(1, 6);
         const excludedIds = new Set(
           [heroArticle?.id, ...moreNewsArticles.map((a) => a.id)].filter(
-            Boolean
-          )
+            Boolean,
+          ),
         );
         const allArticles =
           homeData?.sections?.flatMap((section) => section.articles) || [];
         const remainingArticles = allArticles.filter(
-          (article) => !excludedIds.has(article.id)
+          (article) => !excludedIds.has(article.id),
         );
 
         return (
@@ -306,7 +302,7 @@ const HomePage: React.FC = () => {
               type: "hero-grid",
               articles: heroStoriesSection.articles,
             })}
-            {/* Render remaining articles in a single grid without section headers */}
+            {}
             {remainingArticles.length > 0 && (
               <section className="animate-fade-in-up relative z-10 mb-12">
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
@@ -329,7 +325,7 @@ const HomePage: React.FC = () => {
 
     return (
       <>
-        {/* Render all articles from all sections in a single grid without section headers */}
+        {}
         <section className="animate-fade-in-up relative z-10 mb-12">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {sectionsToRender

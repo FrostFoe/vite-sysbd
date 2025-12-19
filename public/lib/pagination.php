@@ -1,7 +1,4 @@
 <?php
-/**
- * Pagination Helper
- */
 
 require_once __DIR__ . "/constants.php";
 
@@ -18,13 +15,11 @@ class Pagination
         $per_page = DEFAULT_PAGE_SIZE,
         $total_items = 0,
     ) {
-        // Validate and sanitize inputs
         $this->page = max(1, intval($page));
         $this->per_page = max(1, min(intval($per_page), MAX_PAGE_SIZE));
         $this->total_items = max(0, intval($total_items));
         $this->total_pages = ceil($this->total_items / $this->per_page) ?: 1;
 
-        // Ensure page doesn't exceed total pages
         if ($this->page > $this->total_pages) {
             $this->page = $this->total_pages;
         }

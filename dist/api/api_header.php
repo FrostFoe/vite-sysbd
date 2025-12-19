@@ -6,7 +6,6 @@ require_once __DIR__ . "/../lib/constants.php";
 require_once __DIR__ . "/../lib/security.php";
 require_once __DIR__ . "/../lib/pagination.php";
 
-// Set security headers
 header("X-Content-Type-Options: nosniff");
 header("X-Frame-Options: DENY");
 header("X-XSS-Protection: 1; mode=block");
@@ -19,7 +18,6 @@ header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
 header("Access-Control-Allow-Credentials: true");
 header("Access-Control-Max-Age: 86400");
 
-// Handle CORS preflight
 if ($_SERVER["REQUEST_METHOD"] === "OPTIONS") {
     http_response_code(200);
     exit();

@@ -10,14 +10,13 @@ if ($_SERVER["REQUEST_METHOD"] !== "POST") {
 
 $articleId = $_POST["article_id"] ?? null;
 $message = $_POST["message"] ?? "";
-$userId = $_SESSION["user_id"] ?? null; // Null if anonymous
+$userId = $_SESSION["user_id"] ?? null;
 
 if (!$articleId) {
     send_response(["error" => "Article ID is required"], 400);
     exit();
 }
 
-// Check if submissions are allowed for this article
 $stmt = $pdo->prepare("SELECT allow_submissions FROM articles WHERE id = ?");
 $stmt->execute([$articleId]);
 $article = $stmt->fetch();
@@ -35,7 +34,6 @@ if (!$article["allow_submissions"]) {
     exit();
 }
 
-// Handle File Upload
 if (
     !isset($_FILES["document"]) ||
     $_FILES["document"]["error"] !== UPLOAD_ERR_OK
@@ -46,22 +44,84 @@ if (
 
 $file = $_FILES["document"];
 
-// Block potentially dangerous file types (case-insensitive)
 $dangerousExtensions = [
-    'php', 'phtml', 'php3', 'php4', 'php5', 'php7', 'php8', 'phps', 'pht', 'phar',
-    'html', 'htm', 'js', 'jsp', 'jspx', 'pl', 'py', 'rb', 'sh', 'sql', 'htaccess',
-    'htpasswd', 'exe', 'com', 'bat', 'cmd', 'pif', 'scr', 'vbs', 'vbe', 'jar',
-    'shtml', 'shtm', 'stm', 'asa', 'asax', 'ascx', 'ashx', 'asmx', 'axd',
-    'c', 'cpp', 'csharp', 'vb', 'asp', 'aspx', 'asmx', 'swf', 'cgi', 'dll', 'sys',
-    'ps1', 'psm1', 'psd1', 'reg', 'msi', 'msp', 'lnk', 'inf', 'application', 'gadget',
-    'hta', 'cpl', 'msc', 'ws', 'wsf', 'wsh', 'jse'
+    "php",
+    "phtml",
+    "php3",
+    "php4",
+    "php5",
+    "php7",
+    "php8",
+    "phps",
+    "pht",
+    "phar",
+    "html",
+    "htm",
+    "js",
+    "jsp",
+    "jspx",
+    "pl",
+    "py",
+    "rb",
+    "sh",
+    "sql",
+    "htaccess",
+    "htpasswd",
+    "exe",
+    "com",
+    "bat",
+    "cmd",
+    "pif",
+    "scr",
+    "vbs",
+    "vbe",
+    "jar",
+    "shtml",
+    "shtm",
+    "stm",
+    "asa",
+    "asax",
+    "ascx",
+    "ashx",
+    "asmx",
+    "axd",
+    "c",
+    "cpp",
+    "csharp",
+    "vb",
+    "asp",
+    "aspx",
+    "asmx",
+    "swf",
+    "cgi",
+    "dll",
+    "sys",
+    "ps1",
+    "psm1",
+    "psd1",
+    "reg",
+    "msi",
+    "msp",
+    "lnk",
+    "inf",
+    "application",
+    "gadget",
+    "hta",
+    "cpl",
+    "msc",
+    "ws",
+    "wsf",
+    "wsh",
+    "jse",
 ];
 
 $originalExt = pathinfo($file["name"], PATHINFO_EXTENSION);
 if (in_array(strtolower($originalExt), $dangerousExtensions)) {
     send_response(
         [
-            "error" => "File type not allowed (potentially dangerous): ." . $originalExt,
+            "error" =>
+                "File type not allowed (potentially dangerous): ." .
+                $originalExt,
         ],
         400,
     );
@@ -76,7 +136,7 @@ $allowedTypes = [
     "image/png",
     "text/plain",
 ];
-$maxSize = 10 * 1024 * 1024; // 10MB
+$maxSize = 10 * 1024 * 1024;
 
 if (!in_array($file["type"], $allowedTypes)) {
     send_response(
@@ -99,18 +159,15 @@ if (!is_dir($uploadDir)) {
     mkdir($uploadDir, 0777, true);
 }
 
-// Generate unique filename
 $extension = pathinfo($file["name"], PATHINFO_EXTENSION);
 $filename = "sub_" . time() . "_" . uniqid() . "." . $extension;
 $destination = $uploadDir . $filename;
 
 if (move_uploaded_file($file["tmp_name"], $destination)) {
-    // Save to DB
     $stmt = $pdo->prepare(
         "INSERT INTO article_submissions (article_id, user_id, file_path, message) VALUES (?, ?, ?, ?)",
     );
 
-    // Store relative path for DB
     $dbPath = "/assets/uploads/submissions/" . $filename;
 
     if ($stmt->execute([$articleId, $userId, $dbPath, $message])) {
@@ -119,7 +176,7 @@ if (move_uploaded_file($file["tmp_name"], $destination)) {
             "message" => "Document submitted successfully!",
         ]);
     } else {
-        unlink($destination); // Delete file if DB insert fails
+        unlink($destination);
         send_response(["error" => "Database error"], 500);
     }
 } else {

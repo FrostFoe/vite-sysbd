@@ -1,10 +1,10 @@
--- Database Schema for BreachTimes (Unified Language Support)
+
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
 
--- Users Table
+
 CREATE TABLE IF NOT EXISTS `users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `email` varchar(255) NOT NULL,
@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   UNIQUE KEY `email` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Categories Table (Already Unified)
+
 CREATE TABLE IF NOT EXISTS `categories` (
   `id` varchar(50) NOT NULL,
   `title_bn` varchar(255) NOT NULL,
@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS `categories` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Sections Table (Unified)
+
 CREATE TABLE IF NOT EXISTS `sections` (
   `id` varchar(50) NOT NULL,
   `title_bn` varchar(255) NOT NULL,
@@ -39,13 +39,13 @@ CREATE TABLE IF NOT EXISTS `sections` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Articles Table (Unified)
+
 CREATE TABLE IF NOT EXISTS `articles` (
   `id` varchar(50) NOT NULL,
   `section_id` varchar(50) DEFAULT NULL,
   `category_id` varchar(50) DEFAULT NULL,
   
-  -- Bangla Content
+  
   `title_bn` varchar(255) DEFAULT NULL,
   `summary_bn` text,
   `title_en` varchar(255) DEFAULT NULL,
@@ -81,7 +81,7 @@ CREATE TABLE IF NOT EXISTS `article_submissions` (
     FOREIGN KEY (`article_id`) REFERENCES `articles`(`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Comments Table (Simplified, not language specific usually, but stored per article ID)
+
 CREATE TABLE IF NOT EXISTS `comments` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `article_id` varchar(50) NOT NULL,
@@ -99,7 +99,7 @@ CREATE TABLE IF NOT EXISTS `comments` (
   CONSTRAINT `fk_comments_parent` FOREIGN KEY (`parent_comment_id`) REFERENCES `comments` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Comment Votes Table
+
 CREATE TABLE IF NOT EXISTS `comment_votes` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `comment_id` int(11) NOT NULL,
@@ -114,7 +114,7 @@ CREATE TABLE IF NOT EXISTS `comment_votes` (
   CONSTRAINT `fk_votes_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Muted Users Table
+
 CREATE TABLE IF NOT EXISTS `muted_users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
@@ -127,7 +127,7 @@ CREATE TABLE IF NOT EXISTS `muted_users` (
   CONSTRAINT `fk_muted_by_admin` FOREIGN KEY (`muted_by_admin_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Documents Table (For downloadable files associated with articles)
+
 CREATE TABLE IF NOT EXISTS `documents` (
   `id` varchar(50) NOT NULL,
   `article_id` varchar(50) NOT NULL,
@@ -147,38 +147,38 @@ CREATE TABLE IF NOT EXISTS `documents` (
   CONSTRAINT `fk_documents_article` FOREIGN KEY (`article_id`) REFERENCES `articles` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Performance Indexes for BreachTimes Database
 
--- Indexes for articles table - critical for content retrieval
+
+
 ALTER TABLE articles ADD INDEX idx_status_published_at (status, published_at DESC);
 ALTER TABLE articles ADD INDEX idx_category_status (category_id, status);
 ALTER TABLE articles ADD INDEX idx_section_status (section_id, status);
 ALTER TABLE articles ADD INDEX idx_status_created_at (status, created_at DESC);
 
--- Indexes for comments table - critical for comment loading
+
 ALTER TABLE comments ADD INDEX idx_article_parent_time (article_id, parent_comment_id, created_at DESC);
 ALTER TABLE comments ADD INDEX idx_article_created_at (article_id, created_at DESC);
 
--- Indexes for comment_votes table - needed for sorting comments by helpfulness
+
 ALTER TABLE comment_votes ADD INDEX idx_comment_type (comment_id, vote_type);
 
--- Indexes for documents table
+
 ALTER TABLE documents ADD INDEX idx_article_sort (article_id, sort_order ASC);
 
--- Indexes for categories and sections (lookup tables)
+
 ALTER TABLE categories ADD INDEX idx_id (id);
 ALTER TABLE sections ADD INDEX idx_sort_order (sort_order ASC);
 ALTER TABLE sections ADD INDEX idx_category (associated_category);
 
--- Indexes for search functionality
+
 ALTER TABLE articles ADD INDEX idx_title_content (title_bn(100), title_en(100));
 
--- Indexes for user-related tables
+
 ALTER TABLE users ADD INDEX idx_email (email);
 ALTER TABLE users ADD INDEX idx_role (role);
 
--- Index for search performance (fulltext)
--- For TEXT columns in InnoDB, specify prefix length for FULLTEXT indexes
+
+
 ALTER TABLE articles ADD FULLTEXT idx_ft_title_bn (title_bn(255));
 ALTER TABLE articles ADD FULLTEXT idx_ft_summary_bn (summary_bn(500));
 ALTER TABLE articles ADD FULLTEXT idx_ft_content_bn (content_bn(1000));

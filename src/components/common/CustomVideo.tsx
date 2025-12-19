@@ -18,10 +18,6 @@ interface CustomVideoProps {
   controls?: boolean;
 }
 
-/**
- * Custom Video Component for Article Content
- * Provides enhanced video player with custom controls and accessibility features
- */
 const CustomVideo: React.FC<CustomVideoProps> = ({
   src,
   alt = "",
@@ -42,7 +38,6 @@ const CustomVideo: React.FC<CustomVideoProps> = ({
   const [hasError, setHasError] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  // Normalize media URLs to ensure they work from both pages
   const normalizedSrc = normalizeMediaUrl(src);
   const normalizedPoster = normalizeMediaUrl(poster);
 
