@@ -6,7 +6,25 @@ $user = "sysbdadm";
 $pass = "lzx26NGPR58";
 $charset = "utf8mb4";
 
-$gemini_api_key = "AIzaSyAk9areQ7h53Y7YypZrxyhfeO0T2Tz1kJg";
+// Load GEMINI_API_KEY from .env if it exists
+if (file_exists(__DIR__ . '/../../.env')) {
+    $env_lines = file(__DIR__ . '/../../.env', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+    foreach ($env_lines as $line) {
+        if (strpos(trim($line), '#') === 0) continue;
+        if (strpos($line, '=') !== false) {
+            list($name, $value) = explode('=', $line, 2);
+            if (trim($name) === 'GEMINI_API_KEY') {
+                $gemini_api_key = trim($value);
+                break;
+            }
+        }
+    }
+}
+
+// Fallback to hardcoded key if not in .env
+if (!isset($gemini_api_key)) {
+    $gemini_api_key = "AIzaSyD-wmqmiXKltxHabN0t6SVzdxub0Itj1F0";
+}
 
 $dsn = "mysql:host=$host;port=3306;dbname=$db;charset=$charset";
 $options = [
