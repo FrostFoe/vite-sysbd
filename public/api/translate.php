@@ -28,9 +28,9 @@ if (empty($text)) {
     exit;
 }
 
-if (strlen($text) > 5000) {
+if (strlen($text) > 50000) {
     http_response_code(400);
-    echo json_encode(['error' => 'Text exceeds maximum length of 5000 characters']);
+    echo json_encode(['error' => 'Content is too long. Maximum 50000 characters allowed']);
     exit;
 }
 
@@ -63,24 +63,39 @@ function extractMediaAndText($html) {
     $media_placeholders = [];
     $media_counter = 0;
     
-    $dom = new DOMDocument();
-    @$dom->loadHTML('<?xml encoding="UTF-8">' . $html);
+    $text_only = $html;
     
-    $xpath = new DOMXPath($dom);
-    $media_elements = $xpath->query('//img | //video | //iframe | //figure');
-    
-    foreach ($media_elements as $element) {
+    $img_pattern = '/<img[^>]*>/i';
+    preg_match_all($img_pattern, $text_only, $img_matches);
+    foreach ($img_matches[0] as $img_tag) {
         $placeholder = "###MEDIA_" . $media_counter . "###";
-        $media_placeholders[$placeholder] = $dom->saveHTML($element);
+        $media_placeholders[$placeholder] = $img_tag;
         $media_counter++;
     }
+    $text_only = preg_replace($img_pattern, '', $text_only);
     
-    $text_only = preg_replace('/<img[^>]*>/i', '', $html);
-    $text_only = preg_replace('/<video[^>]*>.*?<\/video>/is', '', $text_only);
-    $text_only = preg_replace('/<iframe[^>]*>.*?<\/iframe>/is', '', $text_only);
-    $text_only = preg_replace('/<figure[^>]*>.*?<\/figure>/is', '', $text_only);
+    $video_pattern = '/<video[^>]*>.*?<\/video>/is';
+    preg_match_all($video_pattern, $text_only, $video_matches);
+    foreach ($video_matches[0] as $video_tag) {
+        $placeholder = "###MEDIA_" . $media_counter . "###";
+        $media_placeholders[$placeholder] = $video_tag;
+        $media_counter++;
+    }
+    $text_only = preg_replace($video_pattern, '', $text_only);
+    
+    $iframe_pattern = '/<iframe[^>]*>.*?<\/iframe>/is';
+    preg_match_all($iframe_pattern, $text_only, $iframe_matches);
+    foreach ($iframe_matches[0] as $iframe_tag) {
+        $placeholder = "###MEDIA_" . $media_counter . "###";
+        $media_placeholders[$placeholder] = $iframe_tag;
+        $media_counter++;
+    }
+    $text_only = preg_replace($iframe_pattern, '', $text_only);
     
     $text_only = strip_tags($text_only, '<p><br><strong><em><ul><li><ol><h1><h2><h3><h4><h5><h6><blockquote><a><div><span>');
+    
+    $text_only = htmlspecialchars_decode($text_only, ENT_QUOTES);
+    $text_only = trim($text_only);
     
     return [
         'text' => $text_only,
@@ -94,7 +109,13 @@ $media_elements = $content_data['media'];
 
 if (empty($text_to_translate)) {
     http_response_code(400);
-    echo json_encode(['error' => 'No text content found to translate']);
+    echo json_encode(['error' => 'কোনো পাঠ্য বিষয়বস্তু খুঁজে পাওয়া যায়নি অনুবাদের জন্য | No text content found to translate']);
+    exit;
+}
+
+if (strlen($text_to_translate) > 5000) {
+    http_response_code(400);
+    echo json_encode(['error' => 'পাঠ্য খুব দীর্ঘ (৫০০০ অক্ষরের চেয়ে বেশি) | Text is too long (more than 5000 characters)']);
     exit;
 }
 
