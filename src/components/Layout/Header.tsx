@@ -1,4 +1,4 @@
-import { LayoutDashboard, Moon, Search, Shield, Sun } from "lucide-react";
+import { Moon, Search, Sun, User as UserIcon } from "lucide-react";
 import type React from "react";
 import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
@@ -109,26 +109,17 @@ const Header: React.FC = () => {
             >
               <Search className="w-5 h-5" />
             </button>
+            {isAuthenticated && (
+              <Link
+                to={isAdmin ? "/admin" : "/dashboard"}
+                className="p-2 md:p-2.5 hover:bg-muted-bg rounded-full text-muted-text transition-all active:scale-95"
+              >
+                <UserIcon className="w-5 h-5" />
+              </Link>
+            )}
             <div className="hidden md:flex gap-3 items-center">
               {isAuthenticated ? (
                 <>
-                  {isAdmin ? (
-                    <Link
-                      to="/admin"
-                      className="flex items-center gap-2 px-4 py-2 bg-bbcRed text-white rounded-full text-sm font-bold shadow-lg shadow-bbcRed/30 hover:scale-105 transition-all mr-2 active:scale-95"
-                    >
-                      <Shield className="w-4 h-4" />{" "}
-                      {t("admin_panel", language)}
-                    </Link>
-                  ) : (
-                    <Link
-                      to="/dashboard"
-                      className="flex items-center gap-2 px-4 py-2 bg-bbcRed text-white rounded-full text-sm font-bold shadow-lg shadow-bbcRed/30 hover:scale-105 transition-all mr-2 active:scale-95"
-                    >
-                      <LayoutDashboard className="w-4 h-4" />{" "}
-                      {t("dashboard", language)}
-                    </Link>
-                  )}
                   <button
                     type="button"
                     onClick={handleLogout}
