@@ -134,14 +134,14 @@ const Footer: React.FC = () => {
 
             <div className="space-y-3 mt-4">
               {/* USDT Section */}
-              <div className="bg-transparent p-2.5 sm:p-3 rounded-lg border border-border-color hover:border-success/50 transition-colors duration-300">
+              <div className="bg-transparent p-0 transition-colors duration-300">
                 <div className="flex items-center gap-2 mb-1">
                   <Coins className="w-4 h-4 text-success" />
                   <span className="font-bold text-xs text-card-text uppercase tracking-wide">
                     USDT (TRC-20)
                   </span>
                 </div>
-                <div className="flex items-center justify-between gap-2 bg-card p-2 rounded border border-border-color">
+                <div className="flex items-center justify-between gap-2 bg-transparent p-0 rounded">
                   <code className="text-[9px] sm:text-[10px] text-muted-text break-all font-mono">
                     TNztLXjP7zYWotPRpzdtPCNVu8JB3DG5jV
                   </code>
@@ -162,14 +162,14 @@ const Footer: React.FC = () => {
               </div>
 
               {/* Bitcoin Section */}
-              <div className="bg-transparent p-3 rounded-lg border border-border-color hover:border-warning/50 transition-colors duration-300">
+              <div className="bg-transparent p-0 transition-colors duration-300">
                 <div className="flex items-center gap-2 mb-1">
                   <Bitcoin className="w-4 h-4 text-warning" />
                   <span className="font-bold text-xs text-card-text uppercase tracking-wide">
                     Bitcoin (BTC)
                   </span>
                 </div>
-                <div className="flex items-center justify-between gap-2 bg-card p-2 rounded border border-border-color">
+                <div className="flex items-center justify-between gap-2 bg-transparent p-0 rounded">
                   <code className="text-[9px] sm:text-[10px] text-muted-text break-all font-mono">
                     18kgAYsUMVF51MNUeMt6vr1WhfgHtzcWai
                   </code>
