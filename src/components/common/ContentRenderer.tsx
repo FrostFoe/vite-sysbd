@@ -9,12 +9,14 @@ interface ContentRendererProps {
   content: string;
   className?: string;
   fontSizeClass?: string; // Added fontSizeClass prop
+  containerRef?: React.RefObject<HTMLDivElement>; // Optional ref for text selection
 }
 
 const ContentRenderer: React.FC<ContentRendererProps> = ({
   content,
   className = "",
   fontSizeClass = "", // Added fontSizeClass with default
+  containerRef,
 }) => {
   const safeContent = DOMPurify.sanitize(content);
 
@@ -157,7 +159,13 @@ const ContentRenderer: React.FC<ContentRendererProps> = ({
   }, [safeContent]);
 
   return (
-    <div className={`prose max-w-none ${fontSizeClass} ${className} transition-all duration-300 ease-in-out`} style={{ fontSize: 'inherit' }}>{processedContent}</div>
+    <div
+      ref={containerRef}
+      className={`prose max-w-none ${fontSizeClass} ${className} transition-all duration-300 ease-in-out`}
+      style={{ fontSize: 'inherit' }}
+    >
+      {processedContent}
+    </div>
   );
 };
 

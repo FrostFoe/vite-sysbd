@@ -485,7 +485,7 @@ const ArticleDetail: React.FC = () => {
             </div>
 
             {/* Article Content */}
-            <div ref={contentRef as React.RefObject<HTMLDivElement>} className="relative">
+            <div className="relative">
               <ContentRenderer
                 content={article.content}
                 className="[&_p]:leading-[1.8] [&_p]:mb-[1em] space-y-6 sm:space-y-8 text-card-text transition-all duration-300"
@@ -496,6 +496,7 @@ const ArticleDetail: React.FC = () => {
                       ? "[&_*:not(button):not(img):not(video):not(audio)]:text-[1.35rem] [&_p]:leading-loose"
                       : "[&_*:not(button):not(img):not(video):not(audio)]:text-base sm:[&_*:not(button):not(img):not(video):not(audio)]:text-lg [&_p]:leading-[1.8]"
                 }
+                containerRef={contentRef as React.RefObject<HTMLDivElement>}
               />
               <TextSelectionToolbar
                 visible={toolbarVisible}
