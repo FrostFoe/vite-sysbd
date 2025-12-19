@@ -28,6 +28,8 @@ if (empty($text)) {
     exit;
 }
 
+$text = htmlspecialchars_decode($text, ENT_QUOTES | ENT_HTML5);
+
 if (strlen($text) > 50000) {
     http_response_code(400);
     echo json_encode(['error' => 'Content is too long. Maximum 50000 characters allowed']);
@@ -94,8 +96,11 @@ function extractMediaAndText($html) {
     
     $text_only = strip_tags($text_only, '<p><br><strong><em><ul><li><ol><h1><h2><h3><h4><h5><h6><blockquote><a><div><span>');
     
-    $text_only = htmlspecialchars_decode($text_only, ENT_QUOTES);
+    $text_only = preg_replace('/\s+/', ' ', $text_only);
+    $text_only = preg_replace('/<[^>]+>/', ' ', $text_only);
+    $text_only = htmlspecialchars_decode($text_only, ENT_QUOTES | ENT_HTML5);
     $text_only = trim($text_only);
+    $text_only = preg_replace('/\s+/', ' ', $text_only);
     
     return [
         'text' => $text_only,
@@ -107,20 +112,20 @@ $content_data = extractMediaAndText($text);
 $text_to_translate = $content_data['text'];
 $media_elements = $content_data['media'];
 
-if (empty($text_to_translate)) {
+if (empty($text_to_translate) || strlen($text_to_translate) < 5) {
     http_response_code(400);
-    echo json_encode(['error' => 'কোনো পাঠ্য বিষয়বস্তু খুঁজে পাওয়া যায়নি অনুবাদের জন্য | No text content found to translate']);
+    echo json_encode(['error' => 'কোনো অনুবাদযোগ্য পাঠ্য পাওয়া যায়নি | No translatable text content found']);
     exit;
 }
 
-if (strlen($text_to_translate) > 5000) {
+if (strlen($text_to_translate) > 10000) {
     http_response_code(400);
-    echo json_encode(['error' => 'পাঠ্য খুব দীর্ঘ (৫০০০ অক্ষরের চেয়ে বেশি) | Text is too long (more than 5000 characters)']);
+    echo json_encode(['error' => 'পাঠ্য খুব দীর্ঘ (১০,০০০ অক্ষরের চেয়ে বেশি) | Text is too long (more than 10000 characters). চেষ্টা করুন ছোট অংশ অনুবাদ করতে | Try translating smaller sections']);
     exit;
 }
 
 $prompt = sprintf(
-    "Translate the following text from %s to %s. Provide only the translation without any explanation or additional text.\n\nText: %s",
+    "You are a professional translator. Translate the following %s text to %s. Provide ONLY the translated text, with no explanation or additional text.\n\nText to translate:\n%s",
     $language_names[$source_lang],
     $language_names[$target_lang],
     $text_to_translate
@@ -140,7 +145,7 @@ $request_body = [
 
 $curl = curl_init();
 curl_setopt_array($curl, [
-    CURLOPT_URL => "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={$api_key}",
+    CURLOPT_URL => "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={$api_key}",
     CURLOPT_RETURNTRANSFER => true,
     CURLOPT_POST => true,
     CURLOPT_HTTPHEADER => ['Content-Type: application/json'],
