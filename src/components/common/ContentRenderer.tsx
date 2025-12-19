@@ -215,10 +215,15 @@ const ContentRenderer: React.FC<ContentRendererProps> = ({
       setTimeout(handleSelection, 0);
     };
 
+    // Add the event listener to the document
     document.addEventListener('mouseup', handleMouseUp);
+
+    // Also add a selectionchange listener for better detection
+    document.addEventListener('selectionchange', handleSelection);
 
     return () => {
       document.removeEventListener('mouseup', handleMouseUp);
+      document.removeEventListener('selectionchange', handleSelection);
     };
   }, [enableTextSelectionToolbar, containerRef, onTextSelected]);
 
@@ -307,6 +312,20 @@ const ContentRenderer: React.FC<ContentRendererProps> = ({
     const selection = window.getSelection();
     if (selection && selection.toString().trim() !== '') {
       e.preventDefault(); // Suppress default context menu if text is selected
+      // Show the toolbar if text is selected and right-clicked
+      const selectedTextContent = selection.toString().trim();
+      if (selectedTextContent && containerRef?.current) {
+        const range = selection.getRangeAt(0);
+        if (containerRef.current.contains(range.commonAncestorContainer)) {
+          const rect = range.getBoundingClientRect();
+          const top = rect.top + window.scrollY - 60; // Position above the selection
+          const left = e.clientX; // Use mouse position for right-click
+
+          setToolbarPosition({ top, left });
+          setSelectedText(selectedTextContent);
+          setToolbarVisible(true);
+        }
+      }
     }
   };
 
