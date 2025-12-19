@@ -22,32 +22,30 @@ const TextSelectionToolbar: React.FC<TextSelectionToolbarProps> = ({
   const [showColorPicker, setShowColorPicker] = useState(false);
   const toolbarRef = useRef<HTMLDivElement>(null);
 
-  // Close color picker when clicking outside
+  // Consolidated click outside handler
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (toolbarRef.current && !toolbarRef.current.contains(event.target as Node)) {
-        setShowColorPicker(false);
+      // If toolbar is not visible, do nothing
+      if (!visible) return;
+
+      // Check if click is inside the toolbar
+      if (toolbarRef.current && toolbarRef.current.contains(event.target as Node)) {
+        return;
       }
-    };
 
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-
-  // Hide toolbar when clicking outside
-  useEffect(() => {
-    const handleClick = () => {
+      // If click is outside, close everything
+      setShowColorPicker(false);
       onClose();
     };
 
     if (visible) {
-      document.addEventListener("click", handleClick);
-      return () => {
-        document.removeEventListener("click", handleClick);
-      };
+      // Use 'mousedown' instead of 'click' for better responsiveness on selection clear
+      document.addEventListener("mousedown", handleClickOutside);
     }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
   }, [visible, onClose]);
 
   const colorOptions = [
@@ -60,15 +58,23 @@ const TextSelectionToolbar: React.FC<TextSelectionToolbarProps> = ({
 
   if (!visible) return null;
 
+  // Prevent off-screen positioning (Simple boundary check)
+  const calculatedTop = Math.max(10, position.top - 50);
+  const calculatedLeft = Math.max(10, position.left - 60);
+
   return (
     <div
       ref={toolbarRef}
-      className="fixed z-[100] flex items-center gap-1 bg-card text-card-text shadow-soft rounded-lg p-2 border border-border-color"
-      style={{ top: position.top - 50, left: position.left - 60 }}
+      className="fixed z-[1000] flex items-center gap-1 bg-card text-card-text shadow-xl rounded-lg p-2 border border-border-color animate-in fade-in zoom-in-95 duration-200"
+      style={{ top: calculatedTop, left: calculatedLeft }}
+      onMouseDown={(e) => e.stopPropagation()}
     >
       <button
         type="button"
-        onClick={onCopy}
+        onClick={(e) => {
+          e.stopPropagation();
+          onCopy();
+        }}
         className="p-2 rounded-md hover:bg-muted-bg transition-colors"
         title="Copy text"
       >
@@ -77,7 +83,10 @@ const TextSelectionToolbar: React.FC<TextSelectionToolbarProps> = ({
 
       <button
         type="button"
-        onClick={onSelectAll}
+        onClick={(e) => {
+          e.stopPropagation();
+          onSelectAll();
+        }}
         className="p-2 rounded-md hover:bg-muted-bg transition-colors"
         title="Select all"
       >
@@ -87,24 +96,30 @@ const TextSelectionToolbar: React.FC<TextSelectionToolbarProps> = ({
       <div className="relative">
         <button
           type="button"
-          onClick={() => setShowColorPicker(!showColorPicker)}
-          className="p-2 rounded-md hover:bg-muted-bg transition-colors flex items-center gap-1"
+          onClick={(e) => {
+            e.stopPropagation();
+            setShowColorPicker(!showColorPicker);
+          }}
+          className={`p-2 rounded-md hover:bg-muted-bg transition-colors flex items-center gap-1 ${
+            showColorPicker ? "bg-muted-bg" : ""
+          }`}
           title="Highlight text"
         >
           <Palette className="w-4 h-4" />
         </button>
 
         {showColorPicker && (
-          <div className="absolute bottom-full mb-2 left-0 bg-card border border-border-color rounded-lg shadow-soft p-2 flex flex-wrap gap-1 w-24 z-10">
+          <div className="absolute top-full mt-2 left-1/2 -translate-x-1/2 bg-card border border-border-color rounded-lg shadow-xl p-2 flex flex-wrap gap-2 w-32 z-20">
             {colorOptions.map((color) => (
               <button
                 key={color.name}
                 type="button"
-                onClick={() => {
+                onClick={(e) => {
+                  e.stopPropagation();
                   onHighlight(color.value);
                   setShowColorPicker(false);
                 }}
-                className={`w-5 h-5 rounded-full ${color.displayColor} hover:scale-110 transition-transform`}
+                className={`w-6 h-6 rounded-full ${color.displayColor} hover:scale-110 transition-transform ring-1 ring-border-color`}
                 title={`Highlight with ${color.name}`}
               />
             ))}
@@ -112,10 +127,16 @@ const TextSelectionToolbar: React.FC<TextSelectionToolbarProps> = ({
         )}
       </div>
 
+      <div className="w-px h-4 bg-border-color mx-1" />
+
       <button
         type="button"
-        onClick={onClose}
-        className="p-1 rounded-md hover:bg-muted-bg transition-colors ml-1"
+        onClick={(e) => {
+          e.stopPropagation();
+          onClose();
+        }}
+        className="p-1 rounded-md hover:bg-red-100 hover:text-red-600 transition-colors ml-1"
+        title="Close toolbar"
       >
         <Type className="w-4 h-4" />
       </button>
