@@ -268,11 +268,7 @@ export const adminApi = {
     message?: string;
     error?: string;
   }> => {
-    const response = await api.post("/upload_image.php", formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
+    const response = await api.post("/upload_image.php", formData);
     return response.data;
   },
 
@@ -285,11 +281,7 @@ export const adminApi = {
     message?: string;
     error?: string;
   }> => {
-    const response = await api.post("/upload_video.php", formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
+    const response = await api.post("/upload_video.php", formData);
     return response.data;
   },
 
