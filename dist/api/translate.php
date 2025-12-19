@@ -47,8 +47,8 @@ if ($source_lang === $target_lang) {
     exit;
 }
 
-$api_key = getenv('GEMINI_API_KEY');
-if (empty($api_key)) {
+$api_key = $gemini_api_key;
+if (empty($api_key) || $api_key === 'YOUR_GEMINI_API_KEY_HERE') {
     http_response_code(500);
     echo json_encode(['error' => 'Translation service not configured']);
     exit;
@@ -59,11 +59,50 @@ $language_names = [
     'en' => 'English'
 ];
 
+function extractMediaAndText($html) {
+    $media_placeholders = [];
+    $media_counter = 0;
+    
+    $dom = new DOMDocument();
+    @$dom->loadHTML('<?xml encoding="UTF-8">' . $html);
+    
+    $xpath = new DOMXPath($dom);
+    $media_elements = $xpath->query('//img | //video | //iframe | //figure');
+    
+    foreach ($media_elements as $element) {
+        $placeholder = "###MEDIA_" . $media_counter . "###";
+        $media_placeholders[$placeholder] = $dom->saveHTML($element);
+        $media_counter++;
+    }
+    
+    $text_only = preg_replace('/<img[^>]*>/i', '', $html);
+    $text_only = preg_replace('/<video[^>]*>.*?<\/video>/is', '', $text_only);
+    $text_only = preg_replace('/<iframe[^>]*>.*?<\/iframe>/is', '', $text_only);
+    $text_only = preg_replace('/<figure[^>]*>.*?<\/figure>/is', '', $text_only);
+    
+    $text_only = strip_tags($text_only, '<p><br><strong><em><ul><li><ol><h1><h2><h3><h4><h5><h6><blockquote><a><div><span>');
+    
+    return [
+        'text' => $text_only,
+        'media' => $media_placeholders
+    ];
+}
+
+$content_data = extractMediaAndText($text);
+$text_to_translate = $content_data['text'];
+$media_elements = $content_data['media'];
+
+if (empty($text_to_translate)) {
+    http_response_code(400);
+    echo json_encode(['error' => 'No text content found to translate']);
+    exit;
+}
+
 $prompt = sprintf(
     "Translate the following text from %s to %s. Provide only the translation without any explanation or additional text.\n\nText: %s",
     $language_names[$source_lang],
     $language_names[$target_lang],
-    $text
+    $text_to_translate
 );
 
 $request_body = [
@@ -115,10 +154,15 @@ if (!isset($gemini_response['candidates'][0]['content']['parts'][0]['text'])) {
 
 $translated_text = trim($gemini_response['candidates'][0]['content']['parts'][0]['text']);
 
+$final_content = $translated_text;
+foreach ($media_elements as $placeholder => $media_html) {
+    $final_content = str_replace($placeholder, $media_html, $final_content);
+}
+
 http_response_code(200);
 echo json_encode([
     'success' => true,
-    'translation' => $translated_text,
+    'translation' => $final_content,
     'source_lang' => $source_lang,
     'target_lang' => $target_lang
 ]);
