@@ -124,45 +124,20 @@ const CustomImage: React.FC<CustomImageProps> = ({
           <span className="text-sm text-muted-text">Loading...</span>
         </div>
       )}
-      <picture>
-        {shouldLoad && normalizedSrc.includes(".") ? (
-          <>
-            <source
-              srcSet={normalizedSrc.replace(/\.\w+$/, ".webp")}
-              type="image/webp"
-            />
-            <img
-              ref={imageRef}
-              src={normalizedSrc}
-              alt={alt}
-              title={title}
-              width={width}
-              height={height}
-              crossOrigin="anonymous"
-              onLoad={handleLoad}
-              onError={handleError}
-              className={`w-full h-auto rounded-lg ${isLoading ? "opacity-0" : "opacity-100"} transition-opacity duration-300`}
-              loading={priority ? "eager" : "lazy"}
-              decoding="async"
-            />
-          </>
-        ) : (
-          <img
-            ref={imageRef}
-            src={shouldLoad ? normalizedSrc : ""}
-            alt={alt}
-            title={title}
-            width={width}
-            height={height}
-            crossOrigin="anonymous"
-            onLoad={handleLoad}
-            onError={handleError}
-            className={`w-full h-auto rounded-lg ${isLoading ? "opacity-0" : "opacity-100"} transition-opacity duration-300`}
-            loading={priority ? "eager" : "lazy"}
-            decoding="async"
-          />
-        )}
-      </picture>
+      <img
+        ref={imageRef}
+        src={shouldLoad ? normalizedSrc : ""}
+        alt={alt}
+        title={title}
+        width={width}
+        height={height}
+        crossOrigin="anonymous"
+        onLoad={handleLoad}
+        onError={handleError}
+        className={`w-full h-auto rounded-lg ${isLoading ? "opacity-0" : "opacity-100"} transition-opacity duration-300`}
+        loading={priority ? "eager" : "lazy"}
+        decoding="async"
+      />
       {showCaption && caption && (
         <figcaption className="mt-2 text-sm text-center text-muted-text italic">
           {caption}
