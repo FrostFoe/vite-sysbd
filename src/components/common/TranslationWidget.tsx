@@ -86,19 +86,19 @@ export const TranslationWidget: React.FC<TranslationWidgetProps> = ({
   };
 
   return (
-    <div className="space-y-3 mt-4 p-4 bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900/40 dark:to-blue-900/20 rounded-xl border border-blue-200 dark:border-blue-800/40 shadow-sm">
+    <div className="space-y-3 mt-4 p-4 bg-muted-bg border border-border-color rounded-xl shadow-soft">
       
       <div className="flex items-start gap-2 pb-3">
-        <Info className="w-4 h-4 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
-        <p className="text-xs text-gray-600 dark:text-gray-300 leading-relaxed">
-          <span className="font-semibold text-gray-700 dark:text-gray-200">টিপ:</span> আপনার লেখাটি স্বয়ংক্রিয়ভাবে {langFullName[targetLang]} এ অনুবাদ করা হবে এবং সমস্ত ছবি ও ভিডিও সংরক্ষিত থাকবে।
+        <Info className="w-4 h-4 text-tech flex-shrink-0 mt-0.5" />
+        <p className="text-xs text-muted-text leading-relaxed">
+          <span className="font-semibold text-card-text">টিপ:</span> আপনার লেখাটি স্বয়ংক্রিয়ভাবে {langFullName[targetLang]} এ অনুবাদ করা হবে এবং সমস্ত ছবি ও ভিডিও সংরক্ষিত থাকবে।
         </p>
       </div>
 
       <button
         onClick={handleTranslate}
         disabled={disabled || isLoading || !text.trim()}
-        className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white rounded-lg transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed font-semibold text-sm shadow-md hover:shadow-lg"
+        className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-tech hover:bg-tech/90 text-white rounded-lg transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed font-semibold text-sm shadow-soft hover:shadow-soft-hover"
       >
         {isLoading ? (
           <>
@@ -116,7 +116,7 @@ export const TranslationWidget: React.FC<TranslationWidgetProps> = ({
       </button>
 
       {error && (
-        <div className="p-3 bg-red-100 dark:bg-red-900/30 border border-red-300 dark:border-red-700 rounded-lg text-red-700 dark:text-red-300 text-sm flex items-start gap-2">
+        <div className="p-3 bg-danger/10 border border-danger rounded-lg text-danger text-sm flex items-start gap-2">
           <span className="text-lg flex-shrink-0">⚠️</span>
           <div>
             <p className="font-medium">অনুবাদ ব্যর্থ</p>
@@ -126,18 +126,18 @@ export const TranslationWidget: React.FC<TranslationWidgetProps> = ({
       )}
 
       {translatedText && isExpanded && (
-        <div className="space-y-3 pt-2 border-t border-blue-200 dark:border-blue-800/40">
+        <div className="space-y-3 pt-2 border-t border-border-color">
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <p className="text-xs font-bold text-gray-600 dark:text-gray-400 uppercase tracking-wider">
+              <p className="text-xs font-bold text-muted-text uppercase tracking-wider">
                 ✓ অনুবাদ সফল ({langFullName[targetLang]})
               </p>
-              <span className="text-xs bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 px-2 py-1 rounded-full font-medium">
+              <span className="text-xs bg-success/20 text-success px-2 py-1 rounded-full font-medium">
                 প্রস্তুত
               </span>
             </div>
-            <div className="max-h-48 overflow-y-auto p-3 bg-white dark:bg-slate-800/50 rounded-lg border border-gray-200 dark:border-gray-700">
-              <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed break-words">
+            <div className="max-h-48 overflow-y-auto p-3 bg-card border border-border-color rounded-lg">
+              <p className="text-sm text-card-text leading-relaxed break-words">
                 {translatedText}
               </p>
             </div>
@@ -146,19 +146,19 @@ export const TranslationWidget: React.FC<TranslationWidgetProps> = ({
           <div className="flex flex-col sm:flex-row gap-2">
             <button
               onClick={handleUseTranslation}
-              className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white rounded-lg transition-all duration-200 font-medium text-sm shadow-md hover:shadow-lg"
+              className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-success hover:bg-success/90 text-white rounded-lg transition-all duration-200 font-medium text-sm shadow-soft hover:shadow-soft-hover"
             >
               <Check className="w-4 h-4" />
               এটি ব্যবহার করুন
             </button>
             <button
               onClick={handleCopyTranslation}
-              className="flex items-center justify-center gap-2 px-4 py-2.5 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-lg transition-all duration-200 font-medium text-sm"
+              className="flex items-center justify-center gap-2 px-4 py-2.5 bg-border-color hover:bg-border-color/80 text-card-text rounded-lg transition-all duration-200 font-medium text-sm"
             >
               {copied ? (
                 <>
-                  <Check className="w-4 h-4 text-green-600" />
-                  <span className="text-green-600 dark:text-green-400">কপি করা হয়েছে</span>
+                  <Check className="w-4 h-4 text-success" />
+                  <span className="text-success">কপি করা হয়েছে</span>
                 </>
               ) : (
                 <>
@@ -169,7 +169,7 @@ export const TranslationWidget: React.FC<TranslationWidgetProps> = ({
             </button>
           </div>
 
-          <div className="text-xs text-gray-500 dark:text-gray-400 p-2 bg-gray-100 dark:bg-gray-800/50 rounded italic">
+          <div className="text-xs text-muted-text p-2 bg-muted-bg rounded italic border border-border-color">
             💡 "এটি ব্যবহার করুন" বাটনে ক্লিক করলে অনুবাদটি স্বয়ংক্রিয়ভাবে {langLabel[targetLang]} ক্ষেত্রে যুক্ত হবে।
           </div>
         </div>
