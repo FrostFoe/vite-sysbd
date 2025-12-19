@@ -8,11 +8,13 @@ import CustomVideo from "./CustomVideo";
 interface ContentRendererProps {
   content: string;
   className?: string;
+  fontSizeClass?: string; // Added fontSizeClass prop
 }
 
 const ContentRenderer: React.FC<ContentRendererProps> = ({
   content,
   className = "",
+  fontSizeClass = "", // Added fontSizeClass with default
 }) => {
   const safeContent = DOMPurify.sanitize(content);
 
@@ -155,7 +157,7 @@ const ContentRenderer: React.FC<ContentRendererProps> = ({
   }, [safeContent]);
 
   return (
-    <div className={`prose max-w-none ${className}`}>{processedContent}</div>
+    <div className={`prose max-w-none ${fontSizeClass} ${className}`}>{processedContent}</div>
   );
 };
 

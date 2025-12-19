@@ -107,31 +107,7 @@ const ArticleDetail: React.FC = () => {
 
   const handleFontSizeChange = useCallback((size: typeof fontSize) => {
     setFontSize(size);
-    const proseEl = document.querySelector(".prose");
-    if (proseEl) {
-      const sizes = {
-        sm: ["text-[0.95rem]", "leading-[1.6]"],
-        md: ["text-lg", "leading-[1.8]"],
-        lg: ["text-[1.35rem]", "leading-loose"],
-      };
-
-      Object.values(sizes)
-        .flat()
-        .forEach((cls) => {
-          proseEl.classList.remove(
-            `[&_p]:${cls.replace("text-lg", "text-base")}`
-          );
-          proseEl.classList.remove(`[&_p]:${cls}`);
-        });
-      sizes[size].forEach((cls) => {
-        proseEl.classList.add(`[&_p]:${cls}`);
-      });
-    }
   }, []);
-
-  useEffect(() => {
-    handleFontSizeChange(fontSize);
-  }, [fontSize, handleFontSizeChange]);
 
   const handleBookmarkToggle = useCallback(() => {
     if (!id) return;
@@ -499,7 +475,14 @@ const ArticleDetail: React.FC = () => {
             {/* Article Content */}
             <ContentRenderer
               content={article.content}
-              className="prose max-w-none [&_p]:text-base sm:[&_p]:text-lg [&_p]:leading-[1.8] [&_p]:mb-[1em] space-y-6 sm:space-y-8 text-card-text transition-all duration-300"
+              className="[&_p]:leading-[1.8] [&_p]:mb-[1em] space-y-6 sm:space-y-8 text-card-text transition-all duration-300"
+              fontSizeClass={
+                fontSize === "sm"
+                  ? "[&_p]:text-[0.95rem] [&_p]:leading-[1.6]"
+                  : fontSize === "lg"
+                    ? "[&_p]:text-[1.35rem] [&_p]:leading-loose"
+                    : "[&_p]:text-base sm:[&_p]:text-lg [&_p]:leading-[1.8]"
+              }
             />
           </article>
         </div>
