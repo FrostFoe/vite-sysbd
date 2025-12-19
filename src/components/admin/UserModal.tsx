@@ -112,9 +112,7 @@ export const UserModal: React.FC<UserModalProps> = ({
       <div className="bg-card rounded-2xl shadow-2xl border border-border-color w-full max-w-md mx-4 animate-in zoom-in-95">
         <div className="flex items-center justify-between p-4 sm:p-6 border-b border-border-color">
           <h2 className="text-lg font-bold">
-            {user?.id
-              ? "ব্যবহারকারী সম্পাদনা করুন"
-              : "নতুন ব্যবহারকারী তৈরি করুন"}
+            {user?.id ? "ব্যবহারকারী সম্পাদনা করুন" : "নতুন ব্যবহারকারী তৈরি করুন"}
           </h2>
           <button
             type="button"

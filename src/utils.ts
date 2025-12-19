@@ -16,13 +16,13 @@ export const PLACEHOLDER_IMAGE =
 
 export function formatTimestamp(
   timestampString: string | null | undefined,
-  lang: "en" | "bn",
+  lang: "en" | "bn"
 ): string {
   if (!timestampString) return "";
   let date = new Date(timestampString);
   if (Number.isNaN(date.getTime())) {
     const parts = timestampString.match(
-      /^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})$/,
+      /^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})$/
     );
     if (parts)
       date = new Date(
@@ -31,7 +31,7 @@ export function formatTimestamp(
         parseInt(parts[3], 10),
         parseInt(parts[4], 10),
         parseInt(parts[5], 10),
-        parseInt(parts[6], 10),
+        parseInt(parts[6], 10)
       );
     else return timestampString;
   }
@@ -64,7 +64,7 @@ export function formatTimestamp(
 
 export function showToastMsg(
   msg: string,
-  type: "success" | "error" = "success",
+  type: "success" | "error" = "success"
 ) {
   const container = document.getElementById("toast-container");
   if (!container) return;
@@ -91,7 +91,7 @@ export function handleItemSelect(
   isMobile: boolean,
   navigate: (path: string) => void,
   detailPath: string,
-  onDesktop?: () => void,
+  onDesktop?: () => void
 ) {
   if (isMobile) {
     navigate(detailPath);
@@ -143,7 +143,7 @@ export interface FormValidationResult {
 function validateFieldInternal(
   value: unknown,
   rules: ValidationRule,
-  fieldName: string,
+  fieldName: string
 ): string[] {
   const errors: string[] = [];
 
@@ -158,7 +158,7 @@ function validateFieldInternal(
 
   if (rules.minLength && stringValue.length < rules.minLength) {
     errors.push(
-      `${fieldName} must be at least ${rules.minLength} characters long`,
+      `${fieldName} must be at least ${rules.minLength} characters long`
     );
   }
 
@@ -199,7 +199,7 @@ function validateFieldInternal(
     const result = rules.custom(value);
     if (result !== true) {
       errors.push(
-        typeof result === "string" ? result : `${fieldName} validation failed`,
+        typeof result === "string" ? result : `${fieldName} validation failed`
       );
     }
   }
@@ -210,7 +210,7 @@ function validateFieldInternal(
 export function validateField(
   value: unknown,
   rules: ValidationRule,
-  fieldName: string = "Field",
+  fieldName: string = "Field"
 ): string[] {
   return validateFieldInternal(value, rules, fieldName);
 }
@@ -218,7 +218,7 @@ export function validateField(
 export function validateForm(
   formData: Record<string, unknown>,
   schema: Record<string, ValidationRule>,
-  fieldLabels: Record<string, string> = {},
+  fieldLabels: Record<string, string> = {}
 ): FormValidationResult {
   const errors: ValidationErrors = {};
 
@@ -227,7 +227,7 @@ export function validateForm(
     const fieldErrors = validateFieldInternal(
       formData[fieldName],
       rules,
-      label,
+      label
     );
 
     if (fieldErrors.length > 0) {
@@ -244,7 +244,7 @@ export function validateForm(
 export function validateFieldsMatch(
   formData: Record<string, unknown>,
   field1: string,
-  field2: string,
+  field2: string
 ): boolean {
   return formData[field1] === formData[field2];
 }
@@ -310,7 +310,7 @@ export function useFormValidation(schema: Record<string, ValidationRule>) {
       setErrors(result.errors);
       return result.isValid;
     },
-    [schema],
+    [schema]
   );
 
   const validateFieldFn = useCallback(
@@ -321,19 +321,19 @@ export function useFormValidation(schema: Record<string, ValidationRule>) {
       const fieldErrors = validateFieldInternal(
         value,
         rule,
-        fieldName.charAt(0).toUpperCase() + fieldName.slice(1),
+        fieldName.charAt(0).toUpperCase() + fieldName.slice(1)
       );
 
       setErrors(
         (prev): ValidationErrors => ({
           ...prev,
           [fieldName]: fieldErrors,
-        }),
+        })
       );
 
       setTouched((prev) => new Set([...prev, fieldName]));
     },
-    [schema],
+    [schema]
   );
 
   const clearErrors = useCallback(() => {
@@ -353,7 +353,7 @@ export function useFormValidation(schema: Record<string, ValidationRule>) {
 
 export function generateImageSrcSet(
   basePath: string,
-  widths: number[] = [400, 800, 1200, 1600],
+  widths: number[] = [400, 800, 1200, 1600]
 ): { srcSet: string; sizes: string } {
   const srcSet = widths
     .map((width) => `${basePath}?w=${width}&q=85&fmt=webp ${width}w`)
@@ -366,7 +366,7 @@ export function generateImageSrcSet(
 
 export function getImageWithWebP(
   path: string,
-  alt: string = "Image",
+  alt: string = "Image"
 ): {
   src: string;
   srcSet: string;
@@ -524,7 +524,7 @@ interface ApiResponse {
 
 export const useDataFetch = <T>(
   fetchFn: () => Promise<ApiResponse>,
-  options: UseDataFetchOptions = {},
+  options: UseDataFetchOptions = {}
 ): UseDataFetchReturn<T> => {
   const {
     onSuccess,

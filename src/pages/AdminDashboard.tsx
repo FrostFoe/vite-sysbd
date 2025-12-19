@@ -195,8 +195,7 @@ const AdminDashboard: React.FC = () => {
           </button>
         </div>
         <p className="text-muted-text text-sm">
-          সমস্ত ডেটা (ব্যবহারকারী, নিবন্ধ, মন্তব্য, জমা) JSON ফরম্যাটে ডাউনলোড
-          করুন।
+          সমস্ত ডেটা (ব্যবহারকারী, নিবন্ধ, মন্তব্য, জমা) JSON ফরম্যাটে ডাউনলোড করুন।
         </p>
       </div>
     </div>

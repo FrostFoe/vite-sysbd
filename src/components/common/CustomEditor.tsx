@@ -37,7 +37,7 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
       setLastSyncedValue(value || "");
       setIsInitialized(true);
     }
-  }, [isInitialized]);
+  }, [isInitialized, value]);
 
   useEffect(() => {
     if (editorRef.current && isInitialized && value !== lastSyncedValue) {
@@ -180,7 +180,7 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
         }
       }
     },
-    [handleImageUpload, handleVideoUpload],
+    [handleImageUpload, handleVideoUpload]
   );
 
   return (
@@ -280,6 +280,7 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
 
       {}
       {}
+      {/* biome-ignore lint/a11y/useSemanticElements: contentEditable requires role=textbox or similar non-semantic role behavior */}
       <div
         ref={editorRef}
         contentEditable

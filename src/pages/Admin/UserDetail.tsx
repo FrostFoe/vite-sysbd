@@ -35,7 +35,7 @@ const UserDetail: React.FC = () => {
         const response = await adminApi.getUsers();
         if (response.success && response.users) {
           const foundUser = (response.users as unknown as AdminUser[]).find(
-            (u) => u.id === userId,
+            (u) => u.id === userId
           );
           if (foundUser) {
             setUser(foundUser);

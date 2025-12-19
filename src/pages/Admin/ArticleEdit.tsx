@@ -5,6 +5,7 @@ import {
   Loader,
   Plus,
   Save,
+  Sparkles,
   Trash2,
 } from "lucide-react";
 import type React from "react";
@@ -36,6 +37,7 @@ const ArticleEdit: React.FC = () => {
   const [sections, setSections] = useState<Section[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
+  const [isGeneratingMeta, setIsGeneratingMeta] = useState(false);
   const [restoreAlert, setRestoreAlert] = useState(false);
   const [isModalOpen, setModalOpen] = useState(false);
   const [editingDoc, setEditingDoc] = useState<DocType | null>(null);
@@ -76,8 +78,8 @@ const ArticleEdit: React.FC = () => {
                 ({
                   ...s,
                   title: s.title || "Untitled Section",
-                }) as unknown as Section,
-            ),
+                }) as unknown as Section
+            )
           );
         }
 
@@ -105,7 +107,7 @@ const ArticleEdit: React.FC = () => {
           } else {
             showToastMsg(
               articleRes.error || "নিবন্ধ লোড করতে ব্যর্থ হয়েছে।",
-              "error",
+              "error"
             );
           }
         } else {
@@ -176,7 +178,7 @@ const ArticleEdit: React.FC = () => {
       if (DANGEROUS_FILE_EXTENSIONS.includes(fileExtension)) {
         showToastMsg(
           `File type not allowed (potentially dangerous): .${fileExtension}`,
-          "error",
+          "error"
         );
         return;
       }
@@ -201,7 +203,7 @@ const ArticleEdit: React.FC = () => {
         showToastMsg("সার্ভার ত্রুটি!", "error");
       }
     },
-    [],
+    []
   );
 
   const handleSubmit = useCallback(
@@ -227,7 +229,7 @@ const ArticleEdit: React.FC = () => {
       formData.append("meta_keywords", article.meta_keywords || "");
       formData.append(
         "allow_submissions",
-        article.allow_submissions ? "1" : "0",
+        article.allow_submissions ? "1" : "0"
       );
 
       try {
@@ -241,7 +243,7 @@ const ArticleEdit: React.FC = () => {
         } else {
           showToastMsg(
             response.error || "নিবন্ধ সংরক্ষণ করতে ব্যর্থ হয়েছে!",
-            "error",
+            "error"
           );
         }
       } catch (_error) {
@@ -250,7 +252,7 @@ const ArticleEdit: React.FC = () => {
         setIsSaving(false);
       }
     },
-    [article, id, navigate, storageKey],
+    [article, id, navigate, storageKey]
   );
 
   const handleOpenModal = async (doc: DocType | null) => {
@@ -276,6 +278,44 @@ const ArticleEdit: React.FC = () => {
   const handleSave = async () => {
     await fetchDocuments();
     handleCloseModal();
+  };
+
+  const handleGenerateMetadata = async () => {
+    if (
+      !article.title_bn &&
+      !article.title_en &&
+      !article.content_bn &&
+      !article.content_en
+    ) {
+      showToastMsg("Please add some content or title first.", "error");
+      return;
+    }
+
+    setIsGeneratingMeta(true);
+    try {
+      const response = await adminApi.generateMetadata({
+        title_bn: article.title_bn,
+        title_en: article.title_en,
+        content_bn: article.content_bn,
+        content_en: article.content_en,
+      });
+
+      if (response.success && response.metadata) {
+        setArticle((prev) => ({
+          ...prev,
+          meta_title: response.metadata?.meta_title,
+          meta_description: response.metadata?.meta_description,
+          meta_keywords: response.metadata?.meta_keywords,
+        }));
+        showToastMsg("Metadata generated successfully!");
+      } else {
+        showToastMsg(response.error || "Failed to generate metadata", "error");
+      }
+    } catch (_error) {
+      showToastMsg("Server error while generating metadata", "error");
+    } finally {
+      setIsGeneratingMeta(false);
+    }
   };
 
   const handleDelete = async (docId: string) => {
@@ -498,8 +538,7 @@ const ArticleEdit: React.FC = () => {
                       অসংরক্ষিত খসড়া পাওয়া গেছে
                     </h4>
                     <p className="text-xs text-card-text mt-1">
-                      আপনার ব্রাউজারে এই নিবন্ধটির একটি নতুন সংস্করণ পাওয়া
-                      গেছে।
+                      আপনার ব্রাউজারে এই নিবন্ধটির একটি নতুন সংস্করণ পাওয়া গেছে।
                     </p>
                     <button
                       type="button"
@@ -514,12 +553,30 @@ const ArticleEdit: React.FC = () => {
             )}
 
             <div className="bg-card p-4 rounded-xl border border-border-color shadow-sm">
-              <h3 className="font-bold mb-3 text-sm uppercase text-muted-text">
-                SEO Metadata (এসইও মেটাডেটা)
-              </h3>
+              <div className="flex justify-between items-center mb-3">
+                <h3 className="font-bold text-sm uppercase text-muted-text">
+                  SEO Metadata (এসইও মেটাডেটা)
+                </h3>
+                <button
+                  type="button"
+                  onClick={handleGenerateMetadata}
+                  disabled={isGeneratingMeta}
+                  className="text-xs bg-purple-100 hover:bg-purple-200 text-purple-700 px-3 py-1.5 rounded-full font-bold flex items-center gap-1.5 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {isGeneratingMeta ? (
+                    <Loader className="w-3 h-3 animate-spin" />
+                  ) : (
+                    <Sparkles className="w-3 h-3" />
+                  )}
+                  {isGeneratingMeta ? "Generating..." : "Generate with AI"}
+                </button>
+              </div>
               <div className="mb-4">
                 <div className="flex justify-between items-center mb-1">
-                  <label className="block text-xs font-bold">
+                  <label
+                    htmlFor="meta-title"
+                    className="block text-xs font-bold"
+                  >
                     Meta Title (মেটা শিরোনাম)
                   </label>
                   <span
@@ -533,6 +590,7 @@ const ArticleEdit: React.FC = () => {
                   </span>
                 </div>
                 <input
+                  id="meta-title"
                   name="meta_title"
                   value={article.meta_title || ""}
                   onChange={(e) =>
@@ -547,7 +605,10 @@ const ArticleEdit: React.FC = () => {
               </div>
               <div className="mb-4">
                 <div className="flex justify-between items-center mb-1">
-                  <label className="block text-xs font-bold">
+                  <label
+                    htmlFor="meta-description"
+                    className="block text-xs font-bold"
+                  >
                     Meta Description (মেটা বর্ণনা)
                   </label>
                   <span
@@ -561,6 +622,7 @@ const ArticleEdit: React.FC = () => {
                   </span>
                 </div>
                 <textarea
+                  id="meta-description"
                   name="meta_description"
                   value={article.meta_description || ""}
                   onChange={(e) =>
@@ -575,10 +637,14 @@ const ArticleEdit: React.FC = () => {
                 />
               </div>
               <div className="mb-4">
-                <label className="block text-xs font-bold mb-1">
+                <label
+                  htmlFor="meta-keywords"
+                  className="block text-xs font-bold mb-1"
+                >
                   Meta Keywords (কিওয়ার্ড)
                 </label>
                 <input
+                  id="meta-keywords"
                   name="meta_keywords"
                   value={article.meta_keywords || ""}
                   onChange={(e) =>

@@ -119,18 +119,16 @@ const Header: React.FC = () => {
             )}
             <div className="hidden md:flex gap-3 items-center">
               {isAuthenticated ? (
-                <>
-                  <button
-                    type="button"
-                    onClick={handleLogout}
-                    className="text-sm font-bold px-4 py-2 hover:bg-danger/10 dark:hover:bg-danger/20 text-bbcRed rounded-full transition-all flex items-center gap-2 active:scale-95"
-                  >
-                    <div className="w-4 h-4 bg-bbcRed rounded-full text-white flex items-center justify-center text-[10px]">
-                      {user?.email[0].toUpperCase()}
-                    </div>{" "}
-                    {t("sign_out", language)}
-                  </button>
-                </>
+                <button
+                  type="button"
+                  onClick={handleLogout}
+                  className="text-sm font-bold px-4 py-2 hover:bg-danger/10 dark:hover:bg-danger/20 text-bbcRed rounded-full transition-all flex items-center gap-2 active:scale-95"
+                >
+                  <div className="w-4 h-4 bg-bbcRed rounded-full text-white flex items-center justify-center text-[10px]">
+                    {user?.email[0].toUpperCase()}
+                  </div>{" "}
+                  {t("sign_out", language)}
+                </button>
               ) : (
                 <Link
                   to="/login"

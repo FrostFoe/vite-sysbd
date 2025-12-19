@@ -53,7 +53,7 @@ const Users: React.FC = () => {
   const handleDeleteUser = async (userId: number, email: string) => {
     if (
       !window.confirm(
-        `আপনি কি নিশ্চিত যে আপনি ${email} ব্যবহারকারীকে ডিলিট করতে চান?`,
+        `আপনি কি নিশ্চিত যে আপনি ${email} ব্যবহারকারীকে ডিলিট করতে চান?`
       )
     )
       return;
@@ -63,10 +63,7 @@ const Users: React.FC = () => {
         showToastMsg("ব্যবহারকারী সফলভাবে ডিলিট হয়েছে");
         fetchUsers();
       } else {
-        showToastMsg(
-          response.error || "ব্যবহারকারী ডিলিট করতে ব্যর্থ",
-          "error",
-        );
+        showToastMsg(response.error || "ব্যবহারকারী ডিলিট করতে ব্যর্থ", "error");
       }
     } catch (_error) {
       showToastMsg("সার্ভার ত্রুটি!", "error");
@@ -109,7 +106,7 @@ const Users: React.FC = () => {
                     handleItemSelect(
                       window.innerWidth < 768,
                       navigate,
-                      `/admin/users/${user.id}`,
+                      `/admin/users/${user.id}`
                     )
                   }
                   type="button"

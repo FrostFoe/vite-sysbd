@@ -1,6 +1,6 @@
 import { Eye, EyeOff } from "lucide-react";
 import type React from "react";
-import { useState, useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { normalizeMediaUrl } from "../../utils";
 
 interface CustomImageProps {
@@ -53,7 +53,7 @@ const CustomImage: React.FC<CustomImageProps> = ({
         root: null,
         rootMargin: "100px",
         threshold: 0.01,
-      },
+      }
     );
 
     if (imageRef.current) {
@@ -119,8 +119,7 @@ const CustomImage: React.FC<CustomImageProps> = ({
   return (
     <figure className={`relative ${className}`} ref={imageRef}>
       {isLoading && (
-        <div className="absolute inset-0 bg-muted-bg animate-pulse rounded-lg flex items-center justify-center"
->
+        <div className="absolute inset-0 bg-muted-bg animate-pulse rounded-lg flex items-center justify-center">
           <span className="text-sm text-muted-text">Loading...</span>
         </div>
       )}

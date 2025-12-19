@@ -3,6 +3,7 @@ import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 
 export default defineConfig(({ command }) => {
+  // biome-ignore lint/suspicious/noExplicitAny: buildConfig needs any for flexibility with Rollup types
   const buildConfig: any = {
     rollupOptions: {
       output: {

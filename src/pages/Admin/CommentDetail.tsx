@@ -36,7 +36,7 @@ const CommentDetail: React.FC = () => {
         const response = await adminApi.getAllComments();
         if (response.success && response.comments) {
           const foundComment = (response.comments as AdminComment[]).find(
-            (c) => c.id === commentId,
+            (c) => c.id === commentId
           );
           if (foundComment) {
             setComment(foundComment);
@@ -121,7 +121,7 @@ const CommentDetail: React.FC = () => {
                 tempDiv.innerHTML = sanitizedText;
 
                 const convertNodeToReactElement = (
-                  node: Node,
+                  node: Node
                 ): React.ReactNode => {
                   if (node.nodeType === Node.TEXT_NODE) {
                     return node.textContent;
@@ -137,20 +137,20 @@ const CommentDetail: React.FC = () => {
                     }
 
                     const children = Array.from(element.childNodes).map(
-                      convertNodeToReactElement,
+                      convertNodeToReactElement
                     );
 
                     return createElement(
                       element.tagName.toLowerCase(),
                       props,
-                      ...children,
+                      ...children
                     );
                   }
                   return null;
                 };
 
                 return Array.from(tempDiv.childNodes).map((node, _index) =>
-                  convertNodeToReactElement(node),
+                  convertNodeToReactElement(node)
                 );
               })()}
             </div>

@@ -60,9 +60,7 @@ const Submissions: React.FC = () => {
   return (
     <div className="space-y-4 sm:space-y-6">
       <div className="mb-4 sm:mb-6">
-        <h1 className="text-xl sm:text-2xl font-bold">
-          ব্যবহারকারী জমা দেওয়া তথ্য
-        </h1>
+        <h1 className="text-xl sm:text-2xl font-bold">ব্যবহারকারী জমা দেওয়া তথ্য</h1>
       </div>
 
       <div className="bg-card rounded-xl border border-border-color shadow-sm overflow-hidden">
@@ -82,7 +80,7 @@ const Submissions: React.FC = () => {
                   handleItemSelect(
                     window.innerWidth < 768,
                     navigate,
-                    `/admin/submissions/${s.id}`,
+                    `/admin/submissions/${s.id}`
                   )
                 }
                 type="button"
@@ -121,7 +119,7 @@ const Submissions: React.FC = () => {
                       onClick={() => {
                         if (
                           window.confirm(
-                            "আপনি কি নিশ্চিত যে আপনি এই জমা মুছে ফেলতে চান?",
+                            "আপনি কি নিশ্চিত যে আপনি এই জমা মুছে ফেলতে চান?"
                           )
                         ) {
                           handleDeleteSubmission(s.id);

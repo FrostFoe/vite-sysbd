@@ -40,7 +40,7 @@ const SubmissionDetail: React.FC = () => {
         const response = await adminApi.getSubmissions();
         if (response.success && response.submissions) {
           const foundSubmission = (response.submissions as Submission[]).find(
-            (s) => s.id === submissionId,
+            (s) => s.id === submissionId
           );
           if (foundSubmission) {
             setSubmission(foundSubmission);

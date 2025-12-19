@@ -1,1 +1,0 @@
-import"./component-Layout-MPCMYavj.js";import"./component-common-CgK_QeVS.js";import{o as e}from"./page-Admin-CKcNRJkD.js";export{e as default};

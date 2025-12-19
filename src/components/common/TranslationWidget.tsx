@@ -1,5 +1,6 @@
-import React, { useState } from "react";
-import { Loader, Copy, Check, Globe, Info, ArrowRight } from "lucide-react";
+import { ArrowRight, Check, Copy, Globe, Info, Loader } from "lucide-react";
+import type React from "react";
+import { useState } from "react";
 import { adminApi } from "../../api";
 
 interface TranslationWidgetProps {
@@ -44,7 +45,11 @@ export const TranslationWidget: React.FC<TranslationWidgetProps> = ({
     setTranslatedText(null);
 
     try {
-      const result = await adminApi.translateText(text, currentLang, targetLang);
+      const result = await adminApi.translateText(
+        text,
+        currentLang,
+        targetLang
+      );
 
       if (result.success && result.translation) {
         setTranslatedText(result.translation);
@@ -79,15 +84,17 @@ export const TranslationWidget: React.FC<TranslationWidgetProps> = ({
 
   return (
     <div className="space-y-3 mt-4 p-4 bg-muted-bg border border-border-color rounded-xl shadow-soft">
-      
       <div className="flex items-start gap-2 pb-3">
         <Info className="w-4 h-4 text-tech flex-shrink-0 mt-0.5" />
         <p className="text-xs text-muted-text leading-relaxed">
-          <span className="font-semibold text-card-text">টিপ:</span> আপনার লেখাটি স্বয়ংক্রিয়ভাবে {langFullName[targetLang]} এ অনুবাদ করা হবে এবং সমস্ত ছবি ও ভিডিও সংরক্ষিত থাকবে।
+          <span className="font-semibold text-card-text">টিপ:</span> আপনার লেখাটি
+          স্বয়ংক্রিয়ভাবে {langFullName[targetLang]} এ অনুবাদ করা হবে এবং সমস্ত ছবি ও
+          ভিডিও সংরক্ষিত থাকবে।
         </p>
       </div>
 
       <button
+        type="button"
         onClick={handleTranslate}
         disabled={disabled || isLoading || !text.trim()}
         className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-tech hover:bg-tech/90 text-white rounded-lg transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed font-semibold text-sm shadow-soft hover:shadow-soft-hover"
@@ -137,6 +144,7 @@ export const TranslationWidget: React.FC<TranslationWidgetProps> = ({
 
           <div className="flex flex-col sm:flex-row gap-2">
             <button
+              type="button"
               onClick={handleUseTranslation}
               className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-success hover:bg-success/90 text-white rounded-lg transition-all duration-200 font-medium text-sm shadow-soft hover:shadow-soft-hover"
             >
@@ -144,6 +152,7 @@ export const TranslationWidget: React.FC<TranslationWidgetProps> = ({
               এটি ব্যবহার করুন
             </button>
             <button
+              type="button"
               onClick={handleCopyTranslation}
               className="flex items-center justify-center gap-2 px-4 py-2.5 bg-border-color hover:bg-border-color/80 text-card-text rounded-lg transition-all duration-200 font-medium text-sm"
             >
@@ -162,7 +171,8 @@ export const TranslationWidget: React.FC<TranslationWidgetProps> = ({
           </div>
 
           <div className="text-xs text-muted-text p-2 bg-muted-bg rounded italic border border-border-color">
-            💡 "এটি ব্যবহার করুন" বাটনে ক্লিক করলে অনুবাদটি স্বয়ংক্রিয়ভাবে {langLabel[targetLang]} ক্ষেত্রে যুক্ত হবে।
+            💡 "এটি ব্যবহার করুন" বাটনে ক্লিক করলে অনুবাদটি স্বয়ংক্রিয়ভাবে{" "}
+            {langLabel[targetLang]} ক্ষেত্রে যুক্ত হবে।
           </div>
         </div>
       )}

@@ -63,7 +63,7 @@ const ArticleList: React.FC = () => {
   const handleDeleteArticle = useCallback(async (id: string) => {
     if (
       !window.confirm(
-        "আপনি কি নিশ্চিত এই নিবন্ধটি মুছে ফেলতে চান? এটি উভয় ভাষার সংস্করণ মুছে দেবে।",
+        "আপনি কি নিশ্চিত এই নিবন্ধটি মুছে ফেলতে চান? এটি উভয় ভাষার সংস্করণ মুছে দেবে।"
       )
     )
       return;
@@ -82,7 +82,7 @@ const ArticleList: React.FC = () => {
 
   const handleFilterChange = (
     type: "search" | "cat" | "status",
-    value: string,
+    value: string
   ) => {
     const newParams = new URLSearchParams(searchParams.toString());
     if (value) {
@@ -191,7 +191,7 @@ const ArticleList: React.FC = () => {
                     handleItemSelect(
                       window.innerWidth < 768,
                       navigate,
-                      `/admin/articles/${a.id}/edit`,
+                      `/admin/articles/${a.id}/edit`
                     )
                   }
                   type="button"
