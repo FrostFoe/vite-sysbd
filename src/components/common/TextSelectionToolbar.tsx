@@ -1,4 +1,12 @@
-import { Copy, Palette, Square, Type } from "lucide-react";
+import {
+  Bot,
+  Copy,
+  MessageSquareQuote,
+  Palette,
+  Search,
+  Square,
+  Type,
+} from "lucide-react";
 import type React from "react";
 import { useEffect, useRef, useState } from "react";
 
@@ -6,6 +14,9 @@ interface TextSelectionToolbarProps {
   onHighlight: (color: string) => void;
   onCopy: () => void;
   onSelectAll: () => void;
+  onSearch: () => void;
+  onAskAI: () => void;
+  onAddComment: () => void;
   onClose: () => void;
   visible: boolean;
   position: { top: number; left: number };
@@ -15,6 +26,9 @@ const TextSelectionToolbar: React.FC<TextSelectionToolbarProps> = ({
   onHighlight,
   onCopy,
   onSelectAll,
+  onSearch,
+  onAskAI,
+  onAddComment,
   onClose,
   visible,
   position,
@@ -81,6 +95,44 @@ const TextSelectionToolbar: React.FC<TextSelectionToolbarProps> = ({
       >
         <Copy className="w-4 h-4" />
       </button>
+
+      <button
+        type="button"
+        onClick={(e) => {
+          e.stopPropagation();
+          onSearch();
+        }}
+        className="p-2 rounded-md hover:bg-muted-bg transition-colors"
+        title="Search Web"
+      >
+        <Search className="w-4 h-4" />
+      </button>
+
+      <button
+        type="button"
+        onClick={(e) => {
+          e.stopPropagation();
+          onAskAI();
+        }}
+        className="p-2 rounded-md hover:bg-muted-bg transition-colors"
+        title="Ask AI"
+      >
+        <Bot className="w-4 h-4" />
+      </button>
+
+      <button
+        type="button"
+        onClick={(e) => {
+          e.stopPropagation();
+          onAddComment();
+        }}
+        className="p-2 rounded-md hover:bg-muted-bg transition-colors"
+        title="Quote Reply"
+      >
+        <MessageSquareQuote className="w-4 h-4" />
+      </button>
+
+      <div className="w-px h-4 bg-border-color mx-1" />
 
       <button
         type="button"

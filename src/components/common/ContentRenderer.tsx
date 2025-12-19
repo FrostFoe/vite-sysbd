@@ -14,6 +14,7 @@ interface ContentRendererProps {
   containerRef?: React.RefObject<HTMLDivElement>; // Optional ref for text selection
   enableTextSelectionToolbar?: boolean; // Whether to enable the floating toolbar
   onTextSelected?: (text: string) => void; // Callback when text is selected
+  onAddComment?: (text: string) => void; // Callback when "Quote Reply" is clicked
 }
 
 const ContentRenderer: React.FC<ContentRendererProps> = ({
@@ -23,6 +24,7 @@ const ContentRenderer: React.FC<ContentRendererProps> = ({
   containerRef,
   enableTextSelectionToolbar = false,
   onTextSelected,
+  onAddComment,
 }) => {
   const [toolbarVisible, setToolbarVisible] = useState(false);
   const [toolbarPosition, setToolbarPosition] = useState({ top: 0, left: 0 });
@@ -264,6 +266,33 @@ const ContentRenderer: React.FC<ContentRendererProps> = ({
     }
   };
 
+  const handleSearch = () => {
+    if (selectedText) {
+      window.open(
+        `https://www.google.com/search?q=${encodeURIComponent(selectedText)}`,
+        "_blank"
+      );
+      setToolbarVisible(false);
+    }
+  };
+
+  const handleAskAI = () => {
+    if (selectedText) {
+      // Copy to clipboard first as a convenience
+      navigator.clipboard.writeText(selectedText).catch(() => {});
+      window.open("https://chat.openai.com", "_blank");
+      showToastMsg("Text copied! Paste it in ChatGPT.");
+      setToolbarVisible(false);
+    }
+  };
+
+  const handleAddComment = () => {
+    if (selectedText && onAddComment) {
+      onAddComment(selectedText);
+      setToolbarVisible(false);
+    }
+  };
+
   const handleSelectAll = () => {
     const container = containerRef?.current;
     if (container) {
@@ -348,6 +377,9 @@ const ContentRenderer: React.FC<ContentRendererProps> = ({
         onHighlight={handleHighlight}
         onCopy={handleCopy}
         onSelectAll={handleSelectAll}
+        onSearch={handleSearch}
+        onAskAI={handleAskAI}
+        onAddComment={handleAddComment}
         onClose={() => setToolbarVisible(false)}
       />
     </article>

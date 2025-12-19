@@ -344,6 +344,20 @@ const ArticleDetail: React.FC = () => {
     setUserProfile(null);
   }, []);
 
+  const handleQuoteComment = useCallback((text: string) => {
+    setCommentInput((prev) => {
+      const quote = `> "${text}"\n\n`;
+      return prev ? `${prev}\n${quote}` : quote;
+    });
+
+    // Scroll to comment input
+    const commentInputEl = document.getElementById("comment-input");
+    if (commentInputEl) {
+      commentInputEl.scrollIntoView({ behavior: "smooth", block: "center" });
+      commentInputEl.focus();
+    }
+  }, []);
+
   const submissionFormRef = useRef<HTMLFormElement>(null);
   const handleDocumentSubmission = useCallback(
     async (e: React.FormEvent<HTMLFormElement>) => {
@@ -487,6 +501,7 @@ const ArticleDetail: React.FC = () => {
                 }
                 containerRef={contentRef as React.RefObject<HTMLDivElement>}
                 enableTextSelectionToolbar={true}
+                onAddComment={handleQuoteComment}
               />
             </div>
           </article>
