@@ -21,6 +21,8 @@ import { Link, useParams } from "react-router-dom";
 import { adminApi, publicApi } from "../api";
 import ContentRenderer from "../components/common/ContentRenderer";
 import { CustomDropdown } from "../components/common/CustomDropdown";
+import TextSelectionToolbar from "../components/common/TextSelectionToolbar";
+import { useTextSelection } from "../hooks/useTextSelection";
 import { RelatedArticles } from "../components/common/RelatedArticles";
 import { useAuth } from "../context/AuthContext";
 import { useLayout } from "../context/LayoutContext";
@@ -55,8 +57,18 @@ const ArticleDetail: React.FC = () => {
   const [profileModalOpen, setProfileModalOpen] = useState(false);
   const [profileModalLoading, setProfileModalLoading] = useState(false);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
 
   const isAdmin = user?.role === "admin";
+
+  const {
+    toolbarVisible,
+    toolbarPosition,
+    handleCopy,
+    handleSelectAll,
+    handleHighlight,
+    handleToolbarClose
+  } = useTextSelection(contentRef);
 
   useEffect(() => {
     try {
@@ -473,17 +485,27 @@ const ArticleDetail: React.FC = () => {
             </div>
 
             {/* Article Content */}
-            <ContentRenderer
-              content={article.content}
-              className="[&_p]:leading-[1.8] [&_p]:mb-[1em] space-y-6 sm:space-y-8 text-card-text transition-all duration-300"
-              fontSizeClass={
-                fontSize === "sm"
-                  ? "[&_*:not(button):not(img):not(video):not(audio)]:text-[0.95rem] [&_p]:leading-[1.6]"
-                  : fontSize === "lg"
-                    ? "[&_*:not(button):not(img):not(video):not(audio)]:text-[1.35rem] [&_p]:leading-loose"
-                    : "[&_*:not(button):not(img):not(video):not(audio)]:text-base sm:[&_*:not(button):not(img):not(video):not(audio)]:text-lg [&_p]:leading-[1.8]"
-              }
-            />
+            <div ref={contentRef as React.RefObject<HTMLDivElement>} className="relative">
+              <ContentRenderer
+                content={article.content}
+                className="[&_p]:leading-[1.8] [&_p]:mb-[1em] space-y-6 sm:space-y-8 text-card-text transition-all duration-300"
+                fontSizeClass={
+                  fontSize === "sm"
+                    ? "[&_*:not(button):not(img):not(video):not(audio)]:text-[0.95rem] [&_p]:leading-[1.6]"
+                    : fontSize === "lg"
+                      ? "[&_*:not(button):not(img):not(video):not(audio)]:text-[1.35rem] [&_p]:leading-loose"
+                      : "[&_*:not(button):not(img):not(video):not(audio)]:text-base sm:[&_*:not(button):not(img):not(video):not(audio)]:text-lg [&_p]:leading-[1.8]"
+                }
+              />
+              <TextSelectionToolbar
+                visible={toolbarVisible}
+                position={toolbarPosition}
+                onCopy={handleCopy}
+                onSelectAll={handleSelectAll}
+                onHighlight={handleHighlight}
+                onClose={handleToolbarClose}
+              />
+            </div>
           </article>
         </div>
 
