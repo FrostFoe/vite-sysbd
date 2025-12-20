@@ -175,7 +175,10 @@ const ArticleEdit: React.FC = () => {
   }, [storageKey]);
 
   const handleImageUpload = useCallback(
-    async (e: React.ChangeEvent<HTMLInputElement>) => {
+    async (
+      e: React.ChangeEvent<HTMLInputElement>,
+      field: "image" | "image_bn" | "image_en" = "image"
+    ) => {
       const file = e.target.files?.[0];
       if (!file) return;
 
@@ -199,7 +202,22 @@ const ArticleEdit: React.FC = () => {
       try {
         const response = await adminApi.uploadImage(formData);
         if (response.success && response.url) {
-          setArticle((prev) => ({ ...prev, image: response.url }));
+          if (field === "image") {
+            setArticle((prev) => ({
+              ...prev,
+              image: response.url,
+              image_bn: response.url,
+            }));
+          } else if (field === "image_bn") {
+            setArticle((prev) => ({
+              ...prev,
+              image_bn: response.url,
+              image: response.url, // Sync main image with BN
+            }));
+          } else if (field === "image_en") {
+            setArticle((prev) => ({ ...prev, image_en: response.url }));
+          }
+
           showToastMsg("ছবি সফলভাবে আপলোড করা হয়েছে!");
         } else {
           showToastMsg(response.error || "ছবি আপলোডে ব্যর্থ!", "error");
@@ -874,6 +892,20 @@ const ArticleEdit: React.FC = () => {
                         }
                         className="w-full p-2 rounded border border-border-color bg-muted-bg text-sm"
                       />
+                      <div className="mt-2">
+                        <label
+                          htmlFor="image-upload-bn-sep"
+                          className="block text-xs font-bold mb-1"
+                        >
+                          Or Upload (Bengali)
+                        </label>
+                        <input
+                          id="image-upload-bn-sep"
+                          type="file"
+                          onChange={(e) => handleImageUpload(e, "image_bn")}
+                          className="w-full text-xs"
+                        />
+                      </div>
                     </div>
                     <div>
                       <label
@@ -893,6 +925,20 @@ const ArticleEdit: React.FC = () => {
                         }
                         className="w-full p-2 rounded border border-border-color bg-muted-bg text-sm"
                       />
+                      <div className="mt-2">
+                        <label
+                          htmlFor="image-upload-en-sep"
+                          className="block text-xs font-bold mb-1"
+                        >
+                          Or Upload (English)
+                        </label>
+                        <input
+                          id="image-upload-en-sep"
+                          type="file"
+                          onChange={(e) => handleImageUpload(e, "image_en")}
+                          className="w-full text-xs"
+                        />
+                      </div>
                     </div>
                   </div>
                 )}

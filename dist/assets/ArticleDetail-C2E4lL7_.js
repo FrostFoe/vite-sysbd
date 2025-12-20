@@ -1,1 +1,0 @@
-import"./component-Layout-DOoomvQR.js";import{t as e}from"./page-ArticleDetail.tsx-BX2GY1J9.js";import"./component-common-BdQkaVD7.js";import"./page-Admin-BPRjK111.js";import"./component-admin-CdLjXT1L.js";export{e as default};
