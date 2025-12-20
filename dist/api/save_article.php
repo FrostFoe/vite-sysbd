@@ -67,82 +67,90 @@ $allow_submissions = isset($_POST["allow_submissions"]) ? 1 : 0;
 $read_time_bn = calculate_read_time_from_text($content_bn, "bn");
 $read_time_en = calculate_read_time_from_text($content_en, "en");
 
-$stmt = $pdo->prepare("SELECT id FROM articles WHERE id = ?");
-$stmt->execute([$id]);
-$exists = $stmt->fetch();
+try {
+    $stmt = $pdo->prepare("SELECT id FROM articles WHERE id = ?");
+    $stmt->execute([$id]);
+    $exists = $stmt->fetch();
 
-if ($exists) {
-    $stmt = $pdo->prepare(
-        "UPDATE articles SET 
-            title_bn=?, title_en=?, 
-            summary_bn=?, summary_en=?, 
-            content_bn=?, content_en=?, 
-            read_time_bn=?, read_time_en=?,
-            meta_title=?, meta_description=?, meta_keywords=?,
-            category_id=?, section_id=?, 
-            image_bn=?, image_en=?, use_separate_images=?,
-            leaked_documents=?, status=?, allow_submissions=?
-        WHERE id=?",
-    );
-    $stmt->execute([
-        $title_bn,
-        $title_en,
-        $summary_bn,
-        $summary_en,
-        $content_bn,
-        $content_en,
-        $read_time_bn,
-        $read_time_en,
-        $meta_title,
-        $meta_description,
-        $meta_keywords,
-        $category_id,
-        $section_id,
-        $image_bn,
-        $image_en,
-        $use_separate_images,
-        $leaked_documents,
-        $status,
-        $allow_submissions,
-        $id,
-    ]);
-} else {
-    $stmt = $pdo->prepare(
-        "INSERT INTO articles (
-            id, 
-            title_bn, title_en, 
-            summary_bn, summary_en, 
-            content_bn, content_en, 
-            read_time_bn, read_time_en,
-            meta_title, meta_description, meta_keywords,
-            category_id, section_id, 
-            image_bn, image_en, use_separate_images,
-            leaked_documents, status, allow_submissions, published_at
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())",
-    );
-    $stmt->execute([
-        $id,
-        $title_bn,
-        $title_en,
-        $summary_bn,
-        $summary_en,
-        $content_bn,
-        $content_en,
-        $read_time_bn,
-        $read_time_en,
-        $meta_title,
-        $meta_description,
-        $meta_keywords,
-        $category_id,
-        $section_id,
-        $image_bn,
-        $image_en,
-        $use_separate_images,
-        $leaked_documents,
-        $status,
-        $allow_submissions,
-    ]);
+    if ($exists) {
+        $stmt = $pdo->prepare(
+            "UPDATE articles SET 
+                title_bn=?, title_en=?, 
+                summary_bn=?, summary_en=?, 
+                content_bn=?, content_en=?, 
+                read_time_bn=?, read_time_en=?,
+                meta_title=?, meta_description=?, meta_keywords=?,
+                category_id=?, section_id=?, 
+                image_bn=?, image_en=?, use_separate_images=?,
+                leaked_documents=?, status=?, allow_submissions=?
+            WHERE id=?",
+        );
+        $stmt->execute([
+            $title_bn,
+            $title_en,
+            $summary_bn,
+            $summary_en,
+            $content_bn,
+            $content_en,
+            $read_time_bn,
+            $read_time_en,
+            $meta_title,
+            $meta_description,
+            $meta_keywords,
+            $category_id,
+            $section_id,
+            $image_bn,
+            $image_en,
+            $use_separate_images,
+            $leaked_documents,
+            $status,
+            $allow_submissions,
+            $id,
+        ]);
+    } else {
+        $stmt = $pdo->prepare(
+            "INSERT INTO articles (
+                id, 
+                title_bn, title_en, 
+                summary_bn, summary_en, 
+                content_bn, content_en, 
+                read_time_bn, read_time_en,
+                meta_title, meta_description, meta_keywords,
+                category_id, section_id, 
+                image_bn, image_en, use_separate_images,
+                leaked_documents, status, allow_submissions, published_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())",
+        );
+        $stmt->execute([
+            $id,
+            $title_bn,
+            $title_en,
+            $summary_bn,
+            $summary_en,
+            $content_bn,
+            $content_en,
+            $read_time_bn,
+            $read_time_en,
+            $meta_title,
+            $meta_description,
+            $meta_keywords,
+            $category_id,
+            $section_id,
+            $image_bn,
+            $image_en,
+            $use_separate_images,
+            $leaked_documents,
+            $status,
+            $allow_submissions,
+        ]);
+    }
+
+    send_response(["success" => true, "id" => $id]);
+} catch (PDOException $e) {
+    error_log("Database error in save_article.php: " . $e->getMessage());
+    send_response(["error" => "Database error: " . $e->getMessage()], 500);
+} catch (Exception $e) {
+    error_log("Error in save_article.php: " . $e->getMessage());
+    send_response(["error" => "Error: " . $e->getMessage()], 500);
 }
-
-send_response(["success" => true, "id" => $id]);
 ?>
