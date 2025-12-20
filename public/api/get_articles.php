@@ -1,7 +1,7 @@
 <?php
 require_once "api_header.php";
 require_once __DIR__ . "/../lib/CacheManager.php";
-session_start();
+require_once __DIR__ . '/../lib/session.php';
 
 $status = isset($_GET["status"]) ? $_GET["status"] : "all";
 $isAdmin = isset($_SESSION["user_role"]) && $_SESSION["user_role"] === "admin";

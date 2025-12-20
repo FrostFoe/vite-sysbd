@@ -3,7 +3,7 @@ require_once __DIR__ . "/../config/db.php";
 require_once __DIR__ . "/../lib/security.php";
 
 header("Content-Type: application/json");
-session_start();
+require_once __DIR__ . '/../lib/session.php';
 
 $data = json_decode(file_get_contents("php://input"), true);
 
@@ -54,6 +54,7 @@ try {
 
     $userId = $pdo->lastInsertId();
 
+    session_regenerate_id(true);
     $_SESSION["user_id"] = $userId;
     $_SESSION["user_email"] = $email;
     $_SESSION["user_role"] = "user";

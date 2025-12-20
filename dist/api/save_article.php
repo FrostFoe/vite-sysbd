@@ -22,7 +22,7 @@ function calculate_read_time_from_text($text, $lang = "en")
     }
 }
 
-session_start();
+require_once __DIR__ . '/../lib/session.php';
 
 if (!isset($_SESSION["user_role"]) || $_SESSION["user_role"] !== "admin") {
     send_response(["error" => "Unauthorized"], 403);

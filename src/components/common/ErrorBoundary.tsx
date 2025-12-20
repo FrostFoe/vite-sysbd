@@ -24,12 +24,12 @@ export class ErrorBoundary extends React.Component<Props, State> {
       hasError: false,
       error: null,
       errorInfo: null,
-      autoReloadCountdown: 5,
+      autoReloadCountdown: 3,
     };
   }
 
   public static getDerivedStateFromError(error: Error): State {
-    return { hasError: true, error, errorInfo: null, autoReloadCountdown: 5 };
+    return { hasError: true, error, errorInfo: null, autoReloadCountdown: 3 };
   }
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
@@ -38,13 +38,13 @@ export class ErrorBoundary extends React.Component<Props, State> {
       hasError: true,
       error,
       errorInfo,
-      autoReloadCountdown: 5,
+      autoReloadCountdown: 3,
     });
 
     this.reloadTimer = setTimeout(() => {
       console.log("Auto-reloading due to error...");
       window.location.reload();
-    }, 5000);
+    }, 3000);
 
     this.countdownInterval = setInterval(() => {
       this.setState((prev) => ({

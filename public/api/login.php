@@ -3,7 +3,7 @@ require_once __DIR__ . "/../config/db.php";
 require_once __DIR__ . "/../lib/security.php";
 
 header("Content-Type: application/json");
-session_start();
+require_once __DIR__ . '/../lib/session.php';
 
 $data = json_decode(file_get_contents("php://input"), true);
 
@@ -33,6 +33,7 @@ try {
     $user = $stmt->fetch();
 
     if ($user && password_verify($password, $user["password"])) {
+        session_regenerate_id(true);
         $_SESSION["user_id"] = $user["id"];
         $_SESSION["user_email"] = $user["email"];
         $_SESSION["user_role"] = $user["role"];
@@ -46,6 +47,7 @@ try {
             ],
         ]);
     } else {
+        usleep(500000); // Delay execution by 0.5 seconds to slow down brute-force attacks
         http_response_code(401);
         echo json_encode([
             "success" => false,

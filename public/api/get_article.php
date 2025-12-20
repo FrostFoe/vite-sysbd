@@ -26,7 +26,7 @@ if (!$articleRaw) {
 
 $status = $articleRaw["status"] ?? "published";
 
-session_start();
+require_once __DIR__ . '/../lib/session.php';
 $isAdmin = isset($_SESSION["user_role"]) && $_SESSION["user_role"] === "admin";
 
 if ($status !== "published" && !$isAdmin) {

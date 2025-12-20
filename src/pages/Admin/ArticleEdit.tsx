@@ -568,7 +568,7 @@ const ArticleEdit: React.FC = () => {
                   ) : (
                     <Sparkles className="w-3 h-3" />
                   )}
-                  {isGeneratingMeta ? "Generating..." : "Generate with AI"}
+                  {isGeneratingMeta ? "Generating..." : "AI"}
                 </button>
               </div>
               <div className="mb-4">

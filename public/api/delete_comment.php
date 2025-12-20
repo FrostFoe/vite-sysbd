@@ -6,7 +6,7 @@ if ($_SERVER["REQUEST_METHOD"] !== "POST") {
     send_response(["error" => "Method not allowed"], 405);
 }
 
-session_start();
+require_once __DIR__ . '/../lib/session.php';
 if (!isset($_SESSION["user_role"]) || $_SESSION["user_role"] !== "admin") {
     send_response(["error" => "Unauthorized"], 403);
 }

@@ -6,7 +6,7 @@ require_once __DIR__ . "/../lib/FileUploader.php";
 header("Content-Type: application/json");
 
 try {
-    session_start();
+    require_once __DIR__ . '/../lib/session.php';
     if (!isset($_SESSION["user_role"]) || $_SESSION["user_role"] !== "admin") {
         send_response(["success" => false, "error" => "Unauthorized"], 403);
         exit();
