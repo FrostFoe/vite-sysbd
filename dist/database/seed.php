@@ -205,8 +205,8 @@ $articles = [
 
 $stmt = $pdo->prepare(
     "INSERT INTO articles 
-    (id, section_id, category_id, title_bn, summary_bn, content_bn, read_time_bn, title_en, summary_en, content_en, read_time_en, image, status) 
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+    (id, section_id, category_id, title_bn, summary_bn, content_bn, read_time_bn, title_en, summary_en, content_en, read_time_en, image_bn, image_en, use_separate_images, status) 
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
 );
 
 foreach ($articles as $article) {

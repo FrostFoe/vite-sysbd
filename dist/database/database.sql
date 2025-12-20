@@ -55,7 +55,9 @@ CREATE TABLE IF NOT EXISTS `articles` (
     `read_time_bn` varchar(50) DEFAULT NULL,
     `read_time_en` varchar(50) DEFAULT NULL,
 
-  `image` longtext,
+  `image_bn` longtext,
+  `image_en` longtext,
+  `use_separate_images` tinyint(1) DEFAULT 0,
   `published_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
   `meta_title` varchar(255) DEFAULT NULL,
   `meta_description` text,

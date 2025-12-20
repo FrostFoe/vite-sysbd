@@ -89,7 +89,9 @@ function get_data(
             a.section_id,
             {$artTitleCol} as title,
             {$artSummaryCol} as summary,
-            a.image,
+            a.image_bn,
+            a.image_en,
+            a.use_separate_images,
             a.published_at,
             a.created_at,
             a.category_id,
@@ -145,12 +147,18 @@ function get_data(
 
             foreach ($sectionArticles as $article) {
                 $categoryName = $article["category_title"] ?? null;
+                
+                // Determine which image to show
+                $displayImage = $article["image_bn"];
+                if ($article["use_separate_images"] && $lang === "en" && !empty($article["image_en"])) {
+                    $displayImage = $article["image_en"];
+                }
 
                 $articleData = [
                     "id" => $article["id"],
                     "title" => $article["title"],
                     "summary" => $article["summary"],
-                    "image" => $article["image"],
+                    "image" => $displayImage,
                     "published_at" => $article["published_at"],
                     "category" =>
                         $categoryName ??

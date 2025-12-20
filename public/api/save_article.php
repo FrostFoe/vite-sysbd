@@ -55,7 +55,11 @@ $meta_keywords = isset($_POST["meta_keywords"])
 
 $category_id = $_POST["category_id"] ?? "";
 $section_id = $_POST["section_id"] ?? ($_POST["sectionId"] ?? "news");
-$image = $_POST["image"] ?? "";
+
+$image_bn = $_POST["image_bn"] ?? ($_POST["image"] ?? ""); // Fallback to 'image' for backward compatibility
+$image_en = $_POST["image_en"] ?? "";
+$use_separate_images = isset($_POST["use_separate_images"]) && $_POST["use_separate_images"] === "true" ? 1 : 0;
+
 $leaked_documents = $_POST["leaked_documents"] ?? null;
 $status = $_POST["status"] ?? "draft";
 $allow_submissions = isset($_POST["allow_submissions"]) ? 1 : 0;
@@ -76,7 +80,8 @@ if ($exists) {
             read_time_bn=?, read_time_en=?,
             meta_title=?, meta_description=?, meta_keywords=?,
             category_id=?, section_id=?, 
-            image=?, leaked_documents=?, status=?, allow_submissions=?
+            image_bn=?, image_en=?, use_separate_images=?,
+            leaked_documents=?, status=?, allow_submissions=?
         WHERE id=?",
     );
     $stmt->execute([
@@ -93,7 +98,9 @@ if ($exists) {
         $meta_keywords,
         $category_id,
         $section_id,
-        $image,
+        $image_bn,
+        $image_en,
+        $use_separate_images,
         $leaked_documents,
         $status,
         $allow_submissions,
@@ -109,8 +116,9 @@ if ($exists) {
             read_time_bn, read_time_en,
             meta_title, meta_description, meta_keywords,
             category_id, section_id, 
-            image, leaked_documents, status, allow_submissions, published_at
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())",
+            image_bn, image_en, use_separate_images,
+            leaked_documents, status, allow_submissions, published_at
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())",
     );
     $stmt->execute([
         $id,
@@ -127,7 +135,9 @@ if ($exists) {
         $meta_keywords,
         $category_id,
         $section_id,
-        $image,
+        $image_bn,
+        $image_en,
+        $use_separate_images,
         $leaked_documents,
         $status,
         $allow_submissions,

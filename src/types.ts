@@ -26,6 +26,9 @@ export interface Article {
   content_en?: string;
   readTime: string;
   image: string;
+  image_bn?: string;
+  image_en?: string;
+  use_separate_images?: boolean;
   published_at: string;
   meta_title?: string;
   meta_description?: string;
@@ -53,6 +56,9 @@ export interface AdminArticle {
   meta_keywords?: string;
   status: "published" | "draft" | "archived";
   image: string;
+  image_bn?: string;
+  image_en?: string;
+  use_separate_images?: boolean;
   created_at?: string;
   published_at?: string;
   category_id?: string;

@@ -96,6 +96,11 @@ const ArticleEdit: React.FC = () => {
               content_bn: articleRes.article.content_bn || "",
               content_en: articleRes.article.content_en || "",
               image: articleRes.article.image || "",
+              image_bn:
+                articleRes.article.image_bn || articleRes.article.image || "",
+              image_en: articleRes.article.image_en || "",
+              use_separate_images:
+                articleRes.article.use_separate_images || false,
               category_id: articleRes.article.category_id || "",
               section_id: articleRes.article.section_id || "",
               status: articleRes.article.status,
@@ -221,6 +226,12 @@ const ArticleEdit: React.FC = () => {
       formData.append("content_bn", contentBnRef.current);
       formData.append("content_en", contentEnRef.current);
       formData.append("image", article.image || "");
+      formData.append("image_bn", article.image_bn || article.image || "");
+      formData.append("image_en", article.image_en || "");
+      formData.append(
+        "use_separate_images",
+        article.use_separate_images ? "true" : "false"
+      );
       formData.append("category_id", article.category_id || "");
       formData.append("sectionId", article.section_id || "");
       formData.append("status", article.status || "draft");
@@ -789,44 +800,122 @@ const ArticleEdit: React.FC = () => {
               </h3>
 
               <div className="mb-4">
-                <label
-                  htmlFor="featured-image-url"
-                  className="block text-xs font-bold mb-1"
-                >
-                  বৈশিষ্ট্যযুক্ত ছবির URL
+                <label className="flex items-center gap-2 cursor-pointer mb-2">
+                  <input
+                    type="checkbox"
+                    checked={article.use_separate_images || false}
+                    onChange={(e) =>
+                      setArticle((prev) => ({
+                        ...prev,
+                        use_separate_images: e.target.checked,
+                      }))
+                    }
+                    className="form-checkbox h-4 w-4 text-bbcRed rounded"
+                  />
+                  <span className="text-xs font-bold">
+                    Use separate image for English version
+                  </span>
                 </label>
-                <input
-                  id="featured-image-url"
-                  name="image"
-                  value={article.image || ""}
-                  onChange={(e) =>
-                    setArticle((prev) => ({ ...prev, image: e.target.value }))
-                  }
-                  className="w-full p-2 rounded border border-border-color bg-muted-bg text-sm"
-                />
-              </div>
 
-              <div className="mb-4">
-                <label
-                  htmlFor="image-upload"
-                  className="block text-xs font-bold mb-1"
-                >
-                  অথবা আপলোড করুন
-                </label>
-                <input
-                  id="image-upload"
-                  type="file"
-                  onChange={handleImageUpload}
-                  className="w-full text-xs"
-                />
+                {!article.use_separate_images ? (
+                  <>
+                    <label
+                      htmlFor="featured-image-url"
+                      className="block text-xs font-bold mb-1"
+                    >
+                      Featured Image URL (Global / Bengali)
+                    </label>
+                    <input
+                      id="featured-image-url"
+                      name="image"
+                      value={article.image || ""}
+                      onChange={(e) =>
+                        setArticle((prev) => ({
+                          ...prev,
+                          image: e.target.value,
+                          image_bn: e.target.value,
+                        }))
+                      }
+                      className="w-full p-2 rounded border border-border-color bg-muted-bg text-sm"
+                    />
+                    <div className="mt-2">
+                      <label
+                        htmlFor="image-upload-bn"
+                        className="block text-xs font-bold mb-1"
+                      >
+                        Or Upload
+                      </label>
+                      <input
+                        id="image-upload-bn"
+                        type="file"
+                        onChange={(e) => handleImageUpload(e)}
+                        className="w-full text-xs"
+                      />
+                    </div>
+                  </>
+                ) : (
+                  <div className="space-y-4">
+                    <div>
+                      <label
+                        htmlFor="image-bn-url"
+                        className="block text-xs font-bold mb-1"
+                      >
+                        Bengali Image URL
+                      </label>
+                      <input
+                        id="image-bn-url"
+                        value={article.image_bn || article.image || ""}
+                        onChange={(e) =>
+                          setArticle((prev) => ({
+                            ...prev,
+                            image_bn: e.target.value,
+                            image: e.target.value,
+                          }))
+                        }
+                        className="w-full p-2 rounded border border-border-color bg-muted-bg text-sm"
+                      />
+                    </div>
+                    <div>
+                      <label
+                        htmlFor="image-en-url"
+                        className="block text-xs font-bold mb-1"
+                      >
+                        English Image URL
+                      </label>
+                      <input
+                        id="image-en-url"
+                        value={article.image_en || ""}
+                        onChange={(e) =>
+                          setArticle((prev) => ({
+                            ...prev,
+                            image_en: e.target.value,
+                          }))
+                        }
+                        className="w-full p-2 rounded border border-border-color bg-muted-bg text-sm"
+                      />
+                    </div>
+                  </div>
+                )}
               </div>
 
               <div className="aspect-video bg-muted-bg rounded overflow-hidden">
                 <img
                   id="image-preview"
-                  src={article.image || ""}
+                  src={
+                    article.use_separate_images
+                      ? article.image_en || article.image_bn
+                      : article.image || ""
+                  }
                   alt="Preview"
-                  className={`w-full h-full object-cover ${!article.image ? "opacity-50" : ""}`}
+                  className={`w-full h-full object-cover ${
+                    !(
+                      article.use_separate_images
+                        ? article.image_en || article.image_bn
+                        : article.image
+                    )
+                      ? "opacity-50"
+                      : ""
+                  }`}
                 />
               </div>
             </div>

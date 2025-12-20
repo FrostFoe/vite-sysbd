@@ -53,7 +53,12 @@ $article = [
         $lang === "en"
             ? $articleRaw["read_time_en"] ?? ""
             : $articleRaw["read_time_bn"] ?? "",
-    "image" => $articleRaw["image"],
+    "image" => ($articleRaw["use_separate_images"] && $lang === "en" && !empty($articleRaw["image_en"])) 
+        ? $articleRaw["image_en"] 
+        : $articleRaw["image_bn"],
+    "image_bn" => $articleRaw["image_bn"],
+    "image_en" => $articleRaw["image_en"],
+    "use_separate_images" => (bool) $articleRaw["use_separate_images"],
     "meta_title" => $articleRaw["meta_title"] ?? null,
     "meta_description" => $articleRaw["meta_description"] ?? null,
     "meta_keywords" => $articleRaw["meta_keywords"] ?? null,

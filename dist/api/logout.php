@@ -1,6 +1,5 @@
 <?php
-require_once __DIR__ . '/../lib/session.php';
+require_once "api_header.php";
 session_destroy();
-header("Content-Type: application/json");
 echo json_encode(["success" => true]);
 ?>
