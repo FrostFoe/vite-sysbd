@@ -26,21 +26,24 @@ foreach ($users as $user) {
     }
 }
 
-$adminId = $pdo
-    ->query("SELECT id FROM users WHERE email = 'admin@breachtimes.com'")
-    ->fetch(PDO::FETCH_ASSOC)("id");
-$johnId = $pdo
-    ->query("SELECT id FROM users WHERE email = 'john@example.com'")
-    ->fetch(PDO::FETCH_ASSOC)("id");
-$sarahId = $pdo
-    ->query("SELECT id FROM users WHERE email = 'sarah@example.com'")
-    ->fetch(PDO::FETCH_ASSOC)("id");
-$mikeId = $pdo
-    ->query("SELECT id FROM users WHERE email = 'mike@example.com'")
-    ->fetch(PDO::FETCH_ASSOC)("id");
-$emmaId = $pdo
-    ->query("SELECT id FROM users WHERE email = 'emma@example.com'")
-    ->fetch(PDO::FETCH_ASSOC)("id");
+$adminResult = $pdo->query("SELECT id FROM users WHERE email = 'admin@breachtimes.com'")->fetch(PDO::FETCH_ASSOC);
+$adminId = $adminResult ? $adminResult["id"] : null;
+
+$johnResult = $pdo->query("SELECT id FROM users WHERE email = 'john@example.com'")->fetch(PDO::FETCH_ASSOC);
+$johnId = $johnResult ? $johnResult["id"] : null;
+
+$sarahResult = $pdo->query("SELECT id FROM users WHERE email = 'sarah@example.com'")->fetch(PDO::FETCH_ASSOC);
+$sarahId = $sarahResult ? $sarahResult["id"] : null;
+
+$mikeResult = $pdo->query("SELECT id FROM users WHERE email = 'mike@example.com'")->fetch(PDO::FETCH_ASSOC);
+$mikeId = $mikeResult ? $mikeResult["id"] : null;
+
+$emmaResult = $pdo->query("SELECT id FROM users WHERE email = 'emma@example.com'")->fetch(PDO::FETCH_ASSOC);
+$emmaId = $emmaResult ? $emmaResult["id"] : null;
+
+if (!$adminId) {
+    throw new Exception("Required admin user not found after seeding.");
+}
 
 echo "\n--- Seeding Categories ---\n";
 $cats = [
@@ -296,7 +299,7 @@ $stmt = $pdo->prepare(
 foreach ($replies as $index => $reply) {
     $articleId = $pdo
         ->query("SELECT article_id FROM comments WHERE id = " . $reply[0])
-        ->fetch(PDO::FETCH_ASSOC)("article_id");
+        ->fetch(PDO::FETCH_ASSOC)["article_id"];
     $stmt->execute([$articleId, $reply[1], $reply[2], $reply[3], $reply[0]]);
     echo "✓ Reply created by: " . $reply[2] . "\n";
 }

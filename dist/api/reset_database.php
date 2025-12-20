@@ -69,7 +69,7 @@ try {
             200,
         );
     }
-} catch (Exception $e) {
+} catch (Throwable $e) {
     if (php_sapi_name() === "cli") {
         echo "Error: Database reset failed: " . $e->getMessage() . "\n";
     } else {
