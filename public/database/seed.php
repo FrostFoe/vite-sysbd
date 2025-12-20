@@ -28,19 +28,19 @@ foreach ($users as $user) {
 
 $adminId = $pdo
     ->query("SELECT id FROM users WHERE email = 'admin@breachtimes.com'")
-    ->fetch(PDO::FETCH_ASSOC)["id"];
+    ->fetch(PDO::FETCH_ASSOC)("id");
 $johnId = $pdo
     ->query("SELECT id FROM users WHERE email = 'john@example.com'")
-    ->fetch(PDO::FETCH_ASSOC)["id"];
+    ->fetch(PDO::FETCH_ASSOC)("id");
 $sarahId = $pdo
     ->query("SELECT id FROM users WHERE email = 'sarah@example.com'")
-    ->fetch(PDO::FETCH_ASSOC)["id"];
+    ->fetch(PDO::FETCH_ASSOC)("id");
 $mikeId = $pdo
     ->query("SELECT id FROM users WHERE email = 'mike@example.com'")
-    ->fetch(PDO::FETCH_ASSOC)["id"];
+    ->fetch(PDO::FETCH_ASSOC)("id");
 $emmaId = $pdo
     ->query("SELECT id FROM users WHERE email = 'emma@example.com'")
-    ->fetch(PDO::FETCH_ASSOC)["id"];
+    ->fetch(PDO::FETCH_ASSOC)("id");
 
 echo "\n--- Seeding Categories ---\n";
 $cats = [
@@ -92,7 +92,9 @@ $articles = [
         "New ways to protect against cyber threats",
         "<h2>Importance of Cybersecurity</h2><p>In the digital age, cybersecurity is extremely important. Thousands of hacking incidents occur worldwide every day. Take proper steps to keep your personal information safe.</p><p>Strong passwords, two-factor authentication, and regular updates keep your devices secure.</p>",
         "4 min",
+        "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=1200",
         "",
+        0,
         "published",
     ],
     [
@@ -107,7 +109,9 @@ $articles = [
         "Major security incident affects millions of customers",
         "<h2>Banking Security Crisis</h2><p>A major banking institution has fallen victim to hacking with sensitive customer information stolen.</p><p>Banks are now strengthening security measures and warning customers about protective steps.</p>",
         "5 min",
+        "https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&q=80&w=1200",
         "",
+        0,
         "published",
     ],
     [
@@ -122,7 +126,9 @@ $articles = [
         "Artificial intelligence detects threats more efficiently",
         "<h2>AI and Cybersecurity</h2><p>Using artificial intelligence technology, security experts can now detect threats much faster.</p><p>Machine learning algorithms are helping prevent new types of attacks.</p>",
         "6 min",
+        "https://images.unsplash.com/photo-1555255707-c07966088b7b?auto=format&fit=crop&q=80&w=1200",
         "",
+        0,
         "published",
     ],
     [
@@ -137,7 +143,9 @@ $articles = [
         "Researchers warn about dangerous new malware variant",
         "<h2>New Malware Threat</h2><p>Security researchers have discovered a new malware strain that is highly dangerous and spreads easily.</p><p>Users are advised to keep their systems updated.</p>",
         "3 min",
+        "https://images.unsplash.com/photo-1563206767-5b18f218e8de?auto=format&fit=crop&q=80&w=1200",
         "",
+        0,
         "published",
     ],
 
@@ -153,7 +161,9 @@ $articles = [
         "Learn cybersecurity from experts in 15 minutes",
         "<h2>Complete Cybersecurity Course</h2><p>Learn everything about cybersecurity from experts.</p><video src=\"https://www.w3schools.com/html/mov_bbb.mp4\" poster=\"https://via.placeholder.com/1280x720.png?text=Video+Thumbnail\" controls=\"controls\" style=\"max-width: 100%; height: auto;\"></video>",
         "15 min",
+        "https://images.unsplash.com/photo-1510511459019-5dee995ad896?auto=format&fit=crop&q=80&w=1200",
         "",
+        0,
         "published",
     ],
     [
@@ -163,12 +173,14 @@ $articles = [
         "এআই এর ভবিষ্যৎ এবং সম্ভাবনা",
         "এআই প্রযুক্তি কীভাবে আমাদের জীবনকে পরিবর্তন করবে তার বিশ্লেষণ।",
         "<h2>The Future of AI</h2><p>কৃত্রিম বুদ্ধিমত্তা কীভাবে ভবিষ্যতকে গড়বে তা নিয়ে গভীর আলোচনা।</p>",
-        "२०मिनिट",
+        "২০মিনিত",
         "The Future of AI and Its Possibilities",
         "Analysis of how AI will change our lives",
         "<h2>The Future of AI</h2><p>Deep discussion on how artificial intelligence will shape the future.</p>",
         "20 min",
+        "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&q=80&w=1200",
         "",
+        0,
         "published",
     ],
     [
@@ -183,7 +195,9 @@ $articles = [
         "Listen to experts discussing latest cybersecurity news",
         "<h2>Cybersecurity Podcast Episode 1</h2><p>Insightful discussion from cybersecurity experts.</p>",
         "45 min",
+        "https://images.unsplash.com/photo-1590602847861-f357a9332bbc?auto=format&fit=crop&q=80&w=1200",
         "",
+        0,
         "published",
     ],
     [
@@ -198,7 +212,9 @@ $articles = [
         "Detailed discussion about protecting your personal information",
         "<h2>Data Privacy Podcast Episode 1</h2><p>About data privacy and ways to protect personal information.</p>",
         "50 min",
+        "https://images.unsplash.com/photo-1560732488-6b0df240254a?auto=format&fit=crop&q=80&w=1200",
         "",
+        0,
         "published",
     ],
 ];
@@ -280,7 +296,7 @@ $stmt = $pdo->prepare(
 foreach ($replies as $index => $reply) {
     $articleId = $pdo
         ->query("SELECT article_id FROM comments WHERE id = " . $reply[0])
-        ->fetch(PDO::FETCH_ASSOC)["article_id"];
+        ->fetch(PDO::FETCH_ASSOC)("article_id");
     $stmt->execute([$articleId, $reply[1], $reply[2], $reply[3], $reply[0]]);
     echo "✓ Reply created by: " . $reply[2] . "\n";
 }
