@@ -1,4 +1,3 @@
-import { ChevronDown } from "lucide-react";
 import type React from "react";
 import { useEffect, useRef, useState } from "react";
 
@@ -57,7 +56,6 @@ export const CustomDropdown: React.FC<CustomDropdownProps> = ({
       className={`custom-dropdown-wrapper ${className}`}
       id={id}
     >
-      {}
       <button
         type="button"
         onClick={() => !disabled && setIsOpen(!isOpen)}
@@ -69,10 +67,8 @@ export const CustomDropdown: React.FC<CustomDropdownProps> = ({
         <span className={`${!value ? "custom-dropdown-item placeholder" : ""}`}>
           {displayLabel}
         </span>
-        <ChevronDown className="custom-dropdown-icon" />
       </button>
 
-      {}
       <div className={`custom-dropdown-menu ${isOpen ? "open" : ""}`}>
         {options.length === 0 ? (
           <div className="px-3 py-2 text-sm text-muted-text">

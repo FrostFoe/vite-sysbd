@@ -180,29 +180,6 @@
   }
 }
 
-/* Quill Dark Mode Overrides & Fixes */
-.ql-toolbar {
-  @apply bg-muted-bg border-border-color rounded-t-lg;
-}
-
-.ql-container {
-  @apply bg-card border-border-color rounded-b-lg font-sans;
-}
-
-.ql-editor {
-  @apply min-h-[200px] text-base text-card-text;
-}
-
-.dark .ql-toolbar .ql-stroke {
-  stroke: var(--text-muted);
-}
-.dark .ql-toolbar .ql-fill {
-  fill: var(--text-muted);
-}
-.dark .ql-editor.ql-blank::before {
-  color: var(--text-muted);
-}
-
 /* High Contrast */
 @media (prefers-contrast: more) {
   button,
@@ -577,7 +554,7 @@ textarea:focus-visible {
   }
 }
 
-/* Custom Dropdown Styles */
+/* Custom Dropdown Styles - Without Icon */
 .custom-dropdown-wrapper {
   @apply relative w-full inline-block;
 }
@@ -608,14 +585,6 @@ textarea:focus-visible {
 
 .custom-dropdown-item.placeholder {
   @apply text-muted-text;
-}
-
-.custom-dropdown-icon {
-  @apply w-4 h-4 text-muted-text transition-transform duration-300;
-}
-
-.custom-dropdown-button.open .custom-dropdown-icon {
-  @apply rotate-180;
 }
 
 /* Smooth Transition for Links */
