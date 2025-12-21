@@ -53,11 +53,11 @@ const ContentRenderer: React.FC<ContentRendererProps> = ({
             width={widthMatch ? widthMatch[1] : undefined}
             height={heightMatch ? heightMatch[1] : undefined}
             className="my-4"
-          />
+          />,
         );
 
         return `__CUSTOM_COMPONENT_PLACEHOLDER_${componentIndex}__`;
-      }
+      },
     );
 
     processedContent = processedContent.replace(
@@ -87,20 +87,20 @@ const ContentRenderer: React.FC<ContentRendererProps> = ({
             muted={muted}
             controls={controls}
             className="my-4"
-          />
+          />,
         );
 
         return `__CUSTOM_COMPONENT_PLACEHOLDER_${componentIndex}__`;
-      }
+      },
     );
 
     const parts = processedContent.split(
-      /(__CUSTOM_COMPONENT_PLACEHOLDER_\d+__)/
+      /(__CUSTOM_COMPONENT_PLACEHOLDER_\d+__)/,
     );
 
     const convertNodeToReactElement = (
       node: Node,
-      nodeKey: string
+      nodeKey: string,
     ): React.ReactNode => {
       if (node.nodeType === Node.TEXT_NODE) {
         const text = node.textContent;
@@ -123,8 +123,8 @@ const ContentRenderer: React.FC<ContentRendererProps> = ({
           .map((childNode, childIndex) =>
             convertNodeToReactElement(
               childNode,
-              `${nodeKey}-child-${childIndex}`
-            )
+              `${nodeKey}-child-${childIndex}`,
+            ),
           )
           .filter((child) => child !== null && child !== undefined);
 
@@ -137,7 +137,7 @@ const ContentRenderer: React.FC<ContentRendererProps> = ({
       .map((part, partIndex) => {
         if (part.startsWith("__CUSTOM_COMPONENT_PLACEHOLDER_")) {
           const matchResult = part.match(
-            /__CUSTOM_COMPONENT_PLACEHOLDER_(\d+)__/
+            /__CUSTOM_COMPONENT_PLACEHOLDER_(\d+)__/,
           );
           if (matchResult) {
             const componentIndex = parseInt(matchResult[1], 10);
@@ -152,8 +152,8 @@ const ContentRenderer: React.FC<ContentRendererProps> = ({
             .map((node, nodeIndex) =>
               convertNodeToReactElement(
                 node,
-                `part-${partIndex}-node-${nodeIndex}`
-              )
+                `part-${partIndex}-node-${nodeIndex}`,
+              ),
             )
             .filter((item) => item !== null);
         }
@@ -200,7 +200,7 @@ const ContentRenderer: React.FC<ContentRendererProps> = ({
 
       left = Math.max(
         toolbarHalfWidth,
-        Math.min(left, containerRect.width - toolbarHalfWidth)
+        Math.min(left, containerRect.width - toolbarHalfWidth),
       );
 
       if (containerRect.width < 320) {
@@ -255,7 +255,7 @@ const ContentRenderer: React.FC<ContentRendererProps> = ({
     if (selectedText) {
       window.open(
         `https://www.google.com/search?q=${encodeURIComponent(selectedText)}`,
-        "_blank"
+        "_blank",
       );
       setToolbarVisible(false);
     }
@@ -326,7 +326,7 @@ const ContentRenderer: React.FC<ContentRendererProps> = ({
 
           left = Math.max(
             toolbarHalfWidth,
-            Math.min(left, containerRect.width - toolbarHalfWidth)
+            Math.min(left, containerRect.width - toolbarHalfWidth),
           );
 
           if (containerRect.width < 320) {

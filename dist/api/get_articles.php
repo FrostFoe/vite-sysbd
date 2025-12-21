@@ -1,7 +1,7 @@
 <?php
 require_once "api_header.php";
 require_once __DIR__ . "/../lib/CacheManager.php";
-require_once __DIR__ . '/../lib/session.php';
+require_once __DIR__ . "/../lib/session.php";
 
 $status = isset($_GET["status"]) ? $_GET["status"] : "all";
 $isAdmin = isset($_SESSION["user_role"]) && $_SESSION["user_role"] === "admin";
@@ -17,8 +17,8 @@ if ($_SERVER["REQUEST_METHOD"] !== "GET") {
 $search = isset($_GET["search"]) ? trim($_GET["search"]) : "";
 $catFilter = isset($_GET["cat"]) ? $_GET["cat"] : "";
 
-$page = isset($_GET["page"]) ? max(1, (int)$_GET["page"]) : 1;
-$limit = isset($_GET["limit"]) ? min(100, max(1, (int)$_GET["limit"])) : 20;
+$page = isset($_GET["page"]) ? max(1, (int) $_GET["page"]) : 1;
+$limit = isset($_GET["limit"]) ? min(100, max(1, (int) $_GET["limit"])) : 20;
 $offset = ($page - 1) * $limit;
 
 $cache = new CacheManager();
@@ -39,7 +39,7 @@ if (empty($search) && $catFilter === "" && $status === "all") {
 $lang = isset($_GET["lang"]) ? $_GET["lang"] : "bn";
 
 try {
-    $sql = "SELECT a.id, a.title_bn, a.title_en, a.status, a.image, a.created_at, a.published_at, c.title_en as cat_en, c.title_bn as cat_bn 
+    $sql = "SELECT a.id, a.title_bn, a.title_en, a.status, a.image_bn, a.image_en, a.use_separate_images, a.created_at, a.published_at, c.title_en as cat_en, c.title_bn as cat_bn 
             FROM articles a 
             LEFT JOIN categories c ON a.category_id = c.id 
             WHERE 1=1";
@@ -62,7 +62,7 @@ try {
     }
 
     $sql .= " ORDER BY a.created_at DESC";
-    
+
     $countSql = "SELECT COUNT(*) as total FROM articles a WHERE 1=1";
     $countParams = [];
 
@@ -85,7 +85,7 @@ try {
     $countStmt = $pdo->prepare($countSql);
     $countStmt->execute($countParams);
     $countResult = $countStmt->fetch(PDO::FETCH_ASSOC);
-    $total = (int)$countResult['total'];
+    $total = (int) $countResult["total"];
     $totalPages = ceil($total / $limit);
 
     $sql .= " LIMIT ? OFFSET ?";
@@ -98,6 +98,15 @@ try {
 
     $articles = [];
     foreach ($rawArticles as $art) {
+        $displayImage = $art["image_bn"];
+        if (
+            $art["use_separate_images"] &&
+            $lang === "en" &&
+            !empty($art["image_en"])
+        ) {
+            $displayImage = $art["image_en"];
+        }
+        
         $articles[] = [
             "id" => $art["id"],
             "title_bn" => $art["title_bn"],
@@ -107,7 +116,7 @@ try {
                     ? $art["title_bn"] ?? $art["title_en"]
                     : $art["title_en"] ?? $art["title_bn"],
             "status" => $art["status"],
-            "image" => $art["image"],
+            "image" => $displayImage,
             "created_at" => $art["created_at"],
             "published_at" => $art["published_at"],
             "category_id" => $art["category_id"],
@@ -127,8 +136,8 @@ try {
             "total" => $total,
             "totalPages" => $totalPages,
             "hasNextPage" => $page < $totalPages,
-            "hasPrevPage" => $page > 1
-        ]
+            "hasPrevPage" => $page > 1,
+        ],
     ];
 
     if (empty($search) && $catFilter === "" && $status === "all") {

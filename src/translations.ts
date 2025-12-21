@@ -242,7 +242,8 @@ const translations: Translations = {
     write_details: "বিস্তারিত লিখুন...",
     submit: "জমা দিন",
     submissions_closed: "তথ্য জমা বন্ধ",
-    submissions_turned_off_by_admin: "অ্যাডমিন কর্তৃক জমা দেওয়া বন্ধ করা হয়েছে।",
+    submissions_turned_off_by_admin:
+      "অ্যাডমিন কর্তৃক জমা দেওয়া বন্ধ করা হয়েছে।",
     article_info: "নিবন্ধ তথ্য",
     category: "বিভাগ:",
     published: "প্রকাশনা:",
@@ -298,7 +299,8 @@ const translations: Translations = {
     saved_articles: "সংরক্ষিত নিবন্ধ",
     messages: "মেসেজ",
     your_activity: "আপনার কার্যকলাপ",
-    activity_placeholder: "সাম্প্রতিক কার্যকলাপ বা পরিসংখ্যান এখানে দেখানো যেতে পারে।",
+    activity_placeholder:
+      "সাম্প্রতিক কার্যকলাপ বা পরিসংখ্যান এখানে দেখানো যেতে পারে।",
 
     failed_to_load_stats: "পরিসংখ্যান লোড করতে ব্যর্থ হয়েছে।",
     total_articles: "মোট নিবন্ধ",
@@ -326,7 +328,8 @@ const translations: Translations = {
     date: "তারিখ",
     actions: "ক্রিয়াকলাপ",
     no_articles_found: "কোনো নিবন্ধ পাওয়া যায়নি",
-    no_articles_matching_criteria: "আপনার মানদণ্ডের সাথে মেলে এমন কোনো নিবন্ধ নেই।",
+    no_articles_matching_criteria:
+      "আপনার মানদণ্ডের সাথে মেলে এমন কোনো নিবন্ধ নেই।",
     create_new_article: "নতুন নিবন্ধ তৈরি করুন",
     no_title: "(শিরোনাম নেই)",
     pub: "প্রকাশিত",
@@ -393,7 +396,8 @@ const translations: Translations = {
     already_have_account: "ইতিমধ্যে অ্যাকাউন্ট আছে?",
 
     no_saved_articles: "কোনো সংরক্ষিত নিবন্ধ নেই",
-    bookmark_your_favorites: "আপনার প্রিয় নিবন্ধগুলি এখানে সংরক্ষণ করতে বুকমার্ক করুন",
+    bookmark_your_favorites:
+      "আপনার প্রিয় নিবন্ধগুলি এখানে সংরক্ষণ করতে বুকমার্ক করুন",
     no_news_in_this_category: "এই বিভাগে কোনো সংবাদ নেই",
     read_more: "আরও পড়ুন",
 
@@ -429,7 +433,8 @@ const translations: Translations = {
     title_english: "শিরোনাম (ইংরেজি)",
     color: "রং",
     save: "সংরক্ষণ",
-    confirm_delete_category: "আপনি কি নিশ্চিত যে আপনি এই বিভাগটি মুছে ফেলতে চান?",
+    confirm_delete_category:
+      "আপনি কি নিশ্চিত যে আপনি এই বিভাগটি মুছে ফেলতে চান?",
     failed_to_fetch_categories: "বিভাগগুলি আনতে ব্যর্থ হয়েছে",
     edit_section: "বিভাগ সম্পাদনা করুন",
     new_section: "নতুন বিভাগ",
@@ -439,13 +444,15 @@ const translations: Translations = {
     list: "তালিকা",
     carousel: "ক্যারোজেল",
     highlight: "হাইলাইট",
-    confirm_delete_section: "আপনি কি নিশ্চিত যে আপনি এই বিভাগটি মুছে ফেলতে চান?",
+    confirm_delete_section:
+      "আপনি কি নিশ্চিত যে আপনি এই বিভাগটি মুছে ফেলতে চান?",
     failed_to_fetch_sections: "বিভাগগুলি আনতে ব্যর্থ হয়েছে",
     user_muted_successfully: "ব্যবহারকারীকে সফলভাবে মিউট করা হয়েছে",
     failed_to_mute_user: "ব্যবহারকারীকে মিউট করতে ব্যর্থ হয়েছে",
     user_unmuted_successfully: "ব্যবহারকারীকে সফলভাবে আনমিউট করা হয়েছে",
     failed_to_unmute_user: "ব্যবহারকারীকে আনমিউট করতে ব্যর্থ হয়েছে",
-    confirm_unmute_user: "আপনি কি নিশ্চিত যে আপনি এই ব্যবহারকারীকে আনমিউট করতে চান?",
+    confirm_unmute_user:
+      "আপনি কি নিশ্চিত যে আপনি এই ব্যবহারকারীকে আনমিউট করতে চান?",
     muted: "মিউট করা হয়েছে",
     active: "সক্রিয়",
     unmute: "আনমিউট",

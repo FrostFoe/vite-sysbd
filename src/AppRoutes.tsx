@@ -22,7 +22,7 @@ const AdminComments = lazy(() => import("./pages/Admin/Comments"));
 const AdminCommentDetail = lazy(() => import("./pages/Admin/CommentDetail"));
 const AdminSubmissions = lazy(() => import("./pages/Admin/Submissions"));
 const AdminSubmissionDetail = lazy(
-  () => import("./pages/Admin/SubmissionDetail")
+  () => import("./pages/Admin/SubmissionDetail"),
 );
 const AdminCategories = lazy(() => import("./pages/Admin/Categories"));
 const AdminSections = lazy(() => import("./pages/Admin/Sections"));

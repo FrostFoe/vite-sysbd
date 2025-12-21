@@ -16,7 +16,7 @@ interface UseTextSelectionReturn {
 }
 
 export const useTextSelection = (
-  containerRef: React.RefObject<HTMLElement | null>
+  containerRef: React.RefObject<HTMLElement | null>,
 ): UseTextSelectionReturn => {
   const [toolbarVisible, setToolbarVisible] = useState(false);
   const [toolbarPosition, setToolbarPosition] = useState({ top: 0, left: 0 });
@@ -119,7 +119,7 @@ export const useTextSelection = (
         selection.removeAllRanges();
       }
     },
-    [selectionData.range]
+    [selectionData.range],
   );
 
   const handleToolbarClose = useCallback(() => {

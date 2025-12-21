@@ -12,9 +12,9 @@ class RedisCache
         $this->enabled = false;
 
         try {
-            if (extension_loaded('redis')) {
+            if (extension_loaded("redis")) {
                 $this->redis = new Redis();
-                if (@$this->redis->connect('127.0.0.1', 6379, 1)) {
+                if (@$this->redis->connect("127.0.0.1", 6379, 1)) {
                     $this->enabled = true;
                 }
             }

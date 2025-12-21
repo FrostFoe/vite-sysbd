@@ -147,10 +147,14 @@ function get_data(
 
             foreach ($sectionArticles as $article) {
                 $categoryName = $article["category_title"] ?? null;
-                
+
                 // Determine which image to show
                 $displayImage = $article["image_bn"];
-                if ($article["use_separate_images"] && $lang === "en" && !empty($article["image_en"])) {
+                if (
+                    $article["use_separate_images"] &&
+                    $lang === "en" &&
+                    !empty($article["image_en"])
+                ) {
                     $displayImage = $article["image_en"];
                 }
 
@@ -188,7 +192,7 @@ function get_data(
 }
 
 if (count(debug_backtrace()) == 0) {
-    require_once __DIR__ . '/../lib/session.php';
+    require_once __DIR__ . "/../lib/session.php";
 
     $lang = isset($_GET["lang"]) ? $_GET["lang"] : "bn";
     $limit =

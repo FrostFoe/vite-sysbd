@@ -3,7 +3,7 @@ require_once "../config/db.php";
 require_once "../lib/security.php";
 
 // Initialize session
-require_once __DIR__ . '/../lib/session.php';
+require_once __DIR__ . "/../lib/session.php";
 
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: POST, OPTIONS");
@@ -15,7 +15,7 @@ if ($_SERVER["REQUEST_METHOD"] === "OPTIONS") {
 }
 
 // Check for Admin privileges
-if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
+if (!isset($_SESSION["user_role"]) || $_SESSION["user_role"] !== "admin") {
     http_response_code(403);
     echo json_encode(["success" => false, "error" => "Unauthorized access"]);
     exit();

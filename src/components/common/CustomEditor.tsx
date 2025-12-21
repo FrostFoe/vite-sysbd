@@ -180,7 +180,7 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
         }
       }
     },
-    [handleImageUpload, handleVideoUpload]
+    [handleImageUpload, handleVideoUpload],
   );
 
   return (

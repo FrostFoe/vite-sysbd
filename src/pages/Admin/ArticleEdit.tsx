@@ -78,8 +78,8 @@ const ArticleEdit: React.FC = () => {
                 ({
                   ...s,
                   title: s.title || "Untitled Section",
-                }) as unknown as Section
-            )
+                }) as unknown as Section,
+            ),
           );
         }
 
@@ -112,7 +112,7 @@ const ArticleEdit: React.FC = () => {
           } else {
             showToastMsg(
               articleRes.error || "নিবন্ধ লোড করতে ব্যর্থ হয়েছে।",
-              "error"
+              "error",
             );
           }
         } else {
@@ -177,7 +177,7 @@ const ArticleEdit: React.FC = () => {
   const handleImageUpload = useCallback(
     async (
       e: React.ChangeEvent<HTMLInputElement>,
-      field: "image" | "image_bn" | "image_en" = "image"
+      field: "image" | "image_bn" | "image_en" = "image",
     ) => {
       const file = e.target.files?.[0];
       if (!file) return;
@@ -186,7 +186,7 @@ const ArticleEdit: React.FC = () => {
       if (DANGEROUS_FILE_EXTENSIONS.includes(fileExtension)) {
         showToastMsg(
           `File type not allowed (potentially dangerous): .${fileExtension}`,
-          "error"
+          "error",
         );
         return;
       }
@@ -226,7 +226,7 @@ const ArticleEdit: React.FC = () => {
         showToastMsg("সার্ভার ত্রুটি!", "error");
       }
     },
-    []
+    [],
   );
 
   const handleSubmit = useCallback(
@@ -248,7 +248,7 @@ const ArticleEdit: React.FC = () => {
       formData.append("image_en", article.image_en || "");
       formData.append(
         "use_separate_images",
-        article.use_separate_images ? "true" : "false"
+        article.use_separate_images ? "true" : "false",
       );
       formData.append("category_id", article.category_id || "");
       formData.append("sectionId", article.section_id || "");
@@ -258,7 +258,7 @@ const ArticleEdit: React.FC = () => {
       formData.append("meta_keywords", article.meta_keywords || "");
       formData.append(
         "allow_submissions",
-        article.allow_submissions ? "1" : "0"
+        article.allow_submissions ? "1" : "0",
       );
 
       try {
@@ -272,7 +272,7 @@ const ArticleEdit: React.FC = () => {
         } else {
           showToastMsg(
             response.error || "নিবন্ধ সংরক্ষণ করতে ব্যর্থ হয়েছে!",
-            "error"
+            "error",
           );
         }
       } catch (_error) {
@@ -281,7 +281,7 @@ const ArticleEdit: React.FC = () => {
         setIsSaving(false);
       }
     },
-    [article, id, navigate, storageKey]
+    [article, id, navigate, storageKey],
   );
 
   const handleOpenModal = async (doc: DocType | null) => {
@@ -567,7 +567,8 @@ const ArticleEdit: React.FC = () => {
                       অসংরক্ষিত খসড়া পাওয়া গেছে
                     </h4>
                     <p className="text-xs text-card-text mt-1">
-                      আপনার ব্রাউজারে এই নিবন্ধটির একটি নতুন সংস্করণ পাওয়া গেছে।
+                      আপনার ব্রাউজারে এই নিবন্ধটির একটি নতুন সংস্করণ পাওয়া
+                      গেছে।
                     </p>
                     <button
                       type="button"
@@ -954,11 +955,9 @@ const ArticleEdit: React.FC = () => {
                   }
                   alt="Preview"
                   className={`w-full h-full object-cover ${
-                    !(
-                      article.use_separate_images
-                        ? article.image_en || article.image_bn
-                        : article.image
-                    )
+                    !(article.use_separate_images
+                      ? article.image_en || article.image_bn
+                      : article.image)
                       ? "opacity-50"
                       : ""
                   }`}

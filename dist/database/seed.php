@@ -26,19 +26,29 @@ foreach ($users as $user) {
     }
 }
 
-$adminResult = $pdo->query("SELECT id FROM users WHERE email = 'admin@breachtimes.com'")->fetch(PDO::FETCH_ASSOC);
+$adminResult = $pdo
+    ->query("SELECT id FROM users WHERE email = 'admin@breachtimes.com'")
+    ->fetch(PDO::FETCH_ASSOC);
 $adminId = $adminResult ? $adminResult["id"] : null;
 
-$johnResult = $pdo->query("SELECT id FROM users WHERE email = 'john@example.com'")->fetch(PDO::FETCH_ASSOC);
+$johnResult = $pdo
+    ->query("SELECT id FROM users WHERE email = 'john@example.com'")
+    ->fetch(PDO::FETCH_ASSOC);
 $johnId = $johnResult ? $johnResult["id"] : null;
 
-$sarahResult = $pdo->query("SELECT id FROM users WHERE email = 'sarah@example.com'")->fetch(PDO::FETCH_ASSOC);
+$sarahResult = $pdo
+    ->query("SELECT id FROM users WHERE email = 'sarah@example.com'")
+    ->fetch(PDO::FETCH_ASSOC);
 $sarahId = $sarahResult ? $sarahResult["id"] : null;
 
-$mikeResult = $pdo->query("SELECT id FROM users WHERE email = 'mike@example.com'")->fetch(PDO::FETCH_ASSOC);
+$mikeResult = $pdo
+    ->query("SELECT id FROM users WHERE email = 'mike@example.com'")
+    ->fetch(PDO::FETCH_ASSOC);
 $mikeId = $mikeResult ? $mikeResult["id"] : null;
 
-$emmaResult = $pdo->query("SELECT id FROM users WHERE email = 'emma@example.com'")->fetch(PDO::FETCH_ASSOC);
+$emmaResult = $pdo
+    ->query("SELECT id FROM users WHERE email = 'emma@example.com'")
+    ->fetch(PDO::FETCH_ASSOC);
 $emmaId = $emmaResult ? $emmaResult["id"] : null;
 
 if (!$adminId) {

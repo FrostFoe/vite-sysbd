@@ -26,7 +26,7 @@ if (!$articleRaw) {
 
 $status = $articleRaw["status"] ?? "published";
 
-require_once __DIR__ . '/../lib/session.php';
+require_once __DIR__ . "/../lib/session.php";
 $isAdmin = isset($_SESSION["user_role"]) && $_SESSION["user_role"] === "admin";
 
 if ($status !== "published" && !$isAdmin) {
@@ -53,9 +53,12 @@ $article = [
         $lang === "en"
             ? $articleRaw["read_time_en"] ?? ""
             : $articleRaw["read_time_bn"] ?? "",
-    "image" => ($articleRaw["use_separate_images"] && $lang === "en" && !empty($articleRaw["image_en"])) 
-        ? $articleRaw["image_en"] 
-        : $articleRaw["image_bn"],
+    "image" =>
+        $articleRaw["use_separate_images"] &&
+        $lang === "en" &&
+        !empty($articleRaw["image_en"])
+            ? $articleRaw["image_en"]
+            : $articleRaw["image_bn"],
     "image_bn" => $articleRaw["image_bn"],
     "image_en" => $articleRaw["image_en"],
     "use_separate_images" => (bool) $articleRaw["use_separate_images"],

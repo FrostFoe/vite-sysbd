@@ -27,7 +27,7 @@ interface NotificationContextType {
 }
 
 const NotificationContext = createContext<NotificationContextType | undefined>(
-  undefined
+  undefined,
 );
 
 export const ToastProvider: FC<{ children: ReactNode }> = ({ children }) => {
@@ -50,7 +50,7 @@ export const ToastProvider: FC<{ children: ReactNode }> = ({ children }) => {
 
       return id;
     },
-    []
+    [],
   );
 
   const removeToast = useCallback((id: string) => {
@@ -61,28 +61,28 @@ export const ToastProvider: FC<{ children: ReactNode }> = ({ children }) => {
     (message: string, duration?: number) => {
       addToast(message, "success", duration);
     },
-    [addToast]
+    [addToast],
   );
 
   const error = useCallback(
     (message: string, duration?: number) => {
       addToast(message, "error", duration);
     },
-    [addToast]
+    [addToast],
   );
 
   const warning = useCallback(
     (message: string, duration?: number) => {
       addToast(message, "warning", duration);
     },
-    [addToast]
+    [addToast],
   );
 
   const info = useCallback(
     (message: string, duration?: number) => {
       addToast(message, "info", duration);
     },
-    [addToast]
+    [addToast],
   );
 
   return (

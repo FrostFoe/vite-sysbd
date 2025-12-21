@@ -47,7 +47,7 @@ export const DocumentModal: React.FC<{
         selectedFile.name.split(".").pop()?.toLowerCase() || "";
       if (DANGEROUS_FILE_EXTENSIONS.includes(fileExtension)) {
         setError(
-          `File type not allowed (potentially dangerous): .${fileExtension}`
+          `File type not allowed (potentially dangerous): .${fileExtension}`,
         );
         return;
       }

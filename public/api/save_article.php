@@ -22,7 +22,7 @@ function calculate_read_time_from_text($text, $lang = "en")
     }
 }
 
-require_once __DIR__ . '/../lib/session.php';
+require_once __DIR__ . "/../lib/session.php";
 
 if (!isset($_SESSION["user_role"]) || $_SESSION["user_role"] !== "admin") {
     send_response(["error" => "Unauthorized"], 403);
@@ -58,7 +58,11 @@ $section_id = $_POST["section_id"] ?? ($_POST["sectionId"] ?? "news");
 
 $image_bn = $_POST["image_bn"] ?? ($_POST["image"] ?? ""); // Fallback to 'image' for backward compatibility
 $image_en = $_POST["image_en"] ?? "";
-$use_separate_images = isset($_POST["use_separate_images"]) && $_POST["use_separate_images"] === "true" ? 1 : 0;
+$use_separate_images =
+    isset($_POST["use_separate_images"]) &&
+    $_POST["use_separate_images"] === "true"
+        ? 1
+        : 0;
 
 $leaked_documents = $_POST["leaked_documents"] ?? null;
 $status = $_POST["status"] ?? "draft";

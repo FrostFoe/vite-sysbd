@@ -53,7 +53,7 @@ const CustomImage: React.FC<CustomImageProps> = ({
         root: null,
         rootMargin: "100px",
         threshold: 0.01,
-      }
+      },
     );
 
     if (imageRef.current) {

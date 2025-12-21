@@ -1,7 +1,7 @@
 <?php
 require_once "api_header.php";
 
-require_once __DIR__ . '/../lib/session.php';
+require_once __DIR__ . "/../lib/session.php";
 
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
     send_response(["error" => "Method not allowed"], 405);

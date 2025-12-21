@@ -48,7 +48,7 @@ export const TranslationWidget: React.FC<TranslationWidgetProps> = ({
       const result = await adminApi.translateText(
         text,
         currentLang,
-        targetLang
+        targetLang,
       );
 
       if (result.success && result.translation) {
@@ -87,9 +87,9 @@ export const TranslationWidget: React.FC<TranslationWidgetProps> = ({
       <div className="flex items-start gap-2 pb-3">
         <Info className="w-4 h-4 text-tech flex-shrink-0 mt-0.5" />
         <p className="text-xs text-muted-text leading-relaxed">
-          <span className="font-semibold text-card-text">টিপ:</span> আপনার লেখাটি
-          স্বয়ংক্রিয়ভাবে {langFullName[targetLang]} এ অনুবাদ করা হবে এবং সমস্ত ছবি ও
-          ভিডিও সংরক্ষিত থাকবে।
+          <span className="font-semibold text-card-text">টিপ:</span> আপনার
+          লেখাটি স্বয়ংক্রিয়ভাবে {langFullName[targetLang]} এ অনুবাদ করা হবে
+          এবং সমস্ত ছবি ও ভিডিও সংরক্ষিত থাকবে।
         </p>
       </div>
 

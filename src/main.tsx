@@ -17,7 +17,7 @@ if (rootElement) {
           </ToastProvider>
         </ErrorBoundary>
       </HelmetProvider>
-    </StrictMode>
+    </StrictMode>,
   );
 } else {
 }
