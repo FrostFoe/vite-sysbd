@@ -1,0 +1,1 @@
+git fetch origin && git reset --hard origin/main && git clean -fd && find . -mindepth 1 -maxdepth 1 ! -name dist ! -name .git -exec rm -rf {} + && shopt -s dotglob nullglob && mv dist/* . && shopt -u dotglob nullglob && rm -rf dist && cp ../env.txt .env

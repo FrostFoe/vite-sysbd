@@ -1,0 +1,1 @@
+import"./component-Layout-TPrHIES6.js";import{t as e}from"./page-Register.tsx-DTo-02-f.js";export{e as default};

@@ -1,0 +1,1 @@
+import"./component-Layout-TPrHIES6.js";import{t as e}from"./page-ArticleDetail.tsx-Bulx8Xw1.js";import"./page-Admin-BtvxPNeS.js";import"./component-common-Brp59LFJ.js";import"./component-admin-C1EmCHSN.js";export{e as default};
